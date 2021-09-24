@@ -1,5 +1,173 @@
 <div class="flex flex-row h-full">
-  <div class="flex flex-col min-h-full w-2 sidebar left p-shadow-3">a</div>
-  <div class="flex flex-col min-h-full w-full content">b</div>
-  <div class="flex flex-col min-h-full w-2 sidebar right p-shadow-3">c</div>
+  <div class="left sidebar min-h-full w-2 p-shadow-3 overflow-hidden z-3">
+    <div class="p-1 flex flex-column h-full overflow-y-auto">
+      <input type="text" pInputText class="w-full" style="margin-bottom: 1px" />
+      <span class="p-input-icon-right w-full">
+        <i class="pi pi-spin pi-search"></i>
+        <input type="text" class="w-full" pInputText />
+      </span>
+      <p-panelMenu [model]="mainMenu" [style]="{'width':'100%'}"></p-panelMenu>
+      <div class="flex-grow-1"></div>
+      <p-panelMenu [model]="secondarMenu" [style]="{'width':'100%'}"></p-panelMenu>
+    </div>
+  </div>
+  <div class="center flex min-h-full w-full relative overflow-hide">
+    <div class="absolute left-0 align-self-center flex flex-column z-2 view-overview">
+      <div style="font-size: 40px;" class="pi pi-book element"></div>
+      <div class="pseudo"></div>
+      <div style="font-size: 40px;" class="pi pi-book element"></div>
+      <div class="pseudo"></div>
+      <div style="font-size: 40px;" class="pi pi-book element"></div>
+      <div class="pseudo"></div>
+      <div style="font-size: 40px;" class="pi pi-book element"></div>
+    </div>
+    <div class="absolute left-0 bottom-0 flex flex-row z-3 left-footer">
+      <div style="font-size: 40px;" class="pi pi-map element"></div>
+      <div style="font-size: 40px;" class="pi pi-map element"></div>
+      <div style="font-size: 40px;" class="pi pi-map element"></div>
+      <div style="font-size: 40px;" class="pi pi-map element"></div>
+    </div>
+    <div class="absolute right-0 bottom-0 flex flex-row z-3 right-footer">
+      <div style="font-size: 40px;" class="pi pi-users element"></div>
+    </div>
+    <p-scrollPanel class="content" [style]="{width: '100%', height: '100%'}" styleClass="custombar" #contentPanel>
+      <div class="card">
+        <p-card><button (click)="contentPanel.scrollTop(ala.offsetTop)">aaaaa</button></p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card" #ala>
+        <p-card>blub</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+      <div class="card">
+        <p-card>test</p-card>
+      </div>
+    </p-scrollPanel>
+  </div>
+  <div class="right sidebar min-h-full w-2 p-shadow-3 overflow-hidden">
+    <div class="p-1">
+      <input type="text" pInputText class="w-full" />
+    </div>
+  </div>
 </div>

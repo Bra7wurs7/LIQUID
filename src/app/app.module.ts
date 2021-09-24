@@ -8,6 +8,9 @@ import { AppComponent } from './app.component';
 import {CardModule} from 'primeng/card';
 import {SidebarModule} from 'primeng/sidebar';
 import {ButtonModule} from 'primeng/button';
+import {InputTextModule} from 'primeng/inputtext';
+import {ScrollPanelModule} from 'primeng/scrollpanel';
+import { PanelMenuModule } from 'primeng/panelmenu';
 
 @NgModule({
   declarations: [
@@ -20,6 +23,9 @@ import {ButtonModule} from 'primeng/button';
     CardModule,
     SidebarModule,
     ButtonModule,
+    InputTextModule,
+    ScrollPanelModule,
+    PanelMenuModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
