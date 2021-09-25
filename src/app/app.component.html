@@ -1,14 +1,19 @@
 <div class="flex flex-row h-full">
   <div class="left sidebar min-h-full w-2 p-shadow-3 overflow-hidden z-3">
     <div class="p-1 flex flex-column h-full overflow-y-auto">
-      <input type="text" pInputText class="w-full" style="margin-bottom: 1px" />
-      <span class="p-input-icon-right w-full">
-        <i class="pi pi-spin pi-search"></i>
-        <input type="text" class="w-full" pInputText />
+      <span class="p-input-icon-right w-full" style="margin-bottom: 1px;">
+        <i class="pi pi-search"></i>
+        <input type="text" class="w-full" placeholder="Search/Create" pInputText />
       </span>
-      <p-panelMenu [model]="mainMenu" [style]="{'width':'100%'}"></p-panelMenu>
+      <p-tree [value]="mainMenu" [style]="{'width':'100%', 'padding':'0px'}">
+        <ng-template let-node pTemplate="default">
+          {{node.label}}
+        </ng-template>
+      </p-tree>
       <div class="flex-grow-1"></div>
-      <p-panelMenu [model]="secondarMenu" [style]="{'width':'100%'}"></p-panelMenu>
+      <p-tree [value]="secondarMenu" [style]="{'width':'100%', 'padding':'0px'}">
+
+      </p-tree>
     </div>
   </div>
   <div class="center flex min-h-full w-full relative overflow-hide">
@@ -167,7 +172,10 @@
   </div>
   <div class="right sidebar min-h-full w-2 p-shadow-3 overflow-hidden">
     <div class="p-1">
-      <input type="text" pInputText class="w-full" />
+      <span class="p-input-icon-right w-full" style="margin-bottom: 1px;">
+        <i class="pi pi-search"></i>
+        <input type="text" class="w-full" placeholder="Search/Link" pInputText />
+      </span>
     </div>
   </div>
 </div>

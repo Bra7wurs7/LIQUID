@@ -10,3 +10,36 @@ html {
 .pi{
 line-height: unset !important;
 }
+
+.notes{
+  border-left: 3px solid #823400 !important;
+}
+.categories{
+  border-left: 3px solid #827b00 !important;
+}
+.chronicle{
+  border-left: 3px solid #00827d !important;
+}
+.atlas{
+  border-left: 3px solid #588200 !important;
+}
+.generators{
+  border-left: 3px solid #000682 !important;
+}
+.resources{
+  border-left: 3px solid #820070 !important;
+}
+
+.p-scrollpanel {
+  &.custombar {
+    .p-scrollpanel-wrapper{
+      .p-scrollpanel-content{
+        width: 100%;
+        padding: 0;
+      }
+    }
+      .p-scrollpanel-bar {
+        visibility: collapse !important;
+      }
+  }
+}

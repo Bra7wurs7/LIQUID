@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, TreeNode } from 'primeng/api';
 
 @Component({
     selector: 'app-root',
@@ -8,25 +8,26 @@ import { MenuItem } from 'primeng/api';
 })
 export class AppComponent implements OnInit {
     title = 'GAS';
-    mainMenu: MenuItem[];
-    secondarMenu: MenuItem[];
+    mainMenu: TreeNode[];
+    secondarMenu: TreeNode[];
     constructor() {
         this.mainMenu = [
             {
                 label: 'Notes',
+                styleClass: 'notes',
                 icon: 'pi pi-fw pi-book',
-                items: [
+                children: [
                     {
                         label: 'New',
                         icon: 'pi pi-fw pi-plus',
-                        items: [
+                        children: [
                             {
-                                label: 'Bookmark',
-                                icon: 'pi pi-fw pi-bookmark'
+                                label: 'Note',
+                                icon: 'pi pi-fw pi-book'
                             },
                             {
-                                label: 'Video',
-                                icon: 'pi pi-fw pi-video'
+                                label: 'Folder',
+                                icon: 'pi pi-fw pi-folder'
                             }
                         ]
                     },
@@ -42,8 +43,9 @@ export class AppComponent implements OnInit {
             },
             {
                 label: 'Categories',
+                styleClass: 'categories',
                 icon: 'pi pi-fw pi-tag',
-                items: [
+                children: [
                     {
                         label: 'Left',
                         icon: 'pi pi-fw pi-align-left'
@@ -64,8 +66,9 @@ export class AppComponent implements OnInit {
             },
             {
                 label: 'Chronicle',
+                styleClass: 'chronicle',
                 icon: 'pi pi-fw pi-calendar',
-                items: [
+                children: [
                     {
                         label: 'New',
                         icon: 'pi pi-fw pi-user-plus',
@@ -78,11 +81,11 @@ export class AppComponent implements OnInit {
                     {
                         label: 'Search',
                         icon: 'pi pi-fw pi-users',
-                        items: [
+                        children: [
                             {
                                 label: 'Filter',
                                 icon: 'pi pi-fw pi-filter',
-                                items: [
+                                children: [
                                     {
                                         label: 'Print',
                                         icon: 'pi pi-fw pi-print'
@@ -99,12 +102,13 @@ export class AppComponent implements OnInit {
             },
             {
                 label: 'Atlas',
+                styleClass: 'atlas',
                 icon: 'pi pi-fw pi-map',
-                items: [
+                children: [
                     {
                         label: 'Edit',
                         icon: 'pi pi-fw pi-pencil',
-                        items: [
+                        children: [
                             {
                                 label: 'Save',
                                 icon: 'pi pi-fw pi-calendar-plus'
@@ -118,7 +122,7 @@ export class AppComponent implements OnInit {
                     {
                         label: 'Archieve',
                         icon: 'pi pi-fw pi-calendar-times',
-                        items: [
+                        children: [
                             {
                                 label: 'Remove',
                                 icon: 'pi pi-fw pi-calendar-minus'
@@ -128,9 +132,10 @@ export class AppComponent implements OnInit {
                 ]
             },
             {
-                label: 'Random Generators',
+                label: 'Generators',
+                styleClass: 'generators',
                 icon: 'pi pi-fw pi-cog',
-                items: [
+                children: [
                     {
                         label: 'Left',
                         icon: 'pi pi-fw pi-align-left'
@@ -151,8 +156,9 @@ export class AppComponent implements OnInit {
             },
             {
                 label: 'Resources',
+                styleClass: 'resources',
                 icon: 'pi pi-fw pi-cloud',
-                items: [
+                children: [
                     {
                         label: 'Left',
                         icon: 'pi pi-fw pi-align-left'
@@ -174,37 +180,43 @@ export class AppComponent implements OnInit {
         ]
         this.secondarMenu = [
             {
-                label: 'Save/Load',
+                label: 'Project',
                 icon: 'pi pi-fw pi-file',
-                items: [
+                children: [
                     {
-                        label: 'New',
-                        icon: 'pi pi-fw pi-plus',
-                        items: [
+                        label: 'Save',
+                        icon: 'pi pi-fw pi-save',
+                        children: [
                             {
-                                label: 'Bookmark',
-                                icon: 'pi pi-fw pi-bookmark'
+                                label: 'To Drive',
+                                icon: 'pi pi-fw pi-desktop'
                             },
                             {
-                                label: 'Video',
-                                icon: 'pi pi-fw pi-video'
+                                label: 'To Browser',
+                                icon: 'pi pi-fw pi-globe'
                             }
                         ]
                     },
                     {
-                        label: 'Delete',
-                        icon: 'pi pi-fw pi-trash'
-                    },
-                    {
-                        label: 'Export',
-                        icon: 'pi pi-fw pi-external-link'
+                        label: 'Load',
+                        icon: 'pi pi-fw pi-folder-open',
+                        children: [
+                            {
+                                label: 'From Drive',
+                                icon: 'pi pi-fw pi-desktop'
+                            },
+                            {
+                                label: 'From Browser',
+                                icon: 'pi pi-fw pi-globe'
+                            }
+                        ]
                     }
                 ]
             },
             {
                 label: 'Settings',
                 icon: 'pi pi-fw pi-sliders-h',
-                items: [
+                children: [
                     {
                         label: 'Left',
                         icon: 'pi pi-fw pi-align-left'
