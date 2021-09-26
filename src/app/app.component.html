@@ -1,10 +1,15 @@
 <div class="flex flex-row h-full">
   <div class="left sidebar min-h-full w-2 p-shadow-3 overflow-hidden z-3">
     <div class="p-1 flex flex-column h-full overflow-y-auto">
-      <span class="p-input-icon-right w-full" style="margin-bottom: 1px;">
-        <i class="pi pi-search"></i>
-        <input type="text" class="w-full" placeholder="Search/Create" pInputText />
-      </span>
+      <div class="flex flex-row">
+        <span class="p-input-icon-right w-full" style="margin-bottom: 1px;">
+          <i class="pi pi-search"></i>
+          <input type="text" class="w-full" placeholder="Search/Create" pInputText />
+        </span>
+        <div class="button-border border-clickable flex flex-column align-content-center justify-content-center" style="margin-bottom: 1px; margin-left: 1px;">
+          <i class="pi pi-ellipsis-v icon-button"></i>
+        </div>
+      </div>
       <p-tree [value]="mainMenu" [style]="{'width':'100%', 'padding':'0px'}">
         <ng-template let-node pTemplate="default">
           {{node.label}}
@@ -171,11 +176,23 @@
     </p-scrollPanel>
   </div>
   <div class="right sidebar min-h-full w-2 p-shadow-3 overflow-hidden">
-    <div class="p-1">
-      <span class="p-input-icon-right w-full" style="margin-bottom: 1px;">
-        <i class="pi pi-search"></i>
-        <input type="text" class="w-full" placeholder="Search/Link" pInputText />
-      </span>
+    <div class="p-1 flex flex-column h-full overflow-y-auto">
+      <div class="flex flex-row">
+        <span class="p-input-icon-right w-full" style="margin-bottom: 1px;">
+          <i class="pi pi-search"></i>
+          <input type="text" class="w-full" placeholder="Search/Link" pInputText />
+        </span>
+        <div class="button-border border-clickable flex flex-column align-content-center justify-content-center" style="margin-bottom: 1px; margin-left: 1px;">
+          <i class="pi pi-ellipsis-v icon-button"></i>
+        </div>
+      </div>
+      
+      <div *ngFor="let index of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]">
+        <div class="bordered-element h-2rem notes">
+          Note {{index}}
+        </div> 
+        <div style="padding-bottom: 1px;"></div>
+      </div>
     </div>
   </div>
 </div>

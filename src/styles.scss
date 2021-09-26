@@ -11,23 +11,46 @@ html {
 line-height: unset !important;
 }
 
-.notes{
-  border-left: 3px solid #823400 !important;
+.left {
+  .notes{
+    border-left: 3px solid #823400 !important;
+  }
+  .categories{
+    border-left: 3px solid #827b00 !important;
+  }
+  .chronicle{
+    border-left: 3px solid #00827d !important;
+  }
+  .atlas{
+    border-left: 3px solid #588200 !important;
+  }
+  .generators{
+    border-left: 3px solid #000682 !important;
+  }
+  .resources{
+    border-left: 3px solid #820070 !important;
+  }
 }
-.categories{
-  border-left: 3px solid #827b00 !important;
-}
-.chronicle{
-  border-left: 3px solid #00827d !important;
-}
-.atlas{
-  border-left: 3px solid #588200 !important;
-}
-.generators{
-  border-left: 3px solid #000682 !important;
-}
-.resources{
-  border-left: 3px solid #820070 !important;
+
+.right {
+  .notes{
+    border-right: 3px solid #823400 !important;
+  }
+  .categories{
+    border-right: 3px solid #827b00 !important;
+  }
+  .chronicle{
+    border-right: 3px solid #00827d !important;
+  }
+  .atlas{
+    border-right: 3px solid #588200 !important;
+  }
+  .generators{
+    border-right: 3px solid #000682 !important;
+  }
+  .resources{
+    border-right: 3px solid #820070 !important;
+  }
 }
 
 .p-scrollpanel {
