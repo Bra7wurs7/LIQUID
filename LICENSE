@@ -18,7 +18,10 @@ Some parts of the software are distributed under the MIT (https://mit-license.or
 Angular - Copyright (c) 2010-2021 Google LLC.  - https://angular.io/
 typed-any-access - Copyright (c) 2019 Samuel Schepp - https://github.com/SamuelSchepp/typed-any-access
 PrimeNG, PrimeFlex, PrimeIcons - Copyright (c) 2016-2021 PrimeTek - https://www.primefaces.org
-
+Marked - Copyright (c) 2018+, MarkedJS (https://github.com/markedjs/) Copyright (c) 2011-2018, Christopher Jeffrey (https://github.com/chjj/)
+@types/file-saver - Copyrights are respective of each contributor listed at the beginning of each definition file. - (https://github.com/DefinitelyTyped/DefinitelyTyped)
+file-saver - Copyright © 2016 Eli Grey. - (https://github.com/eligrey/FileSaver.js)
+jszip - Copyright (c) 2009-2016 Stuart Knightley, David Duponchel, Franz Buchinger, António Afonso - (https://stuk.github.io/jszip/)
 
 GNU GENERAL PUBLIC LICENSE
 
