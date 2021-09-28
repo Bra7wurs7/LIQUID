@@ -1,0 +1,23 @@
+<p-panel [toggleable]="true" #panel class="note-panel">
+  <ng-template pTemplate="header">
+    Title
+    <div class="flex-grow-1"></div>
+    <div>
+
+    </div>
+    <div class="flex-grow-1"></div>
+  </ng-template>
+  <ng-template pTemplate="icons">
+    <button (click)="$event.stopPropagation()" pButton pRipple type="button" icon="pi pi-angle-up"
+      class="p-panel-header-icon"></button>
+    <button (click)="$event.stopPropagation()" pButton pRipple type="button" icon="pi pi-angle-down"
+      class="p-panel-header-icon"></button>
+    <button (click)="panel.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
+      [icon]="'pi '+(panel.collapsed?'pi-plus':'pi-minus')" class="p-panel-header-icon"></button>
+    <button (click)="$event.stopPropagation()" pButton pRipple type="button" icon="pi pi-times"
+      class="p-panel-header-icon"></button>
+  </ng-template>
+  <ng-template pTemplate="content">
+    <div [innerHtml]="lorem | parseMarkup"></div>
+  </ng-template>
+</p-panel>
