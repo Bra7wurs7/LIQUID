@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { MenuItem, TreeNode } from 'primeng/api';
+import { AfterViewInit, Component, OnInit, Type, ViewChild } from '@angular/core';
+import { MessageService, TreeNode } from 'primeng/api';
+import { ScrollPanel } from 'primeng/scrollpanel';
+import { GenericPanel, NotePanel } from './models/note-panel.model';
+import { Note } from './models/note.model';
+import { defaultProject, Project } from './models/project.model';
 
 @Component({
   selector: 'app-root',
@@ -7,122 +11,14 @@ import { MenuItem, TreeNode } from 'primeng/api';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  notePanelType = NotePanel;
+
+  project?: Project;
+  noteKeys: string[] = [];
   title = 'GAS';
-  mainMenu: TreeNode[];
+
   secondarMenu: TreeNode[];
-  constructor() {
-    this.mainMenu = [
-      {
-        label: 'Notes',
-        styleClass: 'notes',
-        icon: 'pi pi-fw pi-book',
-        children: [
-          {
-            label: 'New',
-            icon: 'pi pi-fw pi-plus',
-            children: [
-              {
-                label: 'Note',
-                icon: 'pi pi-fw pi-book'
-              },
-              {
-                label: 'Folder',
-                icon: 'pi pi-fw pi-folder'
-              }
-            ]
-          }
-        ]
-      },
-      {
-        label: 'Categories',
-        styleClass: 'categories',
-        icon: 'pi pi-fw pi-tag',
-        children: [
-          {
-            label: 'New',
-            icon: 'pi pi-fw pi-plus',
-          }
-        ]
-      },
-      {
-        label: 'Chronicle',
-        styleClass: 'chronicle',
-        icon: 'pi pi-fw pi-calendar',
-        children: [
-          {
-            label: 'New',
-            icon: 'pi pi-fw pi-plus',
-            children: [
-              {
-                label: 'Calendar',
-                icon: 'pi pi-fw pi-calendar'
-              },
-              {
-                label: 'Timeline',
-                icon: 'pi pi-fw pi-align-right'
-              }
-            ]
-          }
-        ]
-      },
-      {
-        label: 'Atlas',
-        styleClass: 'atlas',
-        icon: 'pi pi-fw pi-map',
-        children: [
-          {
-            label: 'New',
-            icon: 'pi pi-fw pi-plus',
-          }
-        ]
-      },
-      {
-        label: 'Generators',
-        styleClass: 'generators',
-        icon: 'pi pi-fw pi-cog',
-        children: [
-          {
-            label: 'Left',
-            icon: 'pi pi-fw pi-align-left'
-          },
-          {
-            label: 'Right',
-            icon: 'pi pi-fw pi-align-right'
-          },
-          {
-            label: 'Center',
-            icon: 'pi pi-fw pi-align-center'
-          },
-          {
-            label: 'Justify',
-            icon: 'pi pi-fw pi-align-justify'
-          }
-        ]
-      },
-      {
-        label: 'Resources',
-        styleClass: 'resources',
-        icon: 'pi pi-fw pi-cloud',
-        children: [
-          {
-            label: 'Left',
-            icon: 'pi pi-fw pi-align-left'
-          },
-          {
-            label: 'Right',
-            icon: 'pi pi-fw pi-align-right'
-          },
-          {
-            label: 'Center',
-            icon: 'pi pi-fw pi-align-center'
-          },
-          {
-            label: 'Justify',
-            icon: 'pi pi-fw pi-align-justify'
-          }
-        ]
-      },
-    ]
+  constructor(private messageService: MessageService) {
     this.secondarMenu = [
       {
         label: 'Project',
@@ -182,6 +78,57 @@ export class AppComponent implements OnInit {
       }
     ]
   }
+
   ngOnInit() {
+    this.project = defaultProject.toProject();
+    for (const key of this.project.notes?.keys()) {
+      this.noteKeys?.push(key);
+    }
+    this.title = this.project.title;
+  }
+
+  onAddNoteFolderClick(folderTitle: string) {
+    this.messageService.add({severity: 'error', summary: 'Feature not supported yet.', life: 3000})
+  }
+
+  onAddNoteClick(noteTitle: string) {
+    if(this.project?.notes.has(noteTitle)) {
+      this.messageService.add({severity: 'error', summary: 'A note with this name already exists.', life: 3000})
+    } else {
+      this.project?.notes?.set(noteTitle, new Note(noteTitle))
+      this.noteKeys?.push(noteTitle);
+    }
+  }
+
+  onNoteClick(noteTitle: string, contentPanel: ScrollPanel) {
+    const existingPanel = this.getPanelOfNoteFromActiveView(noteTitle);
+
+    if(existingPanel === undefined) {
+      this.project?.views[this.project?.activeViewIndex].panels.push(new NotePanel(noteTitle))
+    } else {
+      this.scrollToPanel(existingPanel, contentPanel);
+    }
+
+  }
+
+  getPanelOfNoteFromActiveView(noteTitle: string) {
+    return this.project?.views[this.project?.activeViewIndex].panels.find((panel) => {
+      if(panel instanceof NotePanel) {
+        return panel.noteName === noteTitle;
+      }
+      return false;
+    });
+  }
+
+  scrollToPanel(child: GenericPanel, parent: ScrollPanel) {
+    parent.scrollTop(child.htmlElement?.offsetTop ?? 0)
+  }
+
+  panelIsInstanceOf(panel: GenericPanel, type: Type<GenericPanel>): boolean {
+    return panel instanceof type;
+  }
+
+  castToNotePanel(panel: GenericPanel): NotePanel {
+    return panel as NotePanel;
   }
 }

@@ -87,3 +87,23 @@ line-height: unset !important;
       }
   }
 }
+
+.sidemenuPanel {
+  margin-bottom: 1px;
+  .p-panel {
+    .p-panel-header {
+      padding: 0px !important;
+      height: 35px;
+      span{
+        margin-left: 1px;
+        align-items: center;
+      }
+    }
+    .p-panel-content{
+      padding: 0px !important;
+      .element{
+        height: 35px;
+      }
+    }
+  }
+}

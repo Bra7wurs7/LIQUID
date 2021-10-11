@@ -1,0 +1,69 @@
+<p-panel [toggleable]="true" #panel class="note-panel" *ngIf="note">
+  <ng-template pTemplate="header">
+    {{note.uniqueName}}
+    <div class="flex-grow-1"></div>
+
+    <div class="flex-grow-1"></div>
+  </ng-template>
+  <ng-template pTemplate="icons">
+    <button (click)="$event.stopPropagation(); editMode = !editMode" pButton pRipple type="button" icon="pi pi-pencil"
+      class="p-panel-header-icon" [ngClass]="{'editModeActive': editMode}"></button>
+    <span class="p-buttonset">
+      <button (click)="$event.stopPropagation()" pButton pRipple type="button" icon="pi pi-angle-up"
+        class="p-panel-header-icon"></button>
+      <button (click)="$event.stopPropagation()" pButton pRipple type="button" icon="pi pi-angle-down"
+        class="p-panel-header-icon"></button>
+      <button (click)="panel.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
+        [icon]="'pi '+(panel.collapsed?'pi-plus':'pi-minus')" class="p-panel-header-icon"></button>
+      <button (click)="$event.stopPropagation()" pButton pRipple type="button" icon="pi pi-times"
+        class="p-panel-header-icon"></button>
+    </span>
+  </ng-template>
+  <ng-template pTemplate="content">
+    <ng-template #noteAttributeListTemplate let-attributes="attributes">
+      <div *ngFor="let attribute of attributes" class="flex align-items-stretch" [ngClass]="{
+        'w-full': attribute.width === 'full',
+        'w-max': attribute.width === 'max',
+        'w-min': attribute.width === 'min',
+        'bordered': attribute.bordered,
+        'flex-row': attribute.direction === 'row',
+        'flex-column': attribute.direction === 'col',
+        'justify-content-start': attribute.direction === 'start',
+        'justify-content-end': attribute.direction === 'end',
+        'justify-content-center': attribute.direction === 'center',
+        'justify-content-between': attribute.direction === 'around',
+        'justify-content-around': attribute.direction === 'between',
+        'justify-content-evenly': attribute.direction === 'evenly',
+        'align-items-stretch': attribute.align === 'stretch',
+        'align-items-start': attribute.align === 'start',
+        'align-items-center': attribute.align === 'center',
+        'align-items-end': attribute.align === 'end',
+        'align-items-baseline': attribute.align === 'baseline',
+        'separator-thin': attribute.separator === 'thin',
+        'separator-medium': attribute.separator === 'medium',
+        'separator-wide': attribute.separator === 'wide',
+        'small': attribute.fontSize === 'small',
+        'medium': attribute.fontSize === 'medium',
+        'large': attribute.fontSize === 'large',
+        'italic': attribute.italic,
+        'bold': attribute.bold,
+        'paddedContent': attribute.content || attribute.contentSlotId
+    }">
+        <ng-container *ngTemplateOutlet="noteAttributeListTemplate; context:{ attributes: attribute.children }">
+        </ng-container>
+        {{attribute.constant ? attribute.content : attribute.contentSlotId | fillAttribute:note.attributesMap}}
+      </div>
+    </ng-template>
+    <div *ngIf="category" style="margin-top: 22px;" [ngClass]="{
+      'float-left': category.attributeTableTemplate.float === 'left',
+      'float-right': category.attributeTableTemplate.float === 'right'}">
+      <ng-container class="flex attributes"
+        *ngTemplateOutlet="noteAttributeListTemplate; context:{ attributes: category.attributeTableTemplate.children}">
+      </ng-container>
+    </div>
+    <div *ngIf="!editMode" [innerHtml]="note.content| parseMarkup"></div>
+    <div *ngIf="editMode">
+      <textarea pInputTextarea [placeholder]="'Enter note text here'" [(ngModel)]="note.content" style="width: 100%; max-width: 100%;" [autoResize]="true"></textarea>
+    </div>
+  </ng-template>
+</p-panel>

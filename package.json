@@ -31,6 +31,7 @@
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
     "typed-any-access": "^1.1.0",
+    "uuid": "^8.3.2",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {

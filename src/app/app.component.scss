@@ -26,7 +26,8 @@
   }
 
   .footer {
-    transition: opacity 0.1s cubic-bezier(0.05, 0.74, 0.2, 0.99), background-color 0.1s cubic-bezier(0.05, 0.74, 0.2, 0.99);
+    transition: opacity 0.1s cubic-bezier(0.05, 0.74, 0.2, 0.99),
+      background-color 0.1s cubic-bezier(0.05, 0.74, 0.2, 0.99);
     opacity: 0.3;
     color: var(--text-color-secondary);
     border: 1px solid var(--surface-border);
@@ -35,18 +36,18 @@
     padding: 6px;
     .element {
       font-size: 25px;
-      &.selected{
+      &.selected {
         color: var(--primary-color);
       }
-      &:hover{
+      &:hover {
         color: var(--text-color);
       }
     }
-    &:hover{
+    &:hover {
       opacity: 1;
       background-color: var(--surface-card);
     }
-    &.left-43px{
+    &.left-43px {
       left: 43px;
     }
   }
@@ -56,9 +57,29 @@
   padding: 3px;
 }
 
+.hideChildUntilHoverParent {
+  >.hideChildUntilHoverChild{
+    visibility: hidden;
+  }
+  &:hover {
+    >.hideChildUntilHoverChild {
+      visibility: visible;
+    }
+  }
+}
+
 .bordered-element {
   border: solid 1px var(--surface-border);
   border-radius: var(--border-radius);
+  background-color: var(--surface-card);
+  padding: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+.unbordered-element {
   background-color: var(--surface-card);
   padding: 8px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
@@ -75,11 +96,32 @@
   font-size: 1rem;
   color: var(--text-color);
   border-color: #ced4da;
+  &:hover {
+    cursor: pointer;
+  }
 }
+
+.button-unbordered {
+  border: solid 1px rgba(0, 0, 0, 0);
+  border-radius: var(--border-radius);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 1rem;
+  color: var(--text-color);
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 .border-clickable {
   transition: border-color 0.2s cubic-bezier(0.05, 0.74, 0.2, 0.99);
   &:hover {
     border-color: var(--primary-color);
+  }
+}
+
+.pointerOnHover{
+  &:hover {
     cursor: pointer;
   }
 }
@@ -87,10 +129,11 @@
 .icon-button {
   font-size: 1.2rem;
   color: var(--text-color);
+  width: min-content;
 }
 
-.color-surface-card{
-  background-color: var(--surface-card)
+.color-surface-card {
+  background-color: var(--surface-card);
 }
 
 @media screen and (max-width: 960px) {
