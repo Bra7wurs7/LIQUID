@@ -8,7 +8,7 @@ export class Note {
   /** The actual markdown content of a note */
   content: string;
   constructor(
-    uniqueName: string = 'New Note',
+    uniqueName: string = '',
     categoryName?: string,
     attributesMap?: any,
     content: string = '',

@@ -27,6 +27,8 @@ import {OverlayPanelModule} from 'primeng/overlaypanel';
 import {MenuModule} from 'primeng/menu';
 import {ToastModule} from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { CategoryPanelComponent } from './components/category-panel/category-panel.component';
+import {TooltipModule} from 'primeng/tooltip';
 
 @NgModule({
   declarations: [
@@ -34,6 +36,7 @@ import { MessageService } from 'primeng/api';
     NotePanelComponent,
     ParseMarkupPipe,
     FillAttributePipe,
+    CategoryPanelComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,6 +61,7 @@ import { MessageService } from 'primeng/api';
     OverlayPanelModule,
     MenuModule,
     ToastModule,
+    TooltipModule,
   ],
   providers: [MessageService],
   bootstrap: [AppComponent]

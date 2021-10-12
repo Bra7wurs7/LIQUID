@@ -20,8 +20,8 @@ p-inputSwitch {
   height: 28px;
 }
 
-//Hiding the default toggler for note panels, so it doesn't block the far right side of the panel header
-.note-panel{
+//Hiding the default toggler for panels, so it doesn't block the far right side of the panel header
+.panel-hide-default-toggler{
   .p-panel-toggler{
     display: none;
   }

@@ -1,5 +1,5 @@
 import { Category } from "./category.model";
-import { GenericPanel, NotePanel } from "./note-panel.model";
+import { CategoryPanel, GenericPanel, NotePanel } from "./panel.model";
 import { Note } from "./note.model";
 import { AttributeContainer, AttributeItem, AttributeTable } from "./noteAttribute.model";
 import { PanelView } from "./panelView.model";
@@ -247,7 +247,7 @@ export const defaultProject: StringifiableProject = new StringifiableProject(
   },
   [
     {
-      panels: [new NotePanel('defaultNote')],
+      panels: [new CategoryPanel('defaultCategory'), new NotePanel('defaultNote')],
       activePanelIndex: 0,
     }
   ],

@@ -1,4 +1,4 @@
-import { GenericPanel } from "./note-panel.model";
+import { GenericPanel } from "./panel.model";
 
 export class PanelView {
   panels: GenericPanel[] = [];

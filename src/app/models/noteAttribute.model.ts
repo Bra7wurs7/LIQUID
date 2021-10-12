@@ -4,6 +4,7 @@ export class AttributeTable {
 }
 
 abstract class NoteAttribute {
+  isContainer: boolean = false;
   width: 'full' | 'max' | 'min' | 'unset';
   bordered: boolean;
   visibility: 'combat' | 'both' | 'nocombat';
@@ -53,6 +54,7 @@ export class AttributeItem extends NoteAttribute {
 }
 
 export class AttributeContainer extends NoteAttribute {
+  isContainer = true;
   direction: 'row' | 'col' = 'row';
   justify: 'start' | 'end' | 'center' | 'around' | 'between' | 'evenly';
   align: 'stretch' | 'start' | 'center' | 'end' | 'baseline';

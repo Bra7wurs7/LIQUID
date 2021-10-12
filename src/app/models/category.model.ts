@@ -7,7 +7,7 @@ export class Category {
   attributeTableTemplate: AttributeTable;
   contentTemplate: string;
   constructor(
-    uniqueName: string = 'New Category',
+    uniqueName: string = '',
     attributeTableTemplate: AttributeTable = new AttributeTable(),
     contentTemplate: string = '',
   ) {

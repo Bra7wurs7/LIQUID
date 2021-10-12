@@ -12,7 +12,7 @@
           <i class="pi pi-ellipsis-v icon-button"></i>
         </div>
       </div>
-      <p-panel [toggleable]="true" #notes class="sidemenuPanel note-panel notes" [collapsed]="true">
+      <p-panel [toggleable]="true" #notes class="sidemenuPanel panel-hide-default-toggler notes" [collapsed]="true">
         <ng-template pTemplate="header">
           <div class="flex justify-content-between align-items-center">
             <button (click)="notes.toggle($event); $event.stopPropagation();" pButton pRipple type="button"
@@ -48,7 +48,7 @@
           <div *ngFor="let key of noteKeys" style="padding: 1px">
             <div class="flex flex-row justify-content-between hideChildUntilHoverParent">
               <div class="unbordered-element h-2rem pointerOnHover" (click)="onNoteClick(key, contentPanel)">
-                {{project?.notes?.get(key)?.uniqueName}}
+                {{key}}
               </div>
               <div
                 class="button-unbordered border-clickable flex flex-column flex-wrap align-content-center justify-content-center color-surface-card hideChildUntilHoverChild"
@@ -59,7 +59,7 @@
           </div>
         </ng-template>
       </p-panel>
-      <p-panel [toggleable]="true" #categories class="sidemenuPanel note-panel categories" [collapsed]="true">
+      <p-panel [toggleable]="true" #categories class="sidemenuPanel panel-hide-default-toggler categories" [collapsed]="true">
         <ng-template pTemplate="header">
           <div class="flex justify-content-between align-items-center">
             <button (click)="categories.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
@@ -78,17 +78,29 @@
           <p-overlayPanel #addCategoryOverlay>
             <ng-template pTemplate>
               <div class="flex flex-wrap flex-column">
-                <input type="text" placeholder="Title for new category" pInputText style="margin-bottom: 5px;" />
-                <button pButton pRipple type="button" icon="pi pi-plus" label="Category"
+                <input type="text" placeholder="Title for new category" pInputText style="margin-bottom: 5px;" #categoryTitleInput/>
+                <button pButton pRipple type="button" icon="pi pi-plus" label="Category" (click)="onAddCategoryClick(categoryTitleInput.value)"
                   class="p-button-outlined"></button>
               </div>
             </ng-template>
           </p-overlayPanel>
         </ng-template>
-        <ng-template pTemplate="content">
+        <ng-template pTemplate="content" *ngIf="categoryKeys">
+          <div *ngFor="let key of categoryKeys" style="padding: 1px">
+            <div class="flex flex-row justify-content-between hideChildUntilHoverParent">
+              <div class="unbordered-element h-2rem pointerOnHover" (click)="onCategoryClick(key, contentPanel)">
+                {{key}}
+              </div>
+              <div
+                class="button-unbordered border-clickable flex flex-column flex-wrap align-content-center justify-content-center color-surface-card hideChildUntilHoverChild"
+                style="width: 32px;">
+                <i class="pi pi-ellipsis-v icon-button"></i>
+              </div>
+            </div>
+          </div>
         </ng-template>
       </p-panel>
-      <p-panel [toggleable]="true" #chronicle class="sidemenuPanel note-panel chronicle" [collapsed]="true">
+      <p-panel [toggleable]="true" #chronicle class="sidemenuPanel panel-hide-default-toggler chronicle" [collapsed]="true">
         <ng-template pTemplate="header">
           <div class="flex justify-content-between align-items-center">
             <button (click)="chronicle.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
@@ -113,7 +125,7 @@
         <ng-template pTemplate="content">
         </ng-template>
       </p-panel>
-      <p-panel [toggleable]="true" #atlas class="sidemenuPanel note-panel atlas" [collapsed]="true">
+      <p-panel [toggleable]="true" #atlas class="sidemenuPanel panel-hide-default-toggler atlas" [collapsed]="true">
         <ng-template pTemplate="header">
           <div class="flex justify-content-between align-items-center">
             <button (click)="atlas.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
@@ -138,7 +150,7 @@
         <ng-template pTemplate="content">
         </ng-template>
       </p-panel>
-      <p-panel [toggleable]="true" #generators class="sidemenuPanel note-panel generators" [collapsed]="true">
+      <p-panel [toggleable]="true" #generators class="sidemenuPanel panel-hide-default-toggler generators" [collapsed]="true">
         <ng-template pTemplate="header">
           <div class="flex justify-content-between align-items-center">
             <button (click)="generators.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
@@ -163,7 +175,7 @@
         <ng-template pTemplate="content">
         </ng-template>
       </p-panel>
-      <p-panel [toggleable]="true" #resources class="sidemenuPanel note-panel resources" [collapsed]="true">
+      <p-panel [toggleable]="true" #resources class="sidemenuPanel panel-hide-default-toggler resources" [collapsed]="true">
         <ng-template pTemplate="header">
           <div class="flex justify-content-between align-items-center">
             <button (click)="resources.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
@@ -217,11 +229,15 @@
     </div>
     <p-scrollPanel class="content" [style]="{width: '100%', height: '100%'}" styleClass="custombar" #contentPanel
       id="contentPanel">
-      <div style="padding-bottom: 12px;" *ngIf="project">
+      <div style="padding-bottom: 20vh;" *ngIf="project">
         <div *ngFor="let panel of project.views[project.activeViewIndex].panels">
           <div class="pseudo" #pseudo></div>
-          <app-note-panel *ngIf="panelIsInstanceOf(panel, notePanelType) " [notes]="project.notes"
-            [categories]="project.categories" [noteName]="castToNotePanel(panel).noteName" [panel]="panel"></app-note-panel>
+          <app-note-panel *ngIf="panelIsInstanceOf(panel, notePanelType)" [notes]="project.notes"
+            [categories]="project.categories" [noteName]="castToNotePanel(panel).noteName" [panel]="panel"
+            (closePanelEvent)="removePanelFromActiveView(panel)"></app-note-panel>
+          <app-category-panel *ngIf="panelIsInstanceOf(panel, categoryPanelType)"
+            [categories]="project.categories" [categoryName]="castToCategoryPanel(panel).categoryName" [panel]="panel"
+            (closePanelEvent)="removePanelFromActiveView(panel)"></app-category-panel>
         </div>
       </div>
       <div class="pseudo"></div>

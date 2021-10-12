@@ -12,4 +12,12 @@ export class NotePanel extends GenericPanel {
   }
 }
 
-
+export class CategoryPanel extends GenericPanel {
+  categoryName: string;
+  constructor(
+    categoryName: string,
+  ) {
+    super();
+    this.categoryName = categoryName;
+  }
+}

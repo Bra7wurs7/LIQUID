@@ -1,6 +1,6 @@
-<p-panel [toggleable]="true" #panel class="panel-hide-default-toggler" *ngIf="note">
+<p-panel [toggleable]="true" #panel class="panel-hide-default-toggler" *ngIf="category">
   <ng-template pTemplate="header">
-    {{note.uniqueName}}
+    {{category.uniqueName}}
     <div class="flex-grow-1"></div>
 
     <div class="flex-grow-1"></div>
@@ -48,12 +48,10 @@
       </div>
     </ng-template>
     <ng-template #noteAttributeItemTemplate let-item="item">
-      <input pInputText [disabled]="true" size="10" style="margin: 1px" *ngIf="editMode && item.separator === 'none' && item.constant"
-        type="text" placeholder="Enter fixed value" class="p-inputtext-sm w-max"
-        [value]="item.content">
+      <input pInputText size="10" style="margin: 1px" *ngIf="editMode && item.separator === 'none' && item.constant"
+        type="text" placeholder="Enter Value" class="p-inputtext-sm w-max" [(ngModel)]="item.content">
       <input pInputText size="10" style="margin: 1px" *ngIf="editMode && item.separator === 'none' && !item.constant"
-        type="text" placeholder="Enter fixed value" class="p-inputtext-sm w-max"
-        [(ngModel)]="note.attributesMap[item.contentSlotId]">
+        type="text" placeholder="No Default Given" class="p-inputtext-sm w-max" [(ngModel)]="item.content">
       <span *ngIf="!editMode && item.separator === 'none'" [ngClass]="{
         'w-full': item.width === 'full',
         'w-max': item.width === 'max',
@@ -66,28 +64,26 @@
         'bold': item.bold,
         'paddedContent': item.content || item.contentSlotId
       }">
-        {{item.constant ? item.content : (item.contentSlotId | fillAttribute:note.attributesMap) ||
-        item.content}}
+        {{item.content}}
       </span>
       <div *ngIf="item.separator !== 'none'" [ngClass]="{
         'separator-thin': item.separator === 'thin',
         'separator-medium': item.separator === 'medium',
         'separator-wide': item.separator === 'wide'
-      }"></div>
+      }">
+      </div>
     </ng-template>
-    <div *ngIf="category" class="flex attributes" style="margin-top: 22px;" [ngClass]="{
-      'float-left': category.attributeTableTemplate.float === 'left' && !editMode,
-      'float-right': category.attributeTableTemplate.float === 'right' && !editMode}">
+    <div *ngIf="category" class="flex attributes" style="margin-top: 22px;">
       <div *ngFor="let child of category.attributeTableTemplate.children">
         <ng-container
           *ngTemplateOutlet="(child.isContainer ? noteAttributeContainerTemplate : noteAttributeItemTemplate); context:{ container: (child.isContainer ? child : undefined), item: (!child.isContainer ? child : undefined)}">
         </ng-container>
       </div>
     </div>
-    <div *ngIf="!editMode" [innerHtml]="note.content| parseMarkup"></div>
+    <div *ngIf="!editMode" [innerHtml]="category.contentTemplate | parseMarkup"></div>
     <div *ngIf="editMode">
-      <textarea pInputTextarea [placeholder]="'Enter note text here'" [(ngModel)]="note.content"
-        style="width: 100%; max-width: 100%;" [autoResize]="true"></textarea>
+      <textarea pInputTextarea [placeholder]="'Enter category template text here'"
+        [(ngModel)]="category.contentTemplate" style="width: 100%; max-width: 100%;" [autoResize]="true"></textarea>
     </div>
   </ng-template>
 </p-panel>
