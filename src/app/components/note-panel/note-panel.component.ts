@@ -35,9 +35,7 @@ export class NotePanelComponent extends GenericPanelComponent implements OnInit 
       this.category = this.categories?.get(this.note.categoryName);
     }
     if (this.panel) {
-      console.log(this.panel);
       this.panel.htmlElement = this.elRef.nativeElement;
-      console.log(this.panel);
     }
   }
 
