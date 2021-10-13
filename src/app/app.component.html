@@ -211,21 +211,21 @@
   </div>
   <div class="center flex min-h-full w-full relative overflow-hide">
     <div class="absolute left-0 bottom-0 flex flex-column z-2 footer">
-      <div class="element pi pi-arrow-circle-up"></div>
+      <div class="element pi pi-arrow-circle-up pointerOnHover" (click)="contentPanel.scrollTop(0)"></div>
       <div class="pseudo"></div>
-      <div class="element pi pi-arrow-circle-down"></div>
+      <div class="element pi pi-arrow-circle-down pointerOnHover" (click)="contentPanel.scrollTop(infinity)"></div>
       <div class="pseudo"></div>
-      <div class="element pi pi-window-maximize"></div>
+      <div class="element pi pi-window-maximize pointerOnHover"></div>
       <div class="pseudo"></div>
-      <div class="element pi pi-window-minimize"></div>
+      <div class="element pi pi-window-minimize pointerOnHover"></div>
     </div>
     <div class="absolute left-43px bottom-0 flex flex-row z-3 footer">
-      <div class="pi pi-globe element"></div>
+      <div class="pi pi-globe element pointerOnHover"></div>
       <div class="pseudo"></div>
-      <div class="pi pi-plus-circle element"></div>
+      <div class="pi pi-plus-circle element pointerOnHover"></div>
     </div>
     <div class="absolute right-0 bottom-0 flex flex-row z-3 footer">
-      <div class="pi pi-users element"></div>
+      <div class="pi pi-users element pointerOnHover"></div>
     </div>
     <p-scrollPanel class="content" [style]="{width: '100%', height: '100%'}" styleClass="custombar" #contentPanel
       id="contentPanel">
@@ -269,4 +269,5 @@
       </div>
     </div>
   </div>
+  <p-toast position="bottom-center"></p-toast>
 </div>

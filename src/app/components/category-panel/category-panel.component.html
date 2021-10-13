@@ -6,8 +6,26 @@
     <div class="flex-grow-1"></div>
   </ng-template>
   <ng-template pTemplate="icons">
+    <button *ngIf="editMode"
+      (click)="$event.stopPropagation(); deleteCellMode = !deleteCellMode; deleteCellMode && (editItemMode = editContainerMode = addCellMode = false)"
+      pButton pRipple type="button" icon="pi pi-trash" class="p-panel-header-icon"
+      [ngClass]="{'buttonActive': deleteCellMode}" style="margin-left: 2px" pTooltip="Delete a table cell"></button>
+    <button *ngIf="editMode"
+      (click)="$event.stopPropagation(); editItemMode = !editItemMode; editItemMode && (deleteCellMode = addCellMode = false)"
+      pButton pRipple type="button" icon="pi pi-image" class="p-panel-header-icon"
+      [ngClass]="{'buttonActive': editItemMode}" style="margin-left: 2px" pTooltip="Edit a table item cell"></button>
+    <button *ngIf="editMode"
+      (click)="$event.stopPropagation(); editContainerMode = !editContainerMode; editContainerMode && (deleteCellMode = addCellMode = false)"
+      pButton pRipple type="button" icon="pi pi-table" class="p-panel-header-icon"
+      [ngClass]="{'buttonActive': editContainerMode}" style="margin-left: 2px"
+      pTooltip="Edit a table container cell"></button>
+    <button *ngIf="editMode"
+      (click)="$event.stopPropagation(); addCellMode = !addCellMode; addCellMode && (editItemMode = editContainerMode = deleteCellMode = false)"
+      pButton pRipple type="button" icon="pi pi-plus" class="p-panel-header-icon"
+      [ngClass]="{'buttonActive': addCellMode}" style="margin-left: 2px" pTooltip="Add attribute table cell"></button>
     <button (click)="$event.stopPropagation(); editMode = !editMode" pButton pRipple type="button" icon="pi pi-pencil"
-      class="p-panel-header-icon" [ngClass]="{'editModeActive': editMode}"></button>
+      class="p-panel-header-icon" [ngClass]="{'buttonActive': editMode}" style="margin-left: 2px"
+      pTooltip="Edit category"></button>
     <span class="p-buttonset">
       <button (click)="$event.stopPropagation()" pButton pRipple type="button" icon="pi pi-angle-up"
         class="p-panel-header-icon"></button>
@@ -20,7 +38,7 @@
     </span>
   </ng-template>
   <ng-template pTemplate="content">
-    <ng-template #noteAttributeContainerTemplate let-container="container">
+    <ng-template #noteAttributeContainerTemplate let-container="container" let-parentContainer="parentContainer">
       <div class="flex" #noteAttributeContainer [ngClass]="{
         'w-full': container.width === 'full',
         'w-max': container.width === 'max',
@@ -28,30 +46,52 @@
         'bordered': container.bordered,
         'flex-row': container.direction === 'row',
         'flex-column': container.direction === 'col',
-        'justify-content-start': container.direction === 'start',
-        'justify-content-end': container.direction === 'end',
-        'justify-content-center': container.direction === 'center',
-        'justify-content-between': container.direction === 'around',
-        'justify-content-around': container.direction === 'between',
-        'justify-content-evenly': container.direction === 'evenly',
+        'justify-content-start': container.justify === 'start',
+        'justify-content-end': container.justify === 'end',
+        'justify-content-center': container.justify === 'center',
+        'justify-content-between': container.justify === 'around',
+        'justify-content-around': container.justify === 'between',
+        'justify-content-evenly': container.justify === 'evenly',
         'align-items-stretch': container.align === 'stretch',
         'align-items-start': container.align === 'start',
         'align-items-center': container.align === 'center',
         'align-items-end': container.align === 'end',
-        'align-items-baseline': container.align === 'baseline'
-      }">
-        <div *ngFor="let child of container.children">
+        'align-items-baseline': container.align === 'baseline',
+        'editMode': editMode,
+        'editCellMode': editContainerMode && editMode,
+        'deleteCellMode': deleteCellMode && editMode
+      }"
+        (click)="editContainerMode && onEditCellClick(container, editCellOverlay, $event, parentContainer.children); deleteCellMode && deleteCell(container, parentContainer.children); $event.stopPropagation()">
+        <div *ngIf="addCellMode && editMode"
+          (click)="onNewCellButtonClick(0, editCellOverlay, $event, container.children)"
+          class="flex addItemButton align-self-stretch align-items-center justify-content-center"
+          [pTooltip]="'Add cell to start of ' + getDirectionName(container.direction)"><i class="pi pi-plus-circle"></i>
+        </div>
+        <div class="flex"
+          *ngFor="let child of container.children; let last = last; let first = first; let index = index"
+          style="flex-direction: inherit;">
           <ng-container
-            *ngTemplateOutlet="(child.isContainer ? noteAttributeContainerTemplate : noteAttributeItemTemplate); context:{ container: (child.isContainer ? child : undefined), item: (!child.isContainer ? child : undefined)}">
+            *ngTemplateOutlet="(child.isContainer ? noteAttributeContainerTemplate : noteAttributeItemTemplate); context:{ container: (child.isContainer ? child : undefined), item: (!child.isContainer ? child : undefined), parentContainer: container}">
           </ng-container>
+          <div *ngIf="addCellMode && editMode && !last"
+            (click)="onNewCellButtonClick(index, editCellOverlay, $event, container.children)"
+            class="flex addItemButton align-self-stretch align-items-center justify-content-center"
+            [pTooltip]="'Add cell to ' + getDirectionName(container.direction)"><i class="pi pi-plus-circle"></i>
+          </div>
+        </div>
+        <div *ngIf="addCellMode && editMode && container.children.length > 0"
+          (click)="onNewCellButtonClick(container.children.length, editCellOverlay, $event, container.children)"
+          class="flex addItemButton align-self-stretch align-items-center justify-content-center"
+          [pTooltip]="'Add cell to end of ' + getDirectionName(container.direction)"><i class="pi pi-plus-circle"></i>
         </div>
       </div>
     </ng-template>
-    <ng-template #noteAttributeItemTemplate let-item="item">
-      <input pInputText size="10" style="margin: 1px" *ngIf="editMode && item.separator === 'none' && item.constant"
-        type="text" placeholder="Enter Value" class="p-inputtext-sm w-max" [(ngModel)]="item.content">
-      <input pInputText size="10" style="margin: 1px" *ngIf="editMode && item.separator === 'none' && !item.constant"
-        type="text" placeholder="No Default Given" class="p-inputtext-sm w-max" [(ngModel)]="item.content">
+    <ng-template #noteAttributeItemTemplate let-item="item" let-parentContainer="parentContainer">
+      <input pInputText size="10" style="margin: 1px" *ngIf="editMode && item.separator === 'none'" type="text"
+        [placeholder]="item.constant ? 'Enter Value' : 'No Default Given'" class="p-inputtext-sm w-max"
+        [(ngModel)]="item.content"
+        [ngClass]="{'editCellMode': editItemMode && editMode, 'deleteCellMode': deleteCellMode && editMode}"
+        (click)="editItemMode && onEditCellClick(item, editCellOverlay, $event, parentContainer.children); deleteCellMode && deleteCell(item, parentContainer.children); editItemMode || deleteCellMode && $event.stopPropagation()">
       <span *ngIf="!editMode && item.separator === 'none'" [ngClass]="{
         'w-full': item.width === 'full',
         'w-max': item.width === 'max',
@@ -66,17 +106,93 @@
       }">
         {{item.content}}
       </span>
-      <div *ngIf="item.separator !== 'none'" [ngClass]="{
+      <div *ngIf="item.separator !== 'none'"
+        (click)="editItemMode && onEditCellClick(item, editCellOverlay, $event, parentContainer.children); deleteCellMode && deleteCell(item, parentContainer.children); editItemMode || deleteCellMode && $event.stopPropagation()"
+        [ngClass]="{
         'separator-thin': item.separator === 'thin',
         'separator-medium': item.separator === 'medium',
-        'separator-wide': item.separator === 'wide'
+        'separator-wide': item.separator === 'wide',
+        'editCellMode': editItemMode && editMode,
+        'deleteCellMode': deleteCellMode && editMode
       }">
       </div>
     </ng-template>
+    <p-overlayPanel #editCellOverlay [showCloseIcon]="true" [dismissable]="false" (onHide)="oldCell = undefined"
+      appendTo="body">
+      <ng-template pTemplate>
+        <div class="flex flex-column">
+          <span class="optionLabel">Type</span>
+          <p-selectButton #cellType [(ngModel)]="newCellType"
+            [options]="[{name: 'Container', value: 'container'}, {name: 'Item', value: 'item'}]" optionLabel="name"
+            optionValue="value"></p-selectButton>
+          <div *ngIf="cellType.value" style="margin-top: 10px">
+            <span class="optionLabel">Width</span>
+            <p-selectButton #cellWidth [(ngModel)]="newCellWidth"
+              [options]="[{name: 'Automatic', value: 'unset'}, {name: 'Minimum Required', value: 'min'}, {name: 'Maximum Required', value: 'max'}, {name: 'Maximum Available', value: 'full'}]"
+              optionLabel="name" optionValue="value"></p-selectButton>
+            <span class="optionLabel">Border</span>
+            <p-selectButton #cellBorder [(ngModel)]="newCellBorder"
+              [options]="[{name: 'Hide Border', value: false}, {name: 'Show Border', value: true}]" optionLabel="name"
+              optionValue="value"></p-selectButton>
+          </div>
+          <div *ngIf="cellType.value === 'container'" style="margin-top: 10px">
+            <span class="optionLabel">Container Direction</span>
+            <p-selectButton #cellDirection [(ngModel)]="newCellDirection"
+              [options]="[{name: 'Row', value: 'row'},{name: 'Column', value: 'col'}]" optionLabel="name"
+              optionValue="value"></p-selectButton>
+            <span class="optionLabel">Justification</span>
+            <p-selectButton #cellJustify [(ngModel)]="newCellJustify"
+              [options]="[{name: 'Start', value: 'start'}, {name: 'End', value: 'end'}, {name: 'Center', value: 'center'}, {name: 'Space Around', value: 'around'}, {name: 'Space Between', value: 'between'}, {name: 'Space Evenly', value: 'evenly'}]"
+              optionLabel="name" optionValue="value"></p-selectButton>
+            <span class="optionLabel">Alignment</span>
+            <p-selectButton #cellAlign [(ngModel)]="newCellAlign"
+              [options]="[{name: 'Stretch', value: 'stretch'}, {name: 'Start', value: 'start'}, {name: 'End', value: 'end'}, {name: 'Baseline', value: 'baseline'}]"
+              optionLabel="name" optionValue="value"></p-selectButton>
+          </div>
+          <div *ngIf="cellType.value === 'item'" style="margin-top: 10px">
+            <span class="optionLabel">Separator</span>
+            <p-selectButton #cellSeparator [(ngModel)]="newCellSeparator"
+              [options]="[{name: 'No Separator', value: 'none'}, {name: 'Thin', value: 'thin'}, {name: 'Medium', value: 'medium'}, {name: 'Wide', value: 'wide'}]"
+              optionLabel="name" optionValue="value"></p-selectButton>
+            <span *ngIf="cellSeparator.value === 'none'" class="optionLabel">Font Size</span>
+            <p-selectButton #cellFontSize *ngIf="cellSeparator.value === 'none'" [(ngModel)]="newCellFontSize"
+              [options]="[{name: 'Small', value: 'small'}, {name: 'Medium', value: 'medium'}, {name: 'Large', value: 'large'}]"
+              optionLabel="name" optionValue="value"></p-selectButton>
+            <span class="optionLabel" *ngIf="cellSeparator.value === 'none'">Font Style</span>
+            <p-selectButton #cellFontStyle *ngIf="cellSeparator.value === 'none'" [(ngModel)]="newCellStyle"
+              [options]="[{name: 'Normal', value: 'none'}, {name: 'Italic', value: 'italic'}, {name: 'Bold', value: 'bold'}, {name: 'Bold + Italic', value: 'both'}]"
+              optionLabel="name" optionValue="value"></p-selectButton>
+            <span class="optionLabel" *ngIf="cellSeparator.value === 'none'">Variable / Constant</span>
+            <p-selectButton #cellConstant *ngIf="cellSeparator.value === 'none'" [(ngModel)]="newCellConstant"
+              [options]="[{name: 'Variable value between notes', value: false}, {name: 'Constant value between notes', value: true}]"
+              optionLabel="name" optionValue="value"></p-selectButton>
+            <span class="optionLabel" *ngIf="cellSeparator.value === 'none' && !newCellConstant">Variable Item ID</span>
+            <div class="flex flex-row" *ngIf="!newCellConstant">
+              <input #cellId type="text" placeholder="ID is Required!"
+                *ngIf="cellSeparator.value === 'none' && !newCellConstant" pInputText [(ngModel)]="newCellId"
+                style="margin-right: 2px" />
+              <button pButton pRipple class="p-button-danger" *ngIf="cellSeparator.value === 'none' && !newCellConstant"
+                label="Generate New (Advanced)" icon="pi pi-refresh" iconPos="right"
+                (click)="onGenerateNewIdClick()"></button>
+            </div>
+          </div>
+          <div *ngIf="cellType.value" style="margin-top: 10px" class="flex justify-content-end">
+            <p-button label="Confirm" icon="pi pi-check" iconPos="right"
+              (click)="saveCellToChildren(parentContainer); editCellOverlay.hide()">
+            </p-button>
+          </div>
+        </div>
+      </ng-template>
+    </p-overlayPanel>
     <div *ngIf="category" class="flex attributes" style="margin-top: 22px;">
+      <div *ngIf="addCellMode && editMode && category.attributeTableTemplate.children.length === 0"
+          (click)="category.attributeTableTemplate.children.push(newContainer())"
+          class="flex addItemButton w-full align-items-center justify-content-center"
+          [pTooltip]="'Add attribute table'"><i class="pi pi-plus-circle"></i>
+        </div>
       <div *ngFor="let child of category.attributeTableTemplate.children">
         <ng-container
-          *ngTemplateOutlet="(child.isContainer ? noteAttributeContainerTemplate : noteAttributeItemTemplate); context:{ container: (child.isContainer ? child : undefined), item: (!child.isContainer ? child : undefined)}">
+          *ngTemplateOutlet="(child.isContainer ? noteAttributeContainerTemplate : noteAttributeItemTemplate); context:{ container: (child.isContainer ? child : undefined), item: (!child.isContainer ? child : undefined), parentContainer: category.attributeTableTemplate}">
         </ng-container>
       </div>
     </div>
@@ -87,3 +203,4 @@
     </div>
   </ng-template>
 </p-panel>
+<p-confirmDialog #overlayOverlay [baseZIndex]="3000" width="425" appendTo="body"></p-confirmDialog>

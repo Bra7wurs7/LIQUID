@@ -29,6 +29,9 @@ import {ToastModule} from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { CategoryPanelComponent } from './components/category-panel/category-panel.component';
 import {TooltipModule} from 'primeng/tooltip';
+import {SelectButtonModule} from 'primeng/selectbutton';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {ConfirmationService} from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -62,8 +65,10 @@ import {TooltipModule} from 'primeng/tooltip';
     MenuModule,
     ToastModule,
     TooltipModule,
+    SelectButtonModule,
+    ConfirmDialogModule
   ],
-  providers: [MessageService],
+  providers: [ConfirmationService, MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

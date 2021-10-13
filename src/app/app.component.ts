@@ -21,6 +21,8 @@ export class AppComponent implements OnInit {
   categoryKeys: string[] = [];
   title = 'GAS';
 
+  infinity: number = Infinity;
+
   secondarMenu: TreeNode[];
   constructor(private messageService: MessageService) {
     this.secondarMenu = [

@@ -81,7 +81,7 @@ span {
 }
 
 .p-panel-header-icon{
-  &.editModeActive{
+  &.buttonActive{
     color: var(--primary-color);
     border: 1px solid var(--primary-color);
   }

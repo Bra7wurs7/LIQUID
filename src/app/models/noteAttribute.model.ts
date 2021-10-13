@@ -1,9 +1,12 @@
 export class AttributeTable {
   float: 'left' | 'right' | 'unset' = 'unset';
-  children: NoteAttribute[] = [];
+  children: NoteAttribute[];
+  constructor() {
+    this.children = [new AttributeContainer([], 'col')];
+  }
 }
 
-abstract class NoteAttribute {
+export abstract class NoteAttribute {
   isContainer: boolean = false;
   width: 'full' | 'max' | 'min' | 'unset';
   bordered: boolean;

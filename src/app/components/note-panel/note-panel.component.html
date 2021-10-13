@@ -7,7 +7,7 @@
   </ng-template>
   <ng-template pTemplate="icons">
     <button (click)="$event.stopPropagation(); editMode = !editMode" pButton pRipple type="button" icon="pi pi-pencil"
-      class="p-panel-header-icon" [ngClass]="{'editModeActive': editMode}"></button>
+      class="p-panel-header-icon" [ngClass]="{'buttonActive': editMode}"></button>
     <span class="p-buttonset">
       <button (click)="$event.stopPropagation()" pButton pRipple type="button" icon="pi pi-angle-up"
         class="p-panel-header-icon"></button>
@@ -28,12 +28,12 @@
         'bordered': container.bordered,
         'flex-row': container.direction === 'row',
         'flex-column': container.direction === 'col',
-        'justify-content-start': container.direction === 'start',
-        'justify-content-end': container.direction === 'end',
-        'justify-content-center': container.direction === 'center',
-        'justify-content-between': container.direction === 'around',
-        'justify-content-around': container.direction === 'between',
-        'justify-content-evenly': container.direction === 'evenly',
+        'justify-content-start': container.justify === 'start',
+        'justify-content-end': container.justify === 'end',
+        'justify-content-center': container.justify === 'center',
+        'justify-content-between': container.justify === 'around',
+        'justify-content-around': container.justify === 'between',
+        'justify-content-evenly': container.justify === 'evenly',
         'align-items-stretch': container.align === 'stretch',
         'align-items-start': container.align === 'start',
         'align-items-center': container.align === 'center',
