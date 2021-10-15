@@ -1,13 +1,7 @@
-export class AttributeTable {
-  float: 'left' | 'right' | 'unset' = 'unset';
-  children: NoteAttribute[];
-  constructor() {
-    this.children = [new AttributeContainer([], 'col')];
-  }
-}
+import { serializable } from "../helper/serialize.helper";
 
 export abstract class NoteAttribute {
-  isContainer: boolean = false;
+  isContainer: boolean;
   width: 'full' | 'max' | 'min' | 'unset';
   bordered: boolean;
   visibility: 'combat' | 'both' | 'nocombat';
@@ -19,16 +13,20 @@ export abstract class NoteAttribute {
     visibility: 'combat' | 'both' | 'nocombat' = 'both',
     content: string = '',
     contentSlotId: string = '',
+    isContainer: boolean = false,
   ) {
     this.width = width;
     this.bordered = bordered;
     this.visibility = visibility;
     this.content = content;
     this.contentSlotId = contentSlotId;
+    this.isContainer = isContainer;
   }
 }
 
+@serializable
 export class AttributeItem extends NoteAttribute {
+  readonly className: string = 'AttributeItem';
   separator: 'thin' | 'medium' | 'wide' | 'none';
   fontSize: 'small' | 'medium' | 'large';
   italic: boolean;
@@ -56,7 +54,9 @@ export class AttributeItem extends NoteAttribute {
   }
 }
 
+@serializable
 export class AttributeContainer extends NoteAttribute {
+  readonly className: string = 'AttributeContainer';
   isContainer = true;
   direction: 'row' | 'col' = 'row';
   justify: 'start' | 'end' | 'center' | 'around' | 'between' | 'evenly';
@@ -76,6 +76,17 @@ export class AttributeContainer extends NoteAttribute {
     this.direction = direction;
     this.justify = justify;
     this.align = align;
+  }
+}
+
+@serializable
+export class AttributeTable {
+  readonly className: string = 'AttributeTable';
+  float: 'left' | 'right' | 'unset';
+  children: NoteAttribute[];
+  constructor(float: 'left' | 'right' | 'unset' = 'unset', children: NoteAttribute[] | undefined = undefined) {
+    this.float = float;
+    this.children = children ?? [new AttributeContainer([], 'col')];
   }
 }
 

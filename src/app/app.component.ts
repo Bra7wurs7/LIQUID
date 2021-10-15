@@ -1,10 +1,11 @@
 import { Component, OnInit, Type } from '@angular/core';
-import { MessageService, TreeNode } from 'primeng/api';
+import { MenuItem, MessageService, TreeNode } from 'primeng/api';
 import { ScrollPanel } from 'primeng/scrollpanel';
 import { Category } from './models/category.model';
 import { CategoryPanel, GenericPanel, NotePanel } from './models/panel.model';
 import { Note } from './models/note.model';
-import { defaultProject, Project } from './models/project.model';
+import { defaultProject, Project, SerializableProject } from './models/project.model';
+import { LocalDriveService } from './services/localDrive/local-drive.service';
 
 @Component({
   selector: 'app-root',
@@ -27,70 +28,36 @@ export class AppComponent implements OnInit {
 
   infinity: number = Infinity;
 
-  secondarMenu: TreeNode[];
-  constructor(private messageService: MessageService) {
-    this.secondarMenu = [
+  saveMenu: MenuItem[];
+  loadMenu: MenuItem[];
+  constructor(private messageService: MessageService, private localdriveService: LocalDriveService) {
+    this.saveMenu = [
       {
-        label: 'Project',
-        icon: 'pi pi-fw pi-file',
-        children: [
-          {
-            label: 'Save',
-            icon: 'pi pi-fw pi-save',
-            children: [
-              {
-                label: 'To Drive',
-                icon: 'pi pi-fw pi-desktop'
-              },
-              {
-                label: 'To Browser',
-                icon: 'pi pi-fw pi-globe'
-              }
-            ]
-          },
-          {
-            label: 'Load',
-            icon: 'pi pi-fw pi-folder-open',
-            children: [
-              {
-                label: 'From Drive',
-                icon: 'pi pi-fw pi-desktop'
-              },
-              {
-                label: 'From Browser',
-                icon: 'pi pi-fw pi-globe'
-              }
-            ]
-          }
-        ]
+        label: 'Save to Browser'
       },
       {
-        label: 'Settings',
-        icon: 'pi pi-fw pi-sliders-h',
-        children: [
-          {
-            label: 'Left',
-            icon: 'pi pi-fw pi-align-left'
-          },
-          {
-            label: 'Right',
-            icon: 'pi pi-fw pi-align-right'
-          },
-          {
-            label: 'Center',
-            icon: 'pi pi-fw pi-align-center'
-          },
-          {
-            label: 'Justify',
-            icon: 'pi pi-fw pi-align-justify'
-          }
-        ]
+        label: 'Download to Disk'
       }
     ]
+
+    this.loadMenu = [
+      {
+        label: 'Save to Browser'
+      },
+      {
+        label: 'Download to Disk'
+      }
+    ]
+
   }
 
   ngOnInit() {
-    this.project = defaultProject.toProject();
+
+
+  }
+
+  loadProject(project: Project) {
+    this.project = project;
     for (const key of this.project.notes?.keys()) {
       this.noteKeys?.push(key);
     }
@@ -192,9 +159,7 @@ export class AppComponent implements OnInit {
   }
 
   navigateInternalLink(internallink: string) {
-    console.log(internallink);
     internallink.replace('[[', '').replace(']]', '');
-
   }
 
   getRelatedElements(panel: GenericPanel) {
@@ -208,7 +173,7 @@ export class AppComponent implements OnInit {
   }
 
   filterKeyArrays(filterString: string) {
-    if(filterString) {
+    if (filterString) {
       this.filteredNoteKeys = this.noteKeys.filter((key) => key.includes(filterString))
       this.filteredCategoryKeys = this.categoryKeys.filter((key) => key.includes(filterString))
     } else {
@@ -217,7 +182,18 @@ export class AppComponent implements OnInit {
     }
   }
 
-  log(a: any) {
-    console.log(a);
+  downloadProject() {
+    if (this.project) {
+      const serializableProject = this.project?.toSerializableProject()
+      this.localdriveService.saveToLocalDrive('fileName'+'.gasp', SerializableProject.serialize(serializableProject))
+    } else {
+      this.messageService.add({severity: 'warn', summary: 'You propably wanted to press "Upload" of "New", right?'})
+    }
+  }
+
+  onFileSelected(input: HTMLInputElement) {
+    if(input.files) {
+      this.localdriveService.loadFromLocalDrive(input.files[0]).then((res) => this.loadProject(res.toProject()));
+    }
   }
 }

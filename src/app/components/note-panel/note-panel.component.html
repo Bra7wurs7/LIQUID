@@ -3,7 +3,7 @@
     <div class="flex flex-row align-items-center">
       <p-autoComplete *ngIf="editMode" [(ngModel)]="note.categoryName" [suggestions]="filteredCategoryNames" (completeMethod)="searchCategory($event)" (onBlur)="filteredCategoryNames = []; updateCategory()" (onSelect)="filteredCategoryNames = []; updateCategory()"></p-autoComplete>
       <i *ngIf="editMode" class="pi pi-chevron-right" style="padding: 3px; font-size: 0.7em;"></i>
-      <span [ngClass]="{'isActivePanel': isActivePanel}">{{note.uniqueName}}</span>
+      <span [ngClass]="{'isActivePanel': isActivePanel}" class="notes">{{note.uniqueName}}</span>
     </div>
     <div class="flex-grow-1"></div>
     <div class="flex-grow-1"></div>

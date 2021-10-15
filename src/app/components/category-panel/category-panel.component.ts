@@ -85,7 +85,6 @@ export class CategoryPanelComponent extends GenericPanelComponent implements OnI
   }
 
   deleteCell(child: NoteAttribute, container: NoteAttribute[]){
-    console.log('AAA')
     this.confirmationService.confirm({
       message: 'Delete this Cell?',
       header: 'Delete Cell',
@@ -154,11 +153,9 @@ export class CategoryPanelComponent extends GenericPanelComponent implements OnI
         newNoteAttribute = new AttributeContainer();
         break;
     }
-    console.log(children);
     if(children) {
       children.splice(this.cellIndex, this.oldCell ? 1 : 0, newNoteAttribute)
     }
-    console.log(children);
   }
 
   getDirectionName(abb: string) {
@@ -170,10 +167,6 @@ export class CategoryPanelComponent extends GenericPanelComponent implements OnI
       default:
         return '';
     }
-  }
-
-  log(s: any) {
-    console.log(s);
   }
 
   newContainer(): AttributeContainer {

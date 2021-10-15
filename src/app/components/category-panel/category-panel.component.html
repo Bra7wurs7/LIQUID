@@ -1,6 +1,6 @@
 <p-panel [toggleable]="true" #panel class="panel-hide-default-toggler border-sides-type-color categories" *ngIf="category">
   <ng-template pTemplate="header">
-    <span [ngClass]="{'isActivePanel': isActivePanel}">{{category.uniqueName}}</span>
+    <span [ngClass]="{'isActivePanel': isActivePanel}" class="categories">{{category.uniqueName}}</span>
     <div class="flex-grow-1"></div>
 
     <div class="flex-grow-1"></div>

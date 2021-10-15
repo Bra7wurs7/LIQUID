@@ -1,6 +1,9 @@
+import { serializable } from "../helper/serialize.helper";
 import { AttributeTable } from "./noteAttribute.model";
 
+@serializable
 export class Category {
+  readonly className: string = 'Category'
   /** The name of the category, as well as its unique identifier */
   uniqueName: string;
   /** The attribute table used for notes of this category, filled with content by the fillAttribute pipe */

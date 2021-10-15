@@ -11,6 +11,6 @@ export class ParseMarkupPipe implements PipeTransform {
   }
 
   parseInternalLinks(htmlMarkdownString: string): string {
-    return htmlMarkdownString.replace(new RegExp('\\[\\[[^\\[]*\\]\\]','g'), '<span class="internalLink">$&</span>')
+    return htmlMarkdownString.replace(new RegExp('\\[\\[[^\\[]*\\]\\]','g'), '<span (click)="internalLinkActivatedEvent.emit($&)" class="internalLink">$&</span>')
   }
 }

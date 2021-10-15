@@ -3,6 +3,7 @@ import { CategoryPanel, GenericPanel, NotePanel } from "./panel.model";
 import { Note } from "./note.model";
 import { AttributeContainer, AttributeItem, AttributeTable } from "./noteAttribute.model";
 import { PanelView } from "./panelView.model";
+import { reviver, serializable } from "../helper/serialize.helper";
 
 export class Project {
   title: string;
@@ -32,7 +33,7 @@ export class Project {
     this.version = version
   }
 
-  toStringifiableProject(): StringifiableProject {
+  toSerializableProject(): SerializableProject {
     const notes: any = {};
     const categories: any = {};
     const views: PanelView[] = []
@@ -44,19 +45,22 @@ export class Project {
     })
     this.views.forEach((view) => {
       const viewCopy = Object.assign({}, view);
-      views.push(viewCopy);
       const panels: GenericPanel[] = [];
       viewCopy.panels.forEach((panel) => {
         const panelCopy = Object.assign({}, panel);
+        delete panelCopy.htmlElement;
         panels.push(panelCopy);
-        panelCopy.htmlElement = undefined;
       })
+      viewCopy.panels = panels;
+      views.push(viewCopy);
     })
-    return new StringifiableProject(this.title, notes, categories, views, this.activeViewIndex, this.version);
+    return new SerializableProject(this.title, notes, categories, views, this.activeViewIndex, this.version);
   }
 }
 
-export class StringifiableProject {
+@serializable
+export class SerializableProject {
+  readonly className: string = 'SerializableProject';
   title: string;
   /** Object representing a map of all notes for this project */
   notes: any;
@@ -68,11 +72,12 @@ export class StringifiableProject {
   activeViewIndex: number;
   /** version of GAS that this Project last saved with */
   version: number;
+
   constructor(
-    title: string,
-    notes: any,
-    categories: any,
-    views: PanelView[],
+    title: string = '',
+    notes: any = undefined,
+    categories: any = undefined,
+    views: PanelView[] = [],
     activeViewIndex: number = 0,
     version: number = 1,
   ) {
@@ -95,135 +100,141 @@ export class StringifiableProject {
     });
     return new Project(this.title, notes, categories, this.views, this.activeViewIndex, this.version);
   }
+
+  static serialize(serializableProject: SerializableProject): string {
+    return JSON.stringify(serializableProject, null, 2);
+  }
+
+  static deserialize(json: string): SerializableProject {
+    return JSON.parse(json, reviver);
+  }
 }
 
-const defaultAttributeTable: AttributeTable = {
-  float: 'right',
-  children: [
-    new AttributeContainer(
-      [
+const defaultAttributeTable: AttributeTable = new AttributeTable('right', [
+  new AttributeContainer(
+    [
+      new AttributeItem(
+        'Monster', 'none', 'large', false, true, true, 'full', false, 'both'
+      ),
+      new AttributeItem(
+        '', 'none', 'medium', true, false, false, 'full', false, 'both', '001'
+      ),
+      new AttributeItem(
+        '', 'medium'
+      ),
+      new AttributeContainer([
         new AttributeItem(
-          'Monster', 'none', 'large', false, true, true, 'full', false, 'both'
+          'Armor Class', 'none', 'medium', false, true, true, 'unset', false, 'both'
         ),
         new AttributeItem(
-          '', 'none', 'medium', true, false, false, 'full', false, 'both', '001'
+          '', 'none', 'medium', false, false, false, 'unset', false, 'both', '002'
+        )
+      ], 'row', 'start', 'stretch', 'full', false, 'both'),
+      new AttributeContainer([
+        new AttributeItem(
+          'Hit Points', 'none', 'medium', false, true, true, 'unset', false, 'both'
         ),
         new AttributeItem(
-          '', 'medium'
-        ),
-        new AttributeContainer([
-          new AttributeItem(
-            'Armor Class', 'none', 'medium', false, true, true, 'unset', false, 'both'
-          ),
-          new AttributeItem(
-            '', 'none', 'medium', false, false, false, 'unset', false, 'both', '002'
-          )
-        ], 'row', 'start', 'stretch', 'full', false, 'both'),
-        new AttributeContainer([
-          new AttributeItem(
-            'Hit Points', 'none', 'medium', false, true, true, 'unset', false, 'both'
-          ),
-          new AttributeItem(
-            '', 'none', 'medium', false, false, false, 'unset', false, 'both', '003'
-          )
-        ], 'row', 'start', 'stretch', 'full', false, 'both'),
-        new AttributeContainer([
-          new AttributeItem(
-            'Speed', 'none', 'medium', false, true, true, 'unset', false, 'both'
-          ),
-          new AttributeItem(
-            '', 'none', 'medium', false, false, false, 'unset', false, 'both', '004'
-          )
-        ], 'row', 'start', 'stretch', 'full', false, 'both'),
+          '', 'none', 'medium', false, false, false, 'unset', false, 'both', '003'
+        )
+      ], 'row', 'start', 'stretch', 'full', false, 'both'),
+      new AttributeContainer([
         new AttributeItem(
-          '', 'medium'
+          'Speed', 'none', 'medium', false, true, true, 'unset', false, 'both'
         ),
-        new AttributeContainer([
-          new AttributeContainer([
-            new AttributeItem(
-              'STR', 'none', 'medium', false, true, true, 'unset', false, 'both'
-            ),
-            new AttributeItem(
-              '', 'none', 'medium', false, false, false, 'unset', false, 'both', '005'
-            )
-          ], 'col', 'start', 'center', 'full', false, 'both'),
-          new AttributeContainer([
-            new AttributeItem(
-              'DEX', 'none', 'medium', false, true, true, 'unset', false, 'both'
-            ),
-            new AttributeItem(
-              '', 'none', 'medium', false, false, false, 'unset', false, 'both', '006'
-            )
-          ], 'col', 'start', 'center', 'full', false, 'both'),
-          new AttributeContainer([
-            new AttributeItem(
-              'CON', 'none', 'medium', false, true, true, 'unset', false, 'both'
-            ),
-            new AttributeItem(
-              '', 'none', 'medium', false, false, false, 'unset', false, 'both', '007'
-            )
-          ], 'col', 'start', 'center', 'full', false, 'both'),
-          new AttributeContainer([
-            new AttributeItem(
-              'INT', 'none', 'medium', false, true, true, 'unset', false, 'both'
-            ),
-            new AttributeItem(
-              '', 'none', 'medium', false, false, false, 'unset', false, 'both', '008'
-            )
-          ], 'col', 'start', 'center', 'full', false, 'both'),
-          new AttributeContainer([
-            new AttributeItem(
-              'WIS', 'none', 'medium', false, true, true, 'unset', false, 'both'
-            ),
-            new AttributeItem(
-              '', 'none', 'medium', false, false, false, 'unset', false, 'both', '009'
-            )
-          ], 'col', 'start', 'center', 'full', false, 'both'),
-          new AttributeContainer([
-            new AttributeItem(
-              'CHA', 'none', 'medium', false, true, true, 'unset', false, 'both'
-            ),
-            new AttributeItem(
-              '', 'none', 'medium', false, false, false, 'unset', false, 'both', '010'
-            )
-          ], 'col', 'start', 'center', 'full', false, 'both'),
-        ], 'row', 'start', 'stretch', 'full', false, 'both'),
         new AttributeItem(
-          '', 'medium'
-        ),
+          '', 'none', 'medium', false, false, false, 'unset', false, 'both', '004'
+        )
+      ], 'row', 'start', 'stretch', 'full', false, 'both'),
+      new AttributeItem(
+        '', 'medium'
+      ),
+      new AttributeContainer([
         new AttributeContainer([
           new AttributeItem(
-            'Senses', 'none', 'medium', false, true, true, 'unset', false, 'both'
+            'STR', 'none', 'medium', false, true, true, 'unset', false, 'both'
           ),
           new AttributeItem(
-            '', 'none', 'medium', false, false, false, 'unset', false, 'both', '011'
+            '', 'none', 'medium', false, false, false, 'unset', false, 'both', '005'
           )
-        ], 'row', 'start', 'stretch', 'full', false, 'both'),
+        ], 'col', 'start', 'center', 'full', false, 'both'),
         new AttributeContainer([
           new AttributeItem(
-            'Languages', 'none', 'medium', false, true, true, 'unset', false, 'both'
+            'DEX', 'none', 'medium', false, true, true, 'unset', false, 'both'
           ),
           new AttributeItem(
-            '', 'none', 'medium', false, false, false, 'unset', false, 'both', '012'
+            '', 'none', 'medium', false, false, false, 'unset', false, 'both', '006'
           )
-        ], 'row', 'start', 'stretch', 'full', false, 'both'),
+        ], 'col', 'start', 'center', 'full', false, 'both'),
         new AttributeContainer([
           new AttributeItem(
-            'Challenge', 'none', 'medium', false, true, true, 'unset', false, 'both'
+            'CON', 'none', 'medium', false, true, true, 'unset', false, 'both'
           ),
           new AttributeItem(
-            '', 'none', 'medium', false, false, false, 'unset', false, 'both', '013'
+            '', 'none', 'medium', false, false, false, 'unset', false, 'both', '007'
           )
-        ], 'row', 'start', 'stretch', 'full', false, 'both'),
+        ], 'col', 'start', 'center', 'full', false, 'both'),
+        new AttributeContainer([
+          new AttributeItem(
+            'INT', 'none', 'medium', false, true, true, 'unset', false, 'both'
+          ),
+          new AttributeItem(
+            '', 'none', 'medium', false, false, false, 'unset', false, 'both', '008'
+          )
+        ], 'col', 'start', 'center', 'full', false, 'both'),
+        new AttributeContainer([
+          new AttributeItem(
+            'WIS', 'none', 'medium', false, true, true, 'unset', false, 'both'
+          ),
+          new AttributeItem(
+            '', 'none', 'medium', false, false, false, 'unset', false, 'both', '009'
+          )
+        ], 'col', 'start', 'center', 'full', false, 'both'),
+        new AttributeContainer([
+          new AttributeItem(
+            'CHA', 'none', 'medium', false, true, true, 'unset', false, 'both'
+          ),
+          new AttributeItem(
+            '', 'none', 'medium', false, false, false, 'unset', false, 'both', '010'
+          )
+        ], 'col', 'start', 'center', 'full', false, 'both'),
+      ], 'row', 'start', 'stretch', 'full', false, 'both'),
+      new AttributeItem(
+        '', 'medium'
+      ),
+      new AttributeContainer([
         new AttributeItem(
-          '', 'medium'
+          'Senses', 'none', 'medium', false, true, true, 'unset', false, 'both'
         ),
-      ], 'col', 'start', 'stretch', 'max', false, 'both'
-    )
-  ]
-}
+        new AttributeItem(
+          '', 'none', 'medium', false, false, false, 'unset', false, 'both', '011'
+        )
+      ], 'row', 'start', 'stretch', 'full', false, 'both'),
+      new AttributeContainer([
+        new AttributeItem(
+          'Languages', 'none', 'medium', false, true, true, 'unset', false, 'both'
+        ),
+        new AttributeItem(
+          '', 'none', 'medium', false, false, false, 'unset', false, 'both', '012'
+        )
+      ], 'row', 'start', 'stretch', 'full', false, 'both'),
+      new AttributeContainer([
+        new AttributeItem(
+          'Challenge', 'none', 'medium', false, true, true, 'unset', false, 'both'
+        ),
+        new AttributeItem(
+          '', 'none', 'medium', false, false, false, 'unset', false, 'both', '013'
+        )
+      ], 'row', 'start', 'stretch', 'full', false, 'both'),
+      new AttributeItem(
+        '', 'medium'
+      ),
+    ], 'col', 'start', 'stretch', 'max', false, 'both'
+  )
+])
 
-export const defaultProject: StringifiableProject = new StringifiableProject(
+
+export const defaultProject: SerializableProject = new SerializableProject(
   'Default Project',
   {
     'defaultNote': new Note('defaultNote', 'defaultCategory', {
@@ -246,10 +257,7 @@ export const defaultProject: StringifiableProject = new StringifiableProject(
     'defaultCategory': new Category('defaultCategory', defaultAttributeTable, 'Some Template Content')
   },
   [
-    {
-      panels: [new CategoryPanel('defaultCategory'), new NotePanel('defaultNote')],
-      activePanelIndex: 0,
-    }
+    new PanelView([new CategoryPanel('defaultCategory'), new NotePanel('defaultNote')], 0)
   ],
   0,
   1,

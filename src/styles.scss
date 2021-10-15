@@ -146,7 +146,7 @@ p-inputSwitch {
   }
 }
 
-.internalLink{
+.internalLink {
   color: var(--blue-700);
   &:hover {
     cursor: pointer;
@@ -154,5 +154,23 @@ p-inputSwitch {
 }
 
 .isActivePanel {
-  text-decoration: underline;
+  font-weight: bold;
+  &.notes {
+    color: var(--color-notes) !important;
+  }
+  &.categories {
+    color: var(--color-categories) !important;
+  }
+  &.chronicle {
+    color: var(--color-chronicle) !important;
+  }
+  &.atlas {
+    color: var(--color-atlas) !important;
+  }
+  &.generators {
+    color: var(--color-generators) !important;
+  }
+  &.resources {
+    color: var(--color-resources) !important;
+  }
 }

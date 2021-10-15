@@ -22,7 +22,6 @@ export class NotePanelComponent extends GenericPanelComponent implements OnInit 
   category?: Category;
   filteredCategoryNames: string[] = []
 
-
   constructor(private http: HttpClient, private elRef: ElementRef, private messageService: MessageService) {
     super();
   }
@@ -50,13 +49,7 @@ export class NotePanelComponent extends GenericPanelComponent implements OnInit 
     if (this.panel) {
       this.panel.htmlElement = this.elRef.nativeElement;
     }
-    console.log(this.contentOutlet);
   }
-
-  getLorem() {
-    this.http.request('GET', 'https://jaspervdj.be/lorem-markdownum/markdown.txt', { responseType: 'text' }).toPromise().then((ret) => { this.note = { uniqueName: 'Lorem Markdownum', content: ret, relatedElements: [] } })
-  }
-
 
   updateCategory(){
     if (this.note.categoryName) {
@@ -68,9 +61,5 @@ export class NotePanelComponent extends GenericPanelComponent implements OnInit 
         })
       }
     }
-  }
-
-  log(msg: any) {
-    console.log(msg);
   }
 }

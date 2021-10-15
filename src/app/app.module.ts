@@ -19,20 +19,24 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { ParseMarkupPipe } from './pipes/parseMarkup/parse-markup.pipe';
 import { HttpClientModule } from '@angular/common/http';
 import { FillAttributePipe } from './pipes/fillAttribute/fill-attribute.pipe';
-import {InputTextareaModule} from 'primeng/inputtextarea';
-import {SplitButtonModule} from 'primeng/splitbutton';
-import {ContextMenuModule} from 'primeng/contextmenu';
-import {DragDropModule} from 'primeng/dragdrop';
-import {OverlayPanelModule} from 'primeng/overlaypanel';
-import {MenuModule} from 'primeng/menu';
-import {ToastModule} from 'primeng/toast';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { ContextMenuModule } from 'primeng/contextmenu';
+import { DragDropModule } from 'primeng/dragdrop';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { MenuModule } from 'primeng/menu';
+import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { CategoryPanelComponent } from './components/category-panel/category-panel.component';
-import {TooltipModule} from 'primeng/tooltip';
-import {SelectButtonModule} from 'primeng/selectbutton';
-import {ConfirmDialogModule} from 'primeng/confirmdialog';
-import {ConfirmationService} from 'primeng/api';
-import {AutoCompleteModule} from 'primeng/autocomplete';
+import { TooltipModule } from 'primeng/tooltip';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { LocalDriveService } from './services/localDrive/local-drive.service';
+import { IndexedDbService } from './services/indexedDb/indexed-db.service';
+
+
 
 @NgModule({
   declarations: [
@@ -70,7 +74,7 @@ import {AutoCompleteModule} from 'primeng/autocomplete';
     ConfirmDialogModule,
     AutoCompleteModule,
   ],
-  providers: [ConfirmationService, MessageService],
+  providers: [ConfirmationService, MessageService, LocalDriveService, IndexedDbService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
