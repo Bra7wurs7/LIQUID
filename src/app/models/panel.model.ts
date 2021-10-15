@@ -1,23 +1,24 @@
 export abstract class GenericPanel {
   htmlElement?: HTMLElement;
+  uniqueName: string;
+  constructor(uniqueName: string) {
+    this.uniqueName = uniqueName;
+  }
 }
 
 export class NotePanel extends GenericPanel {
-  noteName: string;
   constructor(
     noteName: string,
   ) {
-    super();
-    this.noteName = noteName;
+    super(noteName);
   }
 }
 
 export class CategoryPanel extends GenericPanel {
-  categoryName: string;
+
   constructor(
     categoryName: string,
   ) {
-    super();
-    this.categoryName = categoryName;
+    super(categoryName);
   }
 }

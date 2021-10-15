@@ -6,13 +6,16 @@ export class Category {
   /** The attribute table used for notes of this category, filled with content by the fillAttribute pipe */
   attributeTableTemplate: AttributeTable;
   contentTemplate: string;
+  relatedElements: string[];
   constructor(
     uniqueName: string = '',
     attributeTableTemplate: AttributeTable = new AttributeTable(),
     contentTemplate: string = '',
+    relatedElements: string[] = [],
   ) {
     this.uniqueName = uniqueName;
     this.attributeTableTemplate = attributeTableTemplate;
     this.contentTemplate = contentTemplate;
+    this.relatedElements = relatedElements;
   }
 }

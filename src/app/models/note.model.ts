@@ -7,6 +7,8 @@ export class Note {
   attributesMap?: any;
   /** The actual markdown content of a note */
   content: string;
+  /** all elements that should show un in the left sidebar */
+  relatedElements: string[] = [];
   constructor(
     uniqueName: string = '',
     categoryName?: string,

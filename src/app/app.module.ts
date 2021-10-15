@@ -32,6 +32,7 @@ import {TooltipModule} from 'primeng/tooltip';
 import {SelectButtonModule} from 'primeng/selectbutton';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {ConfirmationService} from 'primeng/api';
+import {AutoCompleteModule} from 'primeng/autocomplete';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import {ConfirmationService} from 'primeng/api';
     ToastModule,
     TooltipModule,
     SelectButtonModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    AutoCompleteModule,
   ],
   providers: [ConfirmationService, MessageService],
   bootstrap: [AppComponent]

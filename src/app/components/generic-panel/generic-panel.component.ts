@@ -9,14 +9,14 @@ import { GenericPanel } from 'src/app/models/panel.model';
   styleUrls: ['./generic-panel.component.scss']
 })
 export abstract class GenericPanelComponent implements OnInit {
-  @Output() closePanelEvent: EventEmitter<boolean> = new EventEmitter()
+  @Output() internalLinkActivatedEvent: EventEmitter<string> = new EventEmitter()
+  @Output() moveUpEvent: EventEmitter<void> = new EventEmitter()
+  @Output() moveDownEvent: EventEmitter<void> = new EventEmitter()
+  @Output() closePanelEvent: EventEmitter<void> = new EventEmitter()
   @Input() panel?: GenericPanel;
+  @Input() isActivePanel?: boolean = false;
 
   constructor() { }
-
-  closePanel() {
-    this.closePanelEvent.emit(true);
-  }
 
   ngOnInit(): void {
   }

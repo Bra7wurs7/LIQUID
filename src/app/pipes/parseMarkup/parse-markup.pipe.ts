@@ -6,8 +6,11 @@ import * as marked from 'marked';
 })
 export class ParseMarkupPipe implements PipeTransform {
 
-  transform(value: unknown, ...args: unknown[]): unknown {
-    return marked(value as string);
+  transform(value: string, ...args: unknown[]): string {
+    return this.parseInternalLinks(marked(value));
   }
 
+  parseInternalLinks(htmlMarkdownString: string): string {
+    return htmlMarkdownString.replace(new RegExp('\\[\\[[^\\[]*\\]\\]','g'), '<span class="internalLink">$&</span>')
+  }
 }

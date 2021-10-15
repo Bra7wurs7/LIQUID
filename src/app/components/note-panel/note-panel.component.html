@@ -1,22 +1,27 @@
-<p-panel [toggleable]="true" #panel class="panel-hide-default-toggler" *ngIf="note">
+<p-panel [toggleable]="true" #panel class="panel-hide-default-toggler border-sides-type-color notes" *ngIf="note">
   <ng-template pTemplate="header">
-    {{note.uniqueName}}
+    <div class="flex flex-row align-items-center">
+      <p-autoComplete *ngIf="editMode" [(ngModel)]="note.categoryName" [suggestions]="filteredCategoryNames" (completeMethod)="searchCategory($event)" (onBlur)="filteredCategoryNames = []; updateCategory()" (onSelect)="filteredCategoryNames = []; updateCategory()"></p-autoComplete>
+      <i *ngIf="editMode" class="pi pi-chevron-right" style="padding: 3px; font-size: 0.7em;"></i>
+      <span [ngClass]="{'isActivePanel': isActivePanel}">{{note.uniqueName}}</span>
+    </div>
     <div class="flex-grow-1"></div>
-
     <div class="flex-grow-1"></div>
   </ng-template>
   <ng-template pTemplate="icons">
     <button (click)="$event.stopPropagation(); editMode = !editMode" pButton pRipple type="button" icon="pi pi-pencil"
-      class="p-panel-header-icon" [ngClass]="{'buttonActive': editMode}"></button>
+      class="p-panel-header-icon" [ngClass]="{'buttonActive': editMode}" pTooltip="Edit note"
+      style="margin-left: 2px;"></button>
     <span class="p-buttonset">
-      <button (click)="$event.stopPropagation()" pButton pRipple type="button" icon="pi pi-angle-up"
-        class="p-panel-header-icon"></button>
-      <button (click)="$event.stopPropagation()" pButton pRipple type="button" icon="pi pi-angle-down"
-        class="p-panel-header-icon"></button>
-      <button (click)="panel.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
-        [icon]="'pi '+(panel.collapsed?'pi-plus':'pi-minus')" class="p-panel-header-icon"></button>
-      <button (click)="closePanel(); $event.stopPropagation()" pButton pRipple type="button" icon="pi pi-times"
-        class="p-panel-header-icon"></button>
+      <button pButton pRipple type="button" icon="pi pi-angle-up"
+        class="p-panel-header-icon" (click)="moveUpEvent.emit()" pTooltip="Move panel up"></button>
+      <button pButton pRipple type="button" icon="pi pi-angle-down"
+        class="p-panel-header-icon" (click)="moveDownEvent.emit()" pTooltip="Move panel down"></button>
+      <button (click)="panel.toggle($event);" pButton pRipple type="button"
+        [icon]="'pi '+(panel.collapsed?'pi-plus':'pi-minus')" class="p-panel-header-icon"
+        [pTooltip]="panel.collapsed ? 'Maximize panel' : 'Minimize panel'"></button>
+      <button (click)="closePanelEvent.emit();" pButton pRipple type="button"
+        icon="pi pi-times" class="p-panel-header-icon" pTooltip="Close panel"></button>
     </span>
   </ng-template>
   <ng-template pTemplate="content">
@@ -48,9 +53,9 @@
       </div>
     </ng-template>
     <ng-template #noteAttributeItemTemplate let-item="item">
-      <input pInputText [disabled]="true" size="10" style="margin: 1px" *ngIf="editMode && item.separator === 'none' && item.constant"
-        type="text" placeholder="Enter fixed value" class="p-inputtext-sm w-max"
-        [value]="item.content">
+      <input pInputText [disabled]="true" size="10" style="margin: 1px"
+        *ngIf="editMode && item.separator === 'none' && item.constant" type="text" placeholder="Enter fixed value"
+        class="p-inputtext-sm w-max" [value]="item.content">
       <input pInputText size="10" style="margin: 1px" *ngIf="editMode && item.separator === 'none' && !item.constant"
         type="text" placeholder="Enter fixed value" class="p-inputtext-sm w-max"
         [(ngModel)]="note.attributesMap[item.contentSlotId]">
@@ -84,7 +89,7 @@
         </ng-container>
       </div>
     </div>
-    <div *ngIf="!editMode" [innerHtml]="note.content| parseMarkup"></div>
+    <div *ngIf="!editMode" #contentOutlet [innerHtml]="(note.content | parseMarkup)"></div>
     <div *ngIf="editMode">
       <textarea pInputTextarea [placeholder]="'Enter note text here'" [(ngModel)]="note.content"
         style="width: 100%; max-width: 100%;" [autoResize]="true"></textarea>

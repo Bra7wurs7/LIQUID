@@ -1,6 +1,6 @@
-<p-panel [toggleable]="true" #panel class="panel-hide-default-toggler" *ngIf="category">
+<p-panel [toggleable]="true" #panel class="panel-hide-default-toggler border-sides-type-color categories" *ngIf="category">
   <ng-template pTemplate="header">
-    {{category.uniqueName}}
+    <span [ngClass]="{'isActivePanel': isActivePanel}">{{category.uniqueName}}</span>
     <div class="flex-grow-1"></div>
 
     <div class="flex-grow-1"></div>
@@ -27,14 +27,14 @@
       class="p-panel-header-icon" [ngClass]="{'buttonActive': editMode}" style="margin-left: 2px"
       pTooltip="Edit category"></button>
     <span class="p-buttonset">
-      <button (click)="$event.stopPropagation()" pButton pRipple type="button" icon="pi pi-angle-up"
-        class="p-panel-header-icon"></button>
-      <button (click)="$event.stopPropagation()" pButton pRipple type="button" icon="pi pi-angle-down"
-        class="p-panel-header-icon"></button>
-      <button (click)="panel.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
-        [icon]="'pi '+(panel.collapsed?'pi-plus':'pi-minus')" class="p-panel-header-icon"></button>
-      <button (click)="closePanel(); $event.stopPropagation()" pButton pRipple type="button" icon="pi pi-times"
-        class="p-panel-header-icon"></button>
+      <button pButton pRipple type="button" icon="pi pi-angle-up"
+        class="p-panel-header-icon" (click)="moveUpEvent.emit()" pTooltip="Move panel up"></button>
+      <button pButton pRipple type="button" icon="pi pi-angle-down"
+        class="p-panel-header-icon" (click)="moveDownEvent.emit()" pTooltip="Move panel down"></button>
+      <button (click)="panel.toggle($event);" pButton pRipple type="button"
+        [icon]="'pi '+(panel.collapsed?'pi-plus':'pi-minus')" class="p-panel-header-icon" [pTooltip]="panel.collapsed ? 'Maximize panel' : 'Minimize panel'"></button>
+      <button (click)="closePanelEvent.emit();" pButton pRipple type="button" icon="pi pi-times"
+        class="p-panel-header-icon" pTooltip="Close panel"></button>
     </span>
   </ng-template>
   <ng-template pTemplate="content">

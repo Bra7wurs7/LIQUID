@@ -1,11 +1,10 @@
-import { AfterViewInit, Component, OnInit, Type, ViewChild } from '@angular/core';
+import { Component, OnInit, Type } from '@angular/core';
 import { MessageService, TreeNode } from 'primeng/api';
 import { ScrollPanel } from 'primeng/scrollpanel';
 import { Category } from './models/category.model';
 import { CategoryPanel, GenericPanel, NotePanel } from './models/panel.model';
 import { Note } from './models/note.model';
 import { defaultProject, Project } from './models/project.model';
-import { Panel } from 'primeng/panel';
 
 @Component({
   selector: 'app-root',
@@ -18,8 +17,13 @@ export class AppComponent implements OnInit {
 
   project?: Project;
   noteKeys: string[] = [];
+  filteredNoteKeys: string[] | undefined;
   categoryKeys: string[] = [];
+  filteredCategoryKeys: string[] | undefined;
   title = 'GAS';
+
+  rightSearch: string = '';
+  leftSearch: string = '';
 
   infinity: number = Infinity;
 
@@ -100,36 +104,22 @@ export class AppComponent implements OnInit {
     this.messageService.add({ severity: 'error', summary: 'Feature not supported yet.', life: 3000 })
   }
 
-  onAddNoteClick(noteTitle: string) {
-    if (this.project?.notes.has(noteTitle)) {
-      this.messageService.add({ severity: 'error', summary: 'A note with this name already exists.', life: 3000 })
-    } else {
-      this.project?.notes?.set(noteTitle, new Note(noteTitle))
-      this.noteKeys?.push(noteTitle);
-    }
-  }
-
   onNoteClick(noteTitle: string, contentPanel: ScrollPanel) {
-    const existingPanel = this.getPanelOfNoteFromActiveView(noteTitle);
+    if (!this.project) {
+      return;
+    }
 
+    const existingPanel = this.getPanelFromActiveViewForName(noteTitle);
     if (existingPanel === undefined) {
       this.project?.views[this.project?.activeViewIndex].panels.push(new NotePanel(noteTitle))
     } else {
+      this.project.views[this.project.activeViewIndex].activePanelIndex = this.project?.views[this.project.activeViewIndex].panels.indexOf(existingPanel)
       this.scrollToPanel(existingPanel, contentPanel);
     }
   }
 
-  onAddCategoryClick(categoryTitle: string) {
-    if (this.project?.categories?.has(categoryTitle)) {
-      this.messageService.add({ severity: 'error', summary: 'A category with this name already exists.', life: 3000 })
-    } else {
-      this.project?.categories?.set(categoryTitle, new Category(categoryTitle))
-      this.categoryKeys?.push(categoryTitle);
-    }
-  }
-
   onCategoryClick(categoryTitle: string, contentPanel: ScrollPanel) {
-    const existingPanel = this.getPanelOfCategoryFromActiveView(categoryTitle);
+    const existingPanel = this.getPanelFromActiveViewForName(categoryTitle);
 
     if (existingPanel === undefined) {
       this.project?.views[this.project?.activeViewIndex].panels.push(new CategoryPanel(categoryTitle))
@@ -138,21 +128,28 @@ export class AppComponent implements OnInit {
     }
   }
 
-  getPanelOfNoteFromActiveView(noteTitle: string) {
-    return this.project?.views[this.project?.activeViewIndex].panels.find((panel) => {
-      if (panel instanceof NotePanel) {
-        return panel.noteName === noteTitle;
+  onAddElementClick(uniqueName: string, targetMap: 'categories' | 'notes') {
+    if (this.project?.categories?.has(uniqueName)) {
+      this.messageService.add({ severity: 'error', summary: 'A category with this name already exists. All names in GAS need to be unique.', life: 3000 })
+    } else if (this.project?.notes?.has(uniqueName)) {
+      this.messageService.add({ severity: 'error', summary: 'A note with this name already exists. All names in GAS need to be unique.', life: 3000 })
+    } else {
+      switch (targetMap) {
+        case 'categories':
+          this.project?.categories?.set(uniqueName, new Category(uniqueName))
+          this.categoryKeys?.push(uniqueName);
+          break;
+        case 'notes':
+          this.project?.notes?.set(uniqueName, new Note(uniqueName))
+          this.noteKeys?.push(uniqueName);
+          break;
       }
-      return false;
-    });
+    }
   }
 
-  getPanelOfCategoryFromActiveView(categoryTitle: string) {
+  getPanelFromActiveViewForName(noteTitle: string): GenericPanel | undefined {
     return this.project?.views[this.project?.activeViewIndex].panels.find((panel) => {
-      if (panel instanceof CategoryPanel) {
-        return panel.categoryName === categoryTitle;
-      }
-      return false;
+      return panel.uniqueName === noteTitle;
     });
   }
 
@@ -176,5 +173,51 @@ export class AppComponent implements OnInit {
   }
   castToCategoryPanel(panel: GenericPanel): CategoryPanel {
     return panel as CategoryPanel;
+  }
+
+  moveUp(index: number, panels: GenericPanel[]) {
+    if (index > 0) {
+      let tmp = panels[index - 1];
+      panels[index - 1] = panels[index];
+      panels[index] = tmp;
+    }
+  }
+
+  moveDown(index: number, panels: GenericPanel[]) {
+    if (index < (panels.length - 1)) {
+      let tmp = panels[index + 1];
+      panels[index + 1] = panels[index];
+      panels[index] = tmp;
+    }
+  }
+
+  navigateInternalLink(internallink: string) {
+    console.log(internallink);
+    internallink.replace('[[', '').replace(']]', '');
+
+  }
+
+  getRelatedElements(panel: GenericPanel) {
+    if (panel instanceof NotePanel) {
+      return this.project?.notes.get(panel.uniqueName)?.relatedElements;
+    } else if (panel instanceof CategoryPanel) {
+      return this.project?.categories.get(panel.uniqueName)?.relatedElements;
+    } else {
+      return [];
+    }
+  }
+
+  filterKeyArrays(filterString: string) {
+    if(filterString) {
+      this.filteredNoteKeys = this.noteKeys.filter((key) => key.includes(filterString))
+      this.filteredCategoryKeys = this.categoryKeys.filter((key) => key.includes(filterString))
+    } else {
+      this.filteredNoteKeys = undefined;
+      this.filteredCategoryKeys = undefined;
+    }
+  }
+
+  log(a: any) {
+    console.log(a);
   }
 }
