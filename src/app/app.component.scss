@@ -58,11 +58,11 @@
 }
 
 .hideChildUntilHoverParent {
-  >.hideChildUntilHoverChild{
+  > .hideChildUntilHoverChild {
     visibility: hidden;
   }
   &:hover {
-    >.hideChildUntilHoverChild {
+    > .hideChildUntilHoverChild {
       visibility: visible;
     }
   }
@@ -78,20 +78,38 @@
   color: var(--text-color);
 }
 
-.unbordered-element {
+.sidebar-element {
   background-color: var(--surface-card);
-  padding: 8px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  font-size: 1rem;
-  color: var(--text-color);
   &:hover {
     background-color: var(--surface-hover);
+  }
+  &.bordered {
+    border: solid 1px var(--surface-border);
+    border-radius: var(--border-radius);
+  }
+  .label {
+    margin-left: 6px;
+  }
+  .button {
+    transition: border-color 0.2s cubic-bezier(0.05, 0.74, 0.2, 0.99);
+    border: 1px solid rgba($color: #000000, $alpha: 0);
+    border-radius: var(--border-radius);
+    width: 28px;
+    height: 28px;
+    &:hover {
+      border-color: var(--primary-color);
+    }
+  }
+  &.setFont {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+      "Segoe UI Symbol";
+    font-size: 1rem;
+    color: var(--text-color);
   }
 }
 
 .unbordered-button {
-  padding: 8px;
   background-color: var(--surface-card);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -102,7 +120,7 @@
   }
 }
 
-.button-border {
+.sidebar-search-button {
   border: solid 1px var(--surface-border);
   border-radius: var(--border-radius);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
@@ -115,26 +133,21 @@
   }
 }
 
-.button-unbordered {
-  border: solid 1px rgba(0, 0, 0, 0);
-  border-radius: var(--border-radius);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  font-size: 1rem;
-  color: var(--text-color);
-  &:hover {
-    cursor: pointer;
-  }
-}
-
-.border-clickable {
+.hover-border-primary {
   transition: border-color 0.2s cubic-bezier(0.05, 0.74, 0.2, 0.99);
   &:hover {
     border-color: var(--primary-color);
   }
 }
 
-.pointerOnHover{
+.hover-color-primary {
+  transition: border-color 0.2s cubic-bezier(0.05, 0.74, 0.2, 0.99);
+  &:hover {
+    color: var(--primary-color);
+  }
+}
+
+.pointerOnHover {
   &:hover {
     cursor: pointer;
   }
@@ -146,8 +159,8 @@
   width: min-content;
 }
 
-.color-surface-card {
-  background-color: var(--surface-card);
+.viewPanelCount {
+  font-weight: bold;
 }
 
 @media screen and (max-width: 960px) {

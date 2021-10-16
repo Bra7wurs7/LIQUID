@@ -75,8 +75,8 @@ export class SerializableProject {
 
   constructor(
     title: string = '',
-    notes: any = undefined,
-    categories: any = undefined,
+    notes: any = {},
+    categories: any = {},
     views: PanelView[] = [],
     activeViewIndex: number = 0,
     version: number = 1,
@@ -101,8 +101,8 @@ export class SerializableProject {
     return new Project(this.title, notes, categories, this.views, this.activeViewIndex, this.version);
   }
 
-  static serialize(serializableProject: SerializableProject): string {
-    return JSON.stringify(serializableProject, null, 2);
+  serialize(): string {
+    return JSON.stringify(this, null, 2);
   }
 
   static deserialize(json: string): SerializableProject {

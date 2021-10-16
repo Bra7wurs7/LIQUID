@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { Category } from 'src/app/models/category.model';
 import { GenericPanelComponent } from '../generic-panel/generic-panel.component';
@@ -41,13 +41,16 @@ export class CategoryPanelComponent extends GenericPanelComponent implements OnI
   newCellConstant: boolean = false;
   newCellId: string = uuid.v4();
 
-  constructor(private confirmationService: ConfirmationService) {
+  constructor(private confirmationService: ConfirmationService, private elRef: ElementRef) {
     super()
   }
 
   ngOnInit(): void {
     if (this.categoryName && this.categories) {
       this.category = this.categories.get(this.categoryName) ?? this.category;
+    }
+    if (this.panel) {
+      this.panel.htmlElement = this.elRef.nativeElement;
     }
   }
 
