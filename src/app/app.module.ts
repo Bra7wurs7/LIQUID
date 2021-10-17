@@ -35,7 +35,8 @@ import { ConfirmationService } from 'primeng/api';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { LocalDriveService } from './services/localDrive/local-drive.service';
 import { IndexedDbService } from './services/indexedDb/indexed-db.service';
-
+import {DialogModule} from 'primeng/dialog';
+import {TableModule} from 'primeng/table';
 
 
 @NgModule({
@@ -73,6 +74,8 @@ import { IndexedDbService } from './services/indexedDb/indexed-db.service';
     SelectButtonModule,
     ConfirmDialogModule,
     AutoCompleteModule,
+    DialogModule,
+    TableModule,
   ],
   providers: [ConfirmationService, MessageService, LocalDriveService, IndexedDbService],
   bootstrap: [AppComponent]

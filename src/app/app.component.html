@@ -35,13 +35,14 @@
             <ng-template pTemplate>
               <div class="flex flex-wrap flex-column">
                 <input type="text" placeholder="Title for new Note/Folder" pInputText style="margin-bottom: 5px;"
-                  #notefoldertitle />
+                  #noteFolderTitle [required]="true" />
                 <div class="flex flew-wrap flex-row justify-content-between align-items-center">
-                  <button pButton pRipple type="button" icon="pi pi-plus" label="Note" class="p-button-outlined"
-                    (click)="onAddElementClick(notefoldertitle.value, 'notes', contentPanel); addNoteOverlay.hide()"></button>
-                  <span>or</span>
+                  <button [disabled]="!noteFolderTitle.value" pButton pRipple type="button" icon="pi pi-plus"
+                    label="Note" class="p-button-outlined w-full"
+                    (click)="onAddElementClick(noteFolderTitle.value, 'notes', contentPanel); addNoteOverlay.hide()"></button>
+                  <!--<span>or</span>
                   <button pButton pRipple type="button" icon="pi pi-plus" label="Folder" class="p-button-outlined"
-                    (click)="onAddNoteFolderClick(notefoldertitle.value); addNoteOverlay.hide()"></button>
+                    (click)="onAddNoteFolderClick(notefoldertitle.value); addNoteOverlay.hide()"></button>-->
                 </div>
               </div>
             </ng-template>
@@ -93,8 +94,9 @@
             <ng-template pTemplate>
               <div class="flex flex-wrap flex-column">
                 <input type="text" placeholder="Title for new category" pInputText style="margin-bottom: 5px;"
-                  #categoryTitleInput />
-                <button pButton pRipple type="button" icon="pi pi-plus" label="Category"
+                  #categoryTitleInput [required]="true" />
+                <button [disabled]="!categoryTitleInput.value" pButton pRipple type="button" icon="pi pi-plus"
+                  label="Category"
                   (click)="onAddElementClick(categoryTitleInput.value, 'categories', contentPanel); addCategoryOverlay.hide()"
                   class="p-button-outlined"></button>
               </div>
@@ -113,9 +115,15 @@
               </div>
               <div
                 class="flex flex-column flex-wrap align-content-center justify-content-center hideChildUntilHoverChild button">
-                <i class="pi pi-ellipsis-v"></i>
+                <i class="pi pi-ellipsis-v" (click)="categoryMore.toggle($event)"></i>
               </div>
             </div>
+            <p-overlayPanel #categoryMore>
+              <ng-template pTemplate>
+                <button pButton pRipple type="button" label="Delete" class="p-button-outlined p-button-danger"
+                  (click)="deleteCategory(key)"></button>
+              </ng-template>
+            </p-overlayPanel>
           </div>
         </ng-template>
       </p-panel>
@@ -244,7 +252,7 @@
         <ng-template pTemplate="content">
           <div style="margin: 1px"
             class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover"
-            (click)="newProject()">
+            (click)="newProjectOverlay.toggle($event)">
             <div class="label flex align-items-center">
               <i class="pi pi-fw pi-plus-circle" style="margin-right: 5px;"></i>
               <span>
@@ -252,6 +260,18 @@
               </span>
             </div>
           </div>
+          <p-overlayPanel #newProjectOverlay>
+            <ng-template pTemplate>
+              <div class="flex flex-wrap flex-column">
+                <input type="text" placeholder="Project title (required)" pInputText style="margin-bottom: 5px;"
+                  #newProjectTitleInput [required]="true" />
+                <button [disabled]="!newProjectTitleInput.value" pButton pRipple type="button" icon="pi pi-plus"
+                  label="New Project"
+                  (click)="newProject(newProjectTitleInput.value); newProjectOverlay.hide()"
+                  class="p-button-outlined"></button>
+              </div>
+            </ng-template>
+          </p-overlayPanel>
           <div style="margin: 1px"
             class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover"
             (click)="fileUpload.click()">
@@ -276,7 +296,7 @@
           </div>
           <div style="margin: 1px"
             class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover"
-            (click)="saveToDB()">
+            (click)="saveProjectOverlay.toggle($event)">
             <div class="label flex align-items-center">
               <i class="pi pi-fw pi-save" style="margin-right: 5px;"></i>
               <span>
@@ -284,9 +304,21 @@
               </span>
             </div>
           </div>
+          <p-overlayPanel #saveProjectOverlay>
+            <ng-template pTemplate>
+              <div class="flex flex-wrap flex-column" *ngIf="project">
+                <input type="text" placeholder="Project title (required)" pInputText style="margin-bottom: 5px;"
+                  #projectTitleInput [(ngModel)]="project.title" />
+                <button [disabled]="!project.title" pButton pRipple type="button" icon="pi pi-save"
+                  label="Save to indexedDB"
+                  (click)="saveToDB(project.title); saveProjectOverlay.hide()"
+                  class="p-button-outlined"></button>
+              </div>
+            </ng-template>
+          </p-overlayPanel>
           <div style="margin: 1px"
             class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover"
-            (click)="loadFromDB()">
+            (click)="loadDialogVisible = true">
             <div class="label flex align-items-center">
               <i class="pi pi-fw pi-save" style="margin-right: 5px;"></i>
               <span>
@@ -309,7 +341,14 @@
           </div>
         </ng-template>
         <ng-template pTemplate="content">
-
+          <div style="margin: 1px"
+            class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem">
+            <div class="label flex align-items-center">
+              <span>
+                No settings yet
+              </span>
+            </div>
+          </div>
         </ng-template>
       </p-panel>
 
@@ -411,4 +450,33 @@
     </div>
   </div>
   <p-toast position="bottom-center"></p-toast>
+  <p-dialog header="Load from indexedDB" appendTo="body" #loadDialog [(visible)]="loadDialogVisible">
+    <p-table *ngIf="((allProjectsPromise | async)?.length ?? -1) > 0"
+      [value]="(allProjectsPromise | async) ?? [{title: 'loading', lastModified: undefined}]" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Title</th>
+          <th>Last Saved</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-project>
+        <tr>
+          <td>{{project.title}}</td>
+          <td>{{project.lastModified}}</td>
+          <td>
+            <p-button label="Load" icon="pi pi-folder-open" styleClass="p-button-sm"
+              (click)="loadFromDB(project.title)"></p-button>
+          </td>
+          <td>
+            <p-button label="Delete" icon="pi pi-folder-open" styleClass="p-button-sm p-button-danger"
+              (click)="deleteFromDB(project.title)"></p-button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <div *ngIf="(((allProjectsPromise | async)?.length ?? 0) === 0)">
+      No projects saved in indexedDB of Browser
+    </div>
+  </p-dialog>
+  <p-confirmDialog #overlayOverlay [baseZIndex]="3000" width="425" appendTo="body"></p-confirmDialog>
 </div>

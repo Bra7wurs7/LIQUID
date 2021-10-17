@@ -1,6 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Category } from 'src/app/models/category.model';
-import { Note } from 'src/app/models/note.model';
 import { GenericPanel } from 'src/app/models/panel.model';
 
 @Component({
@@ -8,7 +6,7 @@ import { GenericPanel } from 'src/app/models/panel.model';
   templateUrl: './generic-panel.component.html',
   styleUrls: ['./generic-panel.component.scss']
 })
-export abstract class GenericPanelComponent implements OnInit {
+export abstract class GenericPanelComponent {
   @Output() internalLinkActivatedEvent: EventEmitter<string> = new EventEmitter()
   @Output() moveUpEvent: EventEmitter<void> = new EventEmitter()
   @Output() moveDownEvent: EventEmitter<void> = new EventEmitter()
@@ -17,8 +15,5 @@ export abstract class GenericPanelComponent implements OnInit {
   @Input() isActivePanel?: boolean = false;
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
 }

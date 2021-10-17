@@ -21,6 +21,13 @@ export class IndexedDbService {
     });
   }
 
+  async getAllProjects(): Promise<{title: string, lastModified: Date}[]> {
+    const db = (await this.dbPromise);
+    const tx = db.transaction([this.objectStoreName], 'readonly');
+    const store = tx.objectStore(this.objectStoreName);
+    return (await store.getAll()).map((project: DBProject) => {return {title: project.title, lastModified: project.lastModified}})
+  }
+
   async saveProject(title: string, projectJSON: string): Promise<void> {
     const db = (await this.dbPromise);
     const tx = db.transaction([this.objectStoreName], 'readwrite');
@@ -39,5 +46,13 @@ export class IndexedDbService {
     const tx = db.transaction([this.objectStoreName], 'readonly');
     const store = tx.objectStore(this.objectStoreName);
     return store.get(title);
+  }
+
+  async deleteProject(title: string): Promise<void> {
+    const db = (await this.dbPromise);
+    const tx = db.transaction([this.objectStoreName], 'readwrite');
+    const store = tx.objectStore(this.objectStoreName);
+    store.delete(title);
+    return tx.done;
   }
 }

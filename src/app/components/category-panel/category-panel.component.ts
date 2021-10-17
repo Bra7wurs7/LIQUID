@@ -87,7 +87,7 @@ export class CategoryPanelComponent extends GenericPanelComponent implements OnI
     panel.toggle(event);
   }
 
-  deleteCell(child: NoteAttribute, container: NoteAttribute[]){
+  deleteCell(child: NoteAttribute, container: NoteAttribute[]) {
     this.confirmationService.confirm({
       message: 'Delete this Cell?',
       header: 'Delete Cell',
@@ -107,13 +107,13 @@ export class CategoryPanelComponent extends GenericPanelComponent implements OnI
     this.newCellWidth = child.width;
     this.newCellBorder = child.bordered;
 
-    if(child instanceof AttributeContainer) {
+    if (child instanceof AttributeContainer) {
       this.newCellDirection = child.direction;
       this.newCellJustify = child.justify;
       this.newCellAlign = child.align;
     }
 
-    if(child instanceof AttributeItem) {
+    if (child instanceof AttributeItem) {
       this.newCellSeparator = child.separator;
       this.newCellFontSize = child.fontSize;
       this.newCellStyle = (child.bold ? (child.italic ? 'both' : 'bold') : (child.italic ? 'italic' : 'none'));
@@ -156,7 +156,7 @@ export class CategoryPanelComponent extends GenericPanelComponent implements OnI
         newNoteAttribute = new AttributeContainer();
         break;
     }
-    if(children) {
+    if (children) {
       children.splice(this.cellIndex, this.oldCell ? 1 : 0, newNoteAttribute)
     }
   }

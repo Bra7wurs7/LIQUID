@@ -1,5 +1,5 @@
 import { Component, OnInit, Type } from '@angular/core';
-import { MenuItem, MessageService, TreeNode } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService, TreeNode } from 'primeng/api';
 import { ScrollPanel } from 'primeng/scrollpanel';
 import { Category } from './models/category.model';
 import { CategoryPanel, GenericPanel, NotePanel } from './models/panel.model';
@@ -8,6 +8,8 @@ import { defaultProject, Project, SerializableProject } from './models/project.m
 import { LocalDriveService } from './services/localDrive/local-drive.service';
 import { IndexedDbService } from './services/indexedDb/indexed-db.service';
 import { PanelView } from './models/panelView.model';
+import { of, timer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -24,40 +26,42 @@ export class AppComponent implements OnInit {
   categoryKeys: string[] = [];
   filteredCategoryKeys: string[] | undefined;
   title = 'GAS';
+  allProjectsPromise: Promise<{ title: string, lastModified: Date }[]>;
+  loadDialogVisible: boolean = false;
 
   rightSearch: string = '';
   leftSearch: string = '';
 
   infinity: number = Infinity;
-
-  saveMenu: MenuItem[];
-  loadMenu: MenuItem[];
-  constructor(private messageService: MessageService, private localdriveService: LocalDriveService, private indexedDbService: IndexedDbService) {
-    this.saveMenu = [
-      {
-        label: 'Save to Browser'
-      },
-      {
-        label: 'Download to Disk'
+  autosave = timer(1, 300000).pipe(
+    switchMap(() => {
+      if (this.project) {
+        this.saveToDB(this.project.title);
+        return of({});
+      } else {
+        return of({});
       }
-    ]
+    })
+  );
 
-    this.loadMenu = [
-      {
-        label: 'Save to Browser'
-      },
-      {
-        label: 'Download to Disk'
-      }
-    ]
-
+  constructor(private messageService: MessageService, private localdriveService: LocalDriveService, private indexedDbService: IndexedDbService, private confirmationService: ConfirmationService) {
+    this.allProjectsPromise = indexedDbService.getAllProjects();
   }
 
   ngOnInit() {
-    this.loadFromDB();
-    if (!this.project) {
-      this.newProject();
-    }
+    this.allProjectsPromise.then(async (allProjects) => {
+      let lastProject = { title: '', lastModified: new Date(0) };
+      allProjects.forEach((project) => {
+        if (project.lastModified.getTime() > lastProject.lastModified.getTime()) {
+          lastProject = project;
+        }
+      })
+      await this.loadFromDB(lastProject.title);
+      if (!this.project) {
+        this.newProject();
+      }
+      this.autosave.subscribe(() => {});
+    })
   }
 
   loadProject(project: Project) {
@@ -227,8 +231,8 @@ export class AppComponent implements OnInit {
     }
   }
 
-  newProject() {
-    this.loadProject(new Project('', new Map(), new Map(), []));
+  newProject(title?: string) {
+    this.loadProject(new Project(title ?? 'Untitled Project', new Map(), new Map(), []));
     this.messageService.add({ severity: 'success', summary: 'New Project' })
     this.addView();
   }
@@ -236,7 +240,7 @@ export class AppComponent implements OnInit {
   downloadProject() {
     if (this.project) {
       const serializableProject = this.project?.toSerializableProject()
-      this.localdriveService.saveToLocalDrive('fileName' + '.gasp', serializableProject.serialize())
+      this.localdriveService.saveToLocalDrive(this.project.title + '.gasp', serializableProject.serialize())
     } else {
       this.messageService.add({ severity: 'warn', summary: 'You propably wanted to press "Upload" of "New", right?' })
     }
@@ -248,17 +252,30 @@ export class AppComponent implements OnInit {
     }
   }
 
-  loadFromDB() {
-    this.indexedDbService.loadProject('Default Project').then((succ) => {
-      this.loadProject(SerializableProject.deserialize(succ.projectJSON).toProject());
+  async loadFromDB(title: string) {
+    const project = await this.indexedDbService.loadProject(title)
+    if(project) {
+      this.loadProject(SerializableProject.deserialize(project.projectJSON).toProject());
+    }
+  }
+
+  async deleteFromDB(title: string) {
+    this.confirmationService.confirm({
+      message: `Are you sure that you want to delete ${title}?`,
+      accept: () => {
+        this.indexedDbService.deleteProject(title).then(
+          () => this.allProjectsPromise = this.indexedDbService.getAllProjects()
+        );
+      }
     });
   }
 
-  saveToDB() {
+  saveToDB(title?: string) {
     if (this.project) {
       const serializableProject = this.project?.toSerializableProject()
-      this.indexedDbService.saveProject('Default Project', serializableProject.serialize()).then(() => {
-        this.messageService.add({ severity: 'success', summary: 'Successfully saved project' })
+      this.indexedDbService.saveProject(title ?? this.project.title, serializableProject.serialize()).then(() => {
+        this.messageService.add({ severity: 'success', summary: `Saved ${this.project?.title}` })
+        this.allProjectsPromise = this.indexedDbService.getAllProjects();
       });
     } else {
       this.messageService.add({ severity: 'warn', summary: 'You propably wanted to press "Upload" of "New", right?' })
@@ -289,6 +306,17 @@ export class AppComponent implements OnInit {
     if (this.project) {
       if (this.project.notes.delete(name)) {
         this.noteKeys = this.noteKeys.filter((key) => key !== name);
+        for (const view of this.project.views) {
+          view.panels = view.panels.filter((panel) => panel.uniqueName !== name);
+        }
+      }
+    }
+  }
+
+  deleteCategory(name: string) {
+    if (this.project) {
+      if (this.project.categories.delete(name)) {
+        this.categoryKeys = this.categoryKeys.filter((key) => key !== name);
         for (const view of this.project.views) {
           view.panels = view.panels.filter((panel) => panel.uniqueName !== name);
         }
