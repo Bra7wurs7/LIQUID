@@ -42,7 +42,7 @@ export class SurveyComponent implements OnInit {
   }
 
   submit() {
-    this.http.post('http://localhost:8080/survey', this.survey).toPromise().then((succ) => {
+    this.http.post('http://csideinn.de:8080/survey', this.survey).toPromise().then((succ) => {
       window.localStorage.setItem('surveySubmitted', 'true')
       this.submitted = true;
     })
