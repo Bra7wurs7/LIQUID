@@ -67,7 +67,7 @@ export class AttributeContainer extends NoteAttribute {
     direction: 'row' | 'col' = 'row',
     justify: 'start' | 'end' | 'center' | 'around' | 'between' | 'evenly' = 'start',
     align: 'stretch' | 'start' | 'center' | 'end' | 'baseline' = 'stretch',
-    width: 'full' | 'max' | 'min' | 'unset' = 'unset',
+    width: 'full' | 'max' | 'min' | 'unset' = 'max',
     bordered: boolean = false,
     visibility: 'combat' | 'both' | 'nocombat' = 'both',
   ) {
@@ -84,7 +84,7 @@ export class AttributeTable {
   readonly className: string = 'AttributeTable';
   float: 'left' | 'right' | 'unset';
   children: NoteAttribute[];
-  constructor(float: 'left' | 'right' | 'unset' = 'unset', children: NoteAttribute[] | undefined = undefined) {
+  constructor(float: 'left' | 'right' | 'unset' = 'right', children: NoteAttribute[] | undefined = undefined) {
     this.float = float;
     this.children = children ?? [new AttributeContainer([], 'col')];
   }

@@ -1,0 +1,215 @@
+<div class="flex flex-column" *ngIf="!submitted" style="width: 550px;">
+  <span>
+    To help me with my bachelor's thesis and ultimately with improving this software, please evaluate each of the
+    following 10 statements based on how much you agree with them.
+    Giving <b>one point</b> means that you <b>strongly disagree</b> with the statement, while <b>five points</b>
+    proclaim <b>strong agreement</b>.
+    I would appreciate it if you also took the time to explain how you came to your evaluation in the text field below
+    each question.
+    <br>
+    <br>
+    No personal information about you will be stored. (Unless your answers are considered personal information. I don't
+    know, I'm a software engineer, not a lawyer)
+    Upon submission, your answers to this survey will be stored on my server until the 1st of November 2021 at which
+    time they will be deleted. They will be saved anonymously. It will be entirely impossible to link your answers to
+    your identity.
+    <b>The results of the survey will be published in my bachelor's thesis at the Technical University of central Hesse
+      in Germany, possibly including anything you write in the text-fields of this survey.</b>
+    If you want read my bachelor's thesis once its done, feel free to reach out to me at <a
+      href="mailto:sebastian@csideinn.de">sebastian@csideinn.de</a>
+  </span>
+
+  <h6>Statement 1</h6>
+  <div class="flex flex-row justify-content-between align-items-start">
+    <span style="max-width: 400px;">
+      "I think that I would like to use this system frequently"
+    </span>
+    <div class="flex flex-column">
+      <p-rating [(ngModel)]="survey.q1" [cancel]="false" iconOnClass="pi pi-circle-on" iconOffClass="pi pi-circle-off">
+      </p-rating>
+      <div class="flex flex-row justify-content-between">
+        <span style="font-size: xx-small;" class="flex w-min">Strongly Disagree</span>
+        <span style="font-size: xx-small;" class="flex w-min text-right">Strongly Agree</span>
+      </div>
+    </div>
+  </div>
+  <textarea class="w-full" pInputTextarea placeholder="Explain your thoughts behind this rating (optional)"
+    [(ngModel)]="survey.q1freetext" [autoResize]="true"></textarea>
+
+  <h6>Statement 2</h6>
+  <div class="flex flex-row justify-content-between align-items-start">
+    <span style="max-width: 400px;">
+      "I found the system unnecessarily complex"
+    </span>
+    <div class="flex flex-column">
+      <p-rating [(ngModel)]="survey.q2" [cancel]="false" iconOnClass="pi pi-circle-on" iconOffClass="pi pi-circle-off">
+      </p-rating>
+      <div class="flex flex-row justify-content-between">
+        <span style="font-size: xx-small;" class="flex w-min">Strongly Disagree</span>
+        <span style="font-size: xx-small;" class="flex w-min text-right">Strongly Agree</span>
+      </div>
+    </div>
+  </div>
+  <textarea class="w-full" pInputTextarea placeholder="Explain your thoughts behind this rating (optional)"
+    [(ngModel)]="survey.q2freetext" [autoResize]="true"></textarea>
+
+  <h6>Statement 3</h6>
+  <div class="flex flex-row justify-content-between align-items-start">
+    <span style="max-width: 400px;">
+      "I thought the system was easy to use"
+    </span>
+    <div class="flex flex-column">
+      <p-rating [(ngModel)]="survey.q3" [cancel]="false" iconOnClass="pi pi-circle-on" iconOffClass="pi pi-circle-off">
+      </p-rating>
+      <div class="flex flex-row justify-content-between">
+        <span style="font-size: xx-small;" class="flex w-min">Strongly Disagree</span>
+        <span style="font-size: xx-small;" class="flex w-min text-right">Strongly Agree</span>
+      </div>
+    </div>
+  </div>
+  <textarea class="w-full" pInputTextarea placeholder="Explain your thoughts behind this rating (optional)"
+    [(ngModel)]="survey.q3freetext" [autoResize]="true"></textarea>
+
+  <h6>Statement 4</h6>
+  <div class="flex flex-row justify-content-between align-items-start">
+    <span style="max-width: 400px;">
+      "I think that I would need the support of a technical person to be able to use this system"
+    </span>
+    <div class="flex flex-column">
+      <p-rating [(ngModel)]="survey.q4" [cancel]="false" iconOnClass="pi pi-circle-on" iconOffClass="pi pi-circle-off">
+      </p-rating>
+      <div class="flex flex-row justify-content-between">
+        <span style="font-size: xx-small;" class="flex w-min">Strongly Disagree</span>
+        <span style="font-size: xx-small;" class="flex w-min text-right">Strongly Agree</span>
+      </div>
+    </div>
+  </div>
+  <textarea class="w-full" pInputTextarea placeholder="Explain your thoughts behind this rating (optional)"
+    [(ngModel)]="survey.q4freetext" [autoResize]="true"></textarea>
+
+  <h6>Statement 5</h6>
+  <div class="flex flex-row justify-content-between align-items-start">
+    <span style="max-width: 400px;">
+      "I found the various functions in this system were well integrated"
+    </span>
+    <div class="flex flex-column">
+      <p-rating [(ngModel)]="survey.q5" [cancel]="false" iconOnClass="pi pi-circle-on" iconOffClass="pi pi-circle-off">
+      </p-rating>
+      <div class="flex flex-row justify-content-between">
+        <span style="font-size: xx-small;" class="flex w-min">Strongly Disagree</span>
+        <span style="font-size: xx-small;" class="flex w-min text-right">Strongly Agree</span>
+      </div>
+    </div>
+  </div>
+  <textarea class="w-full" pInputTextarea placeholder="Explain your thoughts behind this rating (optional)"
+    [(ngModel)]="survey.q5freetext" [autoResize]="true"></textarea>
+
+  <h6>Statement 6</h6>
+  <div class="flex flex-row justify-content-between align-items-start">
+    <span style="max-width: 400px;">
+      "I thought there was too much inconsistency in this system"
+    </span>
+    <div class="flex flex-column">
+      <p-rating [(ngModel)]="survey.q6" [cancel]="false" iconOnClass="pi pi-circle-on" iconOffClass="pi pi-circle-off">
+      </p-rating>
+      <div class="flex flex-row justify-content-between">
+        <span style="font-size: xx-small;" class="flex w-min">Strongly Disagree</span>
+        <span style="font-size: xx-small;" class="flex w-min text-right">Strongly Agree</span>
+      </div>
+    </div>
+  </div>
+  <textarea class="w-full" pInputTextarea placeholder="Explain your thoughts behind this rating (optional)"
+    [(ngModel)]="survey.q6freetext" [autoResize]="true"></textarea>
+
+  <h6>Statement 7</h6>
+  <div class="flex flex-row justify-content-between align-items-start">
+    <span style="max-width: 400px;">
+      "I would imagine that most people would learn to use this system very quickly"
+    </span>
+    <div class="flex flex-column">
+      <p-rating [(ngModel)]="survey.q7" [cancel]="false" iconOnClass="pi pi-circle-on" iconOffClass="pi pi-circle-off">
+      </p-rating>
+      <div class="flex flex-row justify-content-between">
+        <span style="font-size: xx-small;" class="flex w-min">Strongly Disagree</span>
+        <span style="font-size: xx-small;" class="flex w-min text-right">Strongly Agree</span>
+      </div>
+    </div>
+  </div>
+  <textarea class="w-full" pInputTextarea placeholder="Explain your thoughts behind this rating (optional)"
+    [(ngModel)]="survey.q7freetext" [autoResize]="true"></textarea>
+
+  <h6>Statement 8</h6>
+  <div class="flex flex-row justify-content-between align-items-start">
+    <span style="max-width: 400px;">
+      "I found the system very cumbersome to use"
+    </span>
+    <div class="flex flex-column">
+      <p-rating [(ngModel)]="survey.q8" [cancel]="false" iconOnClass="pi pi-circle-on" iconOffClass="pi pi-circle-off">
+      </p-rating>
+      <div class="flex flex-row justify-content-between">
+        <span style="font-size: xx-small;" class="flex w-min">Strongly Disagree</span>
+        <span style="font-size: xx-small;" class="flex w-min text-right">Strongly Agree</span>
+      </div>
+    </div>
+  </div>
+  <textarea class="w-full" pInputTextarea placeholder="Explain your thoughts behind this rating (optional)"
+    [(ngModel)]="survey.q8freetext" [autoResize]="true"></textarea>
+
+  <h6>Statement 9</h6>
+  <div class="flex flex-row justify-content-between align-items-start">
+    <span style="max-width: 400px;">
+      "I felt very confident in using the system"
+    </span>
+    <div class="flex flex-column">
+      <p-rating [(ngModel)]="survey.q9" [cancel]="false" iconOnClass="pi pi-circle-on" iconOffClass="pi pi-circle-off">
+      </p-rating>
+      <div class="flex flex-row justify-content-between">
+        <span style="font-size: xx-small;" class="flex w-min">Strongly Disagree</span>
+        <span style="font-size: xx-small;" class="flex w-min text-right">Strongly Agree</span>
+      </div>
+    </div>
+  </div>
+  <textarea class="w-full" pInputTextarea placeholder="Explain your thoughts behind this rating (optional)"
+    [(ngModel)]="survey.q9freetext" [autoResize]="true"></textarea>
+
+  <h6>Statement 10</h6>
+  <div class="flex flex-row justify-content-between align-items-start">
+    <span style="max-width: 400px;">
+      "I needed to learn a lot of things before I could get going with this system"
+    </span>
+    <div class="flex flex-column">
+      <p-rating [(ngModel)]="survey.q10" [cancel]="false" iconOnClass="pi pi-circle-on" iconOffClass="pi pi-circle-off">
+      </p-rating>
+      <div class="flex flex-row justify-content-between">
+        <span style="font-size: xx-small;" class="flex w-min">Strongly Disagree</span>
+        <span style="font-size: xx-small;" class="flex w-min text-right">Strongly Agree</span>
+      </div>
+    </div>
+  </div>
+  <textarea class="w-full" pInputTextarea placeholder="Explain your thoughts behind this rating (optional)"
+    [(ngModel)]="survey.q10freetext" [autoResize]="true"></textarea>
+
+  <h6>Anything else?</h6>
+  <textarea class="w-full" pInputTextarea
+    placeholder="Is there anything else you want me (the developer) to know? Got any feature requests?"
+    [(ngModel)]="survey.anythingelse" [autoResize]="true"></textarea>
+
+  <div class="flex flex-row justify-content-end align-items-end" style="margin-top: 15px;">
+    <p-button label="Submit" icon="pi pi-check" iconPos="right" (click)="submit()"></p-button>
+  </div>
+</div>
+
+<div *ngIf="submitted" style="width: 550px;">
+  Thank you for participating in the survey!
+  <br>
+  <br>
+  No personal information about you will be stored. (Unless your answers are considered personal information. I don't
+  know, I'm a software engineer, not a lawyer)
+  Upon submission, your answers to this survey will be stored on my server until the 1st of November 2021 at which time
+  they will be deleted. They will be saved anonymously. It will be entirely impossible to link your answers to your
+  identity.
+  <b>The results of the survey will be published in my bachelor's thesis at the Technical University of central Hesse in
+    Germany, possibly including anything you wrote in the text-fields of this survey.</b>
+  If you want read my bachelor's thesis once its done, feel free to reach out to me at <a
+    href="mailto:sebastian@csideinn.de">sebastian@csideinn.de</a>
+</div>

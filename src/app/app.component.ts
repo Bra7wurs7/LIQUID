@@ -10,6 +10,7 @@ import { IndexedDbService } from './services/indexedDb/indexed-db.service';
 import { PanelView } from './models/panelView.model';
 import { of, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { surveyDto } from './models/survey/survey.model';
 
 @Component({
   selector: 'app-root',
@@ -44,6 +45,9 @@ export class AppComponent implements OnInit {
     })
   );
 
+  showSurveyDialog: boolean = false;
+  showPrivacyPolicyDialog: boolean = false;
+
   constructor(private messageService: MessageService, private localdriveService: LocalDriveService, private indexedDbService: IndexedDbService, private confirmationService: ConfirmationService) {
     this.allProjectsPromise = indexedDbService.getAllProjects();
   }
@@ -58,9 +62,9 @@ export class AppComponent implements OnInit {
       })
       await this.loadFromDB(lastProject.title);
       if (!this.project) {
-        this.newProject();
+        this.loadProject(defaultProject.toProject());
       }
-      this.autosave.subscribe(() => {});
+      this.autosave.subscribe(() => { });
     })
   }
 
@@ -81,21 +85,24 @@ export class AppComponent implements OnInit {
     this.messageService.add({ severity: 'error', summary: 'Feature not supported yet.', life: 3000 })
   }
 
-  onElementClick(uniqueName: string, contentPanel: ScrollPanel) {
+  onElementClick(uniqueName: string, contentPanel: HTMLDivElement) {
     /** Replace onNoteClick and onCategoryClick with this */
-  }
-
-  onNoteClick(noteTitle: string, contentPanel: ScrollPanel) {
     if (!this.project) {
       return;
     }
+    const existingPanel = this.getPanelFromActiveViewForName(uniqueName);
 
-    const existingPanel = this.getPanelFromActiveViewForName(noteTitle);
-    if (!this.project) {
-      return;
-    }
     if (existingPanel === undefined) {
-      const newPanel = new NotePanel(noteTitle)
+      let newPanel: GenericPanel;
+      if (this.project.notes.has(uniqueName)) {
+        newPanel = new NotePanel(uniqueName)
+      } else if (this.project.categories.has(uniqueName)) {
+        newPanel = new CategoryPanel(uniqueName)
+      } else {
+        this.messageService.add({severity: 'error', summary: `${uniqueName} could not be found`})
+        return;
+      }
+
       this.project?.views[this.project?.activeViewIndex].panels.push(newPanel);
       const scrollToNewPanel = (attempt: number = 0) => {
         if (newPanel.htmlElement !== undefined) {
@@ -115,34 +122,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  onCategoryClick(categoryTitle: string, contentPanel: ScrollPanel) {
-    if (!this.project) {
-      return;
-    }
-    const existingPanel = this.getPanelFromActiveViewForName(categoryTitle);
-
-    if (existingPanel === undefined) {
-      const newPanel = new CategoryPanel(categoryTitle)
-      this.project.views[this.project?.activeViewIndex].panels.push(newPanel);
-      const scrollToNewPanel = (attempt: number = 0) => {
-        if (newPanel.htmlElement !== undefined) {
-          this.scrollToPanel(newPanel, contentPanel)
-        } else {
-          if (attempt > 50) {
-          } else {
-            attempt++;
-            setTimeout(() => scrollToNewPanel(attempt), 100)
-          }
-        }
-      }
-      scrollToNewPanel();
-    } else {
-      this.project.views[this.project.activeViewIndex].activePanelIndex = this.project.views[this.project.activeViewIndex].panels.indexOf(existingPanel)
-      this.scrollToPanel(existingPanel, contentPanel);
-    }
-  }
-
-  onAddElementClick(uniqueName: string, targetMap: 'categories' | 'notes', contentPanel: ScrollPanel) {
+  onAddElementClick(uniqueName: string, targetMap: 'categories' | 'notes', contentPanel: HTMLDivElement) {
     if (this.project?.categories?.has(uniqueName)) {
       this.messageService.add({ severity: 'error', summary: 'A category with this name already exists. All names in GAS need to be unique.', life: 3000 })
     } else if (this.project?.notes?.has(uniqueName)) {
@@ -152,12 +132,12 @@ export class AppComponent implements OnInit {
         case 'categories':
           this.project?.categories?.set(uniqueName, new Category(uniqueName))
           this.categoryKeys?.push(uniqueName);
-          this.onCategoryClick(uniqueName, contentPanel);
+          this.onElementClick(uniqueName, contentPanel);
           break;
         case 'notes':
           this.project?.notes?.set(uniqueName, new Note(uniqueName))
           this.noteKeys?.push(uniqueName);
-          this.onNoteClick(uniqueName, contentPanel);
+          this.onElementClick(uniqueName, contentPanel);
           break;
       }
     }
@@ -176,8 +156,8 @@ export class AppComponent implements OnInit {
     }
   }
 
-  scrollToPanel(child: GenericPanel, parent: ScrollPanel) {
-    parent.scrollTop(child.htmlElement?.offsetTop ?? 0)
+  scrollToPanel(child: GenericPanel, parent: HTMLDivElement) {
+    parent.scrollTop = child.htmlElement?.offsetTop ?? 0;
   }
 
   panelIsInstanceOf(panel: GenericPanel, type: Type<GenericPanel>): boolean {
@@ -207,8 +187,9 @@ export class AppComponent implements OnInit {
     }
   }
 
-  navigateInternalLink(internallink: string) {
-    internallink.replace('[[', '').replace(']]', '');
+  navigateInternalLink(internallink: string, contentPanel: HTMLDivElement) {
+    const uniqueName = internallink.replace('[[', '').replace(']]', '');
+    this.onElementClick(uniqueName, contentPanel);
   }
 
   getRelatedElements(panel: GenericPanel) {
@@ -254,7 +235,7 @@ export class AppComponent implements OnInit {
 
   async loadFromDB(title: string) {
     const project = await this.indexedDbService.loadProject(title)
-    if(project) {
+    if (project) {
       this.loadProject(SerializableProject.deserialize(project.projectJSON).toProject());
     }
   }
@@ -322,5 +303,12 @@ export class AppComponent implements OnInit {
         }
       }
     }
+  }
+
+  openSurvey() {
+    this.showSurveyDialog = true;
+  }
+  openPrivacyPolicy() {
+    this.showPrivacyPolicyDialog = true;
   }
 }

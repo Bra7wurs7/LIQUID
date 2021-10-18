@@ -1,16 +1,21 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import * as marked from 'marked';
 
 @Pipe({
   name: 'parseMarkup'
 })
 export class ParseMarkupPipe implements PipeTransform {
+  constructor(private sanitizer: DomSanitizer) {}
 
-  transform(value: string, ...args: unknown[]): string {
+  transform(value: string, ...args: unknown[]): SafeHtml {
     return this.parseInternalLinks(marked(value));
   }
 
-  parseInternalLinks(htmlMarkdownString: string): string {
-    return htmlMarkdownString.replace(new RegExp('\\[\\[[^\\[]*\\]\\]','g'), '<span (click)="internalLinkActivatedEvent.emit($&)" class="internalLink">$&</span>')
+  parseInternalLinks(htmlMarkdownString: string): SafeHtml {
+    this.sanitizer.sanitize(0, htmlMarkdownString)
+    const md = htmlMarkdownString.replace(new RegExp('\\[\\[[^\\[]*\\]\\]','g'), '<span onclick="internalLinkOpener.value=\'$&\'; internalLinkOpener.click()" class="internalLink">$&</span>')
+    const safe = this.sanitizer.bypassSecurityTrustHtml(md);
+    return safe;
   }
 }

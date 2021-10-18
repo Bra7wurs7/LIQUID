@@ -37,6 +37,9 @@ import { LocalDriveService } from './services/localDrive/local-drive.service';
 import { IndexedDbService } from './services/indexedDb/indexed-db.service';
 import {DialogModule} from 'primeng/dialog';
 import {TableModule} from 'primeng/table';
+import {RatingModule} from 'primeng/rating';
+import { SurveyComponent } from './components/survey/survey.component';
+import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-policy.component';
 
 
 @NgModule({
@@ -46,6 +49,8 @@ import {TableModule} from 'primeng/table';
     ParseMarkupPipe,
     FillAttributePipe,
     CategoryPanelComponent,
+    SurveyComponent,
+    PrivacyPolicyComponent,
   ],
   imports: [
     BrowserModule,
@@ -76,6 +81,7 @@ import {TableModule} from 'primeng/table';
     AutoCompleteModule,
     DialogModule,
     TableModule,
+    RatingModule,
   ],
   providers: [ConfirmationService, MessageService, LocalDriveService, IndexedDbService],
   bootstrap: [AppComponent]

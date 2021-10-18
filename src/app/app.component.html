@@ -52,7 +52,7 @@
           <div *ngFor="let key of (filteredNoteKeys !== undefined ? filteredNoteKeys : noteKeys)">
             <div style="margin: 1px"
               class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover hideChildUntilHoverParent"
-              (click)="onNoteClick(key, contentPanel)">
+              (click)="onElementClick(key, contentPanel)">
               <div class="label flex align-items-center">
                 <span>
                   {{key}}
@@ -107,7 +107,7 @@
           <div *ngFor="let key of (filteredCategoryKeys !== undefined ? filteredCategoryKeys : categoryKeys)">
             <div style="margin: 1px"
               class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover hideChildUntilHoverParent"
-              (click)="onCategoryClick(key, contentPanel)">
+              (click)="onElementClick(key, contentPanel)">
               <div class="label flex align-items-center">
                 <span>
                   {{key}}
@@ -266,12 +266,21 @@
                 <input type="text" placeholder="Project title (required)" pInputText style="margin-bottom: 5px;"
                   #newProjectTitleInput [required]="true" />
                 <button [disabled]="!newProjectTitleInput.value" pButton pRipple type="button" icon="pi pi-plus"
-                  label="New Project"
-                  (click)="newProject(newProjectTitleInput.value); newProjectOverlay.hide()"
+                  label="New Project" (click)="newProject(newProjectTitleInput.value); newProjectOverlay.hide()"
                   class="p-button-outlined"></button>
               </div>
             </ng-template>
           </p-overlayPanel>
+          <div style="margin: 1px"
+            class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover"
+            (click)="downloadProject()">
+            <div class="label flex align-items-center">
+              <i class="pi pi-fw pi-download" style="margin-right: 5px;"></i>
+              <span>
+                Download
+              </span>
+            </div>
+          </div>
           <div style="margin: 1px"
             class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover"
             (click)="fileUpload.click()">
@@ -283,16 +292,6 @@
             </div>
             <input style="visibility: collapse; width: 0; height: 0;" type="file" class="file-input"
               (change)="onFileSelected(fileUpload)" #fileUpload>
-          </div>
-          <div style="margin: 1px"
-            class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover"
-            (click)="downloadProject()">
-            <div class="label flex align-items-center">
-              <i class="pi pi-fw pi-download" style="margin-right: 5px;"></i>
-              <span>
-                Download
-              </span>
-            </div>
           </div>
           <div style="margin: 1px"
             class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover"
@@ -310,8 +309,7 @@
                 <input type="text" placeholder="Project title (required)" pInputText style="margin-bottom: 5px;"
                   #projectTitleInput [(ngModel)]="project.title" />
                 <button [disabled]="!project.title" pButton pRipple type="button" icon="pi pi-save"
-                  label="Save to indexedDB"
-                  (click)="saveToDB(project.title); saveProjectOverlay.hide()"
+                  label="Save to indexedDB" (click)="saveToDB(project.title); saveProjectOverlay.hide()"
                   class="p-button-outlined"></button>
               </div>
             </ng-template>
@@ -328,7 +326,7 @@
           </div>
         </ng-template>
       </p-panel>
-      <p-panel [toggleable]="true" #settings class="sidemenuPanel panel-hide-default-toggler" [collapsed]="true">
+      <!--<p-panel [toggleable]="true" #settings class="sidemenuPanel panel-hide-default-toggler" [collapsed]="true">
         <ng-template pTemplate="header">
           <div class="flex justify-content-between align-items-center">
             <button (click)="settings.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
@@ -350,15 +348,35 @@
             </div>
           </div>
         </ng-template>
-      </p-panel>
-
+      </p-panel>-->
+      <div
+        class="flex sidebar-element bordered setFont flex-row justify-content-between align-items-center h-2rem pointerOnHover hideChildUntilHoverParent"
+        (click)="openSurvey()">
+        <div class="label flex w-full align-items-center">
+          <i class="pi pi-chart-line" style="margin-right: 5px;"></i>
+          <span>
+            Survey
+          </span>
+        </div>
+      </div>
+      <div style="padding-bottom: 1px;"></div>
+      <div
+        class="flex sidebar-element bordered setFont flex-row justify-content-between align-items-center h-2rem pointerOnHover hideChildUntilHoverParent"
+        (click)="openPrivacyPolicy()">
+        <div class="label flex w-full align-items-center">
+          <i class="pi pi-id-card" style="margin-right: 5px;"></i>
+          <span>
+            Privacy Policy
+          </span>
+        </div>
+      </div>
     </div>
   </div>
   <div class="center flex min-h-full w-full relative overflow-hide">
     <div class="absolute right-0 bottom-0 flex flex-column z-2 footer" *ngIf="project">
-      <div class="element pi pi-arrow-circle-up pointerOnHover" (click)="contentPanel.scrollTop(0)"></div>
+      <div class="element pi pi-arrow-circle-up pointerOnHover" (click)="contentPanel.scrollTop = 0"></div>
       <div class="pseudo"></div>
-      <div class="element pi pi-arrow-circle-down pointerOnHover" (click)="contentPanel.scrollTop(infinity)"></div>
+      <div class="element pi pi-arrow-circle-down pointerOnHover" (click)="contentPanel.scrollTop = contentPanel.scrollHeight"></div>
       <div class="pseudo"></div>
     </div>
     <div class="absolute left-43px bottom-0 flex flex-row z-3 footer" *ngIf="project">
@@ -368,7 +386,7 @@
           [pTooltip]="'Remove View ' + (index + 1)">
           <div class="pi pi-times element pointerOnHover" style="font-size: 1em;" (click)="removeView(index)"></div>
         </div>
-        <div [pTooltip]="'View ' + (index + 1)" (click)="this.project.activeViewIndex = index" class="pointerOnHover">
+        <div [pTooltip]="'View ' + (index + 1)" (click)="this.project.activeViewIndex = index" style="height: 27px;" class="pointerOnHover">
           <div class="pi pi-circle-off element"></div>
           <div style="position: absolute; left: 0; top: 0; width: 25px; height: 27px;"
             class="flex align-items-center justify-content-center">
@@ -382,30 +400,28 @@
     <div class="absolute left-0 bottom-0 flex flex-row z-3 footer" *ngIf="project">
       <div class="pi pi-users element pointerOnHover" [pTooltip]="'Encounter Mode (Not yet supported)'"></div>
     </div>
-    <p-scrollPanel class="content" [style]="{width: '100%', height: '100%'}" styleClass="custombar" #contentPanel
-      id="contentPanel">
-      <div style="padding-bottom: 20vh;" *ngIf="project">
-        <div
-          *ngFor="let panel of (project && project.views && project.views.length > 0) ? project.views[project.activeViewIndex].panels : [], let index = index"
-          (mouseenter)="project.views[project.activeViewIndex].activePanelIndex = index">
-          <div class="pseudo" #pseudo></div>
-          <app-note-panel [isActivePanel]="project.views[project.activeViewIndex].activePanelIndex === index"
-            *ngIf="panelIsInstanceOf(panel, notePanelType)" [notes]="project.notes" [categories]="project.categories"
-            [noteName]="panel.uniqueName" [panel]="panel" (internalLinkActivatedEvent)="navigateInternalLink($event)"
-            (closePanelEvent)="removePanelFromActiveView(panel)"
-            (moveUpEvent)="moveUp(index, project.views[project.activeViewIndex].panels)"
-            (moveDownEvent)="moveDown(index, project.views[project.activeViewIndex].panels)"></app-note-panel>
-          <app-category-panel [isActivePanel]="project.views[project.activeViewIndex].activePanelIndex === index"
-            *ngIf="panelIsInstanceOf(panel, categoryPanelType)" [categories]="project.categories"
-            [categoryName]="panel.uniqueName" [panel]="panel"
-            (internalLinkActivatedEvent)="navigateInternalLink($event)"
-            (closePanelEvent)="removePanelFromActiveView(panel)"
-            (moveUpEvent)="moveUp(index, project.views[project.activeViewIndex].panels)"
-            (moveDownEvent)="moveDown(index, project.views[project.activeViewIndex].panels)"></app-category-panel>
-        </div>
+    <input type="text" style="width: 0; height: 0; visibility: collapse;" #internalLinkOpener id="internalLinkOpener" (click)="navigateInternalLink(internalLinkOpener.value, contentPanel)">
+    <div class="content" style="width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth;" styleClass="custombar"
+      #contentPanel id="contentPanel">
+      <div
+        *ngFor="let panel of (project && project.views && project.views.length > 0) ? project.views[project.activeViewIndex].panels : [], let index = index"
+        (mouseenter)="project!.views[project!.activeViewIndex].activePanelIndex = index">
+        <div class="pseudo" #pseudo></div>
+        <app-note-panel [isActivePanel]="project!.views[project!.activeViewIndex].activePanelIndex === index"
+          *ngIf="panelIsInstanceOf(panel, notePanelType)" [notes]="project!.notes" [categories]="project!.categories"
+          [noteName]="panel.uniqueName" [panel]="panel"
+          (closePanelEvent)="removePanelFromActiveView(panel)"
+          (moveUpEvent)="moveUp(index, project!.views[project!.activeViewIndex].panels)"
+          (moveDownEvent)="moveDown(index, project!.views[project!.activeViewIndex].panels)"></app-note-panel>
+        <app-category-panel [isActivePanel]="project!.views[project!.activeViewIndex].activePanelIndex === index"
+          *ngIf="panelIsInstanceOf(panel, categoryPanelType)" [categories]="project!.categories"
+          [categoryName]="panel.uniqueName" [panel]="panel"
+          (closePanelEvent)="removePanelFromActiveView(panel)"
+          (moveUpEvent)="moveUp(index, project!.views[project!.activeViewIndex].panels)"
+          (moveDownEvent)="moveDown(index, project!.views[project!.activeViewIndex].panels)"></app-category-panel>
       </div>
       <div class="pseudo"></div>
-    </p-scrollPanel>
+    </div>
   </div>
   <div class="right sidebar min-h-full w-2 p-shadow-3 overflow-hidden">
     <div class="p-1 flex flex-column h-full overflow-y-auto">
@@ -433,7 +449,7 @@
         *ngFor="let element of (project && project.views && project.views.length > 0) ? getRelatedElements(project.views[project.activeViewIndex].panels[project.views[project.activeViewIndex].activePanelIndex]) : [], let index = index">
         <div
           class="flex sidebar-element bordered setFont flex-row justify-content-between align-items-center h-2rem pointerOnHover hideChildUntilHoverParent"
-          (click)="onNoteClick(element, contentPanel)">
+          (click)="onElementClick(element, contentPanel)">
           <div class="label flex align-items-center">
             <span>
               {{element}}
@@ -480,3 +496,12 @@
   </p-dialog>
   <p-confirmDialog #overlayOverlay [baseZIndex]="3000" width="425" appendTo="body"></p-confirmDialog>
 </div>
+
+
+<p-dialog header="Usability Survey" appendTo="body" #loadDialog [(visible)]="showSurveyDialog">
+  <app-survey></app-survey>
+</p-dialog>
+
+<p-dialog header="Privacy Policy" appendTo="body" #privacyPolicyDialog [(visible)]="showPrivacyPolicyDialog">
+  <app-privacy-policy></app-privacy-policy>
+</p-dialog>

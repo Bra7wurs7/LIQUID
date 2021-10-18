@@ -1,116 +1,4 @@
-import { Category } from "./category.model";
-import { CategoryPanel, GenericPanel, NotePanel } from "./panel.model";
-import { Note } from "./note.model";
-import { AttributeContainer, AttributeItem, AttributeTable } from "./noteAttribute.model";
-import { PanelView } from "./panelView.model";
-import { reviver, serializable } from "../helper/serialize.helper";
-
-export class Project {
-  title: string;
-  /** Object representing a map of all notes for this project */
-  notes: Map<string, Note>;
-  /** Object representing a map of all note categories for this project*/
-  categories: Map<string, Category>;
-  /** */
-  views: PanelView[] = [];
-  /** */
-  activeViewIndex: number;
-  /** version of GAS that this Project last saved with */
-  version: number;
-  constructor(
-    title: string,
-    notes: Map<string, Note>,
-    categories: Map<string, Category>,
-    views: PanelView[],
-    activeViewIndex: number = 0,
-    version: number = 1,
-  ) {
-    this.title = title
-    this.notes = notes;
-    this.categories = categories;
-    this.views = views;
-    this.activeViewIndex = activeViewIndex;
-    this.version = version
-  }
-
-  toSerializableProject(): SerializableProject {
-    const notes: any = {};
-    const categories: any = {};
-    const views: PanelView[] = []
-    this.notes.forEach((value, key) => {
-      notes[key] = value;
-    })
-    this.categories.forEach((value, key) => {
-      categories[key] = value;
-    })
-    this.views.forEach((view) => {
-      const viewCopy = Object.assign({}, view);
-      const panels: GenericPanel[] = [];
-      viewCopy.panels.forEach((panel) => {
-        const panelCopy = Object.assign({}, panel);
-        delete panelCopy.htmlElement;
-        panels.push(panelCopy);
-      })
-      viewCopy.panels = panels;
-      views.push(viewCopy);
-    })
-    return new SerializableProject(this.title, notes, categories, views, this.activeViewIndex, this.version);
-  }
-}
-
-@serializable
-export class SerializableProject {
-  readonly className: string = 'SerializableProject';
-  title: string;
-  /** Object representing a map of all notes for this project */
-  notes: any;
-  /** Object representing a map of all note categories for this project*/
-  categories: any;
-  /** */
-  views: PanelView[] = [];
-  /** */
-  activeViewIndex: number;
-  /** version of GAS that this Project last saved with */
-  version: number;
-
-  constructor(
-    title: string = '',
-    notes: any = {},
-    categories: any = {},
-    views: PanelView[] = [],
-    activeViewIndex: number = 0,
-    version: number = 1,
-  ) {
-    this.title = title
-    this.notes = notes;
-    this.categories = categories;
-    this.views = views;
-    this.activeViewIndex = activeViewIndex;
-    this.version = version
-  }
-
-  toProject(): Project {
-    const notes: Map<string, Note> = new Map();
-    const categories: Map<string, Category> = new Map();
-    Object.keys(this.notes).forEach((key: string) => {
-      notes.set(key, this.notes[key] as Note)
-    });
-    Object.keys(this.categories).forEach((key: string) => {
-      categories.set(key, this.categories[key] as Category)
-    });
-    return new Project(this.title, notes, categories, this.views, this.activeViewIndex, this.version);
-  }
-
-  serialize(): string {
-    return JSON.stringify(this, null, 2);
-  }
-
-  static deserialize(json: string): SerializableProject {
-    return JSON.parse(json, reviver);
-  }
-}
-
-export const defaultProjectJson = {
+{
   "className": "SerializableProject",
   "views": [
     {
@@ -142,7 +30,7 @@ export const defaultProjectJson = {
       ],
       "uniqueName": "Getting Started",
       "attributesMap": {},
-      "content": "## Hello!\n### Thanks for evaluating this (very early) prototype of Game Master's Assistant Software (GAS)!\nThis prototype was developed as part of a bachelors thesis trying to design a software to assist game masters with preparing and running tabletop role-playing games, that is both more user friendly, and more attuned to the needs of game-masters than similar software. After you are done with evaluating GAS I would like to ask you to fill out a short survey on the usability of the application (2-10 minutes). You can access the survey at any time by clicking the button labeled 'survey' in the bottom left corner of the page.\n#### Design Philosophy\nAt it's foundation, GAS will be a powerful, **networked note-keeping** tool and knowledge-base for world-building and writing of non-linear stories. It will provide\n- a **categorization** and templating system for notes, allowing users to define types and categories of notes, and allowing notes of the same category to share content and layout\n- the ability to group notes, and to **filter information** of viewed notes to provide the user with all and only information they need at a given moment, like during a **combat encounter** \n- a **chronicle** feature to allow it's users to define **calendars** and **timelines** of events for the fictional worlds and stories they are writing\n- an **atlas** to define and layer clickable, navigable **maps**\n- random **content generators** that the user can set up and customize themselves\n- **external resources** like **websites** of **PDFs** that can be opened inside of of GAS, referenced from or even embedded into Notes.\n\nAll while allowing information to be stored and networked in a way that imitates how our brains structure information.\n\nIn GAS, every Item of content has a unique name. That way you can create links to any item of content by writing it's name in square brackets anywhere you can put text like this: [[Getting Started]]. Text in GAS can be formatted using Markdown. For a quick introduction on how to use markdown click [here](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet).\n\nThe prototype of GAS you're looking at right now is **nowhere near feature-complete**, that means that many 'big' features like the chronicle, atlas, generator and resource tools are not yet implemented. Many smaller equally important features like the ability to drag and drop anything anywhere, or embed project content items into the project's other content items also don't work yet. However, the most important features of GAS, namely **creating**, **formatting**, **categorizing** and **cross-referencing** notes already do *(mostly)* work.\n\nTo get started with using the application you may want to read the Note [[User Interface]]. It should already be opened and can be found right below this Note. Otherwise feel free to create a new project using the menu point \'Project\' at the bottom of the left sidebar."
+      "content": "## Hello!\n### Thanks for evaluating this (very early) prototype of Game Master's Assistant Software (GAS)!\nThis prototype was developed as part of a bachelors thesis trying to design a software to assist game masters with preparing and running tabletop role-playing games, that is both more user friendly, and more attuned to the needs of game-masters than similar software. After you are done with evaluating GAS I would like to ask you to fill out a short survey on the usability of the application (2-10 minutes). You can access the survey at any time by clicking the button labeled 'survey' in the bottom left corner of the page.\n#### Design Philosophy\nAt it's foundation, GAS will be a powerful, **networked note-keeping** tool and knowledge-base for world-building and writing of non-linear stories. It will provide\n- a **categorization** and templating system for notes, allowing users to define types and categories of notes, and allowing notes of the same category to share content and layout\n- the ability to group notes, and to **filter information** of viewed notes to provide the user with all and only information they need at a given moment, like during a **combat encounter** \n- a **chronicle** feature to allow it's users to define **calendars** and **timelines** of events for the fictional worlds and stories they are writing\n- an **atlas** to define and layer clickable, navigable **maps**\n- random **content generators** that the user can set up and customize themselves\n- **external resources** like **websites** of **PDFs** that can be opened inside of of GAS, referenced from or even embedded into Notes.\n\nAll while allowing information to be stored and networked in a way that imitates how our brains structure information.\n\nIn GAS, every Item of content has a unique name. That way you can create links to any item of content by writing it's name in square brackets anywhere you can put text like this: [[Getting Started]]. Text in GAS can be formatted using Markdown. For a quick introduction on how to use markdown click [here](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet).\n\nThe prototype of GAS you're looking at right now is **nowhere near feature-complete**, that means that many 'big' features like the chronicle, atlas, generator and resource tools are not yet implemented. Many smaller equally important features like the ability to drag and drop anything anywhere, or embed project content items into the project's other content items also don't work yet. However, the most important features of GAS, namely **creating**, **formatting**, **categorizing** and **cross-referencing** notes already do *(mostly)* work.\n\nTo get started with using the application you may want to read the Note [[User Interface]]. It should already be opened and can be found right below this Note."
     },
     "User Interface": {
       "className": "Note",
@@ -1027,8 +915,3 @@ export const defaultProjectJson = {
   "activeViewIndex": 0,
   "version": 1
 }
-
-export const defaultProject: SerializableProject = SerializableProject.deserialize(JSON.stringify(defaultProjectJson))
-
-
-
