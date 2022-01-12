@@ -204,8 +204,8 @@ export class AppComponent implements OnInit {
 
   filterKeyArrays(filterString: string) {
     if (filterString) {
-      this.filteredNoteKeys = this.noteKeys.filter((key) => key.includes(filterString))
-      this.filteredCategoryKeys = this.categoryKeys.filter((key) => key.includes(filterString))
+      this.filteredNoteKeys = this.noteKeys.filter((key) => key.toLowerCase().includes(filterString.toLowerCase()))
+      this.filteredCategoryKeys = this.categoryKeys.filter((key) => key.toLowerCase().includes(filterString.toLowerCase()))
     } else {
       this.filteredNoteKeys = undefined;
       this.filteredCategoryKeys = undefined;
