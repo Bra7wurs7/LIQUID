@@ -34,10 +34,10 @@
           <p-overlayPanel #addNoteOverlay>
             <ng-template pTemplate>
               <div class="flex flex-wrap flex-column">
-                <input type="text" placeholder="Title for new Note/Folder" pInputText style="margin-bottom: 5px;"
-                  #noteFolderTitle [required]="true" />
+                <input autofocus type="text" placeholder="Title for new Note/Folder" pInputText style="margin-bottom: 5px;"
+                  #noteFolderTitle  (keydown.enter)="addNoteButton.click()" [required]="true" />
                 <div class="flex flew-wrap flex-row justify-content-between align-items-center">
-                  <button [disabled]="!noteFolderTitle.value" pButton pRipple type="button" icon="pi pi-plus"
+                  <button #addNoteButton [disabled]="!noteFolderTitle.value" pButton pRipple type="button" icon="pi pi-plus"
                     label="Note" class="p-button-outlined w-full"
                     (click)="onAddElementClick(noteFolderTitle.value, 'notes', contentPanel); addNoteOverlay.hide()"></button>
                   <!--<span>or</span>
@@ -93,9 +93,9 @@
           <p-overlayPanel #addCategoryOverlay>
             <ng-template pTemplate>
               <div class="flex flex-wrap flex-column">
-                <input type="text" placeholder="Title for new category" pInputText style="margin-bottom: 5px;"
-                  #categoryTitleInput [required]="true" />
-                <button [disabled]="!categoryTitleInput.value" pButton pRipple type="button" icon="pi pi-plus"
+                <input autofocus type="text" placeholder="Title for new category" pInputText style="margin-bottom: 5px;"
+                  #categoryTitleInput (keydown.enter)="addCategoryButton.click()" [required]="true" />
+                <button #addCategoryButton [disabled]="!categoryTitleInput.value" pButton pRipple type="button" icon="pi pi-plus"
                   label="Category"
                   (click)="onAddElementClick(categoryTitleInput.value, 'categories', contentPanel); addCategoryOverlay.hide()"
                   class="p-button-outlined"></button>
@@ -263,9 +263,9 @@
           <p-overlayPanel #newProjectOverlay>
             <ng-template pTemplate>
               <div class="flex flex-wrap flex-column">
-                <input type="text" placeholder="Project title (required)" pInputText style="margin-bottom: 5px;"
-                  #newProjectTitleInput [required]="true" />
-                <button [disabled]="!newProjectTitleInput.value" pButton pRipple type="button" icon="pi pi-plus"
+                <input autofocus type="text" placeholder="Project title (required)" pInputText style="margin-bottom: 5px;"
+                  #newProjectTitleInput (keydown.enter)="newProjectButton.click()" [required]="true" />
+                <button #newProjectButton [disabled]="!newProjectTitleInput.value" pButton pRipple type="button" icon="pi pi-plus"
                   label="New Project" (click)="newProject(newProjectTitleInput.value); newProjectOverlay.hide()"
                   class="p-button-outlined"></button>
               </div>
@@ -306,9 +306,9 @@
           <p-overlayPanel #saveProjectOverlay>
             <ng-template pTemplate>
               <div class="flex flex-wrap flex-column" *ngIf="project">
-                <input type="text" placeholder="Project title (required)" pInputText style="margin-bottom: 5px;"
+                <input autofocus (keydown.enter)="saveProjectButton.click()" type="text" placeholder="Project title (required)" pInputText style="margin-bottom: 5px;"
                   #projectTitleInput [(ngModel)]="project.title" />
-                <button [disabled]="!project.title" pButton pRipple type="button" icon="pi pi-save"
+                <button #saveProjectButton [disabled]="!project.title" pButton pRipple type="button" icon="pi pi-save"
                   label="Save to indexedDB" (click)="saveToDB(project.title); saveProjectOverlay.hide()"
                   class="p-button-outlined"></button>
               </div>

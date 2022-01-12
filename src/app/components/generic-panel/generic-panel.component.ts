@@ -3,8 +3,7 @@ import { GenericPanel } from 'src/app/models/panel.model';
 
 @Component({
   selector: 'app-generic-panel',
-  templateUrl: './generic-panel.component.html',
-  styleUrls: ['./generic-panel.component.scss']
+  template: '',
 })
 export abstract class GenericPanelComponent {
   @Output() internalLinkActivatedEvent: EventEmitter<string> = new EventEmitter()
@@ -14,6 +13,5 @@ export abstract class GenericPanelComponent {
   @Input() panel?: GenericPanel;
   @Input() isActivePanel?: boolean = false;
 
-  constructor() { }
-
+  constructor() { } 
 }
