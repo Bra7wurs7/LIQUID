@@ -7,12 +7,6 @@
           <input type="text" class="w-full" placeholder="Search" pInputText [(ngModel)]="leftSearch"
             (ngModelChange)="filterKeyArrays(leftSearch)" />
         </span>
-        <div
-          class="sidebar-search-button hover-border-primary flex flex-column align-content-center justify-content-center color-surface-card"
-          style="margin-bottom: 1px; margin-left: 1px;"
-          pTooltip="More advanced filtering and grouping options coming soon">
-          <i class="pi pi-ellipsis-v icon-button"></i>
-        </div>
       </div>
       <p-panel [toggleable]="true" #notes class="sidemenuPanel panel-hide-default-toggler notes" [collapsed]="true">
         <ng-template pTemplate="header">
@@ -127,113 +121,6 @@
           </div>
         </ng-template>
       </p-panel>
-      <p-panel [toggleable]="true" #chronicle class="sidemenuPanel panel-hide-default-toggler chronicle"
-        [collapsed]="true">
-        <ng-template pTemplate="header">
-          <div class="flex justify-content-between align-items-center">
-            <button (click)="chronicle.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
-              [icon]="'pi '+(chronicle.collapsed?'pi-chevron-right':'pi-chevron-down')"
-              class="p-panel-header-icon"></button>
-            <i class="pi pi-fw pi-calendar" style="margin-right: 5px;"></i>
-            <span>
-              Chronicle
-            </span>
-          </div>
-        </ng-template>
-        <ng-template pTemplate="icons">
-          <div class="flex justify-content-between align-items-center">
-            <button (click)="addChronicleOverlay.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
-              [icon]="'pi pi-plus'" class="p-panel-header-icon"></button>
-          </div>
-          <p-overlayPanel #addChronicleOverlay>
-            <ng-template pTemplate>
-              <span>Unfortunately this feature is not yet supported by the current prototype version</span>
-            </ng-template>
-          </p-overlayPanel>
-        </ng-template>
-        <ng-template pTemplate="content">
-        </ng-template>
-      </p-panel>
-      <p-panel [toggleable]="true" #atlas class="sidemenuPanel panel-hide-default-toggler atlas" [collapsed]="true">
-        <ng-template pTemplate="header">
-          <div class="flex justify-content-between align-items-center">
-            <button (click)="atlas.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
-              [icon]="'pi '+(atlas.collapsed?'pi-chevron-right':'pi-chevron-down')"
-              class="p-panel-header-icon"></button>
-            <i class="pi pi-fw pi-map" style="margin-right: 5px;"></i>
-            <span>
-              Atlas
-            </span>
-          </div>
-        </ng-template>
-        <ng-template pTemplate="icons">
-          <div class="flex justify-content-between align-items-center">
-            <button (click)="addAtlasOverlay.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
-              [icon]="'pi pi-plus'" class="p-panel-header-icon"></button>
-            <p-overlayPanel #addAtlasOverlay>
-              <ng-template pTemplate>
-                <span>Unfortunately this feature is not yet supported by the current prototype version</span>
-              </ng-template>
-            </p-overlayPanel>
-          </div>
-        </ng-template>
-        <ng-template pTemplate="content">
-        </ng-template>
-      </p-panel>
-      <p-panel [toggleable]="true" #generators class="sidemenuPanel panel-hide-default-toggler generators"
-        [collapsed]="true">
-        <ng-template pTemplate="header">
-          <div class="flex justify-content-between align-items-center">
-            <button (click)="generators.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
-              [icon]="'pi '+(generators.collapsed?'pi-chevron-right':'pi-chevron-down')"
-              class="p-panel-header-icon"></button>
-            <i class="pi pi-fw pi-briefcase" style="margin-right: 5px;"></i>
-            <span>
-              Generators
-            </span>
-          </div>
-        </ng-template>
-        <ng-template pTemplate="icons">
-          <div class="flex justify-content-between align-items-center">
-            <button (click)="addGeneratorsOverlay.toggle($event); $event.stopPropagation()" pButton pRipple
-              type="button" [icon]="'pi pi-plus'" class="p-panel-header-icon"></button>
-          </div>
-          <p-overlayPanel #addGeneratorsOverlay>
-            <ng-template pTemplate>
-              <span>Unfortunately this feature is not yet supported by the current prototype version</span>
-            </ng-template>
-          </p-overlayPanel>
-        </ng-template>
-        <ng-template pTemplate="content">
-        </ng-template>
-      </p-panel>
-      <p-panel [toggleable]="true" #resources class="sidemenuPanel panel-hide-default-toggler resources"
-        [collapsed]="true">
-        <ng-template pTemplate="header">
-          <div class="flex justify-content-between align-items-center">
-            <button (click)="resources.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
-              [icon]="'pi '+(resources.collapsed?'pi-chevron-right':'pi-chevron-down')"
-              class="p-panel-header-icon"></button>
-            <i class="pi pi-fw pi-cloud" style="margin-right: 5px;"></i>
-            <span>
-              Resources
-            </span>
-          </div>
-        </ng-template>
-        <ng-template pTemplate="icons">
-          <div class="flex justify-content-between align-items-center">
-            <button (click)="addResourcesOverlay.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
-              [icon]="'pi pi-plus'" class="p-panel-header-icon"></button>
-          </div>
-          <p-overlayPanel #addResourcesOverlay>
-            <ng-template pTemplate>
-              <span>Unfortunately this feature is not yet supported by the current prototype version</span>
-            </ng-template>
-          </p-overlayPanel>
-        </ng-template>
-        <ng-template pTemplate="content">
-        </ng-template>
-      </p-panel>
 
       <div class="flex-grow-1"></div>
 
@@ -326,39 +213,6 @@
           </div>
         </ng-template>
       </p-panel>
-      <!--<p-panel [toggleable]="true" #settings class="sidemenuPanel panel-hide-default-toggler" [collapsed]="true">
-        <ng-template pTemplate="header">
-          <div class="flex justify-content-between align-items-center">
-            <button (click)="settings.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
-              [icon]="'pi '+(settings.collapsed?'pi-chevron-right':'pi-chevron-down')"
-              class="p-panel-header-icon"></button>
-            <i class="pi pi-fw pi-cog" style="margin-right: 5px;"></i>
-            <span>
-              Settings
-            </span>
-          </div>
-        </ng-template>
-        <ng-template pTemplate="content">
-          <div style="margin: 1px"
-            class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem">
-            <div class="label flex align-items-center">
-              <span>
-                No settings yet
-              </span>
-            </div>
-          </div>
-        </ng-template>
-      </p-panel>-->
-      <!--<div
-        class="flex sidebar-element bordered setFont flex-row justify-content-between align-items-center h-2rem pointerOnHover hideChildUntilHoverParent"
-        (click)="openSurvey()">
-        <div class="label flex w-full align-items-center">
-          <i class="pi pi-chart-line" style="margin-right: 5px;"></i>
-          <span>
-            Survey
-          </span>
-        </div>
-      </div>-->
       <div style="padding-bottom: 1px;"></div>
       <div
         class="flex sidebar-element bordered setFont flex-row justify-content-between align-items-center h-2rem pointerOnHover hideChildUntilHoverParent"
@@ -428,12 +282,6 @@
           <i class="pi pi-search"></i>
           <input type="text" class="w-full" placeholder="Search/Link" [(ngModel)]="rightSearch" pInputText />
         </span>
-        <div
-          class="sidebar-search-button hover-border-primary flex flex-column align-content-center justify-content-center color-surface-card"
-          style="margin-bottom: 1px; margin-left: 1px;"
-          pTooltip="More advanced filtering and grouping options coming soon">
-          <i class="pi pi-ellipsis-v icon-button"></i>
-        </div>
       </div>
 
       <div *ngIf="rightSearch && project">
