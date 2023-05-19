@@ -66,61 +66,6 @@
           </div>
         </ng-template>
       </p-panel>
-      <p-panel [toggleable]="true" #categories class="sidemenuPanel panel-hide-default-toggler categories"
-        [collapsed]="true">
-        <ng-template pTemplate="header">
-          <div class="flex justify-content-between align-items-center">
-            <button (click)="categories.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
-              [icon]="'pi '+(categories.collapsed?'pi-chevron-right':'pi-chevron-down')"
-              class="p-panel-header-icon"></button>
-            <i class="pi pi-fw pi-tags" style="margin-right: 5px;"></i>
-            <span>
-              Categories
-            </span>
-          </div>
-        </ng-template>
-        <ng-template pTemplate="icons">
-          <div class="flex justify-content-between align-items-center">
-            <button (click)="addCategoryOverlay.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
-              [icon]="'pi pi-plus'" class="p-panel-header-icon"></button>
-          </div>
-          <p-overlayPanel #addCategoryOverlay>
-            <ng-template pTemplate>
-              <div class="flex flex-wrap flex-column">
-                <input autofocus type="text" placeholder="Title for new category" pInputText style="margin-bottom: 5px;"
-                  #categoryTitleInput (keydown.enter)="addCategoryButton.click()" [required]="true" />
-                <button #addCategoryButton [disabled]="!categoryTitleInput.value" pButton pRipple type="button" icon="pi pi-plus"
-                  label="Category"
-                  (click)="onAddElementClick(categoryTitleInput.value, 'categories', contentPanel); addCategoryOverlay.hide()"
-                  class="p-button-outlined"></button>
-              </div>
-            </ng-template>
-          </p-overlayPanel>
-        </ng-template>
-        <ng-template pTemplate="content" *ngIf="categoryKeys">
-          <div *ngFor="let key of (filteredCategoryKeys !== undefined ? filteredCategoryKeys : categoryKeys)">
-            <div style="margin: 1px"
-              class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover hideChildUntilHoverParent"
-              (click)="onElementClick(key, contentPanel)">
-              <div class="label flex align-items-center">
-                <span>
-                  {{key}}
-                </span>
-              </div>
-              <div
-                class="flex flex-column flex-wrap align-content-center justify-content-center hideChildUntilHoverChild button">
-                <i class="pi pi-ellipsis-v" (click)="categoryMore.toggle($event)"></i>
-              </div>
-            </div>
-            <p-overlayPanel #categoryMore>
-              <ng-template pTemplate>
-                <button pButton pRipple type="button" label="Delete" class="p-button-outlined p-button-danger"
-                  (click)="deleteCategory(key)"></button>
-              </ng-template>
-            </p-overlayPanel>
-          </div>
-        </ng-template>
-      </p-panel>
 
       <div class="flex-grow-1"></div>
 
@@ -214,6 +159,7 @@
         </ng-template>
       </p-panel>
       <div style="padding-bottom: 1px;"></div>
+      <div></div>
       <div
         class="flex sidebar-element bordered setFont flex-row justify-content-between align-items-center h-2rem pointerOnHover hideChildUntilHoverParent"
         (click)="openPrivacyPolicy()">
@@ -266,11 +212,6 @@
           [noteName]="panel.uniqueName" [panel]="panel" (closePanelEvent)="removePanelFromActiveView(panel)"
           (moveUpEvent)="moveUp(index, project!.views[project!.activeViewIndex].panels)"
           (moveDownEvent)="moveDown(index, project!.views[project!.activeViewIndex].panels)"></app-note-panel>
-        <app-category-panel [isActivePanel]="project!.views[project!.activeViewIndex].activePanelIndex === index"
-          *ngIf="panelIsInstanceOf(panel, categoryPanelType)" [categories]="project!.categories"
-          [categoryName]="panel.uniqueName" [panel]="panel" (closePanelEvent)="removePanelFromActiveView(panel)"
-          (moveUpEvent)="moveUp(index, project!.views[project!.activeViewIndex].panels)"
-          (moveDownEvent)="moveDown(index, project!.views[project!.activeViewIndex].panels)"></app-category-panel>
       </div>
       <div class="pseudo"></div>
     </div>
@@ -342,11 +283,6 @@
   </p-dialog>
   <p-confirmDialog #overlayOverlay [baseZIndex]="3000" width="425" appendTo="body"></p-confirmDialog>
 </div>
-
-
-<p-dialog header="Usability Survey" appendTo="body" #loadDialog [(visible)]="showSurveyDialog">
-  <app-survey></app-survey>
-</p-dialog>
 
 <p-dialog header="Privacy Policy" appendTo="body" #privacyPolicyDialog [(visible)]="showPrivacyPolicyDialog">
   <app-privacy-policy></app-privacy-policy>

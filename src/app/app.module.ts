@@ -27,7 +27,6 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { MenuModule } from 'primeng/menu';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { CategoryPanelComponent } from './components/category-panel/category-panel.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -38,7 +37,6 @@ import { IndexedDbService } from './services/indexedDb/indexed-db.service';
 import {DialogModule} from 'primeng/dialog';
 import {TableModule} from 'primeng/table';
 import {RatingModule} from 'primeng/rating';
-import { SurveyComponent } from './components/survey/survey.component';
 import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-policy.component';
 
 
@@ -48,8 +46,6 @@ import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-poli
     NotePanelComponent,
     ParseMarkupPipe,
     FillAttributePipe,
-    CategoryPanelComponent,
-    SurveyComponent,
     PrivacyPolicyComponent,
   ],
   imports: [
