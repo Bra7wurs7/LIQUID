@@ -33,7 +33,7 @@
     "primeflex": "^3.3.0",
     "primeicons": "^5.0.0",
     "primeng": "^15.4.1",
-    "rxjs": "~6.6.0",
+    "rxjs": "^7.8.1",
     "tslib": "^2.3.0",
     "typed-any-access": "^1.1.0",
     "uuid": "^8.3.2",
