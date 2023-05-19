@@ -46,6 +46,7 @@ import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-poli
     NotePanelComponent,
     ParseMarkupPipe,
     FillAttributePipe,
+
     PrivacyPolicyComponent,
   ],
   imports: [
