@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import * as marked from 'marked';
+import { marked } from 'marked';
 
 @Pipe({
   name: 'parseMarkup'
