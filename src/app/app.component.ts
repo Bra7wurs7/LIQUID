@@ -45,7 +45,6 @@ export class AppComponent implements OnInit {
     })
   );
 
-  showSurveyDialog: boolean = false;
   showPrivacyPolicyDialog: boolean = false;
 
   constructor(private messageService: MessageService, private localdriveService: LocalDriveService, private indexedDbService: IndexedDbService, private confirmationService: ConfirmationService) {
@@ -305,10 +304,15 @@ export class AppComponent implements OnInit {
     }
   }
 
-  openSurvey() {
-    this.showSurveyDialog = true;
-  }
-  openPrivacyPolicy() {
+  openPrivacyPolicyDialog() {
     this.showPrivacyPolicyDialog = true;
+  }
+  openImprintDialog() {
+  }
+  openDonationDialog() {
+  }
+  openDevelopmentDialog() {
+  }
+  openSettingsDialog() {
   }
 }

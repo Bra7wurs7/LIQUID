@@ -2,7 +2,7 @@
   <div class="left sidebar min-h-full w-2 p-shadow-3 overflow-hidden z-3">
     <div class="p-1 flex flex-column h-full overflow-y-auto">
       <div class="flex flex-row">
-        <span class="p-input-icon-right w-full" style="margin-bottom: 1px;">
+        <span class="p-input-icon-right w-full" style="margin-bottom: 1px">
           <i class="pi pi-search"></i>
           <input type="text" class="w-full" placeholder="Search" pInputText [(ngModel)]="leftSearch"
             (ngModelChange)="filterKeyArrays(leftSearch)" />
@@ -11,13 +11,12 @@
       <p-panel [toggleable]="true" #notes class="sidemenuPanel panel-hide-default-toggler notes" [collapsed]="true">
         <ng-template pTemplate="header">
           <div class="flex justify-content-between align-items-center">
-            <button (click)="notes.toggle($event); $event.stopPropagation();" pButton pRipple type="button"
-              [icon]="'pi '+(notes.collapsed?'pi-chevron-right':'pi-chevron-down')"
-              class="p-panel-header-icon"></button>
-            <i class="pi pi-fw pi-book" style="margin-right: 5px;"></i>
-            <span>
-              Notes
-            </span>
+            <button (click)="notes.toggle($event); $event.stopPropagation()" pButton pRipple type="button" [icon]="
+                'pi ' +
+                (notes.collapsed ? 'pi-chevron-right' : 'pi-chevron-down')
+              " class="p-panel-header-icon"></button>
+            <i class="pi pi-fw pi-book" style="margin-right: 5px"></i>
+            <span> Notes </span>
           </div>
         </ng-template>
         <ng-template pTemplate="icons">
@@ -28,12 +27,19 @@
           <p-overlayPanel #addNoteOverlay>
             <ng-template pTemplate>
               <div class="flex flex-wrap flex-column">
-                <input autofocus type="text" placeholder="Title for new Note/Folder" pInputText style="margin-bottom: 5px;"
-                  #noteFolderTitle  (keydown.enter)="addNoteButton.click()" [required]="true" />
+                <input autofocus type="text" placeholder="Title for new Note/Folder" pInputText
+                  style="margin-bottom: 5px" #noteFolderTitle (keydown.enter)="addNoteButton.click()"
+                  [required]="true" />
                 <div class="flex flew-wrap flex-row justify-content-between align-items-center">
-                  <button #addNoteButton [disabled]="!noteFolderTitle.value" pButton pRipple type="button" icon="pi pi-plus"
-                    label="Note" class="p-button-outlined w-full"
-                    (click)="onAddElementClick(noteFolderTitle.value, 'notes', contentPanel); addNoteOverlay.hide()"></button>
+                  <button #addNoteButton [disabled]="!noteFolderTitle.value" pButton pRipple type="button"
+                    icon="pi pi-plus" label="Note" class="p-button-outlined w-full" (click)="
+                      onAddElementClick(
+                        noteFolderTitle.value,
+                        'notes',
+                        contentPanel
+                      );
+                      addNoteOverlay.hide()
+                    "></button>
                   <!--<span>or</span>
                   <button pButton pRipple type="button" icon="pi pi-plus" label="Folder" class="p-button-outlined"
                     (click)="onAddNoteFolderClick(notefoldertitle.value); addNoteOverlay.hide()"></button>-->
@@ -43,13 +49,17 @@
           </p-overlayPanel>
         </ng-template>
         <ng-template pTemplate="content" *ngIf="noteKeys">
-          <div *ngFor="let key of (filteredNoteKeys !== undefined ? filteredNoteKeys : noteKeys)">
+          <div *ngFor="
+              let key of filteredNoteKeys !== undefined
+                ? filteredNoteKeys
+                : noteKeys
+            ">
             <div style="margin: 1px"
               class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover hideChildUntilHoverParent"
               (click)="onElementClick(key, contentPanel)">
               <div class="label flex align-items-center">
                 <span>
-                  {{key}}
+                  {{ key }}
                 </span>
               </div>
               <div (click)="noteMore.toggle($event); $event.stopPropagation()"
@@ -73,12 +83,14 @@
         <ng-template pTemplate="header">
           <div class="flex justify-content-between align-items-center">
             <button (click)="projectPanel.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
-              [icon]="'pi '+(projectPanel.collapsed?'pi-chevron-right':'pi-chevron-down')"
-              class="p-panel-header-icon"></button>
-            <i class="pi pi-fw pi-file-o" style="margin-right: 5px;"></i>
-            <span>
-              Project
-            </span>
+              [icon]="
+                'pi ' +
+                (projectPanel.collapsed
+                  ? 'pi-chevron-right'
+                  : 'pi-chevron-down')
+              " class="p-panel-header-icon"></button>
+            <i class="pi pi-fw pi-file-o" style="margin-right: 5px"></i>
+            <span> Project </span>
           </div>
         </ng-template>
         <ng-template pTemplate="content">
@@ -86,20 +98,21 @@
             class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover"
             (click)="newProjectOverlay.toggle($event)">
             <div class="label flex align-items-center">
-              <i class="pi pi-fw pi-plus-circle" style="margin-right: 5px;"></i>
-              <span>
-                New
-              </span>
+              <i class="pi pi-fw pi-plus-circle" style="margin-right: 5px"></i>
+              <span> New </span>
             </div>
           </div>
           <p-overlayPanel #newProjectOverlay>
             <ng-template pTemplate>
               <div class="flex flex-wrap flex-column">
-                <input autofocus type="text" placeholder="Project title (required)" pInputText style="margin-bottom: 5px;"
-                  #newProjectTitleInput (keydown.enter)="newProjectButton.click()" [required]="true" />
-                <button #newProjectButton [disabled]="!newProjectTitleInput.value" pButton pRipple type="button" icon="pi pi-plus"
-                  label="New Project" (click)="newProject(newProjectTitleInput.value); newProjectOverlay.hide()"
-                  class="p-button-outlined"></button>
+                <input autofocus type="text" placeholder="Project title (required)" pInputText
+                  style="margin-bottom: 5px" #newProjectTitleInput (keydown.enter)="newProjectButton.click()"
+                  [required]="true" />
+                <button #newProjectButton [disabled]="!newProjectTitleInput.value" pButton pRipple type="button"
+                  icon="pi pi-plus" label="New Project" (click)="
+                    newProject(newProjectTitleInput.value);
+                    newProjectOverlay.hide()
+                  " class="p-button-outlined"></button>
               </div>
             </ng-template>
           </p-overlayPanel>
@@ -107,39 +120,34 @@
             class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover"
             (click)="downloadProject()">
             <div class="label flex align-items-center">
-              <i class="pi pi-fw pi-download" style="margin-right: 5px;"></i>
-              <span>
-                Download
-              </span>
+              <i class="pi pi-fw pi-download" style="margin-right: 5px"></i>
+              <span> Download </span>
             </div>
           </div>
           <div style="margin: 1px"
             class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover"
             (click)="fileUpload.click()">
             <div class="label flex align-items-center">
-              <i class="pi pi-fw pi-upload" style="margin-right: 5px;"></i>
-              <span>
-                Upload
-              </span>
+              <i class="pi pi-fw pi-upload" style="margin-right: 5px"></i>
+              <span> Upload </span>
             </div>
-            <input style="visibility: collapse; width: 0; height: 0;" type="file" class="file-input"
-              (change)="onFileSelected(fileUpload)" #fileUpload>
+            <input style="visibility: collapse; width: 0; height: 0" type="file" class="file-input"
+              (change)="onFileSelected(fileUpload)" #fileUpload />
           </div>
           <div style="margin: 1px"
             class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover"
             (click)="saveProjectOverlay.toggle($event)">
             <div class="label flex align-items-center">
-              <i class="pi pi-fw pi-save" style="margin-right: 5px;"></i>
-              <span>
-                Save
-              </span>
+              <i class="pi pi-fw pi-save" style="margin-right: 5px"></i>
+              <span> Save </span>
             </div>
           </div>
           <p-overlayPanel #saveProjectOverlay>
             <ng-template pTemplate>
               <div class="flex flex-wrap flex-column" *ngIf="project">
-                <input autofocus (keydown.enter)="saveProjectButton.click()" type="text" placeholder="Project title (required)" pInputText style="margin-bottom: 5px;"
-                  #projectTitleInput [(ngModel)]="project.title" />
+                <input autofocus (keydown.enter)="saveProjectButton.click()" type="text"
+                  placeholder="Project title (required)" pInputText style="margin-bottom: 5px" #projectTitleInput
+                  [(ngModel)]="project.title" />
                 <button #saveProjectButton [disabled]="!project.title" pButton pRipple type="button" icon="pi pi-save"
                   label="Save to indexedDB" (click)="saveToDB(project.title); saveProjectOverlay.hide()"
                   class="p-button-outlined"></button>
@@ -150,26 +158,12 @@
             class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover"
             (click)="loadDialogVisible = true">
             <div class="label flex align-items-center">
-              <i class="pi pi-fw pi-save" style="margin-right: 5px;"></i>
-              <span>
-                Load
-              </span>
+              <i class="pi pi-fw pi-save" style="margin-right: 5px"></i>
+              <span> Load </span>
             </div>
           </div>
         </ng-template>
       </p-panel>
-      <div style="padding-bottom: 1px;"></div>
-      <div></div>
-      <div
-        class="flex sidebar-element bordered setFont flex-row justify-content-between align-items-center h-2rem pointerOnHover hideChildUntilHoverParent"
-        (click)="openPrivacyPolicy()">
-        <div class="label flex w-full align-items-center">
-          <i class="pi pi-id-card" style="margin-right: 5px;"></i>
-          <span>
-            Privacy Policy
-          </span>
-        </div>
-      </div>
     </div>
   </div>
   <div class="center flex min-h-full w-full relative overflow-hide">
@@ -181,14 +175,23 @@
       <div class="pseudo"></div>
     </div>
     <div class="absolute left-43px bottom-0 flex flex-row z-3 footer" *ngIf="project">
-      <div *ngFor="let view of project.views, let index = index" class="flex flex-row"
-        style="position: relative;">
-        <div (click)="this.project.activeViewIndex = index" style="height: 27px;" class="pointerOnHover hideChildUntilHoverParent">
-          <div [pTooltip]="'Remove View ' + (index + 1)" class="pi pi-times-circle element pointerOnHover hideChildUntilHoverChild" style="position: absolute; width: inherit; top: -27px" (click)="removeView(index)"></div>
+      <div *ngFor="let view of project.views; let index = index" class="flex flex-row" style="position: relative">
+        <div (click)="this.project.activeViewIndex = index" style="height: 27px"
+          class="pointerOnHover hideChildUntilHoverParent">
+          <div [pTooltip]="'Remove View ' + (index + 1)"
+            class="pi pi-times-circle element pointerOnHover hideChildUntilHoverChild"
+            style="position: absolute; width: inherit; top: -27px" (click)="removeView(index)"></div>
           <div class="pi pi-circle-off element"></div>
-          <div [pTooltip]="'View ' + (index + 1)" style="position: absolute; left: 0; top: 0; width: 25px; height: 27px;"
-            class="flex align-items-center justify-content-center">
-            <span class="viewPanelCount">{{this.project.views[index].panels.length}}</span>
+          <div [pTooltip]="'View ' + (index + 1)" style="
+              position: absolute;
+              left: 0;
+              top: 0;
+              width: 25px;
+              height: 27px;
+            " class="flex align-items-center justify-content-center">
+            <span class="viewPanelCount">{{
+              this.project.views[index].panels.length
+              }}</span>
           </div>
         </div>
         <div class="pseudo"></div>
@@ -198,20 +201,33 @@
     <div class="absolute left-0 bottom-0 flex flex-row z-3 footer" *ngIf="project">
       <div class="pi pi-users element pointerOnHover" [pTooltip]="'Encounter Mode (Not yet supported)'"></div>
     </div>
-    <input type="text" style="width: 0; height: 0; visibility: collapse;" #internalLinkOpener id="internalLinkOpener"
-      (click)="navigateInternalLink(internalLinkOpener.value, contentPanel)">
-    <div class="content"
-      style="width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth;"
-      styleClass="custombar" #contentPanel id="contentPanel">
-      <div
-        *ngFor="let panel of (project && project.views && project.views.length > 0) ? project.views[project.activeViewIndex].panels : [], let index = index"
-        (mouseenter)="project!.views[project!.activeViewIndex].activePanelIndex = index">
+    <input type="text" style="width: 0; height: 0; visibility: collapse" #internalLinkOpener id="internalLinkOpener"
+      (click)="navigateInternalLink(internalLinkOpener.value, contentPanel)" />
+    <div class="content" style="
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+      " styleClass="custombar" #contentPanel id="contentPanel">
+      <div *ngFor="
+          let panel of project && project.views && project.views.length > 0
+            ? project.views[project.activeViewIndex].panels
+            : [];
+          let index = index
+        " (mouseenter)="
+          project!.views[project!.activeViewIndex].activePanelIndex = index
+        ">
         <div class="pseudo" #pseudo></div>
-        <app-note-panel [isActivePanel]="project!.views[project!.activeViewIndex].activePanelIndex === index"
-          *ngIf="panelIsInstanceOf(panel, notePanelType)" [notes]="project!.notes" [categories]="project!.categories"
+        <app-note-panel [isActivePanel]="
+            project!.views[project!.activeViewIndex].activePanelIndex === index
+          " *ngIf="panelIsInstanceOf(panel, notePanelType)" [notes]="project!.notes" [categories]="project!.categories"
           [noteName]="panel.uniqueName" [panel]="panel" (closePanelEvent)="removePanelFromActiveView(panel)"
-          (moveUpEvent)="moveUp(index, project!.views[project!.activeViewIndex].panels)"
-          (moveDownEvent)="moveDown(index, project!.views[project!.activeViewIndex].panels)"></app-note-panel>
+          (moveUpEvent)="
+            moveUp(index, project!.views[project!.activeViewIndex].panels)
+          " (moveDownEvent)="
+            moveDown(index, project!.views[project!.activeViewIndex].panels)
+          "></app-note-panel>
       </div>
       <div class="pseudo"></div>
     </div>
@@ -219,27 +235,41 @@
   <div class="right sidebar min-h-full w-2 p-shadow-3 overflow-hidden">
     <div class="p-1 flex flex-column h-full overflow-y-auto">
       <div class="flex flex-row">
-        <span class="p-input-icon-right w-full" style="margin-bottom: 1px;">
+        <span class="p-input-icon-right w-full" style="margin-bottom: 1px">
           <i class="pi pi-search"></i>
           <input type="text" class="w-full" placeholder="Search/Link" [(ngModel)]="rightSearch" pInputText />
         </span>
       </div>
 
       <div *ngIf="rightSearch && project">
-        <div class="bordered-element h-2rem flex flex-row justify-content-between pointerOnHover"
-          (click)="getRelatedElements(project.views[project.activeViewIndex].panels[project.views[project.activeViewIndex].activePanelIndex])?.push(rightSearch); rightSearch = ''">
-          <span style="padding: 8px">{{'New Link: ' + rightSearch}}</span>
+        <div class="bordered-element h-2rem flex flex-row justify-content-between pointerOnHover" (click)="
+            getRelatedElements(
+              project.views[project.activeViewIndex].panels[
+                project.views[project.activeViewIndex].activePanelIndex
+              ]
+            )?.push(rightSearch);
+            rightSearch = ''
+          ">
+          <span style="padding: 8px">{{ "New Link: " + rightSearch }}</span>
         </div>
-        <div style="padding-bottom: 1px;"></div>
+        <div style="padding-bottom: 1px"></div>
       </div>
-      <div
-        *ngFor="let element of (project && project.views && project.views.length > 0) ? getRelatedElements(project.views[project.activeViewIndex].panels[project.views[project.activeViewIndex].activePanelIndex]) : [], let index = index">
+      <div *ngFor="
+          let element of project && project.views && project.views.length > 0
+            ? getRelatedElements(
+                project.views[project.activeViewIndex].panels[
+                  project.views[project.activeViewIndex].activePanelIndex
+                ]
+              )
+            : [];
+          let index = index
+        ">
         <div
           class="flex sidebar-element bordered setFont flex-row justify-content-between align-items-center h-2rem pointerOnHover hideChildUntilHoverParent"
           (click)="onElementClick(element, contentPanel)">
           <div class="label flex align-items-center">
             <span>
-              {{element}}
+              {{ element }}
             </span>
           </div>
           <div
@@ -248,14 +278,54 @@
             <i class="pi pi-times"></i>
           </div>
         </div>
-        <div style="padding-bottom: 1px;"></div>
+        <div style="padding-bottom: 1px"></div>
+      </div>
+      <div class="flex-grow-1"></div>
+      <div class="flex flex-row">
+        <div
+          class="flex sidebar-element bordered setFont flex-row align-items-center justify-content-center h-2rem pointerOnHover flex-grow-1"
+          (click)="openImprintDialog()" pTooltip="Imprint">
+          <div class="label flex align-items-center">
+            <i class="pi pi-building" style="margin-right: 5px"></i>
+          </div>
+        </div>
+        <div
+          class="flex sidebar-element bordered setFont flex-row align-items-center justify-content-center h-2rem pointerOnHover flex-grow-1"
+          (click)="openPrivacyPolicyDialog()" pTooltip="Privacy Policy">
+          <div class="label flex align-items-center">
+            <i class="pi pi-user" style="margin-right: 5px"></i>
+          </div>
+        </div>
+        <div
+          class="flex sidebar-element bordered setFont flex-row align-items-center justify-content-center h-2rem pointerOnHover flex-grow-1"
+          (click)="openDonationDialog()" pTooltip="Donate">
+          <div class="label flex align-items-center">
+            <i class="pi pi-money-bill" style="margin-right: 5px"></i>
+          </div>
+        </div>
+        <div
+          class="flex sidebar-element bordered setFont flex-row align-items-center justify-content-center h-2rem pointerOnHover flex-grow-1"
+          (click)="openDevelopmentDialog()" pTooltip="Help with Development">
+          <div class="label flex align-items-center">
+            <i class="pi pi-github" style="margin-right: 5px"></i>
+          </div>
+        </div>
+        <div
+          class="flex sidebar-element bordered setFont flex-row align-items-center justify-content-center h-2rem pointerOnHover flex-grow-1"
+          (click)="openSettingsDialog()" pTooltip="Settings">
+          <div class="label flex align-items-center">
+            <i class="pi pi-sliders-h" style="margin-right: 5px"></i>
+          </div>
+        </div>
       </div>
     </div>
   </div>
   <p-toast position="bottom-center"></p-toast>
   <p-dialog header="Load from indexedDB" appendTo="body" #loadDialog [(visible)]="loadDialogVisible">
-    <p-table *ngIf="((allProjectsPromise | async)?.length ?? -1) > 0"
-      [value]="(allProjectsPromise | async) ?? [{title: 'loading', lastModified: undefined}]" responsiveLayout="scroll">
+    <p-table *ngIf="((allProjectsPromise | async)?.length ?? -1) > 0" [value]="
+        (allProjectsPromise | async) ??
+        [{ title: 'loading', lastModified: undefined }]
+      " responsiveLayout="scroll">
       <ng-template pTemplate="header">
         <tr>
           <th>Title</th>
@@ -264,8 +334,8 @@
       </ng-template>
       <ng-template pTemplate="body" let-project>
         <tr>
-          <td>{{project.title}}</td>
-          <td>{{project.lastModified}}</td>
+          <td>{{ project.title }}</td>
+          <td>{{ project.lastModified }}</td>
           <td>
             <p-button label="Load" icon="pi pi-folder-open" styleClass="p-button-sm"
               (click)="loadFromDB(project.title)"></p-button>
@@ -277,7 +347,7 @@
         </tr>
       </ng-template>
     </p-table>
-    <div *ngIf="(((allProjectsPromise | async)?.length ?? 0) === 0)">
+    <div *ngIf="((allProjectsPromise | async)?.length ?? 0) === 0">
       No projects saved in indexedDB of Browser
     </div>
   </p-dialog>
