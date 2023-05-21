@@ -12,7 +12,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { TreeModule } from 'primeng/tree';
-import { NotePanelComponent } from './components/note-panel/note-panel.component';
+import { NotePanelComponent } from './components/cards/note-panel/note-panel.component';
 import { MenubarModule } from 'primeng/menubar';
 import { PanelModule } from 'primeng/panel';
 import { InputSwitchModule } from 'primeng/inputswitch';
@@ -37,7 +37,7 @@ import { IndexedDbService } from './services/indexedDb/indexed-db.service';
 import {DialogModule} from 'primeng/dialog';
 import {TableModule} from 'primeng/table';
 import {RatingModule} from 'primeng/rating';
-import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-policy.component';
+import { PrivacyPolicyComponent } from './components/modals/privacy-policy/privacy-policy.component';
 
 
 @NgModule({

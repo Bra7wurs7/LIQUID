@@ -1,7 +1,7 @@
 <p-panel [toggleable]="true" #panel class="panel-hide-default-toggler border-sides-type-color notes" *ngIf="note">
   <ng-template pTemplate="header">
     <div class="flex flex-row align-items-center">
-      <p-autoComplete *ngIf="editMode" placeholder="Category" [(ngModel)]="note.categoryName" [suggestions]="filteredCategoryNames" (completeMethod)="searchCategory($event)" (onBlur)="filteredCategoryNames = []; updateCategory()" (onSelect)="updateCategory(); filteredCategoryNames = [];"></p-autoComplete>
+      <p-autoComplete *ngIf="editMode" placeholder="Category" [(ngModel)]="note.categoryName" [suggestions]="[]"></p-autoComplete>
       <i *ngIf="editMode" class="pi pi-chevron-right" style="padding: 3px; font-size: 0.7em;"></i>
       <span [ngClass]="{'isActivePanel': isActivePanel}" class="notes">{{note.uniqueName}}</span>
     </div>
@@ -80,17 +80,6 @@
         'separator-wide': item.separator === 'wide'
       }"></div>
     </ng-template>
-    <div *ngIf="category" class="flex attributes" style="margin-top: 22px;" [ngClass]="{
-      'float-left': category.attributeTableTemplate.float === 'left' && !editMode,
-      'float-right': category.attributeTableTemplate.float === 'right' && !editMode}">
-      <div *ngFor="let child of category.attributeTableTemplate.children">
-        <ng-container
-          *ngTemplateOutlet="(child.isContainer ? noteAttributeContainerTemplate : noteAttributeItemTemplate); context:{ container: (child.isContainer ? child : undefined), item: (!child.isContainer ? child : undefined)}">
-        </ng-container>
-      </div>
-
-    </div>
-    <div *ngIf="category && category.contentTemplate" #templateOutlet [innerHtml]="(category.contentTemplate | parseMarkup)"></div>
     <div *ngIf="!editMode" #contentOutlet [innerHtml]="(note.content | parseMarkup)"></div>
     <div *ngIf="editMode">
       <textarea pInputTextarea [placeholder]="'Enter note text here'" [(ngModel)]="note.content"

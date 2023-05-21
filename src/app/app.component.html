@@ -4,7 +4,7 @@
       <div class="flex flex-row">
         <span class="p-input-icon-right w-full" style="margin-bottom: 1px">
           <i class="pi pi-search"></i>
-          <input type="text" class="w-full" placeholder="Search" pInputText [(ngModel)]="leftSearch"
+          <input type="text" class="w-full" placeholder="Find / Add" pInputText [(ngModel)]="leftSearch"
             (ngModelChange)="filterKeyArrays(leftSearch)" />
         </span>
       </div>
@@ -221,9 +221,8 @@
         <div class="pseudo" #pseudo></div>
         <app-note-panel [isActivePanel]="
             project!.views[project!.activeViewIndex].activePanelIndex === index
-          " *ngIf="panelIsInstanceOf(panel, notePanelType)" [notes]="project!.notes" [categories]="project!.categories"
-          [noteName]="panel.uniqueName" [panel]="panel" (closePanelEvent)="removePanelFromActiveView(panel)"
-          (moveUpEvent)="
+          " *ngIf="panelIsInstanceOf(panel, notePanelType)" [notes]="project!.notes" [noteName]="panel.uniqueName"
+          [panel]="panel" (closePanelEvent)="removePanelFromActiveView(panel)" (moveUpEvent)="
             moveUp(index, project!.views[project!.activeViewIndex].panels)
           " (moveDownEvent)="
             moveDown(index, project!.views[project!.activeViewIndex].panels)
@@ -237,7 +236,7 @@
       <div class="flex flex-row">
         <span class="p-input-icon-right w-full" style="margin-bottom: 1px">
           <i class="pi pi-search"></i>
-          <input type="text" class="w-full" placeholder="Search/Link" [(ngModel)]="rightSearch" pInputText />
+          <input type="text" class="w-full" placeholder="Find / Add" [(ngModel)]="rightSearch" pInputText />
         </span>
       </div>
 

@@ -1,7 +1,5 @@
-import { Category } from "./category.model";
-import { CategoryPanel, GenericPanel, NotePanel } from "./panel.model";
+import { AbstractPanel } from "./panel.model";
 import { Note } from "./note.model";
-import { AttributeContainer, AttributeItem, AttributeTable } from "./noteAttribute.model";
 import { PanelView } from "./panelView.model";
 import { reviver, serializable } from "../helper/serialize.helper";
 
@@ -9,8 +7,6 @@ export class Project {
   title: string;
   /** Object representing a map of all notes for this project */
   notes: Map<string, Note>;
-  /** Object representing a map of all note categories for this project*/
-  categories: Map<string, Category>;
   /** */
   views: PanelView[] = [];
   /** */
@@ -20,14 +16,12 @@ export class Project {
   constructor(
     title: string,
     notes: Map<string, Note>,
-    categories: Map<string, Category>,
     views: PanelView[],
     activeViewIndex: number = 0,
     version: number = 1,
   ) {
     this.title = title
     this.notes = notes;
-    this.categories = categories;
     this.views = views;
     this.activeViewIndex = activeViewIndex;
     this.version = version
@@ -40,12 +34,9 @@ export class Project {
     this.notes.forEach((value, key) => {
       notes[key] = value;
     })
-    this.categories.forEach((value, key) => {
-      categories[key] = value;
-    })
     this.views.forEach((view) => {
       const viewCopy = Object.assign({}, view);
-      const panels: GenericPanel[] = [];
+      const panels: AbstractPanel[] = [];
       viewCopy.panels.forEach((panel) => {
         const panelCopy = Object.assign({}, panel);
         delete panelCopy.htmlElement;
@@ -91,14 +82,10 @@ export class SerializableProject {
 
   toProject(): Project {
     const notes: Map<string, Note> = new Map();
-    const categories: Map<string, Category> = new Map();
     Object.keys(this.notes).forEach((key: string) => {
       notes.set(key, this.notes[key] as Note)
     });
-    Object.keys(this.categories).forEach((key: string) => {
-      categories.set(key, this.categories[key] as Category)
-    });
-    return new Project(this.title, notes, categories, this.views, this.activeViewIndex, this.version);
+    return new Project(this.title, notes, this.views, this.activeViewIndex, this.version);
   }
 
   serialize(): string {

@@ -1,6 +1,6 @@
 import { serializable } from "../helper/serialize.helper";
 
-export abstract class GenericPanel {
+export abstract class AbstractPanel {
   htmlElement?: HTMLElement;
   uniqueName: string;
   constructor(uniqueName: string = '') {
@@ -9,7 +9,7 @@ export abstract class GenericPanel {
 }
 
 @serializable
-export class NotePanel extends GenericPanel {
+export class NotePanel extends AbstractPanel {
   readonly className = 'NotePanel';
   constructor(
     noteName: string = '',
@@ -19,7 +19,7 @@ export class NotePanel extends GenericPanel {
 }
 
 @serializable
-export class CategoryPanel extends GenericPanel {
+export class CategoryPanel extends AbstractPanel {
   readonly className = 'CategoryPanel';
   constructor(
     categoryName: string = '',
