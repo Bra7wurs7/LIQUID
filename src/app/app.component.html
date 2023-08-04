@@ -168,15 +168,16 @@
   </div>
   <div class="center flex min-h-full w-full relative overflow-hide">
     <div class="absolute right-0 bottom-0 flex flex-column z-2 footer" *ngIf="project">
-      <div class="element pi pi-arrow-circle-up pointerOnHover" (click)="contentPanel.scrollTop = 0"></div>
+      <div class="element pi pi-arrow-circle-up pointerOnHover" [pTooltip]="'Jump to top'" (click)="contentPanel.scrollTop = 0"></div>
       <div class="pseudo"></div>
-      <div class="element pi pi-arrow-circle-down pointerOnHover"
+      <div class="element pi pi-arrow-circle-down pointerOnHover" [pTooltip]="'Jump to bottom'"
         (click)="contentPanel.scrollTop = contentPanel.scrollHeight"></div>
-      <div class="pseudo"></div>
     </div>
-    <div class="absolute left-43px bottom-0 flex flex-row z-3 footer" *ngIf="project">
+    <div class="absolute right-37px bottom-0 flex flex-row z-3 footer" *ngIf="project">
+      <div class="pi pi-plus-circle element pointerOnHover" [pTooltip]="'Add View'" (click)="addView()"></div>
       <div *ngFor="let view of project.views; let index = index" class="flex flex-row" style="position: relative">
-        <div (click)="this.project.activeViewIndex = index" style="height: 27px"
+        <div class="pseudo"></div>
+        <div (click)="this.project.activeViewIndex = index" style="height: 27px; position: relative"
           class="pointerOnHover hideChildUntilHoverParent">
           <div [pTooltip]="'Remove View ' + (index + 1)"
             class="pi pi-times-circle element pointerOnHover hideChildUntilHoverChild"
@@ -194,12 +195,18 @@
               }}</span>
           </div>
         </div>
-        <div class="pseudo"></div>
       </div>
-      <div class="pi pi-plus-circle element pointerOnHover" [pTooltip]="'Add View'" (click)="addView()"></div>
     </div>
-    <div class="absolute left-0 bottom-0 flex flex-row z-3 footer" *ngIf="project">
-      <div class="pi pi-users element pointerOnHover" [pTooltip]="'Encounter Mode (Not yet supported)'"></div>
+    <div class="absolute left-0 bottom-0 flex flex-row align-items-center justify-content-center z-3 footer" *ngIf="project">
+      <div class="pi pi-comment bigelement pointerOnHover" [pTooltip]="'LIQUID ASSISTANT\n-\nCan help you with almost anything'"></div>
+      <div class="pseudo"></div>
+      <div class="pi pi-sitemap bigelement pointerOnHover" [pTooltip]="'GM\'s ASSISTANT\n-\nHelps you preparing and running TTRPG games'"></div>
+      <div class="pseudo"></div>
+      <div class="pi pi-globe bigelement pointerOnHover" [pTooltip]="'GAME MASTER SIMULATOR\n-\nPlays your favourite TTRPGs with you'"></div>
+      <div class="pseudo"></div>
+      <div class="pi pi-book bigelement pointerOnHover" [pTooltip]="'AUTHOR AGENT\n-\nExcels at writing stories'"></div>
+      <div class="pseudo"></div>
+      <div class="pi pi-user bigelement pointerOnHover" [pTooltip]="'IMPERSON. AGENT\n-\nAct\'s like they\'re a person'"></div>
     </div>
     <input type="text" style="width: 0; height: 0; visibility: collapse" #internalLinkOpener id="internalLinkOpener"
       (click)="navigateInternalLink(internalLinkOpener.value, contentPanel)" />

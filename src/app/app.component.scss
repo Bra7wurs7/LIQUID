@@ -30,10 +30,9 @@
       background-color 0.1s cubic-bezier(0.05, 0.74, 0.2, 0.99);
     opacity: 0.3;
     color: var(--text-color-secondary);
-    border: 1px solid var(--surface-border);
-    border-radius: var(--border-radius);
-    margin: 4px;
-    padding: 6px;
+    border-radius: 14px;
+    margin: 8px;
+    padding: 2px;
     .element {
       font-size: 25px;
       &.selected {
@@ -43,12 +42,27 @@
         color: var(--text-color);
       }
     }
+    .bigelement {
+      transition: font-size 0.1s;
+      font-size: 25px;
+      &.selected {
+        color: var(--primary-color);
+      }
+      &:hover {
+        transition: font-size 0.1s;
+        font-size: 45px;
+        color: var(--text-color);
+      }
+    }
     &:hover {
       opacity: 1;
       background-color: var(--surface-card);
     }
-    &.left-43px {
-      left: 43px;
+    &.left-37px {
+      left: 33px;
+    }
+    &.right-37px {
+      right: 33px;
     }
   }
 }

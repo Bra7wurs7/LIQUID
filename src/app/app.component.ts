@@ -247,8 +247,8 @@ export class AppComponent implements OnInit {
 
   addView() {
     if (this.project) {
-      this.project.views?.push(new PanelView());
-      this.project.activeViewIndex = this.project.views.length - 1;
+      this.project.views?.unshift(new PanelView());
+      this.project.activeViewIndex = 0;
     }
   }
 
