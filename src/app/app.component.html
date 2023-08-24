@@ -260,32 +260,74 @@
         </div>
         <div style="padding-bottom: 1px"></div>
       </div>
-      <div *ngFor="
-          let element of project && project.views && project.views.length > 0
-            ? getRelatedElements(
-                project.views[project.activeViewIndex].panels[
-                  project.views[project.activeViewIndex].activePanelIndex
-                ]
-              )
-            : [];
-          let index = index
-        ">
-        <div
-          class="flex sidebar-element bordered setFont flex-row justify-content-between align-items-center h-2rem pointerOnHover hideChildUntilHoverParent"
-          (click)="onElementClick(element, contentPanel)">
-          <div class="label flex align-items-center">
-            <span>
-              {{ element }}
-            </span>
+      <p-panel [toggleable]="true" #notes class="sidemenuPanel panel-hide-default-toggler notes" [collapsed]="true">
+        <ng-template pTemplate="header">
+          <div class="flex justify-content-between align-items-center">
+            <button (click)="notes.toggle($event); $event.stopPropagation()" pButton pRipple type="button" [icon]="
+                'pi ' +
+                (notes.collapsed ? 'pi-chevron-right' : 'pi-chevron-down')
+              " class="p-panel-header-icon"></button>
+            <i class="pi pi-fw pi-book" style="margin-right: 5px"></i>
+            <span> Notes </span>
           </div>
-          <div
-            class="flex flex-column flex-wrap align-content-center justify-content-center hideChildUntilHoverChild button"
-            pTooltip="Remove Link" (click)="removeLink(index)">
-            <i class="pi pi-times"></i>
+        </ng-template>
+        <ng-template pTemplate="icons">
+          <div class="flex justify-content-between align-items-center">
+            <button (click)="addNoteOverlay.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
+              [icon]="'pi pi-plus'" class="p-panel-header-icon"></button>
           </div>
-        </div>
-        <div style="padding-bottom: 1px"></div>
-      </div>
+          <p-overlayPanel #addNoteOverlay>
+            <ng-template pTemplate>
+              <div class="flex flex-wrap flex-column">
+                <input autofocus type="text" placeholder="Title for new Note/Folder" pInputText
+                  style="margin-bottom: 5px" #noteFolderTitle (keydown.enter)="addNoteButton.click()"
+                  [required]="true" />
+                <div class="flex flew-wrap flex-row justify-content-between align-items-center">
+                  <button #addNoteButton [disabled]="!noteFolderTitle.value" pButton pRipple type="button"
+                    icon="pi pi-plus" label="Note" class="p-button-outlined w-full" (click)="
+                      onAddElementClick(
+                        noteFolderTitle.value,
+                        'notes',
+                        contentPanel
+                      );
+                      addNoteOverlay.hide()
+                    "></button>
+                  <!--<span>or</span>
+                  <button pButton pRipple type="button" icon="pi pi-plus" label="Folder" class="p-button-outlined"
+                    (click)="onAddNoteFolderClick(notefoldertitle.value); addNoteOverlay.hide()"></button>-->
+                </div>
+              </div>
+            </ng-template>
+          </p-overlayPanel>
+        </ng-template>
+        <ng-template pTemplate="content" *ngIf="noteKeys">
+          <div *ngFor="
+              let key of filteredNoteKeys !== undefined
+                ? filteredNoteKeys
+                : noteKeys
+            ">
+            <div style="margin: 1px"
+              class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover hideChildUntilHoverParent"
+              (click)="onElementClick(key, contentPanel)">
+              <div class="label flex align-items-center">
+                <span>
+                  {{ key }}
+                </span>
+              </div>
+              <div (click)="noteMore.toggle($event); $event.stopPropagation()"
+                class="flex flex-column flex-wrap align-content-center justify-content-center hideChildUntilHoverChild button">
+                <i class="pi pi-ellipsis-v"></i>
+              </div>
+            </div>
+            <p-overlayPanel #noteMore>
+              <ng-template pTemplate>
+                <button pButton pRipple type="button" label="Delete" class="p-button-outlined p-button-danger"
+                  (click)="deleteNote(key)"></button>
+              </ng-template>
+            </p-overlayPanel>
+          </div>
+        </ng-template>
+      </p-panel>
       <div class="flex-grow-1"></div>
       <div class="flex flex-row">
         <div

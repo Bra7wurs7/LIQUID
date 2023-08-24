@@ -3,23 +3,24 @@
   transition: transform 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99),
     visibility 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99);
   &.right {
-    background-color: var(--surface-ground);
+    background-color: var(--surface-b);
     border-left: 1px solid var(--surface-border);
     right: 0;
   }
   &.left {
-    background-color: var(--surface-ground);
+    background-color: var(--surface-b);
     border-right: 1px solid var(--surface-border);
     left: 0;
   }
 }
 .center {
+  background-color: var(--surface-a);
   .content {
-    background-color: var(--surface-ground);
     width: 100%;
     height: 100%;
     padding: 5px 10px 5px 10px;
     .card {
+      background-color: var(--surface-b);
       width: 100%;
       margin-bottom: 5px;
     }
@@ -56,7 +57,7 @@
     }
     &:hover {
       opacity: 1;
-      background-color: var(--surface-card);
+      background-color: var(--surface-b);
     }
     &.left-37px {
       left: 33px;
@@ -93,9 +94,8 @@
 }
 
 .sidebar-element {
-  background-color: var(--surface-card);
   &:hover {
-    background-color: var(--surface-hover);
+    background-color: var(--surface-b);
   }
   &.bordered {
     border: solid 1px var(--surface-border);
@@ -135,8 +135,6 @@
 }
 
 .sidebar-search-button {
-  border: solid 1px var(--surface-border);
-  border-radius: var(--border-radius);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 1rem;
