@@ -23,9 +23,11 @@ export class AppComponent implements OnInit {
   filteredNoteKeys: string[] | undefined;
   categoryKeys: string[] = [];
   filteredCategoryKeys: string[] | undefined;
-  title = 'GAS';
+  title = 'LIQUID';
   allProjectsPromise: Promise<{ title: string, lastModified: Date }[]>;
   loadDialogVisible: boolean = false;
+
+  activeAssistant: string = "1";
 
   rightSearch: string = '';
   leftSearch: string = '';

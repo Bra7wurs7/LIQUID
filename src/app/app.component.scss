@@ -4,12 +4,12 @@
     visibility 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99);
   &.right {
     background-color: var(--surface-b);
-    border-left: 1px solid var(--surface-border);
+    border-left: 1px solid var(--surface-d);
     right: 0;
   }
   &.left {
     background-color: var(--surface-b);
-    border-right: 1px solid var(--surface-border);
+    border-right: 1px solid var(--surface-d);
     left: 0;
   }
 }
@@ -26,14 +26,68 @@
     }
   }
 
+  .assistant-panel {
+    pointer-events: none;
+    max-width: 77%;
+    .tabs {
+      padding-left: 5px;
+      padding-right: 5px;
+      transition: opacity 0.1s;
+      color: var(--text-color-secondary);
+      border-radius: 20px;
+      margin: 8px;
+      margin-bottom: 0px;
+      pointer-events: all;
+      &:hover {
+        opacity: 1;
+        background-color: var(--surface-b);
+      }
+      .tab {
+        padding: 5px;
+        padding-bottom: 8px;
+        transition: all 0.2s;
+        font-size: 25px;
+        border-radius: 20px;
+      
+        &:hover {
+          color: var(--text-color);
+        }
+        &.active {
+          transition: all 0.2s;
+          border: 2px solid var(--surface-border);
+          border-bottom: 0px;
+          border-bottom-left-radius: 0px;
+          border-bottom-right-radius: 0px;
+          color: var(--text-color);
+          background-color: var(--surface-b);
+        }
+      }
+    }
+    .card {
+      background-color: var(--surface-b);
+      pointer-events: all;
+      max-height: 0vh;
+      transition: max-height 0.3s;
+      &.active {
+        border: 2px solid var(--surface-border);
+        transition: max-height 0.3s;
+        max-height: 50vh
+      }
+    }
+  }
+
   .footer {
-    transition: opacity 0.1s cubic-bezier(0.05, 0.74, 0.2, 0.99),
-      background-color 0.1s cubic-bezier(0.05, 0.74, 0.2, 0.99);
+    transition: opacity 0.1s cubic-bezier(0.05, 0.74, 0.2, 0.99);
     opacity: 0.3;
     color: var(--text-color-secondary);
     border-radius: 14px;
     margin: 8px;
     padding: 2px;
+
+    p-card {
+      pointer-events: all;
+    }
+
     .element {
       font-size: 25px;
       &.selected {
@@ -43,27 +97,17 @@
         color: var(--text-color);
       }
     }
-    .bigelement {
-      transition: font-size 0.1s;
-      font-size: 25px;
-      &.selected {
-        color: var(--primary-color);
-      }
-      &:hover {
-        transition: font-size 0.1s;
-        font-size: 45px;
-        color: var(--text-color);
-      }
-    }
-    &:hover {
-      opacity: 1;
-      background-color: var(--surface-b);
-    }
+
     &.left-37px {
       left: 33px;
     }
     &.right-37px {
       right: 33px;
+    }
+
+    &:hover {
+      opacity: 1;
+      background-color: var(--surface-b);
     }
   }
 }

@@ -23,15 +23,6 @@ p-inputSwitch {
   line-height: unset !important;
 }
 
-.border-sides-type-color {
-  &.notes {
-    .p-panel {
-      border-left: 3px solid var(--color-notes) !important;
-      border-right: 3px solid var(--color-notes) !important;
-    }
-  }
-}
-
 .p-scrollpanel {
   &.custombar {
     .p-scrollpanel-wrapper {
