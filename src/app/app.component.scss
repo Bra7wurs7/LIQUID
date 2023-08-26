@@ -2,23 +2,28 @@
   z-index: 3;
   transition: transform 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99),
     visibility 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99);
+
   &.right {
     background-color: var(--surface-b);
     border-left: 1px solid var(--surface-d);
     right: 0;
   }
+
   &.left {
     background-color: var(--surface-b);
     border-right: 1px solid var(--surface-d);
     left: 0;
   }
 }
+
 .center {
   background-color: var(--surface-a);
+
   .content {
     width: 100%;
     height: 100%;
     padding: 5px 10px 5px 10px;
+
     .card {
       background-color: var(--surface-b);
       width: 100%;
@@ -27,33 +32,44 @@
   }
 
   .assistant-panel {
+    margin-bottom: 4px;
     pointer-events: none;
-    max-width: 77%;
+    width: 77%;
+
     .tabs {
-      padding-left: 5px;
-      padding-right: 5px;
-      transition: opacity 0.1s;
+      opacity: 0.5;
+      transition: background-color 0.1s;
       color: var(--text-color-secondary);
       border-radius: 20px;
-      margin: 8px;
+      margin: 4px;
       margin-bottom: 0px;
       pointer-events: all;
+
       &:hover {
+        transition: background-color 0.1s;
         opacity: 1;
         background-color: var(--surface-b);
       }
+
+      &.active {
+        opacity: 1;
+        background-color: var(--surface-border);
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
+      }
+
       .tab {
-        padding: 5px;
-        padding-bottom: 8px;
-        transition: all 0.2s;
+        border: 2px solid transparent;
+        border-bottom: 0px;
+        padding: 9px;
         font-size: 25px;
         border-radius: 20px;
-      
+
         &:hover {
           color: var(--text-color);
         }
+
         &.active {
-          transition: all 0.2s;
           border: 2px solid var(--surface-border);
           border-bottom: 0px;
           border-bottom-left-radius: 0px;
@@ -63,53 +79,63 @@
         }
       }
     }
-    .card {
+
+    .panel-content {
       background-color: var(--surface-b);
+      opacity: 0;
       pointer-events: all;
-      max-height: 0vh;
-      transition: max-height 0.3s;
+      height: 0vh;
+      width: 100%;
+      transition: height 0.3s, opacity 0.3s;
+
       &.active {
+        padding: 6px;
+        opacity: 1;
         border: 2px solid var(--surface-border);
-        transition: max-height 0.3s;
-        max-height: 50vh
+        border-left: 0px;
+        transition: height 0.3s, opacity 0.3s;
+        height: 50vh;
       }
     }
   }
 
   .footer {
-    transition: opacity 0.1s cubic-bezier(0.05, 0.74, 0.2, 0.99);
-    opacity: 0.3;
+    opacity: 0.5;
+    transition: background-color 0.1s;
     color: var(--text-color-secondary);
-    border-radius: 14px;
-    margin: 8px;
-    padding: 2px;
+    border-radius: 20px;
+    margin: 4px;
+    pointer-events: all;
 
-    p-card {
-      pointer-events: all;
-    }
-
-    .element {
-      font-size: 25px;
-      &.selected {
-        color: var(--primary-color);
-      }
-      &:hover {
-        color: var(--text-color);
-      }
-    }
-
-    &.left-37px {
-      left: 33px;
-    }
-    &.right-37px {
-      right: 33px;
-    }
+    padding: 6.5px;
 
     &:hover {
       opacity: 1;
       background-color: var(--surface-b);
     }
+    .element {
+      padding: 6.5px;
+      font-size: 25px;
+
+      &:hover {
+        color: var(--text-color);
+      }
+    }
   }
+}
+
+.number-cell {
+  padding: 6.5px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  text-align: center;
+  vertical-align: middle;
+  font-family: monospace;
+  font-size: 18px;
+  font-weight: bold;
+  user-select: none;
 }
 
 .pseudo {
@@ -117,11 +143,12 @@
 }
 
 .hideChildUntilHoverParent {
-  > .hideChildUntilHoverChild {
+  >.hideChildUntilHoverChild {
     visibility: hidden;
   }
+
   &:hover {
-    > .hideChildUntilHoverChild {
+    >.hideChildUntilHoverChild {
       visibility: visible;
     }
   }
@@ -141,23 +168,28 @@
   &:hover {
     background-color: var(--surface-b);
   }
+
   &.bordered {
     border: solid 1px var(--surface-border);
     border-radius: var(--border-radius);
   }
+
   .label {
     margin-left: 6px;
   }
+
   .button {
     transition: border-color 0.2s cubic-bezier(0.05, 0.74, 0.2, 0.99);
     border: 1px solid rgba($color: #000000, $alpha: 0);
     border-radius: var(--border-radius);
     width: 28px;
     height: 28px;
+
     &:hover {
       border-color: var(--primary-color);
     }
   }
+
   &.setFont {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
       Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
@@ -173,6 +205,7 @@
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 1rem;
   color: var(--text-color);
+
   &:hover {
     background-color: var(--surface-hover);
   }
@@ -184,6 +217,7 @@
   font-size: 1rem;
   color: var(--text-color);
   border-color: #ced4da;
+
   &:hover {
     cursor: pointer;
   }
@@ -191,6 +225,7 @@
 
 .hover-border-primary {
   transition: border-color 0.2s cubic-bezier(0.05, 0.74, 0.2, 0.99);
+
   &:hover {
     border-color: var(--primary-color);
   }
@@ -198,6 +233,7 @@
 
 .hover-color-primary {
   transition: border-color 0.2s cubic-bezier(0.05, 0.74, 0.2, 0.99);
+
   &:hover {
     color: var(--primary-color);
   }
@@ -215,16 +251,13 @@
   width: min-content;
 }
 
-.viewPanelCount {
-  font-weight: bold;
-}
-
 @media screen and (max-width: 960px) {
   .sidebar {
     &.left {
       transform: translateX(-100%);
       visibility: collapse;
     }
+
     &.right {
       transform: translateX(100%);
       visibility: collapse;

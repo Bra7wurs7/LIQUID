@@ -167,66 +167,43 @@
     </div>
   </div>
   <div class="center flex min-h-full w-full relative overflow-hide">
-    <div class="absolute right-0 bottom-0 flex flex-column z-2 footer" *ngIf="project">
-      <div class="element pi pi-arrow-circle-up pointerOnHover" [pTooltip]="'Jump to top'" (click)="contentPanel.scrollTop = 0"></div>
-      <div class="pseudo"></div>
+    <div class="absolute flex flex-column z-2 footer" *ngIf="project" style="right: 0px; bottom: 0;">
+      <div class="element pi pi-arrow-circle-up pointerOnHover" [pTooltip]="'Jump to top'"
+        (click)="contentPanel.scrollTop = 0"></div>
       <div class="element pi pi-arrow-circle-down pointerOnHover" [pTooltip]="'Jump to bottom'"
         (click)="contentPanel.scrollTop = contentPanel.scrollHeight"></div>
     </div>
-    <div class="absolute right-37px bottom-0 flex flex-row z-3 footer" *ngIf="project">
+    <div class="absolute flex flex-row z-3 footer" *ngIf="project" style="right: 39px; bottom: 0;">
       <div class="pi pi-plus-circle element pointerOnHover" [pTooltip]="'Add View'" (click)="addView()"></div>
-      <div *ngFor="let view of project.views; let index = index" class="flex flex-row" style="position: relative">
-        <div class="pseudo"></div>
-        <div (click)="this.project.activeViewIndex = index" style="position: relative; height: 27px"
-          class="pointerOnHover hideChildUntilHoverParent">
-          <div [pTooltip]="'Remove View ' + (index + 1)"
-            class="pi pi-times-circle element pointerOnHover hideChildUntilHoverChild"
-            style="position: absolute; width: inherit; top: -27px" (click)="removeView(index)"></div>
-          <div class="pi pi-circle-off element"></div>
-          <div [pTooltip]="'View ' + (index + 1)" style="
-              position: absolute;
-              left: 0;
-              top: 0;
-              width: 25px;
-              height: 27px;
-            " class="flex align-items-center justify-content-center">
-            <span class="viewPanelCount">{{
-              this.project.views[index].panels.length
-              }}</span>
-          </div>
-        </div>
+      <div *ngFor="let view of project.views; let index = index" class="hideChildUntilHoverParent pointerOnHover"
+        style="position: relative;" (click)="this.project.activeViewIndex = index" [pTooltip]="'View ' + (index + 1)">
+        <span class="pi pi-circle-off element pointerOnHover">
+        </span>
+        <span class="number-cell">{{
+          this.project.views[index].panels.length
+          }}
+        </span>
+        <span [pTooltip]="'Remove View ' + (index + 1)" style="position: absolute; left: 0; top:-30px; scale: 60%"
+          class="pi pi-trash element pointerOnHover hideChildUntilHoverChild" (click)="removeView(index)">
+        </span>
       </div>
     </div>
-    <div class="absolute left-0 bottom-0 flex flex-column align-items-start justify-content-start assistant-panel overflow-hidden" *ngIf="project">
-      <div class="flex flex-row align-items-end justify-content-start z-3 tabs">
-        <div class="pi pi-comment pointerOnHover tab active" [ngClass]="{'active': activeAssistant === '1'}" [pTooltip]="'ASSISTANT\n\nCan help you with almost anything'" (click)="activeAssistant = activeAssistant ? '' : '1'"></div>
-        <div class="pseudo"></div>
-        <div class="pi pi-sitemap pointerOnHover tab" [pTooltip]="'WORLDBUILDER\n\nHelps you preparing and running TTRPG games'"></div>
-        <div class="pseudo"></div>
-        <div class="pi pi-globe pointerOnHover tab" [pTooltip]="'GAME MASTER\n\nPlays your favourite TTRPGs with you'"></div>
-        <div class="pseudo"></div>
-        <div class="pi pi-book pointerOnHover tab" [pTooltip]="'AUTHOR\n\nExcels at writing stories'"></div>
-        <div class="pseudo"></div>
-        <div class="pi pi-user pointerOnHover tab" [pTooltip]="'IMPERSONATOR\n\nActs like they\'re a person'"></div>
+    <div
+      class="absolute left-0 bottom-0 flex flex-column align-items-start justify-content-start assistant-panel"
+      *ngIf="project">
+      <div class="flex flex-row align-items-end justify-content-start z-3 tabs" [ngClass]="{'active': activeAssistant}">
+        <div class="pi pi-comment pointerOnHover tab" [ngClass]="{'active': activeAssistant === '1'}"
+          [pTooltip]="'ASSISTANT\n\nCan help you with almost anything'"
+          (click)="activeAssistant = (activeAssistant === '1') ? '' : '1'"></div>
+        <div class="pi pi-sitemap pointerOnHover tab" [ngClass]="{'active': activeAssistant === '2'}"
+          [pTooltip]="'WORLDBUILDER\n\nHelps you preparing and running TTRPG games'"(click)="activeAssistant = (activeAssistant === '2') ? '' : '2'"></div>
+        <div class="pi pi-globe pointerOnHover tab" [ngClass]="{'active': activeAssistant === '3'}" [pTooltip]="'GAME MASTER\n\nPlays your favourite TTRPGs with you'" (click)="activeAssistant = (activeAssistant === '3') ? '' : '3'">
+        </div>
+        <div class="pi pi-book pointerOnHover tab" [ngClass]="{'active': activeAssistant === '4'}" [pTooltip]="'AUTHOR\n\nExcels at writing stories'" (click)="activeAssistant = (activeAssistant === '4') ? '' : '4'"></div>
+        <div class="pi pi-user pointerOnHover tab" [ngClass]="{'active': activeAssistant === '5'}" [pTooltip]="'IMPERSONATOR\n\nActs like they\'re a person'" (click)="activeAssistant = (activeAssistant === '5') ? '' : '5'"></div>
       </div>
-      <div class="card" [ngClass]="{'active':activeAssistant}">
-        <p class="m-0">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-            quas!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-            quas!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-            quas!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-            quas!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-            quas!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-            quas!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-            quas!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-            quas!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-            quas!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-            quas!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-            quas!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-            quas!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-            quas!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-            quas!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-        </p>
+      <div class="panel-content overflow-y-auto" [ngClass]="{'active':activeAssistant}">
+        <p class="m-0"></p>
       </div>
     </div>
     <input type="text" style="width: 0; height: 0; visibility: collapse" #internalLinkOpener id="internalLinkOpener"
@@ -246,7 +223,6 @@
         " (mouseenter)="
           project!.views[project!.activeViewIndex].activePanelIndex = index
         ">
-        <div class="pseudo" #pseudo></div>
         <app-note-panel [isActivePanel]="
             project!.views[project!.activeViewIndex].activePanelIndex === index
           " *ngIf="panelIsInstanceOf(panel, notePanelType)" [notes]="project!.notes" [noteName]="panel.uniqueName"
@@ -255,6 +231,7 @@
           " (moveDownEvent)="
             moveDown(index, project!.views[project!.activeViewIndex].panels)
           "></app-note-panel>
+        <div class="pseudo"></div>
       </div>
       <div class="pseudo"></div>
     </div>

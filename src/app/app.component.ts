@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
   allProjectsPromise: Promise<{ title: string, lastModified: Date }[]>;
   loadDialogVisible: boolean = false;
 
-  activeAssistant: string = "1";
+  activeAssistant: string = "";
 
   rightSearch: string = '';
   leftSearch: string = '';
