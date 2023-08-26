@@ -34,7 +34,7 @@
   .assistant-panel {
     margin-bottom: 4px;
     pointer-events: none;
-    width: 77%;
+    width: 100%;
 
     .tabs {
       opacity: 0.5;
@@ -85,7 +85,7 @@
       opacity: 0;
       pointer-events: all;
       height: 0vh;
-      width: 100%;
+      width: 50%;
       transition: height 0.3s, opacity 0.3s;
 
       &.active {
