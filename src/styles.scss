@@ -38,6 +38,18 @@ p-inputSwitch {
   }
 }
 
+.p-panel-expanded {
+  .p-panel-header {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+}
+
+.p-panel-header {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
 .sidemenuPanel {
   margin-bottom: 1px;
 
