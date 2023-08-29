@@ -74,6 +74,23 @@ p-inputSwitch {
   }
 }
 
+.menubar {
+  .p-menubar {
+    padding: 0;
+    background-color: var(--surface-b);
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+  }
+  .p-menuitem {
+    .p-menuitem-link {
+      border-radius: 0 !important;
+
+    }
+  }
+}
+
 .internalLink {
   color: var(--blue-700);
 

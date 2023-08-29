@@ -1,4 +1,4 @@
-import { Component, OnInit, Type } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, Type, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CategoryPanel, AbstractPanel, NotePanel } from './models/panel.model';
 import { Note } from './models/note.model';
@@ -8,6 +8,8 @@ import { IndexedDbService } from './services/indexedDb/indexed-db.service';
 import { PanelView } from './models/panelView.model';
 import { of, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { OverlayPanel } from 'primeng/overlaypanel';
+import { Dialog } from 'primeng/dialog';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +17,9 @@ import { switchMap } from 'rxjs/operators';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+
+  @ViewChild("projectUpload", { static: false}) projectUpload!: ElementRef;
+
   notePanelType = NotePanel;
   categoryPanelType = CategoryPanel;
 
@@ -27,10 +32,124 @@ export class AppComponent implements OnInit {
   allProjectsPromise: Promise<{ title: string, lastModified: Date }[]>;
   loadDialogVisible: boolean = false;
 
+  showSaveProjectOverlay: boolean = false;
+  showNewProjectOverlay: boolean = false;
+
   activeAssistant: string = "";
 
   rightSearch: string = '';
   leftSearch: string = '';
+
+  items = [
+    {
+      label: 'Project',
+      icon: 'pi pi-fw pi-file',
+      items: [
+        {
+          label: 'New Project',
+          icon: 'pi pi-fw pi-plus',
+          command: () => {
+            this.showNewProjectOverlay = true;
+          }
+        },
+        {
+          separator: true
+        },
+        {
+          label: 'Save Project',
+          icon: 'pi pi-fw pi-save',
+          items: [
+            {
+              label: 'Save',
+              icon: 'pi pi-fw pi-save',
+              command: () => {
+                if (this.project?.title) {
+                  this.saveToDB(this.project.title);
+                }
+              }
+            },
+            {
+              label: 'Save As',
+              icon: 'pi pi-fw pi-save',
+              command: () => {
+                this.showSaveProjectOverlay = true;
+              }
+            },
+            {
+              label: 'Download',
+              icon: 'pi pi-fw pi-download',
+              command: () => {
+                this.downloadProject();
+              }
+            }
+          ]
+        },
+        {
+          label: 'Load Project',
+          icon: 'pi pi-fw pi-folder-open',
+          items: [
+            {
+              label: 'Load',
+              icon: 'pi pi-fw pi-folder-open',
+              command: () => {
+                this.loadDialogVisible = true;
+              }
+            },
+            {
+              label: 'Upload',
+              icon: 'pi pi-fw pi-upload',
+              command: () => {
+                this.projectUpload.nativeElement.click();
+              }
+            }
+          ]
+        },
+        {
+          separator: true
+        },
+        {
+          label: 'Project Manager',
+          icon: 'pi pi-fw pi-database'
+        }
+      ]
+    },
+    {
+      label: 'Edit',
+      icon: 'pi pi-fw pi-pencil',
+      items: [
+        {
+          label: 'Left',
+          icon: 'pi pi-fw pi-align-left'
+        },
+        {
+          label: 'Right',
+          icon: 'pi pi-fw pi-align-right'
+        },
+        {
+          label: 'Center',
+          icon: 'pi pi-fw pi-align-center'
+        },
+        {
+          label: 'Justify',
+          icon: 'pi pi-fw pi-align-justify'
+        }
+      ]
+    },
+    {
+      label: 'View',
+      icon: 'pi pi-fw pi-user',
+      items: [
+        {
+          label: 'A',
+          icon: 'pi pi-fw pi-user-plus'
+        },
+        {
+          label: 'B',
+          icon: 'pi pi-fw pi-user-minus'
+        }
+      ]
+    }
+  ];
 
   infinity: number = Infinity;
   autosave = timer(1, 300000).pipe(
@@ -63,7 +182,7 @@ export class AppComponent implements OnInit {
         this.loadProject(defaultProject.toProject());
       }
       this.autosave.subscribe(() => { });
-    })
+    });
   }
 
   loadProject(project: Project) {
@@ -92,7 +211,7 @@ export class AppComponent implements OnInit {
       if (this.project.notes.has(uniqueName)) {
         newPanel = new NotePanel(uniqueName)
       } else {
-        this.messageService.add({severity: 'error', summary: `${uniqueName} could not be found`})
+        this.messageService.add({ severity: 'error', summary: `${uniqueName} could not be found` })
         return;
       }
 
