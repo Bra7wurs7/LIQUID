@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "GAS": {
+    "LIQUID": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/GAS",
+            "outputPath": "dist/LIQUID",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -78,10 +78,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "GAS:build:production"
+              "browserTarget": "LIQUID:build:production"
             },
             "development": {
-              "browserTarget": "GAS:build:development"
+              "browserTarget": "LIQUID:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -89,7 +89,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "GAS:build"
+            "browserTarget": "LIQUID:build"
           }
         },
         "test": {

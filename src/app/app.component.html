@@ -8,45 +8,21 @@
         <input type="text" class="w-full" placeholder="Search" pInputText [(ngModel)]="leftSearch"
           (ngModelChange)="filterKeyArrays(leftSearch)" />
       </span>
-      <p-panel [toggleable]="true" #notes class="sidemenuPanel panel-hide-default-toggler notes" [collapsed]="true">
+      <p-panel [toggleable]="true" #notes class="sidemenuPanel panel-hide-default-toggler" [collapsed]="true">
         <ng-template pTemplate="header">
           <div class="flex justify-content-between align-items-center">
             <button (click)="notes.toggle($event); $event.stopPropagation()" pButton pRipple type="button" [icon]="
                 'pi ' +
                 (notes.collapsed ? 'pi-chevron-right' : 'pi-chevron-down')
               " class="p-panel-header-icon"></button>
-            <i class="pi pi-fw pi-book" style="margin-right: 5px"></i>
             <span> Notes </span>
           </div>
         </ng-template>
         <ng-template pTemplate="icons">
           <div class="flex justify-content-between align-items-center">
-            <button (click)="addNoteOverlay.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
+            <button (click)="addArticleOverlay.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
               [icon]="'pi pi-plus'" class="p-panel-header-icon"></button>
           </div>
-          <p-overlayPanel #addNoteOverlay>
-            <ng-template pTemplate>
-              <div class="flex flex-wrap flex-column">
-                <input autofocus type="text" placeholder="Title for new Note/Folder" pInputText
-                  style="margin-bottom: 5px" #noteFolderTitle (keydown.enter)="addNoteButton.click()"
-                  [required]="true" />
-                <div class="flex flew-wrap flex-row justify-content-between align-items-center">
-                  <button #addNoteButton [disabled]="!noteFolderTitle.value" pButton pRipple type="button"
-                    icon="pi pi-plus" label="Note" class="p-button-outlined w-full" (click)="
-                      onAddElementClick(
-                        noteFolderTitle.value,
-                        'notes',
-                        contentPanel
-                      );
-                      addNoteOverlay.hide()
-                    "></button>
-                  <!--<span>or</span>
-                  <button pButton pRipple type="button" icon="pi pi-plus" label="Folder" class="p-button-outlined"
-                    (click)="onAddNoteFolderClick(notefoldertitle.value); addNoteOverlay.hide()"></button>-->
-                </div>
-              </div>
-            </ng-template>
-          </p-overlayPanel>
         </ng-template>
         <ng-template pTemplate="content" *ngIf="noteKeys">
           <div *ngFor="
@@ -74,6 +50,45 @@
               </ng-template>
             </p-overlayPanel>
           </div>
+        </ng-template>
+      </p-panel>
+
+      <p-panel [toggleable]="true" #article class="sidemenuPanel panel-hide-default-toggler" [collapsed]="true">
+        <ng-template pTemplate="header">
+          <div class="flex justify-content-between align-items-center">
+            <button (click)="article.toggle($event); $event.stopPropagation()" pButton pRipple type="button" [icon]="
+                'pi ' +
+                (article.collapsed ? 'pi-chevron-right' : 'pi-chevron-down')
+              " class="p-panel-header-icon"></button>
+            <span> Some Article </span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="icons">
+          <div class="flex justify-content-between align-items-center">
+            <button (click)="addArticleOverlay.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
+              [icon]="'pi pi-plus'" class="p-panel-header-icon"></button>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="content" *ngIf="noteKeys">
+          <p-panel [toggleable]="true" #article class="sidemenuPanel panel-hide-default-toggler" [collapsed]="true">
+            <ng-template pTemplate="header">
+              <div class="flex justify-content-between align-items-center">
+                <button (click)="article.toggle($event); $event.stopPropagation()" pButton pRipple type="button" [icon]="
+                    'pi ' +
+                    (article.collapsed ? 'pi-chevron-right' : 'pi-chevron-down')
+                  " class="p-panel-header-icon"></button>
+                <span> Some Article </span>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="icons">
+              <div class="flex justify-content-between align-items-center">
+                <button (click)="addArticleOverlay.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
+                  [icon]="'pi pi-plus'" class="p-panel-header-icon"></button>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="content">
+            </ng-template>
+          </p-panel>
         </ng-template>
       </p-panel>
     </div>
@@ -195,74 +210,6 @@
         </div>
         <div style="padding-bottom: 1px"></div>
       </div>
-      <p-panel [toggleable]="true" #notes class="sidemenuPanel panel-hide-default-toggler notes" [collapsed]="true">
-        <ng-template pTemplate="header">
-          <div class="flex justify-content-between align-items-center">
-            <button (click)="notes.toggle($event); $event.stopPropagation()" pButton pRipple type="button" [icon]="
-                'pi ' +
-                (notes.collapsed ? 'pi-chevron-right' : 'pi-chevron-down')
-              " class="p-panel-header-icon"></button>
-            <i class="pi pi-fw pi-book" style="margin-right: 5px"></i>
-            <span> Notes </span>
-          </div>
-        </ng-template>
-        <ng-template pTemplate="icons">
-          <div class="flex justify-content-between align-items-center">
-            <button (click)="addNoteOverlay.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
-              [icon]="'pi pi-plus'" class="p-panel-header-icon"></button>
-          </div>
-          <p-overlayPanel #addNoteOverlay>
-            <ng-template pTemplate>
-              <div class="flex flex-wrap flex-column">
-                <input autofocus type="text" placeholder="Title for new Note/Folder" pInputText
-                  style="margin-bottom: 5px" #noteFolderTitle (keydown.enter)="addNoteButton.click()"
-                  [required]="true" />
-                <div class="flex flew-wrap flex-row justify-content-between align-items-center">
-                  <button #addNoteButton [disabled]="!noteFolderTitle.value" pButton pRipple type="button"
-                    icon="pi pi-plus" label="Note" class="p-button-outlined w-full" (click)="
-                      onAddElementClick(
-                        noteFolderTitle.value,
-                        'notes',
-                        contentPanel
-                      );
-                      addNoteOverlay.hide()
-                    "></button>
-                  <!--<span>or</span>
-                  <button pButton pRipple type="button" icon="pi pi-plus" label="Folder" class="p-button-outlined"
-                    (click)="onAddNoteFolderClick(notefoldertitle.value); addNoteOverlay.hide()"></button>-->
-                </div>
-              </div>
-            </ng-template>
-          </p-overlayPanel>
-        </ng-template>
-        <ng-template pTemplate="content" *ngIf="noteKeys">
-          <div *ngFor="
-              let key of filteredNoteKeys !== undefined
-                ? filteredNoteKeys
-                : noteKeys
-            ">
-            <div style="margin: 1px"
-              class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover hideChildUntilHoverParent"
-              (click)="onElementClick(key, contentPanel)">
-              <div class="label flex align-items-center">
-                <span>
-                  {{ key }}
-                </span>
-              </div>
-              <div (click)="noteMore.toggle($event); $event.stopPropagation()"
-                class="flex flex-column flex-wrap align-content-center justify-content-center hideChildUntilHoverChild button">
-                <i class="pi pi-ellipsis-v"></i>
-              </div>
-            </div>
-            <p-overlayPanel #noteMore>
-              <ng-template pTemplate>
-                <button pButton pRipple type="button" label="Delete" class="p-button-outlined p-button-danger"
-                  (click)="deleteNote(key)"></button>
-              </ng-template>
-            </p-overlayPanel>
-          </div>
-        </ng-template>
-      </p-panel>
     </div>
   </div>
 
@@ -301,6 +248,28 @@
     </div>
   </p-dialog>
   <p-confirmDialog #overlayOverlay [baseZIndex]="3000" width="425" appendTo="body"></p-confirmDialog>
+
+  <!-- Add Article Overlay -->
+  <p-overlayPanel #addArticleOverlay>
+    <ng-template pTemplate>
+      <div class="flex flex-wrap flex-column">
+        <input autofocus type="text" placeholder="Title for new Note/Folder" pInputText
+          style="margin-bottom: 5px" #noteFolderTitle (keydown.enter)="addNoteButton.click()"
+          [required]="true" />
+        <div class="flex flew-wrap flex-row justify-content-between align-items-center">
+          <button #addNoteButton [disabled]="!noteFolderTitle.value" pButton pRipple type="button"
+            icon="pi pi-plus" label="Note" class="p-button-outlined w-full" (click)="
+              onAddElementClick(
+                noteFolderTitle.value,
+                'notes',
+                contentPanel
+              );
+              addArticleOverlay.hide()
+            "></button>
+        </div>
+      </div>
+    </ng-template>
+  </p-overlayPanel>
 
   <!-- Project Uploader Input -->
   <input style="visibility: collapse; width: 0; height: 0" type="file" class="file-input"

@@ -44,6 +44,7 @@ export class AppComponent implements OnInit {
     {
       label: 'Project',
       icon: 'pi pi-fw pi-file',
+      tooltip: `Save, Load, or Start New Projects`,
       items: [
         {
           label: 'New Project',
@@ -62,6 +63,7 @@ export class AppComponent implements OnInit {
             {
               label: 'Save',
               icon: 'pi pi-fw pi-save',
+              tooltip: `Save \"${this.project?.title}\"`,
               command: () => {
                 if (this.project?.title) {
                   this.saveToDB(this.project.title);
@@ -71,6 +73,7 @@ export class AppComponent implements OnInit {
             {
               label: 'Save As',
               icon: 'pi pi-fw pi-save',
+              tooltip: `Save project under specific name`,
               command: () => {
                 this.showSaveProjectOverlay = true;
               }
@@ -114,29 +117,32 @@ export class AppComponent implements OnInit {
       ]
     },
     {
-      label: 'Edit',
-      icon: 'pi pi-fw pi-pencil',
+      label: 'Settings',
+      icon: 'pi pi-fw pi-cog',
       items: [
         {
-          label: 'Left',
-          icon: 'pi pi-fw pi-align-left'
-        },
-        {
-          label: 'Right',
-          icon: 'pi pi-fw pi-align-right'
-        },
-        {
-          label: 'Center',
+          label: 'Art. Intelligence',
           icon: 'pi pi-fw pi-align-center'
         },
         {
-          label: 'Justify',
+          label: 'User Interface',
+          icon: 'pi pi-fw pi-align-center'
+        },
+        {
+          label: 'Synchroniziation',
           icon: 'pi pi-fw pi-align-justify'
-        }
+        },
+        {
+          separator: true
+        },
+        {
+          label: 'All Settings',
+          icon: 'pi pi-fw pi-sliders-h'
+        },
       ]
     },
     {
-      label: 'View',
+      label: 'Artificial Int.',
       icon: 'pi pi-fw pi-user',
       items: [
         {
@@ -236,7 +242,7 @@ export class AppComponent implements OnInit {
 
   onAddElementClick(uniqueName: string, targetMap: 'notes', contentPanel: HTMLDivElement) {
     if (this.project?.notes?.has(uniqueName)) {
-      this.messageService.add({ severity: 'error', summary: 'A note with this name already exists. All names in GAS need to be unique.', life: 3000 })
+      this.messageService.add({ severity: 'error', summary: 'An article with this name already exists. All names in LIQUID need to be unique.', life: 3000 })
     } else {
       switch (targetMap) {
         case 'notes':
