@@ -113,12 +113,16 @@ export class AppComponent implements OnInit {
         {
           label: 'Project Manager',
           icon: 'pi pi-fw pi-database'
+        },
+        {
+          label: 'Settings',
+          icon: 'pi pi-fw pi-cog'
         }
       ]
     },
     {
-      label: 'Settings',
-      icon: 'pi pi-fw pi-cog',
+      label: 'Edit',
+      icon: 'pi pi-fw pi-pencil',
       items: [
         {
           label: 'Art. Intelligence',
@@ -136,23 +140,9 @@ export class AppComponent implements OnInit {
           separator: true
         },
         {
-          label: 'All Settings',
+          label: 'Settings',
           icon: 'pi pi-fw pi-sliders-h'
         },
-      ]
-    },
-    {
-      label: 'Artificial Int.',
-      icon: 'pi pi-fw pi-user',
-      items: [
-        {
-          label: 'A',
-          icon: 'pi pi-fw pi-user-plus'
-        },
-        {
-          label: 'B',
-          icon: 'pi pi-fw pi-user-minus'
-        }
       ]
     }
   ];

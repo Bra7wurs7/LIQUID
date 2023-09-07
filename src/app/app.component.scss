@@ -1,3 +1,5 @@
+// Sidebar
+
 .sidebar {
   z-index: 3;
   transition: transform 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99),
@@ -19,6 +21,89 @@
     margin-bottom: 4px;
   }
 }
+
+//Article List
+.articleList {
+
+
+  .articleListEntry {
+    background-color: var(--surface-b);
+    border-bottom-color: var(--surface-border) !important;
+    border-width: 2px;
+    border-bottom-style: solid;
+    border-radius: 6px;
+    min-height: 39px;
+    padding: 2px;
+
+    // Name of Article and Interactions
+    .entryNameAndInteractions {
+      padding: 8px 4px 4px 4px;
+    }
+
+    &.active{
+      background-color: var(--surface-a);
+      // List of Subarticles
+      .articleList {
+        margin-top: 4px;
+      }:last-child {
+        border-bottom-style: unset;
+      }
+      &.left{
+        border-left-color: var(--surface-border) !important;
+        border-left: 4px;
+        border-left-style: solid !important;
+      }
+
+      &.right{
+        border-right-color: var(--surface-border) !important;
+        border-right: 4px;
+        border-right-style: solid !important;
+      }
+    }
+  }
+
+  .articleListCategoryEntry {
+
+  }
+
+  .entryUniqueName {
+    width: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--font-family);
+    height: 20px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    user-select: none;
+  }
+
+  .inlineButton {
+    font-size: small;
+    height: 20px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    margin-left: 2px;
+    margin-right: 2px;
+    &.absoluteRight {
+      background-color: var(--surface-b);
+    }
+    
+  }
+  .absoluteRight {
+    position: absolute;
+    right: 0;
+  }
+
+  // entry has been activated through click or similar action
+  .active {
+    background-color: var(--surface-a);
+    .absoluteRight {
+      background-color: var(--surface-a);
+    }
+  }
+}
+
+
 
 .center {
   background-color: var(--surface-a);
@@ -54,12 +139,14 @@
 
     .workspaces {
       padding-right: 13px;
+
       .workspace {
         padding: 6.5px;
         padding-left: 3px;
         padding-right: 3px;
         font-size: 20px;
       }
+
       .number-cell {
         padding: 6.5px;
         width: 100%;
@@ -132,7 +219,7 @@
       width: 50%;
       border: 0px solid var(--surface-border);
       transition: height 0.3s, opacity 0.3s, border 0.3s;
-      
+
 
       &.active {
         padding: 6px;
@@ -158,6 +245,7 @@
       opacity: 1;
       background-color: var(--surface-b);
     }
+
     .element {
       padding: 6.5px;
       font-size: 25px;
@@ -170,7 +258,7 @@
 }
 
 .pseudo {
-  padding: 3px;
+  padding: 1.5px;
 }
 
 .hideChildUntilHoverParent {
