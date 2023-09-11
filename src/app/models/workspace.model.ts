@@ -2,8 +2,8 @@ import { serializable } from "../helper/serialize.helper";
 import { AbstractPanel } from "./panel.model";
 
 @serializable
-export class PanelView {
-  readonly className: string = 'PanelView';
+export class Workspace {
+  readonly className: string = 'Workspace';
   panels: AbstractPanel[];
   activePanelIndex: number;
   constructor(panels: AbstractPanel[] = [], activePanelIndex: number = -1) {

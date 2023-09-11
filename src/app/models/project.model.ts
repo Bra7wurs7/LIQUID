@@ -1,6 +1,6 @@
 import { AbstractPanel } from "./panel.model";
 import { Note } from "./note.model";
-import { PanelView } from "./panelView.model";
+import { Workspace } from "./workspace.model";
 import { reviver, serializable } from "../helper/serialize.helper";
 
 export class Project {
@@ -8,7 +8,7 @@ export class Project {
   /** Object representing a map of all notes for this project */
   notes: Map<string, Note>;
   /** */
-  views: PanelView[] = [];
+  workspaces: Workspace[] = [];
   /** */
   activeViewIndex: number;
   /** version of GAS that this Project last saved with */
@@ -16,13 +16,13 @@ export class Project {
   constructor(
     title: string,
     notes: Map<string, Note>,
-    views: PanelView[],
+    workspaces: Workspace[],
     activeViewIndex: number = 0,
     version: number = 1,
   ) {
     this.title = title
     this.notes = notes;
-    this.views = views;
+    this.workspaces = workspaces;
     this.activeViewIndex = activeViewIndex;
     this.version = version
   }
@@ -30,12 +30,12 @@ export class Project {
   toSerializableProject(): SerializableProject {
     const notes: any = {};
     const categories: any = {};
-    const views: PanelView[] = []
+    const workspaces: Workspace[] = []
     this.notes.forEach((value, key) => {
       notes[key] = value;
     })
-    this.views.forEach((view) => {
-      const viewCopy = Object.assign({}, view);
+    this.workspaces.forEach((workspace) => {
+      const viewCopy = Object.assign({}, workspace);
       const panels: AbstractPanel[] = [];
       viewCopy.panels.forEach((panel) => {
         const panelCopy = Object.assign({}, panel);
@@ -43,9 +43,9 @@ export class Project {
         panels.push(panelCopy);
       })
       viewCopy.panels = panels;
-      views.push(viewCopy);
+      workspaces.push(viewCopy);
     })
-    return new SerializableProject(this.title, notes, categories, views, this.activeViewIndex, this.version);
+    return new SerializableProject(this.title, notes, categories, workspaces, this.activeViewIndex, this.version);
   }
 }
 
@@ -58,7 +58,7 @@ export class SerializableProject {
   /** Object representing a map of all note categories for this project*/
   categories: any;
   /** */
-  views: PanelView[] = [];
+  workspaces: Workspace[] = [];
   /** */
   activeViewIndex: number;
   /** version of GAS that this Project last saved with */
@@ -68,14 +68,14 @@ export class SerializableProject {
     title: string = '',
     notes: any = {},
     categories: any = {},
-    views: PanelView[] = [],
+    workspaces: Workspace[] = [],
     activeViewIndex: number = 0,
     version: number = 1,
   ) {
     this.title = title
     this.notes = notes;
     this.categories = categories;
-    this.views = views;
+    this.workspaces = workspaces;
     this.activeViewIndex = activeViewIndex;
     this.version = version
   }
@@ -85,7 +85,7 @@ export class SerializableProject {
     Object.keys(this.notes).forEach((key: string) => {
       notes.set(key, this.notes[key] as Note)
     });
-    return new Project(this.title, notes, this.views, this.activeViewIndex, this.version);
+    return new Project(this.title, notes, this.workspaces, this.activeViewIndex, this.version);
   }
 
   serialize(): string {
@@ -99,7 +99,7 @@ export class SerializableProject {
 
 export const defaultProjectJson = {
   "className": "SerializableProject",
-  "views": [
+  "workspaces": [
     {
       "className": "PanelView",
       "panels": [

@@ -1,6 +1,6 @@
 {
   "className": "SerializableProject",
-  "views": [
+  "workspaces": [
     {
       "className": "PanelView",
       "panels": [

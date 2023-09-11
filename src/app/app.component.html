@@ -8,51 +8,7 @@
         (ngModelChange)="filterKeyArrays(leftSearch)" />
     </span>
     <div class="bigpseudo"></div>
-    <div class="articleList active flex flex-column w-full overflowScroll">
-      <div class="listArticle flex-column left flex justify-content-start, align-items-center"
-        [ngClass]="{'active': activeTestDeleteLater}" pTooltip="ActiveArticleEntry">
-        <!-- Article Name & Buttons -->
-        <div (click)="activeTestDeleteLater = !activeTestDeleteLater"
-          class="listArticleEntry w-full relative flex flex-row align-content-center hideChildUntilHoverParent" [ngClass]="{'active': activeTestDeleteLater}">
-          <i class="pi pi-chevron-down activeEntryChevronDown" [ngClass]="{'active': activeTestDeleteLater}"></i>
-          <div class="entryUniqueName pointerOnHover flex-grow-1">ActiveCategoryEntry</div>
-          <i class="inlineButton absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
-            pTooltip="Open Context Menu"></i>
-        </div>
-        <!-- Subarticles List -->
-        <div class="articleList border-left flex flex-column w-full h-full" [ngClass]="{'active': activeTestDeleteLater}">
-          <div class="listArticle flex-column left flex justify-content-start, align-items-center"
-            pTooltip="ActiveArticleEntry">
-            <div
-              class="listArticleEntry w-full relative flex flex-row justify-content-between align-content-center hideChildUntilHoverParent">
-              <div class="entryUniqueName pointerOnHover">InactiveArticleEntry</div>
-              <i class="inlineButton absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
-                pTooltip="Open Context Menu"></i>
-            </div>
-          </div>
-          <div class="pseudo"></div>
-          <div class="listArticle flex-column left flex justify-content-start, align-items-center"
-            pTooltip="ActiveArticleEntry">
-            <div
-              class="listArticleEntry w-full relative flex flex-row justify-content-between align-content-center hideChildUntilHoverParent">
-              <div class="entryUniqueName pointerOnHover">InactiveArticleEntry</div>
-              <i class="inlineButton absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
-                pTooltip="Open Context Menu"></i>
-            </div>
-          </div>
-          <div class="pseudo"></div>
-          <div class="listArticle flex-column left flex justify-content-start, align-items-center"
-            pTooltip="ActiveArticleEntry">
-            <div
-              class="listArticleEntry w-full relative flex flex-row justify-content-between align-content-center hideChildUntilHoverParent">
-              <div class="entryUniqueName pointerOnHover">InactiveArticleEntry</div>
-              <i class="inlineButton absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
-                pTooltip="Open Context Menu"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-hierarchical-list [listItems]="defaultLeftSidebarItems"></app-hierarchical-list>
   </div>
 
   <!-- Center Area -->
@@ -64,16 +20,16 @@
       <!-- Workspaces -->
       <div *ngIf="project" class="flex flex-row workspaces">
         <div class="pi pi-plus-circle workspace pointerOnHover" [pTooltip]="'Add Workspace'" (click)="addView()"></div>
-        <div *ngFor="let view of project.views; let index = index" class="hideChildUntilHoverParent pointerOnHover"
+        <div *ngFor="let view of project.workspaces; let index = index" class="hideChildUntilHoverParent pointerOnHover"
           style="position: relative;" (click)="this.project.activeViewIndex = index"
           [pTooltip]="'Workspace ' + (index + 1)">
           <span class="pi pi-circle-off workspace pointerOnHover">
           </span>
           <span class="number-cell">{{
-            this.project.views[index].panels.length
+            this.project.workspaces[index].panels.length
             }}
           </span>
-          <span [pTooltip]="'Remove Workspace ' + (index + 1)" *ngIf="project.views.length > 1"
+          <span [pTooltip]="'Remove Workspace ' + (index + 1)" *ngIf="project.workspaces.length > 1"
             style="position: absolute; left: 20%; top:25px; scale: 70%"
             class="pi pi-trash element pointerOnHover hideChildUntilHoverChild" (click)="removeView(index)">
           </span>
@@ -129,20 +85,20 @@
         scroll-behavior: smooth;
       " styleClass="custombar" #contentPanel id="contentPanel">
       <div *ngFor="
-          let panel of project && project.views && project.views.length > 0
-            ? project.views[project.activeViewIndex].panels
+          let panel of project && project.workspaces && project.workspaces.length > 0
+            ? project.workspaces[project.activeViewIndex].panels
             : [];
           let index = index
         " (mouseenter)="
-          project!.views[project!.activeViewIndex].activePanelIndex = index
+          project!.workspaces[project!.activeViewIndex].activePanelIndex = index
         ">
         <app-note-panel [isActivePanel]="
-            project!.views[project!.activeViewIndex].activePanelIndex === index
+            project!.workspaces[project!.activeViewIndex].activePanelIndex === index
           " *ngIf="panelIsInstanceOf(panel, notePanelType)" [notes]="project!.notes" [noteName]="panel.uniqueName"
           [panel]="panel" (closePanelEvent)="removePanelFromActiveView(panel)" (moveUpEvent)="
-            moveUp(index, project!.views[project!.activeViewIndex].panels)
+            moveUp(index, project!.workspaces[project!.activeViewIndex].panels)
           " (moveDownEvent)="
-            moveDown(index, project!.views[project!.activeViewIndex].panels)
+            moveDown(index, project!.workspaces[project!.activeViewIndex].panels)
           "></app-note-panel>
         <div class="pseudo"></div>
       </div>
@@ -245,8 +201,8 @@
     <div *ngIf="rightSearch && project">
       <div class="bordered-element h-2rem flex flex-row justify-content-between pointerOnHover" (click)="
           getRelatedElements(
-            project.views[project.activeViewIndex].panels[
-              project.views[project.activeViewIndex].activePanelIndex
+            project.workspaces[project.activeViewIndex].panels[
+              project.workspaces[project.activeViewIndex].activePanelIndex
             ]
           )?.push(rightSearch);
           rightSearch = ''

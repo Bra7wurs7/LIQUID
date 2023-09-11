@@ -5,11 +5,12 @@ import { Note } from './models/note.model';
 import { defaultProject, Project, SerializableProject } from './models/project.model';
 import { LocalDriveService } from './services/localDrive/local-drive.service';
 import { IndexedDbService } from './services/indexedDb/indexed-db.service';
-import { PanelView } from './models/panelView.model';
+import { Workspace } from './models/workspace.model';
 import { of, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { Dialog } from 'primeng/dialog';
+import { HierarchicalListArticle } from './models/hierarchicalListArticle.model';
 
 @Component({
   selector: 'app-root',
@@ -41,6 +42,57 @@ export class AppComponent implements OnInit {
 
   rightSearch: string = '';
   leftSearch: string = '';
+
+  defaultLeftSidebarItems: HierarchicalListArticle[] = [
+    {
+      uniqueName: "Item",
+      subArticles: [
+        {
+          uniqueName: "Doomdestroyer Sword of Poison",
+          subArticles: []
+        },
+        {
+          uniqueName: "Bo-el o wo-a",
+          subArticles: []
+        }
+      ]
+    },
+    {
+      uniqueName: "NPC",
+      subArticles: [
+        {
+          uniqueName: "Bandit",
+          subArticles: [
+            {
+              uniqueName: "Richard Small",
+              subArticles: []
+            },
+            {
+              uniqueName: "John Little",
+              subArticles: []
+            }
+          ]
+        },
+        {
+          uniqueName: "Town Guard",
+          subArticles: [
+            {
+              uniqueName: "Günther Wachmann",
+              subArticles: []
+            },
+            {
+              uniqueName: "Brunhilde Wachfrau",
+              subArticles: []
+            }
+          ]
+        },
+        {
+          uniqueName: "Alfonso Urbestor",
+          subArticles: []
+        }
+      ]
+    },
+  ]
 
   items = [
     {
@@ -188,7 +240,7 @@ export class AppComponent implements OnInit {
         return;
       }
 
-      this.project?.views[this.project?.activeViewIndex].panels.push(newPanel);
+      this.project?.workspaces[this.project?.activeViewIndex].panels.push(newPanel);
       const scrollToNewPanel = (attempt: number = 0) => {
         if (newPanel.htmlElement !== undefined) {
           this.scrollToPanel(newPanel, contentPanel)
@@ -202,7 +254,7 @@ export class AppComponent implements OnInit {
       }
       scrollToNewPanel();
     } else {
-      this.project.views[this.project.activeViewIndex].activePanelIndex = this.project?.views[this.project.activeViewIndex].panels.indexOf(existingPanel)
+      this.project.workspaces[this.project.activeViewIndex].activePanelIndex = this.project?.workspaces[this.project.activeViewIndex].panels.indexOf(existingPanel)
       this.scrollToPanel(existingPanel, contentPanel);
     }
   }
@@ -222,15 +274,15 @@ export class AppComponent implements OnInit {
   }
 
   getPanelFromActiveViewForName(noteTitle: string): AbstractPanel | undefined {
-    return this.project?.views[this.project?.activeViewIndex].panels.find((panel) => {
+    return this.project?.workspaces[this.project?.activeViewIndex].panels.find((panel) => {
       return panel.uniqueName === noteTitle;
     });
   }
 
   removePanelFromActiveView(panel: AbstractPanel) {
-    const panelIndex: number = this.project?.views[this.project?.activeViewIndex].panels.indexOf(panel) ?? -1;
+    const panelIndex: number = this.project?.workspaces[this.project?.activeViewIndex].panels.indexOf(panel) ?? -1;
     if (panelIndex != -1) {
-      this.project?.views[this.project?.activeViewIndex].panels.splice(panelIndex, 1)
+      this.project?.workspaces[this.project?.activeViewIndex].panels.splice(panelIndex, 1)
     }
   }
 
@@ -341,7 +393,7 @@ export class AppComponent implements OnInit {
 
   addView() {
     if (this.project) {
-      this.project.views?.unshift(new PanelView());
+      this.project.workspaces?.unshift(new Workspace());
       this.project.activeViewIndex = 0;
     }
   }
@@ -349,13 +401,13 @@ export class AppComponent implements OnInit {
   removeView(index: number) {
     if (this.project) {
       this.project.activeViewIndex = index - 1;
-      this.project.views?.splice(index, 1);
+      this.project.workspaces?.splice(index, 1);
     }
   }
 
   removeLink(index: number) {
     if (this.project) {
-      this.getRelatedElements(this.project.views[this.project.activeViewIndex].panels[this.project.views[this.project.activeViewIndex].activePanelIndex])?.splice(index, 1);
+      this.getRelatedElements(this.project.workspaces[this.project.activeViewIndex].panels[this.project.workspaces[this.project.activeViewIndex].activePanelIndex])?.splice(index, 1);
     }
   }
 
@@ -363,7 +415,7 @@ export class AppComponent implements OnInit {
     if (this.project) {
       if (this.project.notes.delete(name)) {
         this.noteKeys = this.noteKeys.filter((key) => key !== name);
-        for (const view of this.project.views) {
+        for (const view of this.project.workspaces) {
           view.panels = view.panels.filter((panel) => panel.uniqueName !== name);
         }
       }
