@@ -17,53 +17,63 @@
     left: 0;
   }
 
-  .searchinput {
-    margin-bottom: 4px;
+  .searchInput {
+    border-top: 0px;
   }
 }
 
 //Article List
 .articleList {
+  transition: all 0.3s;
+  height: 0 !important;
+  opacity: 0;
+  border-bottom-width: 0px;
+  width: 100%;
+  overflow: hidden;
 
-
-  .articleListEntry {
-    background-color: var(--surface-b);
-    border-bottom-color: var(--surface-border) !important;
-    border-width: 2px;
-    border-bottom-style: solid;
-    border-radius: 6px;
-    min-height: 39px;
-    padding: 2px;
-
-    // Name of Article and Interactions
-    .entryNameAndInteractions {
-      padding: 8px 4px 4px 4px;
-    }
-
-    &.active{
-      background-color: var(--surface-a);
-      // List of Subarticles
-      .articleList {
-        margin-top: 4px;
-      }:last-child {
-        border-bottom-style: unset;
-      }
-      &.left{
-        border-left-color: var(--surface-border) !important;
-        border-left: 4px;
-        border-left-style: solid !important;
-      }
-
-      &.right{
-        border-right-color: var(--surface-border) !important;
-        border-right: 4px;
-        border-right-style: solid !important;
-      }
-    }
+  &.border-left {
+    border-left-width: 2px !important;
+    border-left-style: solid !important;
+    border-left-color: var(--surface-border) !important;
+    border-top-left-radius: 0px;
   }
 
-  .articleListCategoryEntry {
+  &.border-right {
+    border-right-width: 2px;
+    border-right-style: solid;
+    border-right-color: var(--surface-border);
+    border-radius: 6px;
+  }
 
+  &.active {
+    transition: all 0.1s;
+    border-top-width: 2px;
+    border-top-style: solid;
+    border-top-color: var(--surface-border);
+    height: 100% !important;
+    opacity: 1;
+  }
+}
+
+.overflowScroll {
+  overflow: scroll;
+}
+
+.listArticle {
+
+  // Text and button container displaying the article name and a context menu button
+  .listArticleEntry {
+    padding: 4px 6px 6px 6px;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    border-bottom-color: var(--surface-border);
+
+    &.active {
+      border-left-width: 2px;
+      border-left-style: solid;
+      border-left-color: var(--surface-border);
+      border-bottom-width: 0px;
+    }
   }
 
   .entryUniqueName {
@@ -77,6 +87,21 @@
     user-select: none;
   }
 
+  .activeEntryChevronDown {
+    transform: translateY(5px);
+    color: var(--surface-border);
+    font-size: small;
+    margin-right: 0px;
+    width: 0;
+    opacity: 0;
+
+    &.active {
+      margin-right: 7px;
+      width: min-content;
+      opacity: 1;
+    }
+  }
+
   .inlineButton {
     font-size: small;
     height: 20px;
@@ -84,22 +109,16 @@
     padding-bottom: 3px;
     margin-left: 2px;
     margin-right: 2px;
+
     &.absoluteRight {
       background-color: var(--surface-b);
     }
-    
+
   }
+
   .absoluteRight {
     position: absolute;
     right: 0;
-  }
-
-  // entry has been activated through click or similar action
-  .active {
-    background-color: var(--surface-a);
-    .absoluteRight {
-      background-color: var(--surface-a);
-    }
   }
 }
 
@@ -125,7 +144,7 @@
     background-color: var(--surface-b);
     width: 100%;
     border-bottom: 2px solid var(--surface-border);
-
+    
     * {
       height: 41px;
       border-radius: 0;
@@ -259,6 +278,10 @@
 
 .pseudo {
   padding: 1.5px;
+}
+
+.bigpseudo {
+  padding: 2px;
 }
 
 .hideChildUntilHoverParent {

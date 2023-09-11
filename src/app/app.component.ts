@@ -20,6 +20,8 @@ export class AppComponent implements OnInit {
 
   @ViewChild("projectUpload", { static: false}) projectUpload!: ElementRef;
 
+  activeTestDeleteLater: boolean = true;
+
   notePanelType = NotePanel;
   categoryPanelType = CategoryPanel;
 
@@ -118,31 +120,6 @@ export class AppComponent implements OnInit {
           label: 'Settings',
           icon: 'pi pi-fw pi-cog'
         }
-      ]
-    },
-    {
-      label: 'Edit',
-      icon: 'pi pi-fw pi-pencil',
-      items: [
-        {
-          label: 'Art. Intelligence',
-          icon: 'pi pi-fw pi-align-center'
-        },
-        {
-          label: 'User Interface',
-          icon: 'pi pi-fw pi-align-center'
-        },
-        {
-          label: 'Synchroniziation',
-          icon: 'pi pi-fw pi-align-justify'
-        },
-        {
-          separator: true
-        },
-        {
-          label: 'Settings',
-          icon: 'pi pi-fw pi-sliders-h'
-        },
       ]
     }
   ];

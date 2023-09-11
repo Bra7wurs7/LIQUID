@@ -37,7 +37,12 @@ import { IndexedDbService } from './services/indexedDb/indexed-db.service';
 import {DialogModule} from 'primeng/dialog';
 import {TableModule} from 'primeng/table';
 import {RatingModule} from 'primeng/rating';
-import { PrivacyPolicyComponent } from './components/modals/privacy-policy/privacy-policy.component';
+import { PrivacyPolicyComponent } from './components/popup-modals/privacy-policy/privacy-policy.component';
+import { HierarchicalListComponent } from './components/hierarchical-list/hierarchical-list.component';
+import { HierarchicalListItemComponent } from './components/hierarchical-list/hierarchical-list-item/hierarchical-list-item.component';
+import { LeftSidebarComponent } from './components/left-sidebar/left-sidebar.component';
+import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.component';
+import { CenterComponent } from './components/center/center.component';
 
 
 @NgModule({
@@ -48,6 +53,11 @@ import { PrivacyPolicyComponent } from './components/modals/privacy-policy/priva
     FillAttributePipe,
 
     PrivacyPolicyComponent,
+     HierarchicalListComponent,
+     HierarchicalListItemComponent,
+     LeftSidebarComponent,
+     RightSidebarComponent,
+     CenterComponent,
   ],
   imports: [
     BrowserModule,

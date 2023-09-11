@@ -2,62 +2,54 @@
 
   <!-- Left Sidebar -->
   <div class="left sidebar min-h-full w-2 p-shadow-3 overflow-hidden z-3 p-1 flex flex-column h-full overflow-y-auto">
-    <span class="p-input-icon-right w-full searchinput">
+    <span class="p-input-icon-right w-full">
       <i class="pi pi-search"></i>
-      <input type="text" class="w-full" placeholder="Search Project" pInputText [(ngModel)]="leftSearch"
+      <input type="text" class="w-full searchInput" placeholder="Search Project" pInputText [(ngModel)]="leftSearch"
         (ngModelChange)="filterKeyArrays(leftSearch)" />
     </span>
-
-    <div class="articleList flex flex-column w-full h-full">
-      <div class="articleListEntry flex-column left active flex justify-content-start, align-items-center" pTooltip="ActiveArticleEntry">
-        <div class="entryNameAndInteractions w-full relative flex flex-row justify-content-between align-content-center hideChildUntilHoverParent">
-          <div class="entryUniqueName pointerOnHover">ActiveArticleEntry</div>
-          <i class="inlineButton absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover" pTooltip="Open Context Menu"></i>
-        </div>
-      </div>
-      <div class="pseudo"></div>
-      <div class="articleListEntry flex-column left flex justify-content-start, align-items-center" pTooltip="ActiveArticleEntry">
-        <div class="entryNameAndInteractions w-full relative flex flex-row justify-content-between align-content-center hideChildUntilHoverParent">
-          <div class="entryUniqueName pointerOnHover">InactiveArticleEntry</div>
-          <i class="inlineButton absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover" pTooltip="Open Context Menu"></i>
-        </div>
-      </div>
-      <div class="pseudo"></div>
-      <div class="articleListEntry flex-column left active flex justify-content-start, align-items-center" pTooltip="ActiveArticleEntry">
-        <!-- Article Entry Name & Interactions -->
-        <div class="entryNameAndInteractions w-full relative flex flex-row justify-content-between align-content-center hideChildUntilHoverParent">
-          <div class="entryUniqueName pointerOnHover">ActiveCategoryEntry</div>
-          <i class="inlineButton absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover" pTooltip="Open Context Menu"></i>
+    <div class="bigpseudo"></div>
+    <div class="articleList active flex flex-column w-full overflowScroll">
+      <div class="listArticle flex-column left flex justify-content-start, align-items-center"
+        [ngClass]="{'active': activeTestDeleteLater}" pTooltip="ActiveArticleEntry">
+        <!-- Article Name & Buttons -->
+        <div (click)="activeTestDeleteLater = !activeTestDeleteLater"
+          class="listArticleEntry w-full relative flex flex-row align-content-center hideChildUntilHoverParent" [ngClass]="{'active': activeTestDeleteLater}">
+          <i class="pi pi-chevron-down activeEntryChevronDown" [ngClass]="{'active': activeTestDeleteLater}"></i>
+          <div class="entryUniqueName pointerOnHover flex-grow-1">ActiveCategoryEntry</div>
+          <i class="inlineButton absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
+            pTooltip="Open Context Menu"></i>
         </div>
         <!-- Subarticles List -->
-        <div class="articleList flex flex-column w-full h-full">
-          <div class="articleListEntry flex-column left flex justify-content-start, align-items-center" pTooltip="ActiveArticleEntry">
-            <div class="entryNameAndInteractions w-full relative flex flex-row justify-content-between align-content-center hideChildUntilHoverParent">
+        <div class="articleList border-left flex flex-column w-full h-full" [ngClass]="{'active': activeTestDeleteLater}">
+          <div class="listArticle flex-column left flex justify-content-start, align-items-center"
+            pTooltip="ActiveArticleEntry">
+            <div
+              class="listArticleEntry w-full relative flex flex-row justify-content-between align-content-center hideChildUntilHoverParent">
               <div class="entryUniqueName pointerOnHover">InactiveArticleEntry</div>
-              <i class="inlineButton absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover" pTooltip="Open Context Menu"></i>
+              <i class="inlineButton absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
+                pTooltip="Open Context Menu"></i>
             </div>
           </div>
           <div class="pseudo"></div>
-          <div class="articleListEntry flex-column left flex justify-content-start, align-items-center" pTooltip="ActiveArticleEntry">
-            <div class="entryNameAndInteractions w-full relative flex flex-row justify-content-between align-content-center hideChildUntilHoverParent">
+          <div class="listArticle flex-column left flex justify-content-start, align-items-center"
+            pTooltip="ActiveArticleEntry">
+            <div
+              class="listArticleEntry w-full relative flex flex-row justify-content-between align-content-center hideChildUntilHoverParent">
               <div class="entryUniqueName pointerOnHover">InactiveArticleEntry</div>
-              <i class="inlineButton absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover" pTooltip="Open Context Menu"></i>
+              <i class="inlineButton absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
+                pTooltip="Open Context Menu"></i>
             </div>
           </div>
           <div class="pseudo"></div>
-          <div class="articleListEntry flex-column left flex justify-content-start, align-items-center" pTooltip="ActiveArticleEntry">
-            <div class="entryNameAndInteractions w-full relative flex flex-row justify-content-between align-content-center hideChildUntilHoverParent">
+          <div class="listArticle flex-column left flex justify-content-start, align-items-center"
+            pTooltip="ActiveArticleEntry">
+            <div
+              class="listArticleEntry w-full relative flex flex-row justify-content-between align-content-center hideChildUntilHoverParent">
               <div class="entryUniqueName pointerOnHover">InactiveArticleEntry</div>
-              <i class="inlineButton absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover" pTooltip="Open Context Menu"></i>
+              <i class="inlineButton absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
+                pTooltip="Open Context Menu"></i>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="pseudo"></div>
-      <div class="articleListEntry flex-column left flex justify-content-start, align-items-center" pTooltip="ActiveArticleEntry">
-        <div class="entryNameAndInteractions w-full relative flex flex-row justify-content-between align-content-center hideChildUntilHoverParent">
-          <div class="entryUniqueName pointerOnHover">InactiveCategoryEntry</div>
-          <i class="inlineButton absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover" pTooltip="Open Context Menu"></i>
         </div>
       </div>
     </div>
@@ -160,7 +152,7 @@
 
   <!-- Right Sidebar -->
   <div class="right sidebar min-h-full w-2 p-shadow-3 p-1 flex flex-column h-full overflow-y-auto">
-    <span class="p-input-icon-right w-full searchinput">
+    <span class="p-input-icon-right w-full">
       <i class="pi pi-search"></i>
       <input type="text" class="w-full" placeholder="Search Article" [(ngModel)]="rightSearch" pInputText />
     </span>
