@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { Note } from 'src/app/models/note.model';
+import { Article } from 'src/app/models/article.model';
 import { AbstractPanelComponent } from '../abstract-panel/abstract-panel.component';
 
 @Component({
@@ -12,23 +12,23 @@ import { AbstractPanelComponent } from '../abstract-panel/abstract-panel.compone
 export class NotePanelComponent extends AbstractPanelComponent implements OnInit {
   @ViewChild('contentOutlet') contentOutlet!: HTMLElement;
 
-  @Input() noteName?: string;
+  @Input() articleName?: string;
   @Input() editMode: boolean = false;
-  @Input() notes?: Map<string, Note>;
+  @Input() articles?: Map<string, Article>;
 
-  note: Note = new Note();
+  note: Article = new Article();
 
   constructor(private http: HttpClient, private elRef: ElementRef, private messageService: MessageService) {
     super();
   }
 
   ngOnInit() {
-    if (this.noteName) {
-      let noteOrUndefined = this.notes?.get(this.noteName);
-      if (noteOrUndefined) {
-        this.note = noteOrUndefined;
+    if (this.articleName) {
+      let articleOrUndefined = this.articles?.get(this.articleName);
+      if (articleOrUndefined) {
+        this.note = articleOrUndefined;
       } else {
-        this.messageService.add({severity: 'error', summary: `Note with name ${this.noteName} does not exist.`})
+        this.messageService.add({severity: 'error', summary: `Article with name ${this.articleName} does not exist.`})
         this.closePanelEvent.emit();
       }
     }

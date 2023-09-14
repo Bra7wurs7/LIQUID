@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnInit, Type, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { CategoryPanel, AbstractPanel, NotePanel } from './models/panel.model';
-import { Note } from './models/note.model';
+import { AbstractPanel, NotePanel } from './models/panel.model';
+import { Article } from './models/article.model';
 import { defaultProject, Project, SerializableProject } from './models/project.model';
 import { LocalDriveService } from './services/localDrive/local-drive.service';
 import { IndexedDbService } from './services/indexedDb/indexed-db.service';
@@ -24,7 +24,6 @@ export class AppComponent implements OnInit {
   activeTestDeleteLater: boolean = true;
 
   notePanelType = NotePanel;
-  categoryPanelType = CategoryPanel;
 
   project?: Project;
   noteKeys: string[] = [];
@@ -49,13 +48,16 @@ export class AppComponent implements OnInit {
       subArticles: [
         {
           uniqueName: "Doomdestroyer Sword of Poison",
-          subArticles: []
+          subArticles: [],
+          isActive: false
         },
         {
           uniqueName: "Bo-el o wo-a",
-          subArticles: []
+          subArticles: [],
+          isActive: false
         }
-      ]
+      ],
+      isActive: false
     },
     {
       uniqueName: "NPC",
@@ -65,32 +67,40 @@ export class AppComponent implements OnInit {
           subArticles: [
             {
               uniqueName: "Richard Small",
-              subArticles: []
+              subArticles: [],
+              isActive: false
             },
             {
               uniqueName: "John Little",
-              subArticles: []
+              subArticles: [],
+              isActive: false
             }
-          ]
+          ],
+          isActive: false
         },
         {
           uniqueName: "Town Guard",
           subArticles: [
             {
               uniqueName: "Günther Wachmann",
-              subArticles: []
+              subArticles: [],
+              isActive: false
             },
             {
               uniqueName: "Brunhilde Wachfrau",
-              subArticles: []
+              subArticles: [],
+              isActive: false
             }
-          ]
+          ],
+          isActive: false
         },
         {
           uniqueName: "Alfonso Urbestor",
-          subArticles: []
+          subArticles: [],
+          isActive: false
         }
-      ]
+      ],
+      isActive: false
     },
   ]
 
@@ -214,7 +224,7 @@ export class AppComponent implements OnInit {
     this.noteKeys = [];
     this.categoryKeys = [];
     this.project = project;
-    for (const key of this.project.notes?.keys()) {
+    for (const key of this.project.articles?.keys()) {
       this.noteKeys.push(key);
     }
     this.title = this.project.title;
@@ -233,7 +243,7 @@ export class AppComponent implements OnInit {
 
     if (existingPanel === undefined) {
       let newPanel: AbstractPanel;
-      if (this.project.notes.has(uniqueName)) {
+      if (this.project.articles.has(uniqueName)) {
         newPanel = new NotePanel(uniqueName)
       } else {
         this.messageService.add({ severity: 'error', summary: `${uniqueName} could not be found` })
@@ -260,12 +270,12 @@ export class AppComponent implements OnInit {
   }
 
   onAddElementClick(uniqueName: string, targetMap: 'notes', contentPanel: HTMLDivElement) {
-    if (this.project?.notes?.has(uniqueName)) {
+    if (this.project?.articles?.has(uniqueName)) {
       this.messageService.add({ severity: 'error', summary: 'An article with this name already exists. All names in LIQUID need to be unique.', life: 3000 })
     } else {
       switch (targetMap) {
         case 'notes':
-          this.project?.notes?.set(uniqueName, new Note(uniqueName))
+          this.project?.articles?.set(uniqueName, new Article(uniqueName))
           this.noteKeys?.push(uniqueName);
           this.onElementClick(uniqueName, contentPanel);
           break;
@@ -275,7 +285,7 @@ export class AppComponent implements OnInit {
 
   getPanelFromActiveViewForName(noteTitle: string): AbstractPanel | undefined {
     return this.project?.workspaces[this.project?.activeViewIndex].panels.find((panel) => {
-      return panel.uniqueName === noteTitle;
+      return panel.name === noteTitle;
     });
   }
 
@@ -297,9 +307,6 @@ export class AppComponent implements OnInit {
   castToNotePanel(panel: AbstractPanel): NotePanel {
     return panel as NotePanel;
   }
-  castToCategoryPanel(panel: AbstractPanel): CategoryPanel {
-    return panel as CategoryPanel;
-  }
 
   moveUp(index: number, panels: AbstractPanel[]) {
     if (index > 0) {
@@ -320,14 +327,6 @@ export class AppComponent implements OnInit {
   navigateInternalLink(internallink: string, contentPanel: HTMLDivElement) {
     const uniqueName = internallink.replace('[[', '').replace(']]', '');
     this.onElementClick(uniqueName, contentPanel);
-  }
-
-  getRelatedElements(panel: AbstractPanel) {
-    if (panel instanceof NotePanel) {
-      return this.project?.notes.get(panel.uniqueName)?.relatedElements;
-    } else {
-      return [];
-    }
   }
 
   filterKeyArrays(filterString: string) {
@@ -405,18 +404,12 @@ export class AppComponent implements OnInit {
     }
   }
 
-  removeLink(index: number) {
-    if (this.project) {
-      this.getRelatedElements(this.project.workspaces[this.project.activeViewIndex].panels[this.project.workspaces[this.project.activeViewIndex].activePanelIndex])?.splice(index, 1);
-    }
-  }
-
   deleteNote(name: string) {
     if (this.project) {
-      if (this.project.notes.delete(name)) {
+      if (this.project.articles.delete(name)) {
         this.noteKeys = this.noteKeys.filter((key) => key !== name);
         for (const view of this.project.workspaces) {
-          view.panels = view.panels.filter((panel) => panel.uniqueName !== name);
+          view.panels = view.panels.filter((panel) => panel.name !== name);
         }
       }
     }

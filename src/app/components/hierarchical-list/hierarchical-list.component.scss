@@ -1,33 +1,44 @@
 //Article List
 .articleList {
-    transition: all 0.3s;
-    height: 0 !important;
+    transition: visibility 0.2s, opacity 0.2s, max-height 0.2s;
+    visibility: hidden;
     opacity: 0;
+    max-height: 0;
     border-bottom-width: 0px;
-    width: 100%;
     overflow: hidden;
+    border-right-color: var(--surface-border);
+    border-left-color: var(--surface-border);
 
-    &.border-left {
-        border-left-width: 2px !important;
-        border-left-style: solid !important;
-        border-left-color: var(--surface-border) !important;
-        border-top-left-radius: 0px;
-    }
-
-    &.border-right {
+    &.showBorderLR{
         border-right-width: 2px;
         border-right-style: solid;
         border-right-color: var(--surface-border);
-        border-radius: 6px;
+        border-left-width: 2px !important;
+        border-left-style: solid !important;
+        border-left-color: var(--surface-border) !important;
+    } 
+
+    &.showBorderL{
+        border-left-width: 2px !important;
+        border-left-style: solid !important;
+        border-left-color: var(--surface-border) !important;
+    }
+
+    &.showBorderR{
+        border-right-width: 2px;
+        border-right-style: solid;
+        border-right-color: var(--surface-border);
     }
 
     &.active {
-        transition: all 0.1s;
-        border-top-width: 2px;
-        border-top-style: solid;
-        border-top-color: var(--surface-border);
-        height: 100% !important;
+        max-height: 100vh;
         opacity: 1;
+        visibility: visible;
+    }
+
+    .pseudoBorder{
+        border-top: 1px solid var(--surface-border);
+        border-bottom: 1px solid var(--surface-border);
     }
 }
 
@@ -36,22 +47,20 @@
 
     // Text and button container displaying the article name and a context menu button
     .listArticleEntry {
-        padding: 4px 6px 6px 6px;
-        border-bottom-width: 2px;
-        border-bottom-style: solid;
-        border-bottom-color: var(--surface-border);
+        transition: border-left-width 0.1s, border-right-width 0.1s;
+        padding: 6px 8px 8px 8px;
+        border-right-color: var(--surface-border);
+        border-left-color: var(--surface-border);
 
         &.active {
-            border-bottom-width: 0px;
             background-color: var(--surface-a);
-
-            &.border-left {
-                border-left-width: 2px;
-                border-left-style: solid;
-                border-left-color: var(--surface-border);
+            &.showBorderL{
+                border-left-width: 2px !important;
+                border-left-style: solid !important;
+                border-left-color: var(--surface-border) !important;
             }
-
-            &.border-right {
+        
+            &.showBorderR{
                 border-right-width: 2px;
                 border-right-style: solid;
                 border-right-color: var(--surface-border);
@@ -72,13 +81,13 @@
 
     .activeEntryFolderIcon {
         margin-right: 0px;
-        transition: width 0.01s, opacity 0.01s;
-        width: 0;
+        transition: max-width 0.1s, opacity 0.1s;
+        max-width: 0;
         opacity: 0;
 
         &.active {
             margin-right: 7px;
-            width: 13px;
+            max-width: 13px;
             opacity: 1;
         }
     }

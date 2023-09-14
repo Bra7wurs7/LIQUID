@@ -34,15 +34,16 @@ import { ConfirmationService } from 'primeng/api';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { LocalDriveService } from './services/localDrive/local-drive.service';
 import { IndexedDbService } from './services/indexedDb/indexed-db.service';
-import {DialogModule} from 'primeng/dialog';
-import {TableModule} from 'primeng/table';
-import {RatingModule} from 'primeng/rating';
+import { DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
+import { RatingModule } from 'primeng/rating';
 import { PrivacyPolicyComponent } from './components/popup-modals/privacy-policy/privacy-policy.component';
 import { HierarchicalListComponent } from './components/hierarchical-list/hierarchical-list.component';
-import { HierarchicalListItemComponent } from './components/hierarchical-list/hierarchical-list-item/hierarchical-list-item.component';
 import { LeftSidebarComponent } from './components/left-sidebar/left-sidebar.component';
 import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.component';
 import { CenterComponent } from './components/center/center.component';
+import { ArticlesFilterPipe } from './pipes/articlesFilter/articles-filter.pipe';
+import { ArticlesToHListPipe } from './pipes/articlesToHList/articles-to-hlist.pipe';
 
 
 @NgModule({
@@ -51,13 +52,13 @@ import { CenterComponent } from './components/center/center.component';
     NotePanelComponent,
     ParseMarkupPipe,
     FillAttributePipe,
-
     PrivacyPolicyComponent,
-     HierarchicalListComponent,
-     HierarchicalListItemComponent,
-     LeftSidebarComponent,
-     RightSidebarComponent,
-     CenterComponent,
+    HierarchicalListComponent,
+    LeftSidebarComponent,
+    RightSidebarComponent,
+    CenterComponent,
+    ArticlesFilterPipe,
+    ArticlesToHListPipe,
   ],
   imports: [
     BrowserModule,

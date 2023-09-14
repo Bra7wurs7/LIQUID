@@ -1,18 +1,33 @@
-<div class="articleList active flex flex-column w-full overflowScroll">
-    <div class="listArticle flex-column left flex justify-content-start, align-items-center"
-        [ngClass]="{'active': activeTestDeleteLater}" pTooltip="ActiveArticleEntry">
-        <!-- Article Name & Buttons -->
-        <div (click)="activeTestDeleteLater = !activeTestDeleteLater" *ngIf="sourceItem"
-            class="listArticleEntry w-full relative flex flex-row align-content-center hideChildUntilHoverParent"
-            [ngClass]="{'active': activeTestDeleteLater, 'border-left': borderLeft, 'border-right': borderRight}">
-            <i class="pi pi-folder-open activeEntryFolderIcon" [ngClass]="{'active': activeTestDeleteLater}"></i>
-            <div class="entryUniqueName pointerOnHover flex-grow-1">ActiveCategoryEntry</div>
-            <i class="contextMenuBtn absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
-                [ngClass]="{'active': activeTestDeleteLater}" pTooltip="Open Context Menu"></i>
+<div class="articleList flex flex-column w-full overflowScroll" [ngClass]="{
+        'active': isActive,
+        'showBorderLR': hierarchyDepth === 0,
+        'showBorderL': showBorderL,
+        'showBorderR': showBorderR,
+    }">
+    <div *ngFor="let listArticle of sourceList; first as isFirst; last as isLast">
+        <div class="pseudoBorder" *ngIf="isFirst"></div>
+        <div class="listArticle flex-column left flex justify-content-start, align-items-center"
+            [ngClass]="{'active': listArticle.isActive}">
+            <!-- Article Name & Buttons -->
+            <div (click)="listArticle.isActive = !listArticle.isActive"
+                class="listArticleEntry w-full relative flex flex-row align-content-center hideChildUntilHoverParent"
+                [pTooltip]="listArticle.uniqueName" [ngClass]="{
+                    'active': listArticle.isActive,
+                    'showBorderL': showBorderL,
+                    'showBorderR': showBorderR
+            }">
+                <i class="pi pi-folder-open activeEntryFolderIcon" [ngClass]="{'active': listArticle.isActive}"></i>
+                <div class="entryUniqueName pointerOnHover flex-grow-1">{{listArticle.uniqueName}}</div>
+                <i class="contextMenuBtn absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
+                    [ngClass]="{'active': listArticle.isActive}" pTooltip="Open Context Menu"
+                    (click)="$event.stopPropagation()"></i>
+            </div>
+            <!-- Subarticles List -->
+            <app-hierarchical-list class="w-full" *ngIf="listArticle.subArticles.length"
+                [listItems]="listArticle.subArticles" [isActive]="listArticle.isActive"
+                [hierarchyDepth]="hierarchyDepth + 1" [showBorderL]="showBorderL" [showBorderR]="showBorderR">
+            </app-hierarchical-list>
         </div>
-        <!-- Subarticles List -->
-        <div class="articleList border-left flex flex-column w-full h-full" *ngIf="sourceItem && listItems.length > 0"
-            [ngClass]="{'active': activeTestDeleteLater, 'border-left': borderLeft, 'border-right': borderRight}">
-        </div>
+        <div class="pseudoBorder"></div>
     </div>
 </div>

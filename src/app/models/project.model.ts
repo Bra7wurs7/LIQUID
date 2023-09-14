@@ -1,12 +1,12 @@
 import { AbstractPanel } from "./panel.model";
-import { Note } from "./note.model";
+import { Article } from "./article.model";
 import { Workspace } from "./workspace.model";
 import { reviver, serializable } from "../helper/serialize.helper";
 
 export class Project {
   title: string;
   /** Object representing a map of all notes for this project */
-  notes: Map<string, Note>;
+  articles: Map<string, Article>;
   /** */
   workspaces: Workspace[] = [];
   /** */
@@ -15,13 +15,13 @@ export class Project {
   version: number;
   constructor(
     title: string,
-    notes: Map<string, Note>,
+    notes: Map<string, Article>,
     workspaces: Workspace[],
     activeViewIndex: number = 0,
     version: number = 1,
   ) {
     this.title = title
-    this.notes = notes;
+    this.articles = notes;
     this.workspaces = workspaces;
     this.activeViewIndex = activeViewIndex;
     this.version = version
@@ -31,7 +31,7 @@ export class Project {
     const notes: any = {};
     const categories: any = {};
     const workspaces: Workspace[] = []
-    this.notes.forEach((value, key) => {
+    this.articles.forEach((value, key) => {
       notes[key] = value;
     })
     this.workspaces.forEach((workspace) => {
@@ -81,9 +81,9 @@ export class SerializableProject {
   }
 
   toProject(): Project {
-    const notes: Map<string, Note> = new Map();
+    const notes: Map<string, Article> = new Map();
     Object.keys(this.notes).forEach((key: string) => {
-      notes.set(key, this.notes[key] as Note)
+      notes.set(key, this.notes[key] as Article)
     });
     return new Project(this.title, notes, this.workspaces, this.activeViewIndex, this.version);
   }

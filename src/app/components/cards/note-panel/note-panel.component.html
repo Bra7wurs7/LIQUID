@@ -1,9 +1,7 @@
 <p-panel [toggleable]="true" #panel class="panel-hide-default-toggler notes article-sheet" [ngClass]="{'activePanel': isActivePanel}" *ngIf="note">
   <ng-template pTemplate="header">
     <div class="flex flex-row align-items-center">
-      <p-autoComplete *ngIf="editMode" placeholder="Category" [(ngModel)]="note.categoryName" [suggestions]="[]"></p-autoComplete>
-      <i *ngIf="editMode" class="pi pi-chevron-right" style="padding: 3px; font-size: 0.7em;"></i>
-      <span class="notes">{{note.uniqueName}}</span>
+      <span class="notes">{{note.name}}</span>
     </div>
     <div class="flex-grow-1"></div>
     <div class="flex-grow-1"></div>
@@ -58,7 +56,7 @@
         class="p-inputtext-sm w-max" [value]="item.content">
       <input pInputText size="10" style="margin: 1px" *ngIf="editMode && item.separator === 'none' && !item.constant"
         type="text" placeholder="Enter fixed value" class="p-inputtext-sm w-max"
-        [(ngModel)]="note.attributesMap[item.contentSlotId]">
+        [(ngModel)]="note.attributes[item.contentSlotId]">
       <span *ngIf="!editMode && item.separator === 'none'" [ngClass]="{
         'w-full': item.width === 'full',
         'w-max': item.width === 'max',
@@ -71,7 +69,7 @@
         'bold': item.bold,
         'paddedContent': item.content || item.contentSlotId
       }">
-        {{item.constant ? item.content : (item.contentSlotId | fillAttribute:note.attributesMap) ||
+        {{item.constant ? item.content : (item.contentSlotId | fillAttribute:note.attributes) ||
         item.content}}
       </span>
       <div *ngIf="item.separator !== 'none'" [ngClass]="{

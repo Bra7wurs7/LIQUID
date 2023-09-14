@@ -9,9 +9,10 @@ import { Workspace } from '../../models/workspace.model';
 })
 export class HierarchicalListComponent {
   activeTestDeleteLater: boolean = true;
-  @Input("borderLeft") borderLeft: boolean = true;
-  @Input("borderRight") borderRight: boolean = false;
-  @Input("listItems") listItems: HierarchicalListArticle[] = [];
-  @Input("sourceListItem") sourceItem?: HierarchicalListArticle;
+  @Input("showBorderL") showBorderL: boolean = false;
+  @Input("showBorderR") showBorderR: boolean = false;
+  @Input("listItems") sourceList: HierarchicalListArticle[] = [];
   @Input("currentWorkspace") currentWorkspace?: Workspace;
+  @Input("isActive") isActive: boolean = true;
+  @Input("hierarchyDepth") hierarchyDepth: number = 0;
 }

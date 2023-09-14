@@ -4,11 +4,10 @@
   <div class="left sidebar min-h-full w-2 p-shadow-3 overflow-hidden z-3 p-1 flex flex-column h-full overflow-y-auto">
     <span class="p-input-icon-right w-full">
       <i class="pi pi-search"></i>
-      <input type="text" class="w-full searchInput" placeholder="Search Project" pInputText [(ngModel)]="leftSearch"
-        (ngModelChange)="filterKeyArrays(leftSearch)" />
+      <input type="text" class="w-full searchInput" placeholder="Search Project" pInputText [(ngModel)]="leftSearch"/>
     </span>
     <div class="bigpseudo"></div>
-    <app-hierarchical-list [listItems]="defaultLeftSidebarItems"></app-hierarchical-list>
+    <app-hierarchical-list [showBorderL]="true" [listItems]="defaultLeftSidebarItems"></app-hierarchical-list>
   </div>
 
   <!-- Center Area -->
@@ -94,7 +93,7 @@
         ">
         <app-note-panel [isActivePanel]="
             project!.workspaces[project!.activeViewIndex].activePanelIndex === index
-          " *ngIf="panelIsInstanceOf(panel, notePanelType)" [notes]="project!.notes" [noteName]="panel.uniqueName"
+          " *ngIf="panelIsInstanceOf(panel, notePanelType)" [articles]="project!.articles" [articleName]="panel.name"
           [panel]="panel" (closePanelEvent)="removePanelFromActiveView(panel)" (moveUpEvent)="
             moveUp(index, project!.workspaces[project!.activeViewIndex].panels)
           " (moveDownEvent)="
@@ -196,22 +195,6 @@
         </p-panel>
       </ng-template>
     </p-panel>
-
-    <!-- New Link Stuff (Deletelater)
-    <div *ngIf="rightSearch && project">
-      <div class="bordered-element h-2rem flex flex-row justify-content-between pointerOnHover" (click)="
-          getRelatedElements(
-            project.workspaces[project.activeViewIndex].panels[
-              project.workspaces[project.activeViewIndex].activePanelIndex
-            ]
-          )?.push(rightSearch);
-          rightSearch = ''
-        ">
-        <span style="padding: 8px">{{ "New Link: " + rightSearch }}</span>
-      </div>
-      <div style="padding-bottom: 1px"></div>
-    </div>
-    -->
   </div>
 
   <!-- Notification Outlet -->
