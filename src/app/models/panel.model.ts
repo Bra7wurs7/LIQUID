@@ -1,10 +1,11 @@
 import { serializable } from "../helper/serialize.helper";
 
+/** @TODO Rework how open panels are represented and saved*/
 export abstract class AbstractPanel {
   htmlElement?: HTMLElement;
-  name: string;
+  articleName: string;
   constructor(uniqueName: string = '') {
-    this.name = uniqueName;
+    this.articleName = uniqueName;
   }
 }
 

@@ -4,10 +4,10 @@
   <div class="left sidebar min-h-full w-2 p-shadow-3 overflow-hidden z-3 p-1 flex flex-column h-full overflow-y-auto">
     <span class="p-input-icon-right w-full">
       <i class="pi pi-search"></i>
-      <input type="text" class="w-full searchInput" placeholder="Search Project" pInputText [(ngModel)]="leftSearch"/>
+      <input type="text" class="w-full searchInput" placeholder="Search Articles" pInputText [(ngModel)]="leftSearch"/>
     </span>
     <div class="bigpseudo"></div>
-    <app-hierarchical-list [showBorderL]="true" [listItems]="defaultLeftSidebarItems"></app-hierarchical-list>
+    <app-hierarchical-list *ngIf="articleHierarchyMap.size > 0 && this.project" [showBorderL]="true" [currentWorkspace]="this.project.workspaces[this.project.activeViewIndex]" [listItems]="articleHierarchyMap|filterArticleHierarchyMap:leftSearch" (articleClicked)="onElementClick($event.name, contentPanel)"></app-hierarchical-list>
   </div>
 
   <!-- Center Area -->
@@ -25,7 +25,7 @@
           <span class="pi pi-circle-off workspace pointerOnHover">
           </span>
           <span class="number-cell">{{
-            this.project.workspaces[index].panels.length
+            this.project.workspaces[index].activeArticlePanels.length
             }}
           </span>
           <span [pTooltip]="'Remove Workspace ' + (index + 1)" *ngIf="project.workspaces.length > 1"
@@ -85,19 +85,19 @@
       " styleClass="custombar" #contentPanel id="contentPanel">
       <div *ngFor="
           let panel of project && project.workspaces && project.workspaces.length > 0
-            ? project.workspaces[project.activeViewIndex].panels
+            ? project.workspaces[project.activeViewIndex].activeArticlePanels
             : [];
           let index = index
         " (mouseenter)="
-          project!.workspaces[project!.activeViewIndex].activePanelIndex = index
+          project!.workspaces[project!.activeViewIndex].highlightedPanelIndex = index
         ">
         <app-note-panel [isActivePanel]="
-            project!.workspaces[project!.activeViewIndex].activePanelIndex === index
-          " *ngIf="panelIsInstanceOf(panel, notePanelType)" [articles]="project!.articles" [articleName]="panel.name"
+            project!.workspaces[project!.activeViewIndex].highlightedPanelIndex === index
+          " *ngIf="panelIsInstanceOf(panel, articlePanelType)" [articles]="project!.articles" [articleName]="panel.articleName"
           [panel]="panel" (closePanelEvent)="removePanelFromActiveView(panel)" (moveUpEvent)="
-            moveUp(index, project!.workspaces[project!.activeViewIndex].panels)
+            moveUp(index, project!.workspaces[project!.activeViewIndex].activeArticlePanels)
           " (moveDownEvent)="
-            moveDown(index, project!.workspaces[project!.activeViewIndex].panels)
+            moveDown(index, project!.workspaces[project!.activeViewIndex].activeArticlePanels)
           "></app-note-panel>
         <div class="pseudo"></div>
       </div>
@@ -109,92 +109,8 @@
   <div class="right sidebar min-h-full w-2 p-shadow-3 p-1 flex flex-column h-full overflow-y-auto">
     <span class="p-input-icon-right w-full">
       <i class="pi pi-search"></i>
-      <input type="text" class="w-full" placeholder="Search Article" [(ngModel)]="rightSearch" pInputText />
+      <input type="text" class="w-full searchInput" placeholder="Search ${ArticeArticle}" [(ngModel)]="rightSearch" pInputText />
     </span>
-
-    <p-panel [toggleable]="true" #notes class="sidemenuPanel panel-hide-default-toggler" [collapsed]="true">
-      <ng-template pTemplate="header">
-        <div class="flex justify-content-between align-items-center">
-          <button (click)="notes.toggle($event); $event.stopPropagation()" pButton pRipple type="button" [icon]="
-              'pi ' +
-              (notes.collapsed ? 'pi-chevron-right' : 'pi-chevron-down')
-            " class="p-panel-header-icon"></button>
-          <span> Notes </span>
-        </div>
-      </ng-template>
-      <ng-template pTemplate="icons">
-        <div class="flex justify-content-between align-items-center">
-          <button (click)="addArticleOverlay.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
-            [icon]="'pi pi-plus'" class="p-panel-header-icon"></button>
-        </div>
-      </ng-template>
-      <ng-template pTemplate="content" *ngIf="noteKeys">
-        <div *ngFor="
-            let key of filteredNoteKeys !== undefined
-              ? filteredNoteKeys
-              : noteKeys
-          ">
-          <div style="margin: 1px"
-            class="flex sidebar-element flex-row justify-content-between align-items-center h-2rem pointerOnHover hideChildUntilHoverParent"
-            (click)="onElementClick(key, contentPanel)">
-            <div class="label flex align-items-center">
-              <span>
-                {{ key }}
-              </span>
-            </div>
-            <div (click)="noteMore.toggle($event); $event.stopPropagation()"
-              class="flex flex-column flex-wrap align-content-center justify-content-center hideChildUntilHoverChild button">
-              <i class="pi pi-ellipsis-v"></i>
-            </div>
-          </div>
-          <p-overlayPanel #noteMore>
-            <ng-template pTemplate>
-              <button pButton pRipple type="button" label="Delete" class="p-button-outlined p-button-danger"
-                (click)="deleteNote(key)"></button>
-            </ng-template>
-          </p-overlayPanel>
-        </div>
-      </ng-template>
-    </p-panel>
-
-    <p-panel [toggleable]="true" #article class="sidemenuPanel panel-hide-default-toggler" [collapsed]="true">
-      <ng-template pTemplate="header">
-        <div class="flex justify-content-between align-items-center">
-          <button (click)="article.toggle($event); $event.stopPropagation()" pButton pRipple type="button" [icon]="
-              'pi ' +
-              (article.collapsed ? 'pi-chevron-right' : 'pi-chevron-down')
-            " class="p-panel-header-icon"></button>
-          <span> Some Article </span>
-        </div>
-      </ng-template>
-      <ng-template pTemplate="icons">
-        <div class="flex justify-content-between align-items-center">
-          <button (click)="addArticleOverlay.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
-            [icon]="'pi pi-plus'" class="p-panel-header-icon"></button>
-        </div>
-      </ng-template>
-      <ng-template pTemplate="content" *ngIf="noteKeys">
-        <p-panel [toggleable]="true" #article class="sidemenuPanel panel-hide-default-toggler" [collapsed]="true">
-          <ng-template pTemplate="header">
-            <div class="flex justify-content-between align-items-center">
-              <button (click)="article.toggle($event); $event.stopPropagation()" pButton pRipple type="button" [icon]="
-                  'pi ' +
-                  (article.collapsed ? 'pi-chevron-right' : 'pi-chevron-down')
-                " class="p-panel-header-icon"></button>
-              <span> Some Article </span>
-            </div>
-          </ng-template>
-          <ng-template pTemplate="icons">
-            <div class="flex justify-content-between align-items-center">
-              <button (click)="addArticleOverlay.toggle($event); $event.stopPropagation()" pButton pRipple type="button"
-                [icon]="'pi pi-plus'" class="p-panel-header-icon"></button>
-            </div>
-          </ng-template>
-          <ng-template pTemplate="content">
-          </ng-template>
-        </p-panel>
-      </ng-template>
-    </p-panel>
   </div>
 
   <!-- Notification Outlet -->

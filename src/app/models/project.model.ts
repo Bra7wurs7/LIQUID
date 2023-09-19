@@ -37,12 +37,12 @@ export class Project {
     this.workspaces.forEach((workspace) => {
       const viewCopy = Object.assign({}, workspace);
       const panels: AbstractPanel[] = [];
-      viewCopy.panels.forEach((panel) => {
+      viewCopy.activeArticlePanels.forEach((panel) => {
         const panelCopy = Object.assign({}, panel);
         delete panelCopy.htmlElement;
         panels.push(panelCopy);
       })
-      viewCopy.panels = panels;
+      viewCopy.activeArticlePanels = panels;
       workspaces.push(viewCopy);
     })
     return new SerializableProject(this.title, notes, categories, workspaces, this.activeViewIndex, this.version);

@@ -8,28 +8,25 @@ import { IndexedDbService } from './services/indexedDb/indexed-db.service';
 import { Workspace } from './models/workspace.model';
 import { of, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { OverlayPanel } from 'primeng/overlaypanel';
-import { Dialog } from 'primeng/dialog';
 import { HierarchicalListArticle } from './models/hierarchicalListArticle.model';
+import { ArticleHierarchyNode } from './models/articleHierarchyNode.model';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
+
 export class AppComponent implements OnInit {
 
-  @ViewChild("projectUpload", { static: false}) projectUpload!: ElementRef;
+  @ViewChild("projectUpload", { static: false }) projectUpload!: ElementRef;
 
-  activeTestDeleteLater: boolean = true;
+  articlePanelType = NotePanel;
 
-  notePanelType = NotePanel;
+  /** Maps the names of all articles (groups, parents) to their subarticles (group members, children) */
+  articleHierarchyMap: Map<string, ArticleHierarchyNode> = new Map();
 
   project?: Project;
-  noteKeys: string[] = [];
-  filteredNoteKeys: string[] | undefined;
-  categoryKeys: string[] = [];
-  filteredCategoryKeys: string[] | undefined;
   title = 'LIQUID';
   allProjectsPromise: Promise<{ title: string, lastModified: Date }[]>;
   loadDialogVisible: boolean = false;
@@ -42,71 +39,9 @@ export class AppComponent implements OnInit {
   rightSearch: string = '';
   leftSearch: string = '';
 
-  defaultLeftSidebarItems: HierarchicalListArticle[] = [
-    {
-      uniqueName: "Item",
-      subArticles: [
-        {
-          uniqueName: "Doomdestroyer Sword of Poison",
-          subArticles: [],
-          isActive: false
-        },
-        {
-          uniqueName: "Bo-el o wo-a",
-          subArticles: [],
-          isActive: false
-        }
-      ],
-      isActive: false
-    },
-    {
-      uniqueName: "NPC",
-      subArticles: [
-        {
-          uniqueName: "Bandit",
-          subArticles: [
-            {
-              uniqueName: "Richard Small",
-              subArticles: [],
-              isActive: false
-            },
-            {
-              uniqueName: "John Little",
-              subArticles: [],
-              isActive: false
-            }
-          ],
-          isActive: false
-        },
-        {
-          uniqueName: "Town Guard",
-          subArticles: [
-            {
-              uniqueName: "Günther Wachmann",
-              subArticles: [],
-              isActive: false
-            },
-            {
-              uniqueName: "Brunhilde Wachfrau",
-              subArticles: [],
-              isActive: false
-            }
-          ],
-          isActive: false
-        },
-        {
-          uniqueName: "Alfonso Urbestor",
-          subArticles: [],
-          isActive: false
-        }
-      ],
-      isActive: false
-    },
-  ]
-
   items = [
     {
-      label: 'Project',
+      label: 'File',
       icon: 'pi pi-fw pi-file',
       tooltip: `Save, Load, or Start New Projects`,
       items: [
@@ -221,13 +156,42 @@ export class AppComponent implements OnInit {
   }
 
   loadProject(project: Project) {
-    this.noteKeys = [];
-    this.categoryKeys = [];
     this.project = project;
-    for (const key of this.project.articles?.keys()) {
-      this.noteKeys.push(key);
-    }
     this.title = this.project.title;
+    this.InitializeGroupNameArticlesMap();
+    console.log(this.articleHierarchyMap);
+  }
+
+  InitializeGroupNameArticlesMap() {
+    // Iterate over every article in project
+    for (let article of this.project?.articles.values() ?? []) {
+      // Get from groupNameArticlesMap the ArticleHierarchyNode for the currently iterated article
+      let articleHierarchyNode = this.articleHierarchyMap.get(article.name)
+      // Check if the ArticleHierarchyNode for the group (parent) article exists
+      if (!articleHierarchyNode) {
+        // If it doesn't exist, create it.
+        articleHierarchyNode = new ArticleHierarchyNode(article);
+        this.articleHierarchyMap.set(article.name, articleHierarchyNode)
+      }
+      // Iterate over the names of all groups (parent articles) that this article is a group member (child) of
+      for (let parentName of article.groups) {
+        const parentArticle = this.project?.articles.get(parentName);
+        if (parentArticle === undefined) {
+          // @TODO: Implement automatic group creation option
+          throw new Error("Unknown Group Name")
+        }
+        // Get the ArticleHierarchyNode for the group (parent) article from the groupNameArticlesMap
+        let parentHierarchyNode = this.articleHierarchyMap.get(parentArticle.name)
+        // Check if the ArticleHierarchyNode for the group (parent) article exists
+        if (!parentHierarchyNode) {
+          // If it doesn't exist, create it.
+          parentHierarchyNode = new ArticleHierarchyNode(parentArticle);
+          this.articleHierarchyMap.set(parentArticle.name, parentHierarchyNode)
+        }
+        parentHierarchyNode.children.add(articleHierarchyNode);
+        articleHierarchyNode.parents.add(parentHierarchyNode);
+      }
+    }
   }
 
   onAddNoteFolderClick(folderTitle: string) {
@@ -250,7 +214,7 @@ export class AppComponent implements OnInit {
         return;
       }
 
-      this.project?.workspaces[this.project?.activeViewIndex].panels.push(newPanel);
+      this.project?.workspaces[this.project?.activeViewIndex].activeArticlePanels.push(newPanel);
       const scrollToNewPanel = (attempt: number = 0) => {
         if (newPanel.htmlElement !== undefined) {
           this.scrollToPanel(newPanel, contentPanel)
@@ -264,7 +228,7 @@ export class AppComponent implements OnInit {
       }
       scrollToNewPanel();
     } else {
-      this.project.workspaces[this.project.activeViewIndex].activePanelIndex = this.project?.workspaces[this.project.activeViewIndex].panels.indexOf(existingPanel)
+      this.project.workspaces[this.project.activeViewIndex].highlightedPanelIndex = this.project?.workspaces[this.project.activeViewIndex].activeArticlePanels.indexOf(existingPanel)
       this.scrollToPanel(existingPanel, contentPanel);
     }
   }
@@ -276,7 +240,6 @@ export class AppComponent implements OnInit {
       switch (targetMap) {
         case 'notes':
           this.project?.articles?.set(uniqueName, new Article(uniqueName))
-          this.noteKeys?.push(uniqueName);
           this.onElementClick(uniqueName, contentPanel);
           break;
       }
@@ -284,15 +247,15 @@ export class AppComponent implements OnInit {
   }
 
   getPanelFromActiveViewForName(noteTitle: string): AbstractPanel | undefined {
-    return this.project?.workspaces[this.project?.activeViewIndex].panels.find((panel) => {
-      return panel.name === noteTitle;
+    return this.project?.workspaces[this.project?.activeViewIndex].activeArticlePanels.find((panel) => {
+      return panel.articleName === noteTitle;
     });
   }
 
   removePanelFromActiveView(panel: AbstractPanel) {
-    const panelIndex: number = this.project?.workspaces[this.project?.activeViewIndex].panels.indexOf(panel) ?? -1;
+    const panelIndex: number = this.project?.workspaces[this.project?.activeViewIndex].activeArticlePanels.indexOf(panel) ?? -1;
     if (panelIndex != -1) {
-      this.project?.workspaces[this.project?.activeViewIndex].panels.splice(panelIndex, 1)
+      this.project?.workspaces[this.project?.activeViewIndex].activeArticlePanels.splice(panelIndex, 1)
     }
   }
 
@@ -327,16 +290,6 @@ export class AppComponent implements OnInit {
   navigateInternalLink(internallink: string, contentPanel: HTMLDivElement) {
     const uniqueName = internallink.replace('[[', '').replace(']]', '');
     this.onElementClick(uniqueName, contentPanel);
-  }
-
-  filterKeyArrays(filterString: string) {
-    if (filterString) {
-      this.filteredNoteKeys = this.noteKeys.filter((key) => key.toLowerCase().includes(filterString.toLowerCase()))
-      this.filteredCategoryKeys = this.categoryKeys.filter((key) => key.toLowerCase().includes(filterString.toLowerCase()))
-    } else {
-      this.filteredNoteKeys = undefined;
-      this.filteredCategoryKeys = undefined;
-    }
   }
 
   newProject(title?: string) {
@@ -407,9 +360,8 @@ export class AppComponent implements OnInit {
   deleteNote(name: string) {
     if (this.project) {
       if (this.project.articles.delete(name)) {
-        this.noteKeys = this.noteKeys.filter((key) => key !== name);
         for (const view of this.project.workspaces) {
-          view.panels = view.panels.filter((panel) => panel.name !== name);
+          view.activeArticlePanels = view.activeArticlePanels.filter((panel) => panel.articleName !== name);
         }
       }
     }

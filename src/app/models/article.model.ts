@@ -10,11 +10,11 @@ export class Article {
     * internal fertilization, and nourish their young with milk produced by the female's mammary glands." 
     */
   definition: string;
-  /** The array of all Names that the article has been tagged with. e.g. ["animal", "viviparous", "nursing"] or ["blacksmith", "human", "father"] */
-  tags: string[];
+  /** A list of article names that define the groups that this article has been declared to belong to e.g. ["animal", "viviparous", "nursing"] or ["blacksmith", "human", "father"] */
+  groups: string[];
   /** Object (map) of meta attributes of this article */
   attributes: Record<string, any>;
-  /** The actual downpur content of a note */
+  /** The actual downput or binary content of an article */
   content: string;
   constructor(
     name: string = '',
@@ -25,7 +25,7 @@ export class Article {
   ) {
     this.name = name;
     this.definition = definition;
-    this.tags = tags;
+    this.groups = tags;
     this.attributes = attributes;
     this.content = content;
   }

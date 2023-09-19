@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
-import { HierarchicalListArticle } from '../../models/hierarchicalListArticle.model';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Workspace } from '../../models/workspace.model';
+import { ArticleHierarchyNode } from '../../models/articleHierarchyNode.model';
+import { Article } from '../../models/article.model';
 
 @Component({
   selector: 'app-hierarchical-list',
@@ -8,11 +9,12 @@ import { Workspace } from '../../models/workspace.model';
   styleUrls: ['./hierarchical-list.component.scss']
 })
 export class HierarchicalListComponent {
-  activeTestDeleteLater: boolean = true;
   @Input("showBorderL") showBorderL: boolean = false;
   @Input("showBorderR") showBorderR: boolean = false;
-  @Input("listItems") sourceList: HierarchicalListArticle[] = [];
-  @Input("currentWorkspace") currentWorkspace?: Workspace;
+  @Input("listItems") hierarchyNodeSet!: Set<ArticleHierarchyNode>;
+  @Input("currentWorkspace") currentWorkspace!: Workspace;
   @Input("isActive") isActive: boolean = true;
   @Input("hierarchyDepth") hierarchyDepth: number = 0;
+
+  @Output("articleClicked") articleClickedEmitter = new EventEmitter<Article>();
 }

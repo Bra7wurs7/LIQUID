@@ -42,8 +42,8 @@ import { HierarchicalListComponent } from './components/hierarchical-list/hierar
 import { LeftSidebarComponent } from './components/left-sidebar/left-sidebar.component';
 import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.component';
 import { CenterComponent } from './components/center/center.component';
-import { ArticlesFilterPipe } from './pipes/articlesFilter/articles-filter.pipe';
-import { ArticlesToHListPipe } from './pipes/articlesToHList/articles-to-hlist.pipe';
+import { ArticleIsActivePipe } from './pipes/articleIsActive/article-is-active-pipe.pipe';
+import { FilterArticleHierarchyMapPipe } from './pipes/filterArticleHierarchyMap/filter-article-hierarchy-map.pipe';
 
 
 @NgModule({
@@ -57,8 +57,8 @@ import { ArticlesToHListPipe } from './pipes/articlesToHList/articles-to-hlist.p
     LeftSidebarComponent,
     RightSidebarComponent,
     CenterComponent,
-    ArticlesFilterPipe,
-    ArticlesToHListPipe,
+    ArticleIsActivePipe,
+    FilterArticleHierarchyMapPipe,
   ],
   imports: [
     BrowserModule,

@@ -4,28 +4,28 @@
         'showBorderL': showBorderL,
         'showBorderR': showBorderR,
     }">
-    <div *ngFor="let listArticle of sourceList; first as isFirst; last as isLast">
+    <div *ngFor="let articleHierarchyNodeEntry of hierarchyNodeSet; first as isFirst; last as isLast">
         <div class="pseudoBorder" *ngIf="isFirst"></div>
         <div class="listArticle flex-column left flex justify-content-start, align-items-center"
-            [ngClass]="{'active': listArticle.isActive}">
+            [ngClass]="{'active': articleHierarchyNodeEntry.node|articleIsActive:currentWorkspace}">
             <!-- Article Name & Buttons -->
-            <div (click)="listArticle.isActive = !listArticle.isActive"
+            <div (click)="articleClickedEmitter.emit(articleHierarchyNodeEntry.node)"
                 class="listArticleEntry w-full relative flex flex-row align-content-center hideChildUntilHoverParent"
-                [pTooltip]="listArticle.uniqueName" [ngClass]="{
-                    'active': listArticle.isActive,
+                [pTooltip]="articleHierarchyNodeEntry.node.name" [ngClass]="{
+                    'active': articleHierarchyNodeEntry.node|articleIsActive:currentWorkspace,
                     'showBorderL': showBorderL,
                     'showBorderR': showBorderR
             }">
-                <i class="pi pi-folder-open activeEntryFolderIcon" [ngClass]="{'active': listArticle.isActive}"></i>
-                <div class="entryUniqueName pointerOnHover flex-grow-1">{{listArticle.uniqueName}}</div>
+                <i class="pi pi-folder-open activeEntryFolderIcon" [ngClass]="{'active': articleHierarchyNodeEntry.node|articleIsActive:currentWorkspace}"></i>
+                <div class="entryUniqueName pointerOnHover flex-grow-1">{{articleHierarchyNodeEntry.node.name}}</div>
                 <i class="contextMenuBtn absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
-                    [ngClass]="{'active': listArticle.isActive}" pTooltip="Open Context Menu"
+                    [ngClass]="{'active': articleHierarchyNodeEntry.node|articleIsActive:currentWorkspace}" pTooltip="Open Context Menu"
                     (click)="$event.stopPropagation()"></i>
             </div>
             <!-- Subarticles List -->
-            <app-hierarchical-list class="w-full" *ngIf="listArticle.subArticles.length"
-                [listItems]="listArticle.subArticles" [isActive]="listArticle.isActive"
-                [hierarchyDepth]="hierarchyDepth + 1" [showBorderL]="showBorderL" [showBorderR]="showBorderR">
+            <app-hierarchical-list class="w-full" *ngIf="articleHierarchyNodeEntry.children.size > 0"
+                [listItems]="articleHierarchyNodeEntry.children" [isActive]="articleHierarchyNodeEntry.node|articleIsActive:currentWorkspace"
+                [hierarchyDepth]="hierarchyDepth + 1" [showBorderL]="showBorderL" [showBorderR]="showBorderR" (articleClicked)="this.articleClickedEmitter.emit($event)">
             </app-hierarchical-list>
         </div>
         <div class="pseudoBorder"></div>

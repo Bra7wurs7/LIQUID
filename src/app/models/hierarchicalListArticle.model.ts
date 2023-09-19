@@ -1,5 +1,7 @@
+import { Article } from "./article.model";
+
 export interface HierarchicalListArticle {
-    uniqueName: string;
-    isActive: boolean;
-    subArticles: HierarchicalListArticle[];
+    article: Article;
+    children: HierarchicalListArticle[];
+    parents: HierarchicalListArticle[];
 }
