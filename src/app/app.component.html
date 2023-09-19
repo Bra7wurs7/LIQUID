@@ -4,10 +4,13 @@
   <div class="left sidebar min-h-full w-2 p-shadow-3 overflow-hidden z-3 p-1 flex flex-column h-full overflow-y-auto">
     <span class="p-input-icon-right w-full">
       <i class="pi pi-search"></i>
-      <input type="text" class="w-full searchInput" placeholder="Search Articles" pInputText [(ngModel)]="leftSearch"/>
+      <input type="text" class="w-full searchInput" placeholder="Search Articles" pInputText [(ngModel)]="leftSearch" />
     </span>
     <div class="bigpseudo"></div>
-    <app-hierarchical-list *ngIf="articleHierarchyMap.size > 0 && this.project" [showBorderL]="true" [currentWorkspace]="this.project.workspaces[this.project.activeViewIndex]" [listItems]="articleHierarchyMap|filterArticleHierarchyMap:leftSearch" (articleClicked)="onElementClick($event.name, contentPanel)"></app-hierarchical-list>
+    <app-hierarchical-list *ngIf="articleHierarchyMap.size > 0 && this.project" [showBorderL]="true"
+      [currentWorkspace]="this.project.workspaces[this.project.activeWorkspaceIndex]"
+      [listItems]="articleHierarchyMap|filterArticleHierarchyMap:leftSearch"
+      (articleClicked)="toggleArticleActive($event.name)"></app-hierarchical-list>
   </div>
 
   <!-- Center Area -->
@@ -19,13 +22,13 @@
       <!-- Workspaces -->
       <div *ngIf="project" class="flex flex-row workspaces">
         <div class="pi pi-plus-circle workspace pointerOnHover" [pTooltip]="'Add Workspace'" (click)="addView()"></div>
-        <div *ngFor="let view of project.workspaces; let index = index" class="hideChildUntilHoverParent pointerOnHover"
-          style="position: relative;" (click)="this.project.activeViewIndex = index"
+        <div *ngFor="let workspace of project.workspaces; let index = index" class="hideChildUntilHoverParent pointerOnHover"
+          style="position: relative;" (click)="this.project.activeWorkspaceIndex = index"
           [pTooltip]="'Workspace ' + (index + 1)">
           <span class="pi pi-circle-off workspace pointerOnHover">
           </span>
           <span class="number-cell">{{
-            this.project.workspaces[index].activeArticlePanels.length
+            this.project.workspaces[index].activeArticles.length
             }}
           </span>
           <span [pTooltip]="'Remove Workspace ' + (index + 1)" *ngIf="project.workspaces.length > 1"
@@ -84,20 +87,20 @@
         scroll-behavior: smooth;
       " styleClass="custombar" #contentPanel id="contentPanel">
       <div *ngFor="
-          let panel of project && project.workspaces && project.workspaces.length > 0
-            ? project.workspaces[project.activeViewIndex].activeArticlePanels
+          let activeArticleName of project && project.workspaces && project.workspaces.length > 0
+            ? project.workspaces[project.activeWorkspaceIndex].activeArticles
             : [];
           let index = index
         " (mouseenter)="
-          project!.workspaces[project!.activeViewIndex].highlightedPanelIndex = index
+          project!.workspaces[project!.activeWorkspaceIndex].highlightedPanelIndex = index
         ">
         <app-note-panel [isActivePanel]="
-            project!.workspaces[project!.activeViewIndex].highlightedPanelIndex === index
-          " *ngIf="panelIsInstanceOf(panel, articlePanelType)" [articles]="project!.articles" [articleName]="panel.articleName"
-          [panel]="panel" (closePanelEvent)="removePanelFromActiveView(panel)" (moveUpEvent)="
-            moveUp(index, project!.workspaces[project!.activeViewIndex].activeArticlePanels)
+            project!.workspaces[project!.activeWorkspaceIndex].highlightedPanelIndex === index
+          " [articles]="project!.articles" [articleName]="activeArticleName"
+          (closePanelEvent)="toggleArticleActive(activeArticleName)" (moveUpEvent)="
+            moveUp(index)
           " (moveDownEvent)="
-            moveDown(index, project!.workspaces[project!.activeViewIndex].activeArticlePanels)
+            moveDown(index)
           "></app-note-panel>
         <div class="pseudo"></div>
       </div>
@@ -109,7 +112,8 @@
   <div class="right sidebar min-h-full w-2 p-shadow-3 p-1 flex flex-column h-full overflow-y-auto">
     <span class="p-input-icon-right w-full">
       <i class="pi pi-search"></i>
-      <input type="text" class="w-full searchInput" placeholder="Search ${ArticeArticle}" [(ngModel)]="rightSearch" pInputText />
+      <input type="text" class="w-full searchInput" placeholder="Search ${ArticeArticle}" [(ngModel)]="rightSearch"
+        pInputText />
     </span>
   </div>
 

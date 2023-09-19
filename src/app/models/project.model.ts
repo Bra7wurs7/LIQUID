@@ -1,4 +1,3 @@
-import { AbstractPanel } from "./panel.model";
 import { Article } from "./article.model";
 import { Workspace } from "./workspace.model";
 import { reviver, serializable } from "../helper/serialize.helper";
@@ -10,42 +9,30 @@ export class Project {
   /** */
   workspaces: Workspace[] = [];
   /** */
-  activeViewIndex: number;
+  activeWorkspaceIndex: number;
   /** version of GAS that this Project last saved with */
   version: number;
   constructor(
     title: string,
     notes: Map<string, Article>,
     workspaces: Workspace[],
-    activeViewIndex: number = 0,
+    activeWorkspaceIndex: number = 0,
     version: number = 1,
   ) {
     this.title = title
     this.articles = notes;
     this.workspaces = workspaces;
-    this.activeViewIndex = activeViewIndex;
+    this.activeWorkspaceIndex = activeWorkspaceIndex;
     this.version = version
   }
 
   toSerializableProject(): SerializableProject {
     const notes: any = {};
     const categories: any = {};
-    const workspaces: Workspace[] = []
     this.articles.forEach((value, key) => {
       notes[key] = value;
     })
-    this.workspaces.forEach((workspace) => {
-      const viewCopy = Object.assign({}, workspace);
-      const panels: AbstractPanel[] = [];
-      viewCopy.activeArticlePanels.forEach((panel) => {
-        const panelCopy = Object.assign({}, panel);
-        delete panelCopy.htmlElement;
-        panels.push(panelCopy);
-      })
-      viewCopy.activeArticlePanels = panels;
-      workspaces.push(viewCopy);
-    })
-    return new SerializableProject(this.title, notes, categories, workspaces, this.activeViewIndex, this.version);
+    return new SerializableProject(this.title, notes, categories, this.workspaces, this.activeWorkspaceIndex, this.version);
   }
 }
 
@@ -60,7 +47,7 @@ export class SerializableProject {
   /** */
   workspaces: Workspace[] = [];
   /** */
-  activeViewIndex: number;
+  activeWorkspaceIndex: number;
   /** version of GAS that this Project last saved with */
   version: number;
 
@@ -69,14 +56,14 @@ export class SerializableProject {
     notes: any = {},
     categories: any = {},
     workspaces: Workspace[] = [],
-    activeViewIndex: number = 0,
+    activeWorkspaceIndex: number = 0,
     version: number = 1,
   ) {
     this.title = title
     this.notes = notes;
     this.categories = categories;
     this.workspaces = workspaces;
-    this.activeViewIndex = activeViewIndex;
+    this.activeWorkspaceIndex = activeWorkspaceIndex;
     this.version = version
   }
 
@@ -85,7 +72,7 @@ export class SerializableProject {
     Object.keys(this.notes).forEach((key: string) => {
       notes.set(key, this.notes[key] as Article)
     });
-    return new Project(this.title, notes, this.workspaces, this.activeViewIndex, this.version);
+    return new Project(this.title, notes, this.workspaces, this.activeWorkspaceIndex, this.version);
   }
 
   serialize(): string {
@@ -1011,7 +998,7 @@ export const defaultProjectJson = {
       ]
     }
   },
-  "activeViewIndex": 0,
+  "activeWorkspaceIndex": 0,
   "version": 1
 }
 

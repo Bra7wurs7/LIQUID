@@ -32,8 +32,5 @@ export class NotePanelComponent extends AbstractPanelComponent implements OnInit
         this.closePanelEvent.emit();
       }
     }
-    if (this.panel) {
-      this.panel.htmlElement = this.elRef.nativeElement;
-    }
   }
 }

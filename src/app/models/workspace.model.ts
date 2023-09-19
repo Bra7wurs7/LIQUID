@@ -1,13 +1,13 @@
 import { serializable } from "../helper/serialize.helper";
-import { AbstractPanel } from "./panel.model";
+import { Article } from "./article.model";
 
 @serializable
 export class Workspace {
   readonly className: string = 'Workspace';
-  activeArticlePanels: AbstractPanel[];
+  activeArticles: string[];
   highlightedPanelIndex: number;
-  constructor(panels: AbstractPanel[] = [], activePanelIndex: number = -1) {
-    this.activeArticlePanels = panels;
+  constructor(activeArticles: string[] = [], activePanelIndex: number = -1) {
+    this.activeArticles = activeArticles;
     this.highlightedPanelIndex = activePanelIndex;
   }
 }

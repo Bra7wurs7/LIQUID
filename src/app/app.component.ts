@@ -1,6 +1,5 @@
 import { Component, ElementRef, Input, OnInit, Type, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { AbstractPanel, NotePanel } from './models/panel.model';
 import { Article } from './models/article.model';
 import { defaultProject, Project, SerializableProject } from './models/project.model';
 import { LocalDriveService } from './services/localDrive/local-drive.service';
@@ -21,8 +20,6 @@ export class AppComponent implements OnInit {
 
   @ViewChild("projectUpload", { static: false }) projectUpload!: ElementRef;
 
-  articlePanelType = NotePanel;
-
   /** Maps the names of all articles (groups, parents) to their subarticles (group members, children) */
   articleHierarchyMap: Map<string, ArticleHierarchyNode> = new Map();
 
@@ -38,6 +35,8 @@ export class AppComponent implements OnInit {
 
   rightSearch: string = '';
   leftSearch: string = '';
+
+  activeArticlePages: Map<string, HTMLElement> = new Map();
 
   items = [
     {
@@ -159,7 +158,6 @@ export class AppComponent implements OnInit {
     this.project = project;
     this.title = this.project.title;
     this.InitializeGroupNameArticlesMap();
-    console.log(this.articleHierarchyMap);
   }
 
   InitializeGroupNameArticlesMap() {
@@ -198,38 +196,17 @@ export class AppComponent implements OnInit {
     this.messageService.add({ severity: 'error', summary: 'Feature not supported yet.', life: 3000 })
   }
 
-  onElementClick(uniqueName: string, contentPanel: HTMLDivElement) {
-    /** Replace onNoteClick and onCategoryClick with this */
+  toggleArticleActive(uniqueName: string) {
     if (!this.project) {
       return;
     }
-    const existingPanel = this.getPanelFromActiveViewForName(uniqueName);
 
-    if (existingPanel === undefined) {
-      let newPanel: AbstractPanel;
-      if (this.project.articles.has(uniqueName)) {
-        newPanel = new NotePanel(uniqueName)
-      } else {
-        this.messageService.add({ severity: 'error', summary: `${uniqueName} could not be found` })
-        return;
-      }
+    const articleActiveIndex = this.project.workspaces[this.project.activeWorkspaceIndex].activeArticles.indexOf(uniqueName)
 
-      this.project?.workspaces[this.project?.activeViewIndex].activeArticlePanels.push(newPanel);
-      const scrollToNewPanel = (attempt: number = 0) => {
-        if (newPanel.htmlElement !== undefined) {
-          this.scrollToPanel(newPanel, contentPanel)
-        } else {
-          if (attempt > 50) {
-          } else {
-            attempt++;
-            setTimeout(() => scrollToNewPanel(attempt), 100)
-          }
-        }
-      }
-      scrollToNewPanel();
+    if (articleActiveIndex >= 0) {
+      this.project.workspaces[this.project.activeWorkspaceIndex].activeArticles.splice(articleActiveIndex, 1);
     } else {
-      this.project.workspaces[this.project.activeViewIndex].highlightedPanelIndex = this.project?.workspaces[this.project.activeViewIndex].activeArticlePanels.indexOf(existingPanel)
-      this.scrollToPanel(existingPanel, contentPanel);
+      this.project.workspaces[this.project.activeWorkspaceIndex].activeArticles.push(uniqueName);
     }
   }
 
@@ -240,56 +217,39 @@ export class AppComponent implements OnInit {
       switch (targetMap) {
         case 'notes':
           this.project?.articles?.set(uniqueName, new Article(uniqueName))
-          this.onElementClick(uniqueName, contentPanel);
+          this.toggleArticleActive(uniqueName);
           break;
       }
     }
   }
 
-  getPanelFromActiveViewForName(noteTitle: string): AbstractPanel | undefined {
-    return this.project?.workspaces[this.project?.activeViewIndex].activeArticlePanels.find((panel) => {
-      return panel.articleName === noteTitle;
-    });
+  scrollToPanel(child: HTMLElement, parent: HTMLDivElement) {
+    parent.scrollTop = child.offsetTop ?? 0;
   }
 
-  removePanelFromActiveView(panel: AbstractPanel) {
-    const panelIndex: number = this.project?.workspaces[this.project?.activeViewIndex].activeArticlePanels.indexOf(panel) ?? -1;
-    if (panelIndex != -1) {
-      this.project?.workspaces[this.project?.activeViewIndex].activeArticlePanels.splice(panelIndex, 1)
-    }
-  }
-
-  scrollToPanel(child: AbstractPanel, parent: HTMLDivElement) {
-    parent.scrollTop = child.htmlElement?.offsetTop ?? 0;
-  }
-
-  panelIsInstanceOf(panel: AbstractPanel, type: Type<AbstractPanel>): boolean {
-    return panel instanceof type;
-  }
-
-  castToNotePanel(panel: AbstractPanel): NotePanel {
-    return panel as NotePanel;
-  }
-
-  moveUp(index: number, panels: AbstractPanel[]) {
+  moveUp(index: number) {
+    if (!this.project) { return }
+    let activeArticles = this.project?.workspaces[this.project?.activeWorkspaceIndex].activeArticles
     if (index > 0) {
-      let tmp = panels[index - 1];
-      panels[index - 1] = panels[index];
-      panels[index] = tmp;
+      let tmp = activeArticles[index - 1];
+      activeArticles[index - 1] = activeArticles[index];
+      activeArticles[index] = tmp;
     }
   }
 
-  moveDown(index: number, panels: AbstractPanel[]) {
-    if (index < (panels.length - 1)) {
-      let tmp = panels[index + 1];
-      panels[index + 1] = panels[index];
-      panels[index] = tmp;
+  moveDown(index: number) {
+    if (!this.project) { return }
+    let activeArticles = this.project?.workspaces[this.project?.activeWorkspaceIndex].activeArticles
+    if (index < (activeArticles.length - 1)) {
+      let tmp = activeArticles[index + 1];
+      activeArticles[index + 1] = activeArticles[index];
+      activeArticles[index] = tmp;
     }
   }
 
   navigateInternalLink(internallink: string, contentPanel: HTMLDivElement) {
     const uniqueName = internallink.replace('[[', '').replace(']]', '');
-    this.onElementClick(uniqueName, contentPanel);
+    this.toggleArticleActive(uniqueName);
   }
 
   newProject(title?: string) {
@@ -346,13 +306,13 @@ export class AppComponent implements OnInit {
   addView() {
     if (this.project) {
       this.project.workspaces?.unshift(new Workspace());
-      this.project.activeViewIndex = 0;
+      this.project.activeWorkspaceIndex = 0;
     }
   }
 
   removeView(index: number) {
     if (this.project) {
-      this.project.activeViewIndex = index - 1;
+      this.project.activeWorkspaceIndex = index - 1;
       this.project.workspaces?.splice(index, 1);
     }
   }
@@ -360,8 +320,8 @@ export class AppComponent implements OnInit {
   deleteNote(name: string) {
     if (this.project) {
       if (this.project.articles.delete(name)) {
-        for (const view of this.project.workspaces) {
-          view.activeArticlePanels = view.activeArticlePanels.filter((panel) => panel.articleName !== name);
+        for (const workspace of this.project.workspaces) {
+          workspace.activeArticles = workspace.activeArticles.filter((activeArticleName) => activeArticleName !== name);
         }
       }
     }
