@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Workspace } from '../../models/workspace.model';
 import { ArticleHierarchyNode } from '../../models/articleHierarchyNode.model';
 import { Article } from '../../models/article.model';
-import { ModalService } from '../../services/contextMenu/context-menu.service';
 
 @Component({
   selector: 'app-hierarchical-list',
@@ -12,14 +11,16 @@ import { ModalService } from '../../services/contextMenu/context-menu.service';
 export class HierarchicalListComponent {
   @Input("showBorderL") showBorderL: boolean = false;
   @Input("showBorderR") showBorderR: boolean = false;
+  @Input("ListParent") listParent!: ArticleHierarchyNode;
   @Input("listItems") hierarchyNodeSet!: Set<ArticleHierarchyNode>;
   @Input("currentWorkspace") currentWorkspace!: Workspace;
   @Input("isActive") isActive: boolean = true;
   @Input("hierarchyDepth") hierarchyDepth: number = 0;
+  @Input("searchInput") searchInput: string = "";
 
   @Output("articleClicked") articleClickedEmitter = new EventEmitter<Article>();
 
-  constructor(public modalService: ModalService) {
+  constructor() {
 
   }
 }
