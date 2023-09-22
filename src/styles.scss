@@ -8,6 +8,13 @@ html {
   }
 }
 
+app-context-menu {
+  position: absolute;
+  border: 2px solid pink;
+  height: 100px;
+  width: 100px;
+}
+
 p-inputSwitch {
   height: 28px;
 }

@@ -43,6 +43,8 @@ import { LeftSidebarComponent } from './components/left-sidebar/left-sidebar.com
 import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.component';
 import { CenterComponent } from './components/center/center.component';
 import { FilterArticleHierarchyMapPipe } from './pipes/filterArticleHierarchyMap/filter-article-hierarchy-map.pipe';
+import { ModalService } from './services/contextMenu/context-menu.service';
+import { ModalComponent } from './components/popup-modals/context-menu/context-menu.component';
 
 
 @NgModule({
@@ -57,6 +59,7 @@ import { FilterArticleHierarchyMapPipe } from './pipes/filterArticleHierarchyMap
     RightSidebarComponent,
     CenterComponent,
     FilterArticleHierarchyMapPipe,
+    ModalComponent
   ],
   imports: [
     BrowserModule,
@@ -89,7 +92,7 @@ import { FilterArticleHierarchyMapPipe } from './pipes/filterArticleHierarchyMap
     TableModule,
     RatingModule,
   ],
-  providers: [ConfirmationService, MessageService, LocalDriveService, IndexedDbService],
+  providers: [ConfirmationService, MessageService, LocalDriveService, IndexedDbService, ModalService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
