@@ -4,13 +4,14 @@
         'showBorderL': showBorderL,
         'showBorderR': showBorderR,
     }">
-    <div class="newArticleButton">
-        <i class="pi pi-folder-open activeEntryFolderIcon active"></i>
-        <div class="entryUniqueName pointerOnHover flex-grow-1">{{"New "+searchInput}}</div>
-        <i #contextMenuButton
-            class="contextMenuBtn absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
-            [ngClass]="{'active': currentWorkspace.activeArticles.includes(articleHierarchyNodeEntry.node.name)}"
-            pTooltip="Open Context Menu" (click)="$event.stopPropagation()"></i>
+    <div lass="listArticle flex-column left flex justify-content-start, align-items-center">
+        <div class="listArticleEntry borderTopBottom w-full relative flex flex-row align-content-center hideChildUntilHoverParent">
+            <i class="pi pi-plus activeEntryFolderIcon active"></i>
+            <div class="entryUniqueName pointerOnHover flex-grow-1">{{"New "+searchInput}}</div>
+            <i #contextMenuButton
+                class="contextMenuBtn absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
+                pTooltip="Open Context Menu" (click)="$event.stopPropagation()"></i>
+        </div>
     </div>
     <div *ngFor="let articleHierarchyNodeEntry of hierarchyNodeSet; first as isFirst; last as isLast">
         <div class="pseudoBorder" *ngIf="isFirst"></div>

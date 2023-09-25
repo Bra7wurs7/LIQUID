@@ -40,77 +40,86 @@
         border-top: 1px solid var(--surface-border);
         border-bottom: 1px solid var(--surface-border);
     }
+
+    .newArticleButton {
+        padding: 6px 8px 8px 8px;
+    }
 }
 
-// List Element
-.listArticle {
+// Text and button container displaying the article name and a context menu button
+.listArticleEntry {
+    transition: border-left-width 0.1s, border-right-width 0.1s;
+    padding: 6px 8px 8px 8px;
+    border-right-color: var(--surface-border);
+    border-left-color: var(--surface-border);
 
-    // Text and button container displaying the article name and a context menu button
-    .listArticleEntry {
-        transition: border-left-width 0.1s, border-right-width 0.1s;
-        padding: 6px 8px 8px 8px;
-        border-right-color: var(--surface-border);
-        border-left-color: var(--surface-border);
-
-        &.active {
-            background-color: var(--surface-a);
-            &.showBorderL{
-                border-left-width: 2px !important;
-                border-left-style: solid !important;
-                border-left-color: var(--surface-border) !important;
-            }
-        
-            &.showBorderR{
-                border-right-width: 2px;
-                border-right-style: solid;
-                border-right-color: var(--surface-border);
-            }
+    &.active {
+        background-color: var(--surface-a);
+        &.showBorderL{
+            border-left-width: 2px !important;
+            border-left-style: solid !important;
+            border-left-color: var(--surface-border) !important;
+        }
+    
+        &.showBorderR{
+            border-right-width: 2px;
+            border-right-style: solid;
+            border-right-color: var(--surface-border);
         }
     }
+}
 
-    .entryUniqueName {
-        width: auto;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        font-family: var(--font-family);
-        height: 20px;
-        padding-top: 3px;
-        padding-bottom: 3px;
-        user-select: none;
+.borderTopBottom {
+    border-top-width: 2px;
+    border-top-style: solid;
+    border-top-color: var(--surface-border);
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    border-bottom-color: var(--surface-border);
+}
+
+.entryUniqueName {
+    width: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--font-family);
+    height: 20px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    user-select: none;
+}
+
+.activeEntryFolderIcon {
+    margin-right: 0px;
+    transition: max-width 0.1s, opacity 0.1s;
+    max-width: 0;
+    opacity: 0;
+
+    &.active {
+        margin-right: 7px;
+        max-width: 13px;
+        opacity: 1;
+    }
+}
+
+.contextMenuBtn {
+    font-size: small;
+    height: 20px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    margin-left: 2px;
+    margin-right: 2px;
+    background-color: var(--surface-b);
+
+    &.active {
+        background-color: var(--surface-a);
     }
 
-    .activeEntryFolderIcon {
-        margin-right: 0px;
-        transition: max-width 0.1s, opacity 0.1s;
-        max-width: 0;
-        opacity: 0;
+}
 
-        &.active {
-            margin-right: 7px;
-            max-width: 13px;
-            opacity: 1;
-        }
-    }
-
-    .contextMenuBtn {
-        font-size: small;
-        height: 20px;
-        padding-top: 3px;
-        padding-bottom: 3px;
-        margin-left: 2px;
-        margin-right: 2px;
-        background-color: var(--surface-b);
-
-        &.active {
-            background-color: var(--surface-a);
-        }
-
-    }
-
-    .absoluteRight {
-        position: absolute;
-        right: 0;
-    }
+.absoluteRight {
+    position: absolute;
+    right: 0;
 }
 
 .overflowScroll {
