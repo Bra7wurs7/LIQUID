@@ -19,13 +19,13 @@ export class Article {
   constructor(
     name: string = '',
     definition: string = '',
-    tags: string[] = [],
+    groups: string[] = [],
     attributes: Record<string, any> = {},
     content: string = '',
   ) {
     this.name = name;
     this.definition = definition;
-    this.groups = tags;
+    this.groups = groups;
     this.attributes = attributes;
     this.content = content;
   }
@@ -34,7 +34,7 @@ export class Article {
 export class MarkdownNote {
   /** The filename of the note, as well as its unique identifier */
   fileName: string = "";
-  /** The entire markdown content of the Note, including categories, tags and attributes */
+  /** The entire markdown content of the Note, including categories, groups and attributes */
   content: string = "";
   /** JSON string of file metadata*/
   metadata: string = "";

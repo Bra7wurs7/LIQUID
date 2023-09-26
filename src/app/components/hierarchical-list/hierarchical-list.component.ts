@@ -16,9 +16,13 @@ export class HierarchicalListComponent {
   @Input("currentWorkspace") currentWorkspace!: Workspace;
   @Input("isActive") isActive: boolean = true;
   @Input("hierarchyDepth") hierarchyDepth: number = 0;
-  @Input("searchInput") searchInput: string = "";
+  @Input("lsArticleName") lsArticleName?: string;
+  @Input("lsParentName") lsParentName?: string;
+
+  @Input("showNewArticleButton") showNewArticleButton: boolean = false;
 
   @Output("articleClicked") articleClickedEmitter = new EventEmitter<Article>();
+  @Output("addArticleClicked") addArticleClicked = new EventEmitter<string>();
 
   constructor() {
 

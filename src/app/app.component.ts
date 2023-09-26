@@ -35,6 +35,9 @@ export class AppComponent implements OnInit {
 
   rightSearch: string = '';
   leftSearch: string = '';
+  lsArticleName?: string;
+  lsParentName?: string;
+
 
   activeArticlePages: Map<string, HTMLElement> = new Map();
 
@@ -148,7 +151,7 @@ export class AppComponent implements OnInit {
       })
       await this.loadFromDB(lastProject.title);
       if (!this.project) {
-        this.loadProject(defaultProject.toProject());
+        this.loadProject(defaultProject);
       }
       this.autosave.subscribe(() => { });
     });
@@ -157,10 +160,10 @@ export class AppComponent implements OnInit {
   loadProject(project: Project) {
     this.project = project;
     this.title = this.project.title;
-    this.InitializeGroupNameArticlesMap();
+    this.InitializeArticleHierarchyMap();
   }
 
-  InitializeGroupNameArticlesMap() {
+  InitializeArticleHierarchyMap() {
     // Iterate over every article in project
     for (let article of this.project?.articles.values() ?? []) {
       // Get from groupNameArticlesMap the ArticleHierarchyNode for the currently iterated article
@@ -192,10 +195,6 @@ export class AppComponent implements OnInit {
     }
   }
 
-  onAddNoteFolderClick(folderTitle: string) {
-    this.messageService.add({ severity: 'error', summary: 'Feature not supported yet.', life: 3000 })
-  }
-
   toggleArticleActive(uniqueName: string) {
     if (!this.project) {
       return;
@@ -210,17 +209,43 @@ export class AppComponent implements OnInit {
     }
   }
 
-  onAddElementClick(uniqueName: string, targetMap: 'notes', contentPanel: HTMLDivElement) {
-    if (this.project?.articles?.has(uniqueName)) {
-      this.messageService.add({ severity: 'error', summary: 'An article with this name already exists. All names in LIQUID need to be unique.', life: 3000 })
-    } else {
-      switch (targetMap) {
-        case 'notes':
-          this.project?.articles?.set(uniqueName, new Article(uniqueName))
-          this.toggleArticleActive(uniqueName);
-          break;
+  onLeftSearchKeyUp(searchValue: string){
+    const searchValueSeparated: string[] = searchValue.split('.');
+    this.lsArticleName = undefined;
+    this.lsParentName = undefined;
+
+
+    for (const s of searchValueSeparated) {
+      this.lsArticleName = (this.lsArticleName !== undefined ? `${this.lsArticleName}.${s}` : `${s}`);
+      if (this.lsArticleName && this.project?.articles.has(this.lsArticleName)) {
+        if(!this.lsParentName) {
+          this.lsParentName = this.lsArticleName;
+          this.lsArticleName = undefined;
+        }
       }
     }
+  }
+
+  addArticle(articleName: string, parentName?: string) {
+    const article = this.project?.articles.get(articleName)
+    if (article && parentName) {
+      if (article.groups.includes(parentName)) {
+        this.project!.workspaces[this.project!.activeWorkspaceIndex].activeArticles.push(articleName);
+      } else {
+        article.groups.push(parentName);
+        this.messageService.add({ severity: 'success', summary: `${articleName} has been added to group ${parentName}`, life: 3000 })
+      }
+    } else {
+      this.project!.articles.set(articleName!, new Article(articleName, undefined, parentName ? [parentName] : []))
+      this.project!.workspaces[this.project!.activeWorkspaceIndex].activeArticles.push(articleName);
+      if (parentName) {
+        this.project!.workspaces[this.project!.activeWorkspaceIndex].activeArticles.push(parentName);
+        this.messageService.add({ severity: 'success', summary: `Added ${articleName}`, detail: `${articleName} has been added as member of group ${parentName}`, life: 3000 })
+      } else {
+        this.messageService.add({ severity: 'success', summary: `Added ${articleName}` })
+      }
+    }
+    this.InitializeArticleHierarchyMap();
   }
 
   scrollToPanel(child: HTMLElement, parent: HTMLDivElement) {

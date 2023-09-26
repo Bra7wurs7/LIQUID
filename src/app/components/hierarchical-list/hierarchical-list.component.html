@@ -4,13 +4,16 @@
         'showBorderL': showBorderL,
         'showBorderR': showBorderR,
     }">
-    <div lass="listArticle flex-column left flex justify-content-start, align-items-center">
-        <div class="listArticleEntry borderTopBottom w-full relative flex flex-row align-content-center hideChildUntilHoverParent">
+    <!-- @TODO: Don't show the add article button when an article with the same exact name as {lsArticleName} already exists -->
+    <div class="listArticle flex-column left flex justify-content-start, align-items-center"
+        *ngIf="showNewArticleButton">
+        <div class="listArticleEntry borderTop w-full relative flex flex-row align-content-center justify-content-between hideChildUntilHoverParent"
+            [ngClass]="{'borderBottom': hierarchyNodeSet.size === 0}" (click)="addArticleClicked.emit(lsArticleName)"
+            [pTooltip]="'Add new '+lsParentName+' called '+lsArticleName">
             <i class="pi pi-plus activeEntryFolderIcon active"></i>
-            <div class="entryUniqueName pointerOnHover flex-grow-1">{{"New "+searchInput}}</div>
-            <i #contextMenuButton
-                class="contextMenuBtn absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
-                pTooltip="Open Context Menu" (click)="$event.stopPropagation()"></i>
+            <div class="entryUniqueName pointerOnHover flex-grow-1">
+                {{(lsParentName ? (lsParentName+": "+lsArticleName) : (lsArticleName))}}
+            </div>
         </div>
     </div>
     <div *ngFor="let articleHierarchyNodeEntry of hierarchyNodeSet; first as isFirst; last as isLast">
@@ -25,8 +28,8 @@
                     'showBorderL': showBorderL,
                     'showBorderR': showBorderR
             }">
-                <i class="pi pi-folder-open activeEntryFolderIcon"
-                    [ngClass]="{'active': currentWorkspace.activeArticles.includes(articleHierarchyNodeEntry.node.name)}"></i>
+                <i class="pi activeEntryFolderIcon"
+                    [ngClass]="{'pi-folder-open': articleHierarchyNodeEntry.children.size > 0, 'pi-file': articleHierarchyNodeEntry.children.size === 0, 'active': currentWorkspace.activeArticles.includes(articleHierarchyNodeEntry.node.name)}"></i>
                 <div class="entryUniqueName pointerOnHover flex-grow-1">{{articleHierarchyNodeEntry.node.name}}</div>
                 <i #contextMenuButton
                     class="contextMenuBtn absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
@@ -38,10 +41,9 @@
                 [listItems]="articleHierarchyNodeEntry.children"
                 [isActive]="currentWorkspace.activeArticles.includes(articleHierarchyNodeEntry.node.name)"
                 [hierarchyDepth]="hierarchyDepth + 1" [showBorderL]="showBorderL" [showBorderR]="showBorderR"
-                (articleClicked)="this.articleClickedEmitter.emit($event)">
+                [currentWorkspace]="currentWorkspace" (articleClicked)="this.articleClickedEmitter.emit($event)">
             </app-hierarchical-list>
         </div>
         <div class="pseudoBorder"></div>
     </div>
-
 </div>

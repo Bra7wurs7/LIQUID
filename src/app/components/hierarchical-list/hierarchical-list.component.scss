@@ -41,7 +41,7 @@
         border-bottom: 1px solid var(--surface-border);
     }
 
-    .newArticleButton {
+    .borderBottomTop {
         padding: 6px 8px 8px 8px;
     }
 }
@@ -69,10 +69,13 @@
     }
 }
 
-.borderTopBottom {
+.borderTop {
     border-top-width: 2px;
     border-top-style: solid;
     border-top-color: var(--surface-border);
+}
+
+.borderBottom {
     border-bottom-width: 2px;
     border-bottom-style: solid;
     border-bottom-color: var(--surface-border);

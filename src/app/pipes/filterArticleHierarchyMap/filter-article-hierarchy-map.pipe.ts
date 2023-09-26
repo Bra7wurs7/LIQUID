@@ -10,7 +10,7 @@ export class FilterArticleHierarchyMapPipe implements PipeTransform {
   transform(value: Map<string, ArticleHierarchyNode>, ...args: [string]): Set<ArticleHierarchyNode> {
     let filteredArticles: Set<ArticleHierarchyNode> = new Set();
     for (const article of value.values()) {
-      if (article.parents.size === 0 && article.node.name.toLocaleLowerCase().includes(args[0].toLocaleLowerCase())) {
+      if ((article.parents.size === 0 && !args[0]) || (args[0] && article.node.name.toLocaleLowerCase().includes(args[0].toLocaleLowerCase()))) {
         filteredArticles.add(article)
       }
     }
