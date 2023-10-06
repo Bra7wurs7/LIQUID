@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, Type, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Type, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Article } from './models/article.model';
 import { defaultProject, Project, SerializableProject } from './models/project.model';
@@ -7,7 +7,6 @@ import { IndexedDbService } from './services/indexedDb/indexed-db.service';
 import { Workspace } from './models/workspace.model';
 import { of, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { HierarchicalListArticle } from './models/hierarchicalListArticle.model';
 import { ArticleHierarchyNode } from './models/articleHierarchyNode.model';
 
 @Component({
@@ -18,29 +17,37 @@ import { ArticleHierarchyNode } from './models/articleHierarchyNode.model';
 
 export class AppComponent implements OnInit {
 
+  /** HTML Template Elements */
   @ViewChild("projectUpload", { static: false }) projectUpload!: ElementRef;
+  activeArticlePages: Map<string, HTMLElement> = new Map();
 
-  /** Maps the names of all articles (groups, parents) to their subarticles (group members, children) */
-  articleHierarchyMap: Map<string, ArticleHierarchyNode> = new Map();
-
-  project?: Project;
+  /** Application */
   title = 'LIQUID';
+  
+  /** Project */
   allProjectsPromise: Promise<{ title: string, lastModified: Date }[]>;
-  loadDialogVisible: boolean = false;
+  project?: Project;
 
-  showSaveProjectOverlay: boolean = false;
-  showNewProjectOverlay: boolean = false;
-
-  activeAssistant: string = "";
-
-  rightSearch: string = '';
+  /** Left Sidebar */
+  articleHierarchyMap: Map<string, ArticleHierarchyNode> = new Map();
+  highlightedArticlePath: ArticleHierarchyNode[] = [];
   leftSearch: string = '';
   lsArticleName?: string;
   lsParentName?: string;
 
+  /** Right Sidebar */
+  rightSearch: string = '';
 
-  activeArticlePages: Map<string, HTMLElement> = new Map();
+  /** Assistants */
+  activeAssistant: string = "";
 
+  /** Dialogs */
+  showSaveProjectOverlay: boolean = false;
+  showNewProjectOverlay: boolean = false;
+  showPrivacyPolicyDialog: boolean = false;
+  loadDialogVisible: boolean = false;
+
+  /** Header Menu */
   items = [
     {
       label: 'File',
@@ -123,7 +130,7 @@ export class AppComponent implements OnInit {
     }
   ];
 
-  infinity: number = Infinity;
+  /** Autosaver */
   autosave = timer(1, 300000).pipe(
     switchMap(() => {
       if (this.project) {
@@ -135,7 +142,7 @@ export class AppComponent implements OnInit {
     })
   );
 
-  showPrivacyPolicyDialog: boolean = false;
+  
 
   constructor(private messageService: MessageService, private localdriveService: LocalDriveService, private indexedDbService: IndexedDbService, private confirmationService: ConfirmationService) {
     this.allProjectsPromise = indexedDbService.getAllProjects();
@@ -160,10 +167,12 @@ export class AppComponent implements OnInit {
   loadProject(project: Project) {
     this.project = project;
     this.title = this.project.title;
+    this.messageService.add({ severity: 'success', summary: `Succesfully loaded "${this.title}"` })
     this.InitializeArticleHierarchyMap();
   }
 
   InitializeArticleHierarchyMap() {
+    this.articleHierarchyMap.clear();
     // Iterate over every article in project
     for (let article of this.project?.articles.values() ?? []) {
       // Get from groupNameArticlesMap the ArticleHierarchyNode for the currently iterated article
@@ -176,21 +185,21 @@ export class AppComponent implements OnInit {
       }
       // Iterate over the names of all groups (parent articles) that this article is a group member (child) of
       for (let parentName of article.groups) {
-        const parentArticle = this.project?.articles.get(parentName);
-        if (parentArticle === undefined) {
+        const hierarchicalListContainer = this.project?.articles.get(parentName);
+        if (hierarchicalListContainer === undefined) {
           // @TODO: Implement automatic group creation option
           throw new Error("Unknown Group Name")
         }
         // Get the ArticleHierarchyNode for the group (parent) article from the groupNameArticlesMap
-        let parentHierarchyNode = this.articleHierarchyMap.get(parentArticle.name)
+        let parentHierarchyNode = this.articleHierarchyMap.get(hierarchicalListContainer.name)
         // Check if the ArticleHierarchyNode for the group (parent) article exists
         if (!parentHierarchyNode) {
           // If it doesn't exist, create it.
-          parentHierarchyNode = new ArticleHierarchyNode(parentArticle);
-          this.articleHierarchyMap.set(parentArticle.name, parentHierarchyNode)
+          parentHierarchyNode = new ArticleHierarchyNode(hierarchicalListContainer);
+          this.articleHierarchyMap.set(hierarchicalListContainer.name, parentHierarchyNode)
         }
-        parentHierarchyNode.children.add(articleHierarchyNode);
-        articleHierarchyNode.parents.add(parentHierarchyNode);
+        parentHierarchyNode.children.push(articleHierarchyNode);
+        articleHierarchyNode.parents.push(parentHierarchyNode);
       }
     }
   }
@@ -209,16 +218,30 @@ export class AppComponent implements OnInit {
     }
   }
 
-  onLeftSearchKeyUp(searchValue: string){
+  onLeftSearchKeyUp(searchValue: string, event: KeyboardEvent) {
+    switch (event.key) {
+      case "ArrowUp":
+        console.log('ArrowUp')
+        break;
+      case "ArrowDown":
+        console.log('ArrowDown')
+        break;
+      case "Enter":
+        console.log('Enter')
+        break;
+      case "Delete":
+        console.log('Delete')
+        break;
+    }
+
     const searchValueSeparated: string[] = searchValue.split('.');
     this.lsArticleName = undefined;
     this.lsParentName = undefined;
 
-
     for (const s of searchValueSeparated) {
       this.lsArticleName = (this.lsArticleName !== undefined ? `${this.lsArticleName}.${s}` : `${s}`);
       if (this.lsArticleName && this.project?.articles.has(this.lsArticleName)) {
-        if(!this.lsParentName) {
+        if (!this.lsParentName) {
           this.lsParentName = this.lsArticleName;
           this.lsArticleName = undefined;
         }
@@ -278,7 +301,7 @@ export class AppComponent implements OnInit {
   }
 
   newProject(title?: string) {
-    this.loadProject(new Project(title ?? 'Untitled Project', new Map(), []));
+    this.loadProject(new Project(title ?? 'Untitled Project'));
     this.messageService.add({ severity: 'success', summary: 'New Project' })
     this.addView();
   }

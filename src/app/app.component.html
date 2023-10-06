@@ -4,7 +4,7 @@
   <div class="left sidebar min-h-full w-2 p-shadow-3 overflow-hidden z-3 p-1 flex flex-column h-full overflow-y-auto">
     <span class="p-input-icon-right w-full">
       <i class="pi pi-search"></i>
-      <input type="text" class="w-full searchInput" placeholder="Search Articles" pInputText [(ngModel)]="leftSearch" (keyup)="onLeftSearchKeyUp(leftSearch)"/>
+      <input type="text" class="w-full searchInput" placeholder="Search Articles" pInputText [(ngModel)]="leftSearch" (keyup)="onLeftSearchKeyUp(leftSearch, $event)"/>
     </span>
     <div class="bigpseudo"></div>
     <!-- @TODO Add Button to toggle between Alphabetic Sorting Up Down, Last Changed Up Down, and Importance-->
@@ -13,10 +13,10 @@
       [lsArticleName]="this.lsArticleName || 'New Article'"
       [lsParentName]="this.lsParentName"
       [currentWorkspace]="this.project.workspaces[this.project.activeWorkspaceIndex]"
-      [listItems]="articleHierarchyMap|filterArticleHierarchyMap:leftSearch"
+      [listItems]="articleHierarchyMap|articleMapToList:leftSearch"
       (articleClicked)="toggleArticleActive($event.name)"
       (addArticleClicked)="addArticle(lsArticleName!, lsParentName); leftSearch = ''; lsArticleName = undefined; lsParentName = undefined"
-      ></app-hierarchical-list>
+      ></app-hierarchical-list> 
   </div>
 
   <!-- Center Area -->

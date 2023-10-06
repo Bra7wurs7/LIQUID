@@ -1,6 +1,6 @@
 //Article List
-.articleList {
-    transition: visibility 0.2s, opacity 0.2s, max-height 0.2s;
+.hierarchicalListContainer {
+    transition: visibility 0.2s, max-height 0.2s;
     visibility: hidden;
     opacity: 0;
     max-height: 0;
@@ -9,34 +9,31 @@
     border-right-color: var(--surface-border);
     border-left-color: var(--surface-border);
 
-    &.showBorderLR{
+    &.showBorderLR {
         border-right-width: 2px;
         border-right-style: solid;
-        border-right-color: var(--surface-border);
         border-left-width: 2px !important;
         border-left-style: solid !important;
-        border-left-color: var(--surface-border) !important;
-    } 
-
-    &.showBorderL{
-        border-left-width: 2px !important;
-        border-left-style: solid !important;
-        border-left-color: var(--surface-border) !important;
     }
 
-    &.showBorderR{
+    &.showBorderL {
+        border-left-width: 2px !important;
+        border-left-style: solid !important;
+    }
+
+    &.showBorderR {
         border-right-width: 2px;
         border-right-style: solid;
-        border-right-color: var(--surface-border);
     }
 
     &.active {
         max-height: 100vh;
         opacity: 1;
         visibility: visible;
+        margin-bottom: 1px;
     }
 
-    .pseudoBorder{
+    .pseudoBorder {
         border-top: 1px solid var(--surface-border);
         border-bottom: 1px solid var(--surface-border);
     }
@@ -46,27 +43,44 @@
     }
 }
 
+.articleContainer {
+    transition: margin-left 0.1s;
+    &.active {
+        margin-left: 1px;
+    }
+}
+
 // Text and button container displaying the article name and a context menu button
-.listArticleEntry {
-    transition: border-left-width 0.1s, border-right-width 0.1s;
+.article {
+    // transition: border-left-width 0.1s, border-right-width 0.1s;
     padding: 6px 8px 8px 8px;
     border-right-color: var(--surface-border);
     border-left-color: var(--surface-border);
 
-    &.active {
-        background-color: var(--surface-a);
-        &.showBorderL{
+    &.showBorderL {
+        &.active {
+            background-color: var(--surface-a);  
             border-left-width: 2px !important;
             border-left-style: solid !important;
-            border-left-color: var(--surface-border) !important;
-        }
-    
-        &.showBorderR{
-            border-right-width: 2px;
-            border-right-style: solid;
-            border-right-color: var(--surface-border);
         }
     }
+
+    &.showBorderR {
+        &.active {
+            border-right-width: 2px;
+            border-right-style: solid;
+        }
+    }
+    &.active {
+        background-color: var(--surface-a);  
+    }
+
+    &.highlighted {
+        border-left-color: var(--primary-color);
+        border-left-width: 2px;
+        border-left-style: solid;
+    }
+   
 }
 
 .borderTop {
