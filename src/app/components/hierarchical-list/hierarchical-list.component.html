@@ -11,7 +11,7 @@
             [ngClass]="{
                 'borderBottom': hierarchyNodeSet.length === 0
             }" (click)="addArticleClicked.emit(lsArticleName)"
-            [pTooltip]="'Add new '+lsParentName+' called '+lsArticleName">
+            [pTooltip]="'Add ' + (lsParentName ? ('new ' + lsParentName + ' '):'article ') + lsArticleName">
             <i class="pi pi-plus activeEntryFolderIcon active"></i>
             <div class="entryUniqueName pointerOnHover flex-grow-1">
                 {{(lsParentName ? (lsParentName+": "+lsArticleName) : (lsArticleName))}}

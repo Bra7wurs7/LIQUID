@@ -13,7 +13,7 @@
       [lsArticleName]="this.lsArticleName || 'New Article'"
       [lsParentName]="this.lsParentName"
       [currentWorkspace]="this.project.workspaces[this.project.activeWorkspaceIndex]"
-      [listItems]="articleHierarchyMap|articleMapToList:leftSearch"
+      [listItems]="articleHierarchyArray"
       (articleClicked)="toggleArticleActive($event.name)"
       (addArticleClicked)="addArticle(lsArticleName!, lsParentName); leftSearch = ''; lsArticleName = undefined; lsParentName = undefined"
       ></app-hierarchical-list> 

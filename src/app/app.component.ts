@@ -30,6 +30,7 @@ export class AppComponent implements OnInit {
 
   /** Left Sidebar */
   articleHierarchyMap: Map<string, ArticleHierarchyNode> = new Map();
+  articleHierarchyArray: ArticleHierarchyNode[] = [];
   highlightedArticlePath: ArticleHierarchyNode[] = [];
   leftSearch: string = '';
   lsArticleName?: string;
@@ -202,6 +203,17 @@ export class AppComponent implements OnInit {
         articleHierarchyNode.parents.push(parentHierarchyNode);
       }
     }
+    this.articleHierarchyArray = this.articleMapToFilteredList(this.articleHierarchyMap, this.leftSearch);
+  }
+
+  articleMapToFilteredList(map: Map<string, ArticleHierarchyNode>, filter: string): ArticleHierarchyNode[] {
+    let filteredArticles: ArticleHierarchyNode[] = [];
+    for (const article of map.values()) {
+      if ((article.parents.length === 0 && !filter) || (filter && article.node.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase()))) {
+        filteredArticles.push(article);
+      }
+    }
+    return filteredArticles;
   }
 
   toggleArticleActive(uniqueName: string) {
@@ -247,6 +259,8 @@ export class AppComponent implements OnInit {
         }
       }
     }
+
+    this.articleHierarchyArray = this.articleMapToFilteredList(this.articleHierarchyMap, searchValue);
   }
 
   addArticle(articleName: string, parentName?: string) {
