@@ -4,19 +4,17 @@
   <div class="left sidebar min-h-full w-2 p-shadow-3 overflow-hidden z-3 p-1 flex flex-column h-full overflow-y-auto">
     <span class="p-input-icon-right w-full">
       <i class="pi pi-search"></i>
-      <input type="text" class="w-full searchInput" placeholder="Search Articles" pInputText [(ngModel)]="leftSearch" (keyup)="onLeftSearchKeyUp(leftSearch, $event)"/>
+      <input type="text" class="w-full searchInput" placeholder="Search Articles" pInputText [(ngModel)]="leftSearch"
+        (keyup)="onLeftSearchKeyUp(leftSearch, $event)" />
     </span>
     <div class="bigpseudo"></div>
     <!-- @TODO Add Button to toggle between Alphabetic Sorting Up Down, Last Changed Up Down, and Importance-->
-    <app-hierarchical-list *ngIf="(this.articleHierarchyMap.size > 0 || this.lsArticleName) && this.project" [showBorderL]="true"
-      [showNewArticleButton]="leftSearch !== undefined && leftSearch !== ''"
-      [lsArticleName]="this.lsArticleName || 'New Article'"
-      [lsParentName]="this.lsParentName"
+    <app-hierarchical-list *ngIf="(this.articleHierarchyMap.size > 0 || this.lsArticleName) && this.project"
+      [showBorderL]="true" [showNewArticleButton]="leftSearch !== undefined && leftSearch !== ''"
+      [lsArticleName]="this.lsArticleName || 'New Article'" [lsParentName]="this.lsParentName"
       [currentWorkspace]="this.project.workspaces[this.project.activeWorkspaceIndex]"
-      [listItems]="articleHierarchyArray"
-      (articleClicked)="toggleArticleActive($event.name)"
-      (addArticleClicked)="addArticle(lsArticleName!, lsParentName); leftSearch = ''; lsArticleName = undefined; lsParentName = undefined"
-      ></app-hierarchical-list> 
+      [listItems]="articleHierarchyArray" (articleClicked)="toggleArticleActive($event.name)" (articleActionClicked)="onListArticleActionClick($event)"
+      (addArticleClicked)="addArticle(lsArticleName!, lsParentName); leftSearch = ''; lsArticleName = undefined; lsParentName = undefined"></app-hierarchical-list>
   </div>
 
   <!-- Center Area -->
@@ -28,9 +26,9 @@
       <!-- Workspaces -->
       <div *ngIf="project" class="flex flex-row workspaces">
         <div class="pi pi-plus-circle workspace pointerOnHover" [pTooltip]="'Add Workspace'" (click)="addView()"></div>
-        <div *ngFor="let workspace of project.workspaces; let index = index" class="hideChildUntilHoverParent pointerOnHover"
-          style="position: relative;" (click)="this.project.activeWorkspaceIndex = index"
-          [pTooltip]="'Workspace ' + (index + 1)">
+        <div *ngFor="let workspace of project.workspaces; let index = index"
+          class="hideChildUntilHoverParent pointerOnHover" style="position: relative;"
+          (click)="this.project.activeWorkspaceIndex = index" [pTooltip]="'Workspace ' + (index + 1)">
           <span class="pi pi-circle-off workspace pointerOnHover">
           </span>
           <span class="number-cell">{{
@@ -58,22 +56,18 @@
     <div class="absolute left-0 bottom-0 flex flex-column align-items-start justify-content-start assistant-panel"
       *ngIf="project">
       <div class="flex flex-row align-items-end justify-content-start z-3 tabs" [ngClass]="{'active': activeAssistant}">
-        <div class="pi pi-comment pointerOnHover tab" [ngClass]="{'active': activeAssistant === '1'}"
-          [pTooltip]="'ASSISTANT\n\nCan help you with almost anything'"
-          (click)="activeAssistant = (activeAssistant === '1') ? '' : '1'"></div>
-        <div class="pi pi-globe pointerOnHover tab" [ngClass]="{'active': activeAssistant === '2'}"
-          [pTooltip]="'WORLDBUILDER\n\nHelps you preparing and running TTRPG games'"
-          (click)="activeAssistant = (activeAssistant === '2') ? '' : '2'"></div>
-        <div class="pi pi-sitemap pointerOnHover tab" [ngClass]="{'active': activeAssistant === '3'}"
-          [pTooltip]="'GAME MASTER\n\nPlays your favourite TTRPGs with you'"
-          (click)="activeAssistant = (activeAssistant === '3') ? '' : '3'">
+        <div class="flex flex-row">
+          <div class="pi pi-comments pointerOnHover tab" [ngClass]="{'active': activeAssistant === 1}"
+            [pTooltip]="activeAssistant === 1 ? 'Hide assistant panel' : 'Chat with LIQUID Assistant'"
+            (click)="onToggleAssistant(1, chatInput)">
+          </div>
+          <input #chatInput type="text" class="w-full searchInput" [ngClass]="{'active': activeAssistant === 1}"
+            placeholder="Type, then press enter/return" pInputText />
         </div>
-        <div class="pi pi-book pointerOnHover tab" [ngClass]="{'active': activeAssistant === '4'}"
-          [pTooltip]="'AUTHOR\n\nExcels at writing stories'"
-          (click)="activeAssistant = (activeAssistant === '4') ? '' : '4'"></div>
-        <div class="pi pi-user pointerOnHover tab" [ngClass]="{'active': activeAssistant === '5'}"
-          [pTooltip]="'IMPERSONATOR\n\nActs like they\'re a person'"
-          (click)="activeAssistant = (activeAssistant === '5') ? '' : '5'"></div>
+        <div class="flex flex-row">
+          <div class="pi pi-plus-circle pointerOnHover tab" [pTooltip]="'Create new assistant or autonomous agent'">
+          </div>
+        </div>
       </div>
       <div class="panel-content overflow-y-auto" [ngClass]="{'active':activeAssistant}">
         <p class="m-0"></p>

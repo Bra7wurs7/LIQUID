@@ -6,8 +6,9 @@ import { LocalDriveService } from './services/localDrive/local-drive.service';
 import { IndexedDbService } from './services/indexedDb/indexed-db.service';
 import { Workspace } from './models/workspace.model';
 import { of, timer } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, timeout } from 'rxjs/operators';
 import { ArticleHierarchyNode } from './models/articleHierarchyNode.model';
+import { ArticleActionEnum } from './enums/articleActionEnum';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +24,7 @@ export class AppComponent implements OnInit {
 
   /** Application */
   title = 'LIQUID';
-  
+
   /** Project */
   allProjectsPromise: Promise<{ title: string, lastModified: Date }[]>;
   project?: Project;
@@ -40,7 +41,7 @@ export class AppComponent implements OnInit {
   rightSearch: string = '';
 
   /** Assistants */
-  activeAssistant: string = "";
+  activeAssistant?: number;
 
   /** Dialogs */
   showSaveProjectOverlay: boolean = false;
@@ -143,7 +144,7 @@ export class AppComponent implements OnInit {
     })
   );
 
-  
+
 
   constructor(private messageService: MessageService, private localdriveService: LocalDriveService, private indexedDbService: IndexedDbService, private confirmationService: ConfirmationService) {
     this.allProjectsPromise = indexedDbService.getAllProjects();
@@ -169,10 +170,10 @@ export class AppComponent implements OnInit {
     this.project = project;
     this.title = this.project.title;
     this.messageService.add({ severity: 'success', summary: `Succesfully loaded "${this.title}"` })
-    this.InitializeArticleHierarchyMap();
+    this.initializeArticleHierarchyMap();
   }
 
-  InitializeArticleHierarchyMap() {
+  initializeArticleHierarchyMap() {
     this.articleHierarchyMap.clear();
     // Iterate over every article in project
     for (let article of this.project?.articles.values() ?? []) {
@@ -233,13 +234,13 @@ export class AppComponent implements OnInit {
   onLeftSearchKeyUp(searchValue: string, event: KeyboardEvent) {
     switch (event.key) {
       case "ArrowUp":
-        console.log('ArrowUp')
+        this.shiftHighlightUp();
         break;
       case "ArrowDown":
-        console.log('ArrowDown')
+        this.shiftHighlightDown();
         break;
       case "Enter":
-        console.log('Enter')
+        this.activateHighlighted();
         break;
       case "Delete":
         console.log('Delete')
@@ -263,6 +264,18 @@ export class AppComponent implements OnInit {
     this.articleHierarchyArray = this.articleMapToFilteredList(this.articleHierarchyMap, searchValue);
   }
 
+  shiftHighlightDown() {
+
+  }
+
+  shiftHighlightUp() {
+
+  }
+
+  activateHighlighted() {
+
+  }
+
   addArticle(articleName: string, parentName?: string) {
     const article = this.project?.articles.get(articleName)
     if (article && parentName) {
@@ -282,7 +295,7 @@ export class AppComponent implements OnInit {
         this.messageService.add({ severity: 'success', summary: `Added ${articleName}` })
       }
     }
-    this.InitializeArticleHierarchyMap();
+    this.initializeArticleHierarchyMap();
   }
 
   scrollToPanel(child: HTMLElement, parent: HTMLDivElement) {
@@ -379,13 +392,44 @@ export class AppComponent implements OnInit {
     }
   }
 
-  deleteNote(name: string) {
+  deleteArticle(name: string) {
     if (this.project) {
       if (this.project.articles.delete(name)) {
         for (const workspace of this.project.workspaces) {
           workspace.activeArticles = workspace.activeArticles.filter((activeArticleName) => activeArticleName !== name);
         }
+        this.initializeArticleHierarchyMap();
       }
+    }
+  }
+
+  onToggleAssistant(index: number, element: HTMLInputElement) {
+    if (this.activeAssistant === index) {
+      this.activeAssistant = undefined;
+    } else {
+      this.activeAssistant = index;
+      setTimeout(() => { element.focus() }, 300)
+    }
+  }
+
+  onListArticleActionClick(event: {action: ArticleActionEnum, node: Article}) {
+    console.log(event.node);
+    
+    switch (event.action) {
+      case ArticleActionEnum.toggle:
+        this.toggleArticleActive(event.node.name);
+        break;
+      case ArticleActionEnum.rename:
+        break;
+      case ArticleActionEnum.editCategories:
+        break;
+      case ArticleActionEnum.saveAsMD:
+        break;
+      case ArticleActionEnum.saveAsPDF:
+        break;
+      case ArticleActionEnum.delete:
+        this.deleteArticle(event.node.name);
+        break;
     }
   }
 

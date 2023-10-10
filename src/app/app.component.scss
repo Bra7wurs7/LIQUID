@@ -96,6 +96,7 @@
       margin: 4px;
       margin-bottom: 0px;
       pointer-events: all;
+      max-width: 49%;
 
       &:hover {
         transition: background-color 0.1s;
@@ -111,12 +112,12 @@
       }
 
       .tab {
+        transition: padding 0.1s;
         border: 2px solid transparent;
         border-bottom: 0px;
         padding: 9px;
         font-size: 25px;
         border-radius: 20px;
-
         &:hover {
           color: var(--text-color);
         }
@@ -124,10 +125,29 @@
         &.active {
           border: 2px solid var(--surface-border);
           border-bottom: 0px;
-          border-bottom-left-radius: 0px;
-          border-bottom-right-radius: 0px;
+          border-radius: 0;
+          border-top-left-radius: 20px;
+          border-bottom-left-radius: 20px;
+          border-right: 0;
+          padding-right: 0;
           color: var(--text-color);
           background-color: var(--surface-b);
+        }
+      }
+      .searchInput {
+        transition: max-width 0.4s, padding 0.1s;
+        max-width: 0px;
+        padding: 0;
+        border: 0;
+        visibility: collapse;
+        border-radius: 0;
+        &.active{
+          visibility: visible;
+          max-width: 100vw;
+          padding: 8px 12px 8px 12px;
+          border-top: 2px solid var(--surface-border);
+          border-right: 2px solid var(--surface-border);
+          border-top-right-radius: 20px;
         }
       }
     }
