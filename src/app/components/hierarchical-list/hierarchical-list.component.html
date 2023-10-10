@@ -26,7 +26,7 @@
             }">
             <!-- Article Name & Buttons -->
             <div #articleNameAndButtons (click)="articleClickedEmitter.emit(articleHierarchyNodeEntry.node)"
-                (contextmenu)="$event.preventDefault(); lastRightClickedArticle = articleHierarchyNodeEntry; contextMenu.toggle(); dummy.click()"
+                (contextmenu)="$event.preventDefault(); setlastRightClickedArticle(articleHierarchyNodeEntry); contextMenu.toggle(); dummy.click()"
                 class="article w-full relative flex flex-row align-content-center hideChildUntilHoverParent"
                 [pTooltip]="articleHierarchyNodeEntry.node.name" [ngClass]="{
                     'active': currentWorkspace.activeArticles.includes(articleHierarchyNodeEntry.node.name),
@@ -40,7 +40,7 @@
                 <i #contextMenuButton
                     class="contextMenuBtn absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
                     [ngClass]="{'active': currentWorkspace.activeArticles.includes(articleHierarchyNodeEntry.node.name)}"
-                    pTooltip="Open Context Menu" (click)="$event.stopPropagation(); lastRightClickedArticle = articleHierarchyNodeEntry; contextMenu.toggle(); dummy.click()"></i>
+                    pTooltip="Open Context Menu" (click)="$event.stopPropagation(); setlastRightClickedArticle(articleHierarchyNodeEntry); contextMenu.toggle(); dummy.click()"></i>
             </div>
 
             <!-- Article Entry Context Menu -->

@@ -387,8 +387,8 @@ export class AppComponent implements OnInit {
 
   removeView(index: number) {
     if (this.project) {
-      this.project.activeWorkspaceIndex = index - 1;
       this.project.workspaces?.splice(index, 1);
+      this.project.activeWorkspaceIndex = this.project.workspaces.length - 1;
     }
   }
 
@@ -398,6 +398,9 @@ export class AppComponent implements OnInit {
         for (const workspace of this.project.workspaces) {
           workspace.activeArticles = workspace.activeArticles.filter((activeArticleName) => activeArticleName !== name);
         }
+        this.articleHierarchyMap.get(name)?.children.forEach((child) => {
+          child.node.groups.splice(child.node.groups.findIndex((grp) => grp = name), 1);
+        })
         this.initializeArticleHierarchyMap();
       }
     }
@@ -412,9 +415,8 @@ export class AppComponent implements OnInit {
     }
   }
 
-  onListArticleActionClick(event: {action: ArticleActionEnum, node: Article}) {
+  onListArticleActionClick(event: { action: ArticleActionEnum, node: Article }) {
     console.log(event.node);
-    
     switch (event.action) {
       case ArticleActionEnum.toggle:
         this.toggleArticleActive(event.node.name);

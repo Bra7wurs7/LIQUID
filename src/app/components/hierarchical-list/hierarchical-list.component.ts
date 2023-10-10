@@ -65,16 +65,17 @@ export class HierarchicalListComponent {
       command: () => {
         if(this.lastRightClickedArticle) {
           this.articleActionClicked.emit({action: ArticleActionEnum.delete, node: this.lastRightClickedArticle.node})
-        }else {
-        } ;
+        }
       }
     },
   ];
   constructor() {
-
+    this.articleActionClicked.subscribe((event) => {
+      console.log(event)
+    })
   }
 
   setlastRightClickedArticle(article: ArticleHierarchyNode) {
-
+    this.lastRightClickedArticle = article;
   }
 }
