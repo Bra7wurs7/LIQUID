@@ -13,7 +13,8 @@
       [showBorderL]="true" [showNewArticleButton]="leftSearch !== undefined && leftSearch !== ''"
       [lsArticleName]="this.lsArticleName || 'New Article'" [lsParentName]="this.lsParentName"
       [currentWorkspace]="this.project.workspaces[this.project.activeWorkspaceIndex]"
-      [listItems]="articleHierarchyArray" (articleClicked)="toggleArticleActive($event.name)" (articleActionClicked)="onListArticleActionClick($event)"
+      [listItems]="articleHierarchyArray" (articleClicked)="toggleArticleActive($event.name)"
+      (articleActionClicked)="onListArticleActionClick($event)"
       (addArticleClicked)="addArticle(lsArticleName!, lsParentName); leftSearch = ''; lsArticleName = undefined; lsParentName = undefined"></app-hierarchical-list>
   </div>
 
@@ -61,7 +62,7 @@
             [pTooltip]="activeAssistant === 1 ? 'Hide assistant panel' : 'Chat with LIQUID Assistant'"
             (click)="onToggleAssistant(1, chatInput)">
           </div>
-          <input #chatInput type="text" class="w-full searchInput" [ngClass]="{'active': activeAssistant === 1}"
+          <input #chatInput type="text" class="w-full assistantInput" [ngClass]="{'active': activeAssistant === 1}"
             placeholder="Type, then press enter/return" pInputText />
         </div>
         <div class="flex flex-row">
@@ -94,14 +95,12 @@
         " (mouseenter)="
           project!.workspaces[project!.activeWorkspaceIndex].highlightedPanelIndex = index
         ">
-        <app-note-panel [isActivePanel]="
-            project!.workspaces[project!.activeWorkspaceIndex].highlightedPanelIndex === index
-          " [articles]="project!.articles" [articleName]="activeArticleName"
-          (closePanelEvent)="toggleArticleActive(activeArticleName)" (moveUpEvent)="
-            moveUp(index)
-          " (moveDownEvent)="
-            moveDown(index)
-          "></app-note-panel>
+        <app-note-panel
+          [isActivePanel]="project!.workspaces[project!.activeWorkspaceIndex].highlightedPanelIndex === index"
+          [articles]="project!.articles" [articleName]="activeArticleName"
+          (closePanelEvent)="toggleArticleActive(activeArticleName)" (moveUpEvent)="moveUp(index)"
+          (moveDownEvent)="moveDown(index)"
+          (internalLinkActivatedEvent)="this.toggleArticleActive($event)"></app-note-panel>
         <div class="pseudo"></div>
       </div>
       <div class="pseudo"></div>
@@ -152,6 +151,20 @@
     </div>
   </p-dialog>
   <p-confirmDialog #overlayOverlay [baseZIndex]="3000" width="425" appendTo="body"></p-confirmDialog>
+
+  <!-- Settings Modal Dialog -->
+  <p-dialog header="Settings & Preferences" appendTo="body" #settingsDialog [(visible)]="settingsDialogVisible">
+    <!-- LLM Endpoints -->
+    <div class="flex flex-column">
+      <div class="flex flex-row justify-content-between">
+        <input #LLM_Name type="text" class="settingsTextInput sm" [ngClass]="{'active': activeAssistant === 1}"
+          placeholder="Name" pInputText />
+        <input #LLM_Url type="text" class="settingsTextInput lg" [ngClass]="{'active': activeAssistant === 1}"
+          placeholder="API Endpnt. URL" pInputText />
+        <span>Blep</span>
+      </div>
+    </div>
+  </p-dialog>
 
   <!-- Project Uploader Input -->
   <input style="visibility: collapse; width: 0; height: 0" type="file" class="file-input"

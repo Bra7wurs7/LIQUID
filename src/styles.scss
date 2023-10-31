@@ -106,6 +106,12 @@ p-inputSwitch {
   }
 }
 
+.pointerOnHover {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 .activePanel {
   font-weight: bold;
 

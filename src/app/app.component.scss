@@ -46,7 +46,7 @@
     background-color: var(--surface-b);
     width: 100%;
     border-bottom: 2px solid var(--surface-border);
-    
+
     * {
       height: 41px;
       border-radius: 0;
@@ -60,6 +60,7 @@
 
     .workspaces {
       padding-right: 13px;
+      color: var(--text-color-secondary);
 
       .workspace {
         padding: 6.5px;
@@ -118,6 +119,7 @@
         padding: 9px;
         font-size: 25px;
         border-radius: 20px;
+
         &:hover {
           color: var(--text-color);
         }
@@ -127,27 +129,29 @@
           border-bottom: 0px;
           border-radius: 0;
           border-top-left-radius: 20px;
-          border-bottom-left-radius: 20px;
           border-right: 0;
           padding-right: 0;
           color: var(--text-color);
           background-color: var(--surface-b);
         }
       }
-      .searchInput {
+
+      .assistantInput {
         transition: max-width 0.4s, padding 0.1s;
         max-width: 0px;
         padding: 0;
         border: 0;
         visibility: collapse;
         border-radius: 0;
-        &.active{
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+
+        &.active {
           visibility: visible;
           max-width: 100vw;
           padding: 8px 12px 8px 12px;
           border-top: 2px solid var(--surface-border);
           border-right: 2px solid var(--surface-border);
-          border-top-right-radius: 20px;
         }
       }
     }
@@ -302,16 +306,25 @@
   }
 }
 
-.pointerOnHover {
-  &:hover {
-    cursor: pointer;
-  }
-}
-
 .icon-button {
   font-size: 1.2rem;
   color: var(--text-color);
   width: min-content;
+}
+
+.settingsTextInput {
+  border-radius: 0;
+  margin-right: 2px;
+  font-size: x-small;
+  &.sm{
+    width: 75px;
+  }
+  &.mm{
+    width: 150px;
+  }
+  &.lg{
+    width: 225px;
+  }
 }
 
 @media screen and (max-width: 960px) {

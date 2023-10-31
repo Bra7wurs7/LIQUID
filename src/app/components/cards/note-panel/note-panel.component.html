@@ -1,9 +1,11 @@
-<p-panel [toggleable]="true" #panel class="panel-hide-default-toggler notes article-sheet" [ngClass]="{'activePanel': isActivePanel}" *ngIf="note">
+<p-panel [toggleable]="true" #panel class="panel-hide-default-toggler" [ngClass]="{'activePanel': isActivePanel}" *ngIf="note">
   <ng-template pTemplate="header">
-    <div class="flex flex-row align-items-center">
-      <span class="notes">{{note.name}}</span>
+    <div class="flex flex-column align-items-start">
+      <div class="flex flex-row">
+        <span class="article-tag pointerOnHover" *ngFor="let group of note.groups" (click)="internalLinkActivatedEvent.emit(group)">#{{group}}</span>
+      </div>
+      <span style="padding-bottom: 0px;">{{note.name}}</span>
     </div>
-    <div class="flex-grow-1"></div>
     <div class="flex-grow-1"></div>
   </ng-template>
   <ng-template pTemplate="icons">
@@ -23,61 +25,6 @@
     </span>
   </ng-template>
   <ng-template pTemplate="content">
-    <ng-template #noteAttributeContainerTemplate let-container="container">
-      <div class="flex" #noteAttributeContainer [ngClass]="{
-        'w-full': container.width === 'full',
-        'w-max': container.width === 'max',
-        'w-min': container.width === 'min',
-        'bordered': container.bordered,
-        'flex-row': container.direction === 'row',
-        'flex-column': container.direction === 'col',
-        'justify-content-start': container.justify === 'start',
-        'justify-content-end': container.justify === 'end',
-        'justify-content-center': container.justify === 'center',
-        'justify-content-between': container.justify === 'around',
-        'justify-content-around': container.justify === 'between',
-        'justify-content-evenly': container.justify === 'evenly',
-        'align-items-stretch': container.align === 'stretch',
-        'align-items-start': container.align === 'start',
-        'align-items-center': container.align === 'center',
-        'align-items-end': container.align === 'end',
-        'align-items-baseline': container.align === 'baseline'
-      }">
-        <div *ngFor="let child of container.children">
-          <ng-container
-            *ngTemplateOutlet="(child.isContainer ? noteAttributeContainerTemplate : noteAttributeItemTemplate); context:{ container: (child.isContainer ? child : undefined), item: (!child.isContainer ? child : undefined)}">
-          </ng-container>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template #noteAttributeItemTemplate let-item="item">
-      <input pInputText [disabled]="true" size="10" style="margin: 1px"
-        *ngIf="editMode && item.separator === 'none' && item.constant" type="text" placeholder="Enter fixed value"
-        class="p-inputtext-sm w-max" [value]="item.content">
-      <input pInputText size="10" style="margin: 1px" *ngIf="editMode && item.separator === 'none' && !item.constant"
-        type="text" placeholder="Enter fixed value" class="p-inputtext-sm w-max"
-        [(ngModel)]="note.attributes[item.contentSlotId]">
-      <span *ngIf="!editMode && item.separator === 'none'" [ngClass]="{
-        'w-full': item.width === 'full',
-        'w-max': item.width === 'max',
-        'w-min': item.width === 'min',
-        'bordered': item.bordered,
-        'small': item.fontSize === 'small',
-        'medium': item.fontSize === 'medium',
-        'large': item.fontSize === 'large',
-        'italic': item.italic,
-        'bold': item.bold,
-        'paddedContent': item.content || item.contentSlotId
-      }">
-        {{item.constant ? item.content : (item.contentSlotId | fillAttribute:note.attributes) ||
-        item.content}}
-      </span>
-      <div *ngIf="item.separator !== 'none'" [ngClass]="{
-        'separator-thin': item.separator === 'thin',
-        'separator-medium': item.separator === 'medium',
-        'separator-wide': item.separator === 'wide'
-      }"></div>
-    </ng-template>
     <div *ngIf="!editMode" #contentOutlet [innerHtml]="(note.content | parseMarkup)"></div>
     <div *ngIf="editMode">
       <textarea pInputTextarea [placeholder]="'Enter note text here'" [(ngModel)]="note.content"

@@ -1,11 +1,13 @@
 .attributes {
   margin: 10px;
+
   &.show-flex-direction {
     .flex-row {
       background-color: darkgray;
       padding: 6px;
       border: 1px solid rgba($color: #000000, $alpha: 0.5);
     }
+
     .flex-column {
       background-color: gray;
       padding: 6px;
@@ -18,6 +20,17 @@
   padding: 5px;
   border: 1px solid var(--surface-border);
   border-radius: var(--border-radius);
+}
+
+.article-tag {
+  color: var(--text-color-secondary);
+  font-size: xx-small;
+  padding-bottom: 0px;
+  padding-top: 0px;
+  user-select: none;
+  &:hover {
+    color: var(--text-color-primary);
+  }
 }
 
 span {
@@ -80,11 +93,9 @@ span {
   float: right;
 }
 
-.p-panel-header-icon{
-  &.buttonActive{
+.p-panel-header-icon {
+  &.buttonActive {
     color: var(--primary-color);
     border: 1px solid var(--primary-color);
   }
 }
-
-

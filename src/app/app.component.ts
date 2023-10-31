@@ -48,6 +48,7 @@ export class AppComponent implements OnInit {
   showNewProjectOverlay: boolean = false;
   showPrivacyPolicyDialog: boolean = false;
   loadDialogVisible: boolean = false;
+  settingsDialogVisible: boolean = false;
 
   /** Header Menu */
   items = [
@@ -125,8 +126,11 @@ export class AppComponent implements OnInit {
           icon: 'pi pi-fw pi-database'
         },
         {
-          label: 'Settings',
-          icon: 'pi pi-fw pi-cog'
+          label: 'Settings & Prf.',
+          icon: 'pi pi-fw pi-cog',
+          command: () => {
+            this.settingsDialogVisible = true;
+          }
         }
       ]
     }
