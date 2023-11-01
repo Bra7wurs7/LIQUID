@@ -58,15 +58,33 @@
     position: sticky;
     padding: 0;
 
+
+
     .workspaces {
-      padding-right: 13px;
       color: var(--text-color-secondary);
+      height: 100%;
 
       .workspace {
-        padding: 6.5px;
-        padding-left: 3px;
-        padding-right: 3px;
-        font-size: 20px;
+        min-width: 30px;
+        height: 41px;
+        border-left: 2px solid var(--surface-border);
+        border-bottom-left-radius: 7px;
+
+        .workspace-articles {
+          width: 100%;
+          height: 100%;
+          overflow-y: hidden;
+          overflow-x: hidden;
+
+          .workspace-article {
+            margin-bottom: 1px;
+            border: 1px solid var(--surface-border);
+            margin-left: 1px;
+            margin-right: 1px;
+            padding-top: 2px;
+            border-radius: 2px;
+          }
+        }
       }
 
       .number-cell {
@@ -316,13 +334,16 @@
   border-radius: 0;
   margin-right: 2px;
   font-size: x-small;
-  &.sm{
+
+  &.sm {
     width: 75px;
   }
-  &.mm{
+
+  &.mm {
     width: 150px;
   }
-  &.lg{
+
+  &.lg {
     width: 225px;
   }
 }

@@ -26,21 +26,26 @@
 
       <!-- Workspaces -->
       <div *ngIf="project" class="flex flex-row workspaces">
-        <div class="pi pi-plus-circle workspace pointerOnHover" [pTooltip]="'Add Workspace'" (click)="addView()"></div>
+        <div class="workspace pointerOnHover" [pTooltip]="'Add Workspace'" (click)="addView()"></div>
         <div *ngFor="let workspace of project.workspaces; let index = index"
-          class="hideChildUntilHoverParent pointerOnHover" style="position: relative;"
-          (click)="this.project.activeWorkspaceIndex = index" [pTooltip]="'Workspace ' + (index + 1)">
-          <span class="pi pi-circle-off workspace pointerOnHover">
-          </span>
-          <span class="number-cell">{{
-            this.project.workspaces[index].activeArticles.length
-            }}
-          </span>
-          <span [pTooltip]="'Remove Workspace ' + (index + 1)" *ngIf="project.workspaces.length > 1"
+          class="hideChildUntilHoverParent workspace pointerOnHover" style="position: relative;"
+          (click)="this.project.activeWorkspaceIndex = index" [pTooltip]="tooltipContent">
+          <div class="flex flex-column workspace-articles">
+            <div *ngFor="let workspace-article of workspace.activeArticles; index as i" class="workspace-article"></div>
+          </div>
+          <span [pTooltip]="'Close Workspace'" *ngIf="project.workspaces.length > 1"
             style="position: absolute; left: 20%; top:25px; scale: 70%"
             class="pi pi-trash element pointerOnHover hideChildUntilHoverChild" (click)="removeView(index)">
           </span>
         </div>
+        <ng-template #tooltipContent>
+          <div class="flex align-items-center">
+            <img src="https://primefaces.org/cdn/primeng/images/primeng.svg" height="20" class="mr-2" />
+            <span>
+              <b>PrimeNG</b> rocks!
+            </span>
+          </div>
+        </ng-template>
       </div>
 
     </p-menubar>

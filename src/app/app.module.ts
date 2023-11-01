@@ -42,6 +42,7 @@ import { HierarchicalListComponent } from './components/hierarchical-list/hierar
 import { LeftSidebarComponent } from './components/left-sidebar/left-sidebar.component';
 import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.component';
 import { CenterComponent } from './components/center/center.component';
+import { WorkspaceTooltipPipe } from './pipes/workspaceTooltip/workspace-tooltip.pipe';
 
 
 @NgModule({
@@ -55,6 +56,7 @@ import { CenterComponent } from './components/center/center.component';
     LeftSidebarComponent,
     RightSidebarComponent,
     CenterComponent,
+    WorkspaceTooltipPipe,
   ],
   imports: [
     BrowserModule,
