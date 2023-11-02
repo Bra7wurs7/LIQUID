@@ -18,7 +18,7 @@
             </div>
         </div>
     </div>
-    <div *ngFor="let articleHierarchyNodeEntry of hierarchyNodeSet; first as isFirst; last as isLast; index as i">
+    <div style="overflow-y: hidden; overflow-x: hidden;" *ngFor="let articleHierarchyNodeEntry of hierarchyNodeSet; first as isFirst; last as isLast; index as i">
         <div class="pseudoBorder top" *ngIf="isFirst"
             [ngClass]="{'active': currentWorkspace.activeArticles.includes(articleHierarchyNodeEntry.node.name)}"></div>
         <div class="articleContainer flex-column left flex justify-content-start align-items-center" [ngClass]="{
@@ -26,7 +26,7 @@
             }">
             <!-- Article Name & Buttons -->
             <div #articleNameAndButtons (click)="articleClickedEmitter.emit(articleHierarchyNodeEntry.node)"
-                (contextmenu)="$event.preventDefault(); setlastRightClickedArticle(articleHierarchyNodeEntry); contextMenu.toggle(); dummy.click()"
+                (contextmenu)="$event.preventDefault(); setlastRightClickedArticle(articleHierarchyNodeEntry); contextMenu.toggle($event); dummy.click()"
                 class="article w-full relative flex flex-row align-content-center hideChildUntilHoverParent"
                 [pTooltip]="articleHierarchyNodeEntry.node.name" [ngClass]="{
                     'active': currentWorkspace.activeArticles.includes(articleHierarchyNodeEntry.node.name),
@@ -40,7 +40,7 @@
                 <i #contextMenuButton
                     class="contextMenuBtn absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
                     [ngClass]="{'active': currentWorkspace.activeArticles.includes(articleHierarchyNodeEntry.node.name)}"
-                    pTooltip="Open Context Menu" (click)="$event.stopPropagation(); setlastRightClickedArticle(articleHierarchyNodeEntry); contextMenu.toggle(); dummy.click()"></i>
+                    pTooltip="Open Context Menu" (click)="$event.stopPropagation(); setlastRightClickedArticle(articleHierarchyNodeEntry); contextMenu.toggle($event); dummy.click()"></i>
             </div>
 
             <!-- Article Entry Context Menu -->

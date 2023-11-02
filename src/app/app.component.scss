@@ -5,6 +5,9 @@
   transition: transform 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99),
     visibility 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99);
 
+  overflow-y: hidden;
+  overflow-x: hidden;
+
   &.right {
     background-color: var(--surface-b);
     border-left: 2px solid var(--surface-d);
@@ -60,15 +63,29 @@
 
 
 
-    .workspaces {
-      color: var(--text-color-secondary);
+    .toolbarWorkspaces {
+      color: var(--surface-border);
       height: 100%;
 
-      .workspace {
+      .toolbarAddWorkspace {
+        min-width: 30px;
+        height: 41px;
+        border-left: 2px solid transparent;
+      }
+
+      .toolbarWorkspaceDelete {
+        color: var(--text-color);
+      }
+
+      .toolbarWorkspace {
         min-width: 30px;
         height: 41px;
         border-left: 2px solid var(--surface-border);
-        border-bottom-left-radius: 7px;
+        border-bottom-left-radius: 4px;
+
+        &.active {
+          background-color: var(--surface-a);
+        }
 
         .workspace-articles {
           width: 100%;
@@ -77,12 +94,13 @@
           overflow-x: hidden;
 
           .workspace-article {
+            background-color: var(--surface-border);
             margin-bottom: 1px;
             border: 1px solid var(--surface-border);
             margin-left: 1px;
             margin-right: 1px;
             padding-top: 2px;
-            border-radius: 2px;
+            border-bottom-left-radius: 4px;
           }
         }
       }
@@ -369,5 +387,15 @@
         padding-bottom: 120px;
       }
     }
+  }
+}
+
+.toolbarWorkspaceTooltip {
+  .toolbarWorkspaceTooltipArticle {
+    border: 1px solid var(--text-color);
+    padding: 3px;
+    padding-bottom: 0px;
+    border-bottom-left-radius: 7px;
+    margin-bottom: 2px;
   }
 }

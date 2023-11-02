@@ -1,7 +1,7 @@
 <div class="flex flex-row h-full">
 
   <!-- Left Sidebar -->
-  <div class="left sidebar min-h-full w-2 p-shadow-3 overflow-hidden z-3 p-1 flex flex-column h-full overflow-y-auto">
+  <div class="left sidebar min-h-full w-2 p-shadow-3 overflow-hidden z-3 p-1 flex flex-column h-full">
     <span class="p-input-icon-right w-full">
       <i class="pi pi-search"></i>
       <input type="text" class="w-full searchInput" placeholder="Search Articles" pInputText [(ngModel)]="leftSearch"
@@ -9,8 +9,9 @@
     </span>
     <div class="bigpseudo"></div>
     <!-- @TODO Add Button to toggle between Alphabetic Sorting Up Down, Last Changed Up Down, and Importance-->
-    <app-hierarchical-list *ngIf="(this.articleHierarchyMap.size > 0 || this.lsArticleName) && this.project"
-      [showBorderL]="true" [showNewArticleButton]="leftSearch !== undefined && leftSearch !== ''"
+    <app-hierarchical-list class="overflow-y-auto overflow-x-hidden"
+      *ngIf="(this.articleHierarchyMap.size > 0 || this.lsArticleName) && this.project" [showBorderL]="true"
+      [showNewArticleButton]="leftSearch !== undefined && leftSearch !== ''"
       [lsArticleName]="this.lsArticleName || 'New Article'" [lsParentName]="this.lsParentName"
       [currentWorkspace]="this.project.workspaces[this.project.activeWorkspaceIndex]"
       [listItems]="articleHierarchyArray" (articleClicked)="toggleArticleActive($event.name)"
@@ -25,27 +26,34 @@
     <p-menubar class="menubar" [model]="items">
 
       <!-- Workspaces -->
-      <div *ngIf="project" class="flex flex-row workspaces">
-        <div class="workspace pointerOnHover" [pTooltip]="'Add Workspace'" (click)="addView()"></div>
-        <div *ngFor="let workspace of project.workspaces; let index = index"
-          class="hideChildUntilHoverParent workspace pointerOnHover" style="position: relative;"
-          (click)="this.project.activeWorkspaceIndex = index" [pTooltip]="tooltipContent">
+      <!-- @TODO Make Workspaces appear dynamically: When last empty workspace is used, add new one. Autoremove unselected empty workspaces except one-->
+      <div *ngIf="project" class="flex flex-row toolbarWorkspaces">
+        <div class="toolbarAddWorkspace pointerOnHover flex flex-column align-items-center justify-content-center" [tooltipPosition]="'bottom'" [pTooltip]="'Add New Workspace'"
+          (click)="addView()">
+          <div class="pi pi-plus"></div>
+        </div>
+        <div *ngFor="let workspace of project.workspaces; let index = index" [ngClass]="{'active': this.project.activeWorkspaceIndex === index}"
+          class="hideChildUntilHoverParent toolbarWorkspace pointerOnHover" style="position: relative;"
+          (click)="this.project.activeWorkspaceIndex = index" [tooltipPosition]="'bottom'" [pTooltip]="tooltipContent">
           <div class="flex flex-column workspace-articles">
             <div *ngFor="let workspace-article of workspace.activeArticles; index as i" class="workspace-article"></div>
           </div>
           <span [pTooltip]="'Close Workspace'" *ngIf="project.workspaces.length > 1"
             style="position: absolute; left: 20%; top:25px; scale: 70%"
-            class="pi pi-trash element pointerOnHover hideChildUntilHoverChild" (click)="removeView(index)">
+            class="pi pi-trash element pointerOnHover hideChildUntilHoverChild toolbarWorkspaceDelete" (click)="removeView(index)">
           </span>
+          <ng-template #tooltipContent>
+            <div class="flex flex-column toolbarWorkspaceTooltip">
+              <div *ngFor="let workspaceArticle of workspace.activeArticles; index as i"
+                class="toolbarWorkspaceTooltipArticle">
+                {{workspaceArticle}}
+              </div>
+              <div *ngIf="workspace.activeArticles.length === 0">
+                Empty Workspace
+              </div>
+            </div>
+          </ng-template>
         </div>
-        <ng-template #tooltipContent>
-          <div class="flex align-items-center">
-            <img src="https://primefaces.org/cdn/primeng/images/primeng.svg" height="20" class="mr-2" />
-            <span>
-              <b>PrimeNG</b> rocks!
-            </span>
-          </div>
-        </ng-template>
       </div>
 
     </p-menubar>

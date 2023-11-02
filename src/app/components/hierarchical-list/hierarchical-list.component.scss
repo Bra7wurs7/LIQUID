@@ -5,9 +5,11 @@
     opacity: 0;
     max-height: 0;
     border-bottom-width: 0px;
-    overflow: hidden;
     border-right-color: var(--surface-border);
     border-left-color: var(--surface-border);
+
+    overflow-y: hidden;
+    overflow-x: hidden;
 
     &.showBorderLR {
         border-right-width: 2px;
@@ -45,6 +47,7 @@
 
 .articleContainer {
     transition: margin-left 0.1s;
+
     &.active {
         margin-left: 1px;
     }
@@ -59,7 +62,7 @@
 
     &.showBorderL {
         &.active {
-            background-color: var(--surface-a);  
+            background-color: var(--surface-a);
             border-left-width: 2px !important;
             border-left-style: solid !important;
         }
@@ -71,8 +74,9 @@
             border-right-style: solid;
         }
     }
+
     &.active {
-        background-color: var(--surface-a);  
+        background-color: var(--surface-a);
     }
 
     &.highlighted {
@@ -80,7 +84,7 @@
         border-left-width: 2px;
         border-left-style: solid;
     }
-   
+
 }
 
 .borderTop {
