@@ -6,6 +6,8 @@ import { HttpParams } from "@angular/common/http";
 export class LLMConfig {
     name: string;
     url: string;
+    power: 'bad' | 'ok' | 'best';
+    price: 'free' | 'ok' | 'expensive';
     method: "GET" | "POST" | string;
     params: [string, string][];
     headers: [string, string][];
@@ -15,9 +17,9 @@ export class LLMConfig {
         name: string,
         url: string,
         method: "GET" | "POST" | string,
-        params: [string, string][],
-        headers: [string, string][],
-        body: Record<string, any>
+        params: [string, string][] = [],
+        headers: [string, string][] = [],
+        body: Record<string, any> = {}
     ) {
         this.name = name;
         this.url = url;
@@ -25,5 +27,7 @@ export class LLMConfig {
         this.params = params;
         this.headers = headers;
         this.body = body;
+        this.power = 'ok'
+        this.price = 'ok'
     }
 }

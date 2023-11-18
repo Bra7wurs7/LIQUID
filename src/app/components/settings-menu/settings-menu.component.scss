@@ -1,0 +1,21 @@
+.settingsTextInput {
+    border-radius: 0;
+    margin-right: 2px;
+    font-size: x-small;
+
+    &.sm {
+        width: 75px;
+    }
+
+    &.mm {
+        width: 150px;
+    }
+
+    &.lg {
+        width: 225px;
+    }
+}
+
+.iconButton {
+    margin: 4px;
+}

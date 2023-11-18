@@ -9,7 +9,7 @@ export class ParseMarkupPipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer) {}
 
   transform(value: string, ...args: unknown[]): SafeHtml {
-    return this.parseInternalLinks(marked(value));
+    return this.parseInternalLinks(marked(value, {headerIds: false, mangle: false}));
   }
 
   parseInternalLinks(htmlMarkdownString: string): SafeHtml {

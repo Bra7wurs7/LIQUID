@@ -43,6 +43,7 @@ import { LeftSidebarComponent } from './components/left-sidebar/left-sidebar.com
 import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.component';
 import { CenterComponent } from './components/center/center.component';
 import { WorkspaceTooltipPipe } from './pipes/workspaceTooltip/workspace-tooltip.pipe';
+import { SettingsMenuComponent } from './components/settings-menu/settings-menu.component';
 
 
 @NgModule({
@@ -57,6 +58,7 @@ import { WorkspaceTooltipPipe } from './pipes/workspaceTooltip/workspace-tooltip
     RightSidebarComponent,
     CenterComponent,
     WorkspaceTooltipPipe,
+    SettingsMenuComponent
   ],
   imports: [
     BrowserModule,

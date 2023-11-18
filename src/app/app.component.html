@@ -27,21 +27,23 @@
 
       <!-- Workspaces -->
       <!-- @TODO Make Workspaces appear dynamically: When last empty workspace is used, add new one. Autoremove unselected empty workspaces except one-->
-      <div *ngIf="project" class="flex flex-row toolbarWorkspaces">
-        <div class="toolbarAddWorkspace pointerOnHover flex flex-column align-items-center justify-content-center" [tooltipPosition]="'bottom'" [pTooltip]="'Add New Workspace'"
-          (click)="addView()">
+      <div *ngIf="project" class="flex flex-row toolbarWorkspaces relative">
+        <div class="toolbarAddWorkspace pointerOnHover flex flex-column align-items-center justify-content-center"
+          [tooltipPosition]="'bottom'" [pTooltip]="'Add New Workspace'" (click)="addView()">
           <div class="pi pi-plus"></div>
         </div>
-        <div *ngFor="let workspace of project.workspaces; let index = index" [ngClass]="{'active': this.project.activeWorkspaceIndex === index}"
-          class="hideChildUntilHoverParent toolbarWorkspace pointerOnHover" style="position: relative;"
-          (click)="this.project.activeWorkspaceIndex = index" [tooltipPosition]="'bottom'" [pTooltip]="tooltipContent">
+        <div *ngFor="let workspace of project.workspaces; let index = index"
+          [ngClass]="{'active': this.project.activeWorkspaceIndex === index}" [autoHide]="false"
+          [tooltipPosition]="'bottom'" [pTooltip]="tooltipContent"
+          class="hideChildUntilHoverParent toolbarWorkspace pointerOnHover relative"
+          (click)="this.project.activeWorkspaceIndex = index">
           <div class="flex flex-column workspace-articles">
             <div *ngFor="let workspace-article of workspace.activeArticles; index as i" class="workspace-article"></div>
           </div>
-          <span [pTooltip]="'Close Workspace'" *ngIf="project.workspaces.length > 1"
-            style="position: absolute; left: 20%; top:25px; scale: 70%"
-            class="pi pi-trash element pointerOnHover hideChildUntilHoverChild toolbarWorkspaceDelete" (click)="removeView(index)">
-          </span>
+          <div [pTooltip]="'Close Workspace'" *ngIf="project.workspaces.length > 1"
+            class="pi pi-trash element pointerOnHover hideChildUntilHoverChild toolbarWorkspaceDelete"
+            (click)="removeView(index)">
+          </div>
           <ng-template #tooltipContent>
             <div class="flex flex-column toolbarWorkspaceTooltip">
               <div *ngFor="let workspaceArticle of workspace.activeArticles; index as i"
@@ -55,16 +57,7 @@
           </ng-template>
         </div>
       </div>
-
     </p-menubar>
-
-    <!-- Quick Navigation -->
-    <div class="absolute flex flex-column z-2 footer" *ngIf="project" style="right: 0px; bottom: 0;">
-      <div class="element pi pi-arrow-circle-up pointerOnHover" [pTooltip]="'Jump to top'"
-        (click)="contentPanel.scrollTop = 0"></div>
-      <div class="element pi pi-arrow-circle-down pointerOnHover" [pTooltip]="'Jump to bottom'"
-        (click)="contentPanel.scrollTop = contentPanel.scrollHeight"></div>
-    </div>
 
     <!-- Assistant Panel & Selector -->
     <div class="absolute left-0 bottom-0 flex flex-column align-items-start justify-content-start assistant-panel"
@@ -72,19 +65,22 @@
       <div class="flex flex-row align-items-end justify-content-start z-3 tabs" [ngClass]="{'active': activeAssistant}">
         <div class="flex flex-row">
           <div class="pi pi-comments pointerOnHover tab" [ngClass]="{'active': activeAssistant === 1}"
-            [pTooltip]="activeAssistant === 1 ? 'Hide assistant panel' : 'Chat with LIQUID Assistant'"
+            [pTooltip]="activeAssistant === 1 ? 'Hide assistant panel' : 'Chat with Assistant'"
             (click)="onToggleAssistant(1, chatInput)">
           </div>
           <input #chatInput type="text" class="w-full assistantInput" [ngClass]="{'active': activeAssistant === 1}"
-            placeholder="Type, then press enter/return" pInputText />
+            placeholder="Type, then press enter/return" pInputText (keyup)="assistantKeyUp($event, chatInput.value)" />
         </div>
         <div class="flex flex-row">
           <div class="pi pi-plus-circle pointerOnHover tab" [pTooltip]="'Create new assistant or autonomous agent'">
           </div>
         </div>
       </div>
-      <div class="panel-content overflow-y-auto" [ngClass]="{'active':activeAssistant}">
-        <p class="m-0"></p>
+      <div class="panel-content overflow-y-auto flex flex-row" [ngClass]="{'active':activeAssistant}">
+        <div class="flex flex-column assistant-chat">
+          <div class="message prompt">blub</div>
+          <div class="message response">bleb</div>
+        </div>
       </div>
     </div>
 
@@ -167,16 +163,7 @@
 
   <!-- Settings Modal Dialog -->
   <p-dialog header="Settings & Preferences" appendTo="body" #settingsDialog [(visible)]="settingsDialogVisible">
-    <!-- LLM Endpoints -->
-    <div class="flex flex-column">
-      <div class="flex flex-row justify-content-between">
-        <input #LLM_Name type="text" class="settingsTextInput sm" [ngClass]="{'active': activeAssistant === 1}"
-          placeholder="Name" pInputText />
-        <input #LLM_Url type="text" class="settingsTextInput lg" [ngClass]="{'active': activeAssistant === 1}"
-          placeholder="API Endpnt. URL" pInputText />
-        <span>Blep</span>
-      </div>
-    </div>
+    <app-settings-menu></app-settings-menu>
   </p-dialog>
 
   <!-- Project Uploader Input -->

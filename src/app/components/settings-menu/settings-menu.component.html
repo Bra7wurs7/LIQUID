@@ -1,0 +1,17 @@
+<!-- LLM Endpoints -->
+<div class="flex flex-column">
+    <h6 *ngIf="llmApiService.llmConfigs.length > 0">Configured Chat-AI Services (Large Language Models APIs)</h6>
+    <div class="flex flex-row justify-content-between align-items-center"
+        *ngFor="let llmConfig of llmApiService.llmConfigs, index as i">
+        <input type="text" class="settingsTextInput md" placeholder="Config Name" [value]="llmConfig.name" pInputText />
+        <input type="text" class="settingsTextInput md" placeholder="URL" [value]="llmConfig.url" pInputText />
+        <i class="pi pi-trash" (click)="llmApiService.removeLLMConfig(i)"></i>
+    </div>
+    <h6>Add new chat-ai service configuration  (Large Language Models API)</h6>
+    <div class="flex flex-row justify-content-between align-items-center">
+        <input #NewConfigName type="text" class="settingsTextInput sm" placeholder="Name" pInputText pTooltip="Choose a name for the new API configuration (e.g. 'OpenAI GPT-4')" />
+        <input #NewConfigUrl type="text" class="settingsTextInput md" placeholder="API Endpoint URL" pInputText pTooltip="Enter the web-address that points to the new API endpoint" />
+        <input #NewConfigKey type="password" class="settingsTextInput md" placeholder="Api Key" pInputText pTooltip="Enter the authorization key for the API endpoint" />
+        <i class="pi pi-box iconButton pointerOnHover" pTooltip="Add as OpenAI Config" (click)="llmApiService.addNewOpenAiConfig(NewConfigName.value, NewConfigUrl.value, NewConfigKey.value)"></i>
+    </div>
+</div>

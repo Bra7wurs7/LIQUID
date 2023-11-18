@@ -5,10 +5,11 @@ import { defaultProject, Project, SerializableProject } from './models/project.m
 import { LocalDriveService } from './services/localDrive/local-drive.service';
 import { IndexedDbService } from './services/indexedDb/indexed-db.service';
 import { Workspace } from './models/workspace.model';
-import { of, timer } from 'rxjs';
+import { lastValueFrom, of, timer } from 'rxjs';
 import { switchMap, timeout } from 'rxjs/operators';
 import { ArticleHierarchyNode } from './models/articleHierarchyNode.model';
 import { ArticleActionEnum } from './enums/articleActionEnum';
+import { LlmApiService } from './services/llmApi/llm-api.service';
 
 @Component({
   selector: 'app-root',
@@ -150,7 +151,7 @@ export class AppComponent implements OnInit {
 
 
 
-  constructor(private messageService: MessageService, private localdriveService: LocalDriveService, private indexedDbService: IndexedDbService, private confirmationService: ConfirmationService) {
+  constructor(private messageService: MessageService, private localdriveService: LocalDriveService, private indexedDbService: IndexedDbService, private confirmationService: ConfirmationService, private llm: LlmApiService) {
     this.allProjectsPromise = indexedDbService.getAllProjects();
   }
 
@@ -439,15 +440,11 @@ export class AppComponent implements OnInit {
     }
   }
 
-  openPrivacyPolicyDialog() {
-    this.showPrivacyPolicyDialog = true;
-  }
-  openImprintDialog() {
-  }
-  openDonationDialog() {
-  }
-  openDevelopmentDialog() {
-  }
-  openSettingsDialog() {
+  assistantKeyUp(event: KeyboardEvent, chatInput: string) {
+
+    if(this.llm.llmConfigs[0] && event.key === "Enter") {
+      console.log("AAA")
+      this.llm.sendOpenAiStylePrompt([{role: "system", content: chatInput}], this.llm.llmConfigs[0]).subscribe((msg) => console.log(msg));
+    }
   }
 }

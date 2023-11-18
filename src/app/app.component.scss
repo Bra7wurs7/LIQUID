@@ -74,6 +74,10 @@
       }
 
       .toolbarWorkspaceDelete {
+        position: absolute;
+        left: 20%;
+        top: 0;
+        scale: 60%;
         color: var(--text-color);
       }
 
@@ -200,13 +204,38 @@
       border: 0px solid var(--surface-border);
       transition: height 0.25s, opacity 0.25s, border 0.25s;
 
-
       &.active {
         padding: 6px;
         opacity: 1;
         border: 2px solid var(--surface-border);
         border-left: 0px;
         height: 50vh;
+      }
+
+      .assistant-chat {
+        width: 100%;
+        margin-left: 1px;
+
+        .message {
+          padding: 6px;
+          width: 100%;
+
+          &.prompt {
+            background-color: var(--surface-border);
+            border-left: 2px solid var(--surface-border);
+            border-right: 2px solid var(--surface-border);
+            border-top: 2px solid var(--surface-border);
+            border-top-right-radius: 10px;
+            border-top-left-radius: 10px;
+          }
+
+          &.response {
+            background-color: var(--surface-a);
+            border-left: 2px solid var(--surface-border);
+            border-right: 2px solid var(--surface-border);
+            border-bottom: 2px solid var(--surface-border);
+          }
+        }
       }
     }
   }
@@ -347,21 +376,13 @@
   width: min-content;
 }
 
-.settingsTextInput {
-  border-radius: 0;
-  margin-right: 2px;
-  font-size: x-small;
-
-  &.sm {
-    width: 75px;
-  }
-
-  &.mm {
-    width: 150px;
-  }
-
-  &.lg {
-    width: 225px;
+.toolbarWorkspaceTooltip {
+  .toolbarWorkspaceTooltipArticle {
+    border: 1px solid var(--text-color);
+    padding: 3px;
+    padding-bottom: 0px;
+    border-bottom-left-radius: 7px;
+    margin-bottom: 2px;
   }
 }
 
@@ -386,15 +407,5 @@
         padding-bottom: 120px;
       }
     }
-  }
-}
-
-.toolbarWorkspaceTooltip {
-  .toolbarWorkspaceTooltipArticle {
-    border: 1px solid var(--text-color);
-    padding: 3px;
-    padding-bottom: 0px;
-    border-bottom-left-radius: 7px;
-    margin-bottom: 2px;
   }
 }

@@ -8,21 +8,37 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class LlmApiService {
+  llmConfigs: LLMConfig[] = [];
 
-  constructor(private http: HttpClient) { }
-
-  public sendLlmPrompt(prompt: LlmMessage[], llmConfig: LLMConfig) {
-    let headers: HttpHeaders;
-    let params: HttpParams;
-    llmConfig.headers.forEach((header) => headers = headers.set(header[0], header[1]));
-    llmConfig.params.forEach((param) => params = params.set(param[0], param[1]));
+  constructor(private http: HttpClient) {
+    const loadedConfig = localStorage.getItem("llmConfigs")
+    if (loadedConfig) {
+      this.llmConfigs = JSON.parse(loadedConfig);
+      console.log(this.llmConfigs);
+      
+    }
   }
 
-  public sendOpenAiStyleApiPrompt(prompt: LlmMessage[], llmConfig: LLMConfig): Observable<any> {
-    let headers: HttpHeaders;
-    let params: HttpParams;
-    llmConfig.headers.forEach((header) => headers = headers.set(header[0], header[1]));
-    llmConfig.params.forEach((param) => params = params.set(param[0], param[1]));
-    return this.http.post(llmConfig.url, {...llmConfig.body, messages: prompt})
+  public addNewOpenAiConfig(name: string, url: string, key: string) {
+    const newOpenAiConfig = new LLMConfig(name, url, "POST", [], [['Authorization', `Bearer ${key}`]], { model: "gpt-3.5-turbo", stream: true, temperature: 1.07 })
+    this.llmConfigs.push(newOpenAiConfig);
+    localStorage.setItem("llmConfigs", JSON.stringify(this.llmConfigs));
+  }
+
+  public removeLLMConfig(index: number) {
+    this.llmConfigs.splice(index, 1);
+  }
+
+  public sendOpenAiStylePrompt(prompt: LlmMessage[], llmConfig: LLMConfig): Observable<any> {
+    let headers: HttpHeaders = new HttpHeaders();
+    let params: HttpParams = new HttpParams();
+    for (const header of llmConfig.headers) {
+      console.log(header);
+      headers = headers.set(header[0], header[1])
+    }
+    for (const param of llmConfig.params) {
+      params = params.set(param[0], param[1])
+    }
+    return this.http.post(llmConfig.url, {...llmConfig.body, messages: prompt}, {headers: headers, params: params})
   }
 }
