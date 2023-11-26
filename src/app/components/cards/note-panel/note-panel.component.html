@@ -1,34 +1,90 @@
-<p-panel [toggleable]="true" #panel class="panel-hide-default-toggler" [ngClass]="{'activePanel': isActivePanel}" *ngIf="note">
+<p-panel
+  [toggleable]="true"
+  #panel
+  class="panel-hide-default-toggler"
+  [ngClass]="{ activePanel: isActivePanel }"
+  *ngIf="note"
+>
   <ng-template pTemplate="header">
     <div class="flex flex-column align-items-start">
       <div class="flex flex-row">
-        <span class="article-tag pointerOnHover" *ngFor="let group of note.groups" (click)="internalLinkActivatedEvent.emit(group)">#{{group}}</span>
+        <span
+          class="article-tag pointerOnHover"
+          *ngFor="let group of note.groups"
+          (click)="internalLinkActivatedEvent.emit(group)"
+          >#{{ group }}</span
+        >
       </div>
-      <span style="padding-bottom: 0px;">{{note.name}}</span>
+      <span style="padding-bottom: 0px">{{ note.name }}</span>
     </div>
     <div class="flex-grow-1"></div>
   </ng-template>
   <ng-template pTemplate="icons">
-    <button (click)="$event.stopPropagation(); editMode = !editMode" pButton pRipple type="button" icon="pi pi-file-edit"
-      class="p-panel-header-icon" [ngClass]="{'buttonActive': editMode}" pTooltip="Edit note"
-      style="margin-left: 2px;"></button>
+    <button
+      (click)="$event.stopPropagation(); editMode = !editMode"
+      pButton
+      pRipple
+      type="button"
+      icon="pi pi-file-edit"
+      class="p-panel-header-icon"
+      [ngClass]="{ buttonActive: editMode }"
+      pTooltip="Edit note"
+      style="margin-left: 2px"
+    ></button>
     <span class="p-buttonset">
-      <button pButton pRipple type="button" icon="pi pi-angle-up"
-        class="p-panel-header-icon" (click)="moveUpEvent.emit()" pTooltip="Move panel up"></button>
-      <button pButton pRipple type="button" icon="pi pi-angle-down"
-        class="p-panel-header-icon" (click)="moveDownEvent.emit()" pTooltip="Move panel down"></button>
-      <button (click)="panel.toggle($event);" pButton pRipple type="button"
-        [icon]="'pi '+(panel.collapsed?'pi-plus':'pi-minus')" class="p-panel-header-icon"
-        [pTooltip]="panel.collapsed ? 'Maximize panel' : 'Minimize panel'"></button>
-      <button (click)="closePanelEvent.emit();" pButton pRipple type="button"
-        icon="pi pi-times" class="p-panel-header-icon" pTooltip="Close panel"></button>
+      <button
+        pButton
+        pRipple
+        type="button"
+        icon="pi pi-angle-up"
+        class="p-panel-header-icon"
+        (click)="moveUpEvent.emit()"
+        pTooltip="Move panel up"
+      ></button>
+      <button
+        pButton
+        pRipple
+        type="button"
+        icon="pi pi-angle-down"
+        class="p-panel-header-icon"
+        (click)="moveDownEvent.emit()"
+        pTooltip="Move panel down"
+      ></button>
+      <button
+        (click)="panel.toggle($event)"
+        pButton
+        pRipple
+        type="button"
+        [icon]="'pi ' + (panel.collapsed ? 'pi-plus' : 'pi-minus')"
+        class="p-panel-header-icon"
+        [pTooltip]="panel.collapsed ? 'Maximize panel' : 'Minimize panel'"
+      ></button>
+      <button
+        (click)="closePanelEvent.emit()"
+        pButton
+        pRipple
+        type="button"
+        icon="pi pi-times"
+        class="p-panel-header-icon"
+        pTooltip="Close panel"
+      ></button>
     </span>
   </ng-template>
   <ng-template pTemplate="content">
-    <div *ngIf="!editMode" #contentOutlet [innerHtml]="(note.content | parseMarkup)"></div>
+    <div
+      *ngIf="!editMode"
+      #contentOutlet
+      [innerHtml]="note.content | parseMarkup"
+      style="overflow: hidden; overflow-wrap: break-word"
+    ></div>
     <div *ngIf="editMode">
-      <textarea pInputTextarea [placeholder]="'Enter note text here'" [(ngModel)]="note.content"
-        style="width: 100%; max-width: 100%;" [autoResize]="true"></textarea>
+      <textarea
+        pInputTextarea
+        [placeholder]="'Enter note text here'"
+        [(ngModel)]="note.content"
+        style="width: 100%; max-width: 100%"
+        [autoResize]="true"
+      ></textarea>
     </div>
   </ng-template>
 </p-panel>

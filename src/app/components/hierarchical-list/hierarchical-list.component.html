@@ -35,7 +35,7 @@
                     'highlighted': false
             }">
                 <i class="pi activeEntryFolderIcon"
-                    [ngClass]="{'pi-folder-open': articleHierarchyNodeEntry.children.length > 0, 'pi-file': articleHierarchyNodeEntry.children.length === 0, 'active': currentWorkspace.activeArticles.includes(articleHierarchyNodeEntry.node.name)}"></i>
+                    [ngClass]="{'pi-tag': articleHierarchyNodeEntry.children.length > 0, 'pi-file': articleHierarchyNodeEntry.children.length === 0, 'active': currentWorkspace.activeArticles.includes(articleHierarchyNodeEntry.node.name)}"></i>
                 <div class="entryUniqueName pointerOnHover flex-grow-1">{{articleHierarchyNodeEntry.node.name}}</div>
                 <i #contextMenuButton
                     class="contextMenuBtn absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
