@@ -22,6 +22,7 @@
 
   .searchInput {
     border-radius: 0px;
+    text-overflow: ellipsis;
   }
 }
 
@@ -76,14 +77,6 @@
         min-width: 30px;
         height: 41px;
         border-right: 2px solid transparent;
-      }
-
-      .toolbarWorkspaceDelete {
-        position: absolute;
-        left: 20%;
-        top: 0;
-        scale: 60%;
-        color: var(--text-color);
       }
 
       .toolbarWorkspace {
@@ -513,8 +506,7 @@
   .toolbarWorkspaceTooltipArticle {
     padding: 3px;
     border-top-right-radius: 7px;
-    margin-top: 1px;
-    margin-bottom: 1px;
+    margin: 1px;
     background-color: var(--surface-border);
   }
 }

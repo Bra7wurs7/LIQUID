@@ -276,22 +276,7 @@ export class AppComponent implements OnInit {
     this.onTouchWorkspaces();
   }
 
-  onLeftSearchKeyUp(searchValue: string, event: KeyboardEvent) {
-    switch (event.key) {
-      case 'ArrowUp':
-        this.shiftHighlightUp();
-        break;
-      case 'ArrowDown':
-        this.shiftHighlightDown();
-        break;
-      case 'Enter':
-        this.activateHighlighted();
-        break;
-      case 'Delete':
-        console.log('Delete');
-        break;
-    }
-
+  onLeftSearchValueChange(searchValue: string) {
     const searchValueSeparated: string[] = searchValue.split('.');
     this.lsArticleName = undefined;
     this.lsParentName = undefined;

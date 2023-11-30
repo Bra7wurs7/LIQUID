@@ -3,8 +3,9 @@
   <div class="left sidebar min-h-full w-2 p-shadow-3 overflow-hidden z-3 p-1 flex flex-column h-full">
     <span class="p-input-icon-right w-full">
       <i class="pi pi-search"></i>
-      <input type="text" class="w-full searchInput" placeholder="Search Articles" pInputText [(ngModel)]="leftSearch"
-        (keyup)="onLeftSearchKeyUp(leftSearch, $event)" />
+      <input type="text" class="w-full searchInput" placeholder="Search/Add Article"
+        pTooltip="Enter a name to search for an existing article, or to add a new one" pInputText [(ngModel)]="leftSearch"
+        (keyup)="onLeftSearchValueChange(leftSearch)" />
     </span>
     <div class="bigpseudo"></div>
     <!-- @TODO Add Button to toggle between Alphabetic Sorting Up Down, Last Changed Up Down, and Importance-->
@@ -18,6 +19,7 @@
       (articleActionClicked)="onListArticleActionClick($event)" (addArticleClicked)="
         addArticle(lsArticleName!, lsParentName);
         leftSearch = '';
+        onLeftSearchValueChange('');
         lsArticleName = undefined;
         lsParentName = undefined
       "></app-hierarchical-list>
@@ -66,7 +68,7 @@
                     {{ workspaceArticle }}
                   </div>
                   <div *ngIf="workspace.activeArticles.length === 0">
-                    [Empty Workspace]
+                    Empty Workspace
                   </div>
                 </div>
               </ng-template>
@@ -188,8 +190,7 @@
   <div class="right sidebar min-h-full w-2 p-shadow-3 p-1 flex flex-column h-full overflow-y-auto">
     <span class="p-input-icon-right w-full">
       <i class="pi pi-search"></i>
-      <input type="text" class="w-full searchInput" placeholder="Search ${ArticeArticle}" [(ngModel)]="rightSearch"
-        pInputText />
+      <input type="text" class="w-full searchInput" [(ngModel)]="rightSearch" pInputText />
     </span>
   </div>
 
