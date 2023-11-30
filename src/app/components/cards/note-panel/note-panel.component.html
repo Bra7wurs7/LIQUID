@@ -30,7 +30,8 @@
     <div *ngIf="!editMode" #contentOutlet [innerHtml]="note.content | parseMarkup"
       style="overflow: hidden; overflow-wrap: break-word"></div>
     <div *ngIf="editMode">
-      <angular-editor style="width: 100%; height: max-content;" [(ngModel)]="note.content" style="width: 100%; max-width: 100%"></angular-editor>
+      <textarea pInputTextarea [placeholder]="'Enter note text here'" [(ngModel)]="note.content"
+        style="width: 100%; max-width: 100%" [autoResize]="true"></textarea>
     </div>
   </ng-template>
 </p-panel>
