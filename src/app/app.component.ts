@@ -65,86 +65,79 @@ export class AppComponent implements OnInit {
   /** Header Menu */
   items = [
     {
-      label: 'File',
-      icon: 'pi pi-fw pi-file',
-      tooltip: `Save, Load, or Start New Projects`,
+      label: 'New Project',
+      icon: 'pi pi-fw pi-plus',
+      command: () => {
+        this.showNewProjectOverlay = true;
+      },
+    },
+    {
+      separator: true,
+    },
+    {
+      label: 'Save Project',
+      icon: 'pi pi-fw pi-save',
       items: [
         {
-          label: 'New Project',
-          icon: 'pi pi-fw pi-plus',
+          label: 'Save',
+          icon: 'pi pi-fw pi-save',
+          tooltip: `Save \"${this.project?.title}\"`,
           command: () => {
-            this.showNewProjectOverlay = true;
+            if (this.project?.title) {
+              this.saveToDB(this.project.title);
+            }
           },
         },
         {
-          separator: true,
-        },
-        {
-          label: 'Save Project',
+          label: 'Save As',
           icon: 'pi pi-fw pi-save',
-          items: [
-            {
-              label: 'Save',
-              icon: 'pi pi-fw pi-save',
-              tooltip: `Save \"${this.project?.title}\"`,
-              command: () => {
-                if (this.project?.title) {
-                  this.saveToDB(this.project.title);
-                }
-              },
-            },
-            {
-              label: 'Save As',
-              icon: 'pi pi-fw pi-save',
-              tooltip: `Save project under specific name`,
-              command: () => {
-                this.showSaveProjectOverlay = true;
-              },
-            },
-            {
-              label: 'Download',
-              icon: 'pi pi-fw pi-download',
-              command: () => {
-                this.downloadProject();
-              },
-            },
-          ],
-        },
-        {
-          label: 'Load Project',
-          icon: 'pi pi-fw pi-folder-open',
-          items: [
-            {
-              label: 'Load',
-              icon: 'pi pi-fw pi-folder-open',
-              command: () => {
-                this.loadDialogVisible = true;
-              },
-            },
-            {
-              label: 'Upload',
-              icon: 'pi pi-fw pi-upload',
-              command: () => {
-                this.projectUpload.nativeElement.click();
-              },
-            },
-          ],
-        },
-        {
-          separator: true,
-        },
-        {
-          label: 'Project Manager',
-          icon: 'pi pi-fw pi-database',
-        },
-        {
-          label: 'Settings & Prf.',
-          icon: 'pi pi-fw pi-cog',
+          tooltip: `Save project under specific name`,
           command: () => {
-            this.settingsDialogVisible = true;
+            this.showSaveProjectOverlay = true;
+          },
+        },
+        {
+          label: 'Download',
+          icon: 'pi pi-fw pi-download',
+          command: () => {
+            this.downloadProject();
           },
         },
       ],
+    },
+    {
+      label: 'Load Project',
+      icon: 'pi pi-fw pi-folder-open',
+      items: [
+        {
+          label: 'Load',
+          icon: 'pi pi-fw pi-folder-open',
+          command: () => {
+            this.loadDialogVisible = true;
+          },
+        },
+        {
+          label: 'Upload',
+          icon: 'pi pi-fw pi-upload',
+          command: () => {
+            this.projectUpload.nativeElement.click();
+          },
+        },
+      ],
+    },
+    {
+      separator: true,
+    },
+    {
+      label: 'Project Manager',
+      icon: 'pi pi-fw pi-database',
+    },
+    {
+      label: 'Settings & Prf.',
+      icon: 'pi pi-fw pi-cog',
+      command: () => {
+        this.settingsDialogVisible = true;
+      },
     },
   ];
 

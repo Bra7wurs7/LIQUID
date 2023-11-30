@@ -119,3 +119,12 @@ p-inputSwitch {
     background-color: var(--surface-b);
   }
 }
+
+.p-tooltip .p-tooltip-text {
+  padding: 4px;
+  border-radius: 7px;
+  background-color: var(--surface-a);
+  border: 2px solid var(--surface-border);
+  box-shadow: none;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}

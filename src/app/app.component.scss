@@ -85,6 +85,12 @@
         min-width: 30px;
         height: 41px;
         border-right: 2px solid var(--surface-border);
+        border-top: 4px solid var(--surface-border);
+        padding-top: 1px;
+
+        &.isLast {
+          border-top-right-radius: 7px;
+        }
 
         &.active {
           background-color: var(--surface-a);
@@ -119,6 +125,40 @@
         font-family: monospace;
         font-size: 14px;
         user-select: none;
+      }
+    }
+
+    .loadedFolder {
+      color: var(--text-color-secondary);
+      writing-mode: vertical-rl;
+      background-color: var(--surface-border);
+      height: 41px;
+      font-size: x-small;
+      padding: 4px;
+      max-width: 14px;
+
+      .folderName {
+        text-overflow: "..";
+      }
+
+      .folderActions {
+        transition: opacity 0.2s;
+        visibility: collapse;
+        opacity: 0;
+
+        .folderAction {
+          font-size: small;
+          margin-top: 4px;
+        }
+      }
+
+      &:hover {
+        writing-mode: unset;
+        max-width: max-content;
+        .folderActions {
+          visibility: visible;
+          opacity: 100%;
+        }
       }
     }
   }
@@ -173,7 +213,7 @@
     max-width: 49%;
 
     .tab {
-      transition: border 0.1s;
+      transition: border-color 0.1s;
       border-bottom: 0px;
       padding: 9px;
       border-bottom: 2px solid transparent;
@@ -225,20 +265,20 @@
       margin-bottom: 0px;
       pointer-events: all;
       max-width: 49%;
-  
+
       &:hover {
         transition: background-color 0.1s;
         opacity: 1;
         background-color: var(--surface-b);
       }
-  
+
       &.active {
         opacity: 1;
         background-color: var(--surface-border);
         border-bottom-left-radius: 0px;
         border-bottom-right-radius: 0px;
       }
-  
+
       .tab {
         transition: padding 0.1s;
         border: 2px solid transparent;
@@ -246,11 +286,11 @@
         padding: 9px;
         font-size: 25px;
         border-radius: 20px;
-  
+
         &:hover {
           color: var(--text-color);
         }
-  
+
         &.active {
           border: 2px solid var(--surface-border);
           border-bottom: 0px;
@@ -262,7 +302,7 @@
           background-color: var(--surface-b);
         }
       }
-  
+
       .assistantInput {
         transition: width 0.2s, padding 0.1s;
         width: 0;
@@ -272,7 +312,7 @@
         border-radius: 0;
         border-top-right-radius: 20px;
         border-bottom-right-radius: 20px;
-  
+
         &.active {
           visibility: visible;
           width: 270px;
@@ -466,11 +506,11 @@
 
 .toolbarWorkspaceTooltip {
   .toolbarWorkspaceTooltipArticle {
-    border: 1px solid var(--text-color);
     padding: 3px;
-    padding-bottom: 0px;
     border-top-right-radius: 7px;
-    margin-bottom: 2px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    background-color: var(--surface-border);
   }
 }
 

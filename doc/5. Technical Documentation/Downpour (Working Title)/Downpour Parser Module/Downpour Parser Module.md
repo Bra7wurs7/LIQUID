@@ -1,0 +1,1 @@
+The Parser Module can be imported to Provide access to the DownpourParser class, which provides functions for preprocessing, tokenizing and parsing strings that adhere to the Downpour syntax.

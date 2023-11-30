@@ -1,150 +1,110 @@
 <div class="flex flex-row h-full">
   <!-- Left Sidebar -->
-  <div
-    class="left sidebar min-h-full w-2 p-shadow-3 overflow-hidden z-3 p-1 flex flex-column h-full"
-  >
+  <div class="left sidebar min-h-full w-2 p-shadow-3 overflow-hidden z-3 p-1 flex flex-column h-full">
     <span class="p-input-icon-right w-full">
       <i class="pi pi-search"></i>
-      <input
-        type="text"
-        class="w-full searchInput"
-        placeholder="Search Articles"
-        pInputText
-        [(ngModel)]="leftSearch"
-        (keyup)="onLeftSearchKeyUp(leftSearch, $event)"
-      />
+      <input type="text" class="w-full searchInput" placeholder="Search Articles" pInputText [(ngModel)]="leftSearch"
+        (keyup)="onLeftSearchKeyUp(leftSearch, $event)" />
     </span>
     <div class="bigpseudo"></div>
     <!-- @TODO Add Button to toggle between Alphabetic Sorting Up Down, Last Changed Up Down, and Importance-->
-    <app-hierarchical-list
-      class="overflow-y-auto overflow-x-hidden"
-      *ngIf="
+    <app-hierarchical-list class="overflow-y-auto overflow-x-hidden" *ngIf="
         (this.articleHierarchyMap.size > 0 || this.lsArticleName) &&
         this.project
-      "
-      [showBorderL]="true"
-      [showNewArticleButton]="leftSearch !== undefined && leftSearch !== ''"
-      [lsArticleName]="this.lsArticleName || 'New Article'"
-      [lsParentName]="this.lsParentName"
-      [currentWorkspace]="
+      " [showBorderL]="true" [showNewArticleButton]="leftSearch !== undefined && leftSearch !== ''"
+      [lsArticleName]="this.lsArticleName || 'New Article'" [lsParentName]="this.lsParentName" [currentWorkspace]="
         this.project.workspaces[this.project.activeWorkspaceIndex]
-      "
-      [listItems]="articleHierarchyArray"
-      (articleClicked)="toggleArticleActive($event.name)"
-      (articleActionClicked)="onListArticleActionClick($event)"
-      (addArticleClicked)="
+      " [listItems]="articleHierarchyArray" (articleClicked)="toggleArticleActive($event.name)"
+      (articleActionClicked)="onListArticleActionClick($event)" (addArticleClicked)="
         addArticle(lsArticleName!, lsParentName);
         leftSearch = '';
         lsArticleName = undefined;
         lsParentName = undefined
-      "
-    ></app-hierarchical-list>
+      "></app-hierarchical-list>
   </div>
 
   <!-- Center Area -->
   <div class="center flex flex-column min-h-full w-full relative overflow-hide">
     <!-- Menu Bar -->
     <div class="menubar flex flex-column">
-      <div
-        class="newpanel-content overflow-y-auto flex flex-row"
-        [ngClass]="{ active: activeConsole }"
-      >
-        <div class="flex flex-column assistant-chat">
-        </div>
+      <div class="newpanel-content overflow-y-auto flex flex-row" [ngClass]="{ active: activeConsole }">
+        <div class="flex flex-column assistant-chat"></div>
       </div>
       <div class="flex flex-row justify-content-between align-content-center">
-        <!-- Workspaces -->
-        <!-- @TODO Make Workspaces appear dynamically: When last empty workspace is used, add new one. Autoremove unselected empty workspaces except one-->
-        <div *ngIf="project" class="flex flex-row toolbarWorkspaces relative">
-          <div
-            *ngFor="let workspace of project.workspaces; let index = index"
-            [ngClass]="{ active: this.project.activeWorkspaceIndex === index }"
-            [autoHide]="false"
-            tooltipPosition="bottom"
-            [pTooltip]="tooltipContent"
-            class="hideChildUntilHoverParent toolbarWorkspace pointerOnHover relative"
-            (click)="this.project.activeWorkspaceIndex = index"
-          >
-            <div class="flex flex-column workspace-articles">
-              <div
-                *ngFor="
+        <!-- Toolbar Left Side-->
+        <div class="flex flex-row align-content-center">
+          <!-- @TODO Fix touch devices not triggering hover event -->
+          <div class="flex flex-column align-content-center justify-content-between loadedFolder" *ngIf="project">
+            <div class="flex flex-row justify-content-between align-content-end folderActions">
+              <div class="pi pi-save pointerOnHover folderAction" (click)="this.saveToDB(this.project.title)" tooltipPosition="bottom" [pTooltip]="'Save ' + project.title + '\n[Hotkey: ctrl + s]'"></div>
+              <div class="pi pi-bars pointerOnHover folderAction" (click)="folderMenu.toggle($event)" tooltipPosition="bottom" pTooltip="More Options"></div>
+            </div>
+            <div class="folderName" [pTooltip]="project.title">{{project.title}}</div>
+          </div>
+          <p-contextMenu #folderMenu [model]="items"></p-contextMenu>
+          <!-- Workspaces -->
+          <!-- @TODO Make Workspaces appear dynamically: When last empty workspace is used, add new one. Autoremove unselected empty workspaces except one-->
+          <div *ngIf="project" class="flex flex-row toolbarWorkspaces relative">
+            <div *ngFor="let workspace of project.workspaces; let index = index let isLast = last"
+              [ngClass]="{ active: this.project.activeWorkspaceIndex === index, isLast: isLast }" [autoHide]="false"
+              tooltipPosition="bottom" [pTooltip]="tooltipContent"
+              class="hideChildUntilHoverParent toolbarWorkspace pointerOnHover relative"
+              (click)="this.project.activeWorkspaceIndex = index">
+              <div class="flex flex-column workspace-articles">
+                <div *ngFor="
                   let &quot;workspace-article&quot; of workspace.activeArticles;
                   index as i
-                "
-                class="workspace-article"
-              ></div>
-            </div>
-            <div
-              [pTooltip]="'Close Workspace'"
-              *ngIf="project.workspaces.length > 1"
-              class="pi pi-trash element pointerOnHover hideChildUntilHoverChild toolbarWorkspaceDelete"
-              (click)="removeView(index)"
-            ></div>
-            <ng-template #tooltipContent>
-              <div class="flex flex-column toolbarWorkspaceTooltip">
-                <div
-                  *ngFor="
+                " class="workspace-article"></div>
+              </div>
+              <div [pTooltip]="'Close Workspace'" *ngIf="project.workspaces.length > 1"
+                class="pi pi-trash element pointerOnHover hideChildUntilHoverChild toolbarWorkspaceDelete"
+                (click)="removeView(index)"></div>
+              <ng-template #tooltipContent>
+                <div class="flex flex-column toolbarWorkspaceTooltip">
+                  <div *ngFor="
                     let workspaceArticle of workspace.activeArticles;
                     index as i
-                  "
-                  class="toolbarWorkspaceTooltipArticle"
-                >
-                  {{ workspaceArticle }}
+                  " class="toolbarWorkspaceTooltipArticle">
+                    {{ workspaceArticle }}
+                  </div>
+                  <div *ngIf="workspace.activeArticles.length === 0">
+                    [Empty Workspace]
+                  </div>
                 </div>
-                <div *ngIf="workspace.activeArticles.length === 0">
-                  Empty Workspace
-                </div>
-              </div>
-            </ng-template>
-          </div>
-          <div
-            class="toolbarAddWorkspace pointerOnHover flex flex-column align-items-center justify-content-center"
-            tooltipPosition="bottom"
-            [pTooltip]="'Add New Workspace'"
-            (click)="addView()"
-          >
-            <div class="pi pi-plus"></div>
+              </ng-template>
+            </div>
+            <div class="toolbarAddWorkspace pointerOnHover flex flex-column align-items-center justify-content-center"
+              tooltipPosition="bottom" [pTooltip]="'Add New Workspace'" (click)="addView()">
+              <div class="pi pi-plus"></div>
+            </div>
           </div>
         </div>
-        <div
-          class="flex flex-row align-items-center justify-content-start z-3 newtabs"
-          [ngClass]="{ active: activeConsole }"
-        >
-          <div class="flex flex-row">
-            <div
-              class="pi pi-globe pointerOnHover tab"
-              [ngClass]="{ active: activeConsole === 1 }"
-              tooltipPosition="bottom"
-              [pTooltip]="
+
+        <div class="flex flex-row align-content-center">
+          <div class="flex flex-row align-items-center justify-content-start z-3 newtabs"
+            [ngClass]="{ active: activeConsole }">
+            <div class="flex flex-row">
+              <div class="pi pi-comment pointerOnHover tab" [ngClass]="{ active: activeConsole === 1 }"
+                tooltipPosition="bottom" [pTooltip]="
                 activeConsole === 1
                   ? 'Hide LLM Terminal'
                   : 'LLM Terminal'
-              "
-              (click)="onToggleConsole(1, chatInput)"
-            ></div>
-            <input
-              #chatInput
-              type="text"
-              class="assistantInput"
-              [ngClass]="{ active: activeConsole === 1 }"
-              placeholder="Press enter/return to send prompt"
-              pInputText
-              (keyup)="assistantKeyUp($event, chatInput.value)"
-            />
-          </div>
-          <div class="flex flex-row">
-            <div
-              class="pi pi-sliders-h pointerOnHover tab"
-              [pTooltip]="'Settings'"
-              (click) = "this.settingsDialogVisible = !this.settingsDialogVisible"
-            ></div>
+              " (click)="onToggleConsole(1, chatInput)"></div>
+              <input #chatInput type="text" class="assistantInput" [ngClass]="{ active: activeConsole === 1 }"
+                placeholder="Press enter/return to send prompt" pInputText
+                (keyup)="assistantKeyUp($event, chatInput.value)" />
+            </div>
+            <div class="flex flex-row">
+              <div class="pi pi-sliders-h pointerOnHover tab" tooltipPosition="bottom" [pTooltip]="'Settings'"
+                (click)="this.settingsDialogVisible = !this.settingsDialogVisible"></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Assistant Panel & Selector -->
-    <div
+    <!--<div
       class="absolute left-0 bottom-0 flex flex-column align-items-start justify-content-start assistant-panel"
       *ngIf="project"
     >
@@ -189,58 +149,39 @@
           <div class="message response">bleb</div>
         </div>
       </div>
-    </div>
+    </div>-->
 
     <!-- Internal Link Opener -->
-    <input
-      type="text"
-      style="width: 0; height: 0; visibility: collapse"
-      #internalLinkOpener
-      id="internalLinkOpener"
-      (click)="navigateInternalLink(internalLinkOpener.value, contentPanel)"
-    />
+    <input type="text" style="width: 0; height: 0; visibility: collapse" #internalLinkOpener id="internalLinkOpener"
+      (click)="navigateInternalLink(internalLinkOpener.value, contentPanel)" />
 
     <!-- Article Page (Content) List -->
-    <div
-      class="content"
-      style="
+    <div class="content" style="
         width: 100%;
         height: 100%;
         overflow-y: auto;
         overflow-x: hidden;
         scroll-behavior: smooth;
-      "
-      styleClass="custombar"
-      #contentPanel
-      id="contentPanel"
-    >
-      <div
-        *ngFor="
+      " styleClass="custombar" #contentPanel id="contentPanel">
+      <div *ngFor="
           let activeArticleName of project &&
           project.workspaces &&
           project.workspaces.length > 0
             ? project.workspaces[project.activeWorkspaceIndex].activeArticles
             : [];
           let index = index
-        "
-        (mouseenter)="
+        " (mouseenter)="
           project!.workspaces[
             project!.activeWorkspaceIndex
           ].highlightedPanelIndex = index
-        "
-      >
-        <app-note-panel
-          [isActivePanel]="
+        ">
+        <app-note-panel [isActivePanel]="
             project!.workspaces[project!.activeWorkspaceIndex]
               .highlightedPanelIndex === index
-          "
-          [articles]="project!.articles"
-          [articleName]="activeArticleName"
-          (closePanelEvent)="toggleArticleActive(activeArticleName)"
-          (moveUpEvent)="moveUp(index)"
+          " [articles]="project!.articles" [articleName]="activeArticleName"
+          (closePanelEvent)="toggleArticleActive(activeArticleName)" (moveUpEvent)="moveUp(index)"
           (moveDownEvent)="moveDown(index)"
-          (internalLinkActivatedEvent)="this.toggleArticleActive($event)"
-        ></app-note-panel>
+          (internalLinkActivatedEvent)="this.toggleArticleActive($event)"></app-note-panel>
         <div class="pseudo"></div>
       </div>
       <div class="pseudo"></div>
@@ -248,18 +189,11 @@
   </div>
 
   <!-- Right Sidebar -->
-  <div
-    class="right sidebar min-h-full w-2 p-shadow-3 p-1 flex flex-column h-full overflow-y-auto"
-  >
+  <div class="right sidebar min-h-full w-2 p-shadow-3 p-1 flex flex-column h-full overflow-y-auto">
     <span class="p-input-icon-right w-full">
       <i class="pi pi-search"></i>
-      <input
-        type="text"
-        class="w-full searchInput"
-        placeholder="Search ${ArticeArticle}"
-        [(ngModel)]="rightSearch"
-        pInputText
-      />
+      <input type="text" class="w-full searchInput" placeholder="Search ${ArticeArticle}" [(ngModel)]="rightSearch"
+        pInputText />
     </span>
   </div>
 
@@ -267,20 +201,11 @@
   <p-toast position="bottom-center"></p-toast>
 
   <!-- Load Modal Dialog -->
-  <p-dialog
-    header="Load from indexedDB"
-    appendTo="body"
-    #loadDialog
-    [(visible)]="loadDialogVisible"
-  >
-    <p-table
-      *ngIf="((allProjectsPromise | async)?.length ?? -1) > 0"
-      [value]="
+  <p-dialog header="Load from indexedDB" appendTo="body" #loadDialog [(visible)]="loadDialogVisible">
+    <p-table *ngIf="((allProjectsPromise | async)?.length ?? -1) > 0" [value]="
         (allProjectsPromise | async) ??
         [{ title: 'loading', lastModified: undefined }]
-      "
-      responsiveLayout="scroll"
-    >
+      " responsiveLayout="scroll">
       <ng-template pTemplate="header">
         <tr>
           <th>Title</th>
@@ -292,20 +217,12 @@
           <td>{{ project.title }}</td>
           <td>{{ project.lastModified }}</td>
           <td>
-            <p-button
-              label="Load"
-              icon="pi pi-folder-open"
-              styleClass="p-button-sm"
-              (click)="loadFromDB(project.title)"
-            ></p-button>
+            <p-button label="Load" icon="pi pi-folder-open" styleClass="p-button-sm"
+              (click)="loadFromDB(project.title)"></p-button>
           </td>
           <td>
-            <p-button
-              label="Delete"
-              icon="pi pi-folder-open"
-              styleClass="p-button-sm p-button-danger"
-              (click)="deleteFromDB(project.title)"
-            ></p-button>
+            <p-button label="Delete" icon="pi pi-folder-open" styleClass="p-button-sm p-button-danger"
+              (click)="deleteFromDB(project.title)"></p-button>
           </td>
         </tr>
       </ng-template>
@@ -314,107 +231,47 @@
       No projects saved in indexedDB of Browser
     </div>
   </p-dialog>
-  <p-confirmDialog
-    #overlayOverlay
-    [baseZIndex]="3000"
-    width="425"
-    appendTo="body"
-  ></p-confirmDialog>
+  <p-confirmDialog #overlayOverlay [baseZIndex]="3000" width="425" appendTo="body"></p-confirmDialog>
 
   <!-- Settings Modal Dialog -->
-  <p-dialog
-    header="Settings & Preferences"
-    appendTo="body"
-    #settingsDialog
-    [(visible)]="settingsDialogVisible"
-  >
+  <p-dialog header="Settings & Preferences" appendTo="body" #settingsDialog [(visible)]="settingsDialogVisible">
     <app-settings-menu></app-settings-menu>
   </p-dialog>
 
   <!-- Project Uploader Input -->
-  <input
-    style="visibility: collapse; width: 0; height: 0"
-    type="file"
-    class="file-input"
-    (change)="onFileSelected(projectUpload)"
-    #projectUpload
-  />
+  <input style="visibility: collapse; width: 0; height: 0" type="file" class="file-input"
+    (change)="onFileSelected(projectUpload)" #projectUpload />
 
   <!-- New Project Overlay -->
-  <p-dialog
-    header="Create new Project"
-    [(visible)]="showNewProjectOverlay"
-    #newProjectOverlay
-  >
+  <p-dialog header="Create new Project" [(visible)]="showNewProjectOverlay" #newProjectOverlay>
     <ng-template pTemplate>
       <div class="flex flex-wrap flex-column">
-        <input
-          autofocus
-          type="text"
-          placeholder="Project title (required)"
-          pInputText
-          style="margin-bottom: 5px"
-          #newProjectTitleInput
-          (keydown.enter)="newProjectButton.click()"
-          [required]="true"
-        />
-        <button
-          #newProjectButton
-          [disabled]="!newProjectTitleInput.value"
-          pButton
-          pRipple
-          type="button"
-          icon="pi pi-plus"
-          label="New Project"
-          (click)="
+        <input autofocus type="text" placeholder="Project title (required)" pInputText style="margin-bottom: 5px"
+          #newProjectTitleInput (keydown.enter)="newProjectButton.click()" [required]="true" />
+        <button #newProjectButton [disabled]="!newProjectTitleInput.value" pButton pRipple type="button"
+          icon="pi pi-plus" label="New Project" (click)="
             newProject(newProjectTitleInput.value);
             showNewProjectOverlay = false
-          "
-          class="p-button-outlined"
-        ></button>
+          " class="p-button-outlined"></button>
       </div>
     </ng-template>
   </p-dialog>
 
   <!-- Save Project Overlay -->
-  <p-dialog
-    header="Save Project in IndexedDB of Browser"
-    [(visible)]="showSaveProjectOverlay"
-    #saveProjectOverlay
-  >
+  <p-dialog header="Save Project in IndexedDB of Browser" [(visible)]="showSaveProjectOverlay" #saveProjectOverlay>
     <ng-template pTemplate>
       <div class="flex flex-wrap flex-column" *ngIf="project">
-        <input
-          autofocus
-          (keydown.enter)="saveProjectButton.click()"
-          type="text"
-          placeholder="Project title (required)"
-          pInputText
-          style="margin-bottom: 5px"
-          #projectTitleInput
-          [(ngModel)]="project.title"
-        />
-        <button
-          #saveProjectButton
-          [disabled]="!project.title"
-          pButton
-          pRipple
-          type="button"
-          icon="pi pi-save"
-          label="Save to indexedDB"
-          (click)="saveToDB(project.title); showSaveProjectOverlay = false"
-          class="p-button-outlined"
-        ></button>
+        <input autofocus (keydown.enter)="saveProjectButton.click()" type="text" placeholder="Project title (required)"
+          pInputText style="margin-bottom: 5px" #projectTitleInput [(ngModel)]="project.title" />
+        <button #saveProjectButton [disabled]="!project.title" pButton pRipple type="button" icon="pi pi-save"
+          label="Save to indexedDB" (click)="saveToDB(project.title); showSaveProjectOverlay = false"
+          class="p-button-outlined"></button>
       </div>
     </ng-template>
   </p-dialog>
 
   <!-- Privacy Policy Modal Dialog-->
-  <p-dialog
-    header="Privacy Policy"
-    #privacyPolicyDialog
-    [(visible)]="showPrivacyPolicyDialog"
-  >
+  <p-dialog header="Privacy Policy" #privacyPolicyDialog [(visible)]="showPrivacyPolicyDialog">
     <app-privacy-policy></app-privacy-policy>
   </p-dialog>
 </div>

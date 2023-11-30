@@ -1,0 +1,3 @@
+Um so weiter "hinten" im Prompt, um so geringer die Curiosity für die Artikel.
+Um So geringer die curiosity für einen Artikel, um so geringer die Anzahl an Informationen aus diesem Artikel die für den nächsten Prompt in der Kette geladen werden.
+Fast alle Worte des ersten Satzes werden behandelt als wären sie von \[\[\]\] umgeben. Ein \[\[solches\]\] wort bekommt fast immer eine gute curiosity wenn es einen Artikel referenziert.
