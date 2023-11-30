@@ -177,7 +177,7 @@ export class AppComponent implements OnInit {
       if (!this.project) {
         this.loadProject(defaultProject);
       }
-      this.autosave.subscribe(() => {});
+      this.autosave.subscribe(() => { });
     });
   }
 
@@ -256,9 +256,7 @@ export class AppComponent implements OnInit {
   }
 
   toggleArticleActive(uniqueName: string) {
-    if (!this.project) {
-      return;
-    }
+    if (!this.project) return;
 
     const articleActiveIndex =
       this.project.workspaces[
@@ -274,6 +272,8 @@ export class AppComponent implements OnInit {
         this.project.activeWorkspaceIndex
       ].activeArticles.push(uniqueName);
     }
+
+    this.onTouchWorkspaces();
   }
 
   onLeftSearchKeyUp(searchValue: string, event: KeyboardEvent) {
@@ -318,11 +318,11 @@ export class AppComponent implements OnInit {
     );
   }
 
-  shiftHighlightDown() {}
+  shiftHighlightDown() { }
 
-  shiftHighlightUp() {}
+  shiftHighlightUp() { }
 
-  activateHighlighted() {}
+  activateHighlighted() { }
 
   addArticle(articleName: string, parentName?: string) {
     const article = this.project?.articles.get(articleName);
@@ -407,7 +407,7 @@ export class AppComponent implements OnInit {
   newProject(title?: string) {
     this.loadProject(new Project(title ?? 'Untitled Project'));
     this.messageService.add({ severity: 'success', summary: 'New Project' });
-    this.addView();
+    this.addWorkspace();
   }
 
   downloadProject() {
@@ -479,17 +479,16 @@ export class AppComponent implements OnInit {
     }
   }
 
-  addView() {
+  addWorkspace() {
     if (this.project) {
       this.project.workspaces?.push(new Workspace());
-      this.project.activeWorkspaceIndex = this.project.workspaces.length - 1;
     }
   }
 
-  removeView(index: number) {
+  removeWorkspace(index: number) {
     if (this.project) {
       this.project.workspaces?.splice(index, 1);
-      if (index <= this.project.activeWorkspaceIndex) {
+      if (index < this.project.activeWorkspaceIndex) {
         this.project.activeWorkspaceIndex = this.project.activeWorkspaceIndex - 1;
       }
     }
@@ -557,6 +556,30 @@ export class AppComponent implements OnInit {
         this.deleteArticle(event.node.name);
         break;
     }
+  }
+
+  /**
+   * To be called whenever a aricle is opened or closed
+   */
+  onTouchWorkspaces() {
+    if (this.project === undefined) return;
+    // Remove all empty workspaces that aren't the last workspace
+    let removedWorkspace = true;
+    while (removedWorkspace && this.project) {
+      removedWorkspace = false;
+      const index = this.project?.workspaces.findIndex((wrkspc) => wrkspc.activeArticles.length === 0)
+      if (index !== -1 && index !== this.project?.workspaces.length - 1) {
+        this.removeWorkspace(index)
+        removedWorkspace = true;
+      } else {
+        removedWorkspace = false;
+      }
+    }
+    // Add new empty workspace if empty workspace is no longer empty
+    if ((this.project?.workspaces[this.project?.workspaces.length - 1].activeArticles.length ?? 0) > 0) {
+      this.addWorkspace();
+    }
+
   }
 
   assistantKeyUp(event: KeyboardEvent, chatInput: string) {

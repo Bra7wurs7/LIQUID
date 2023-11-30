@@ -30,9 +30,10 @@
 }
 
 .center {
-  background-color: var(--surface-a);
+  background-color: var(--surface-border);
 
   .content {
+    background-color: var(--surface-a);
     width: 100%;
     height: 100%;
     padding: 4px;
@@ -42,6 +43,10 @@
       width: 100%;
       margin-bottom: 4px;
     }
+  }
+
+  .empty{
+    border-top-right-radius: 30px;
   }
 
   .center-menubar {

@@ -36,14 +36,15 @@
           <!-- @TODO Fix touch devices not triggering hover event -->
           <div class="flex flex-column align-content-center justify-content-between loadedFolder" *ngIf="project">
             <div class="flex flex-row justify-content-between align-content-end folderActions">
-              <div class="pi pi-save pointerOnHover folderAction" (click)="this.saveToDB(this.project.title)" tooltipPosition="bottom" [pTooltip]="'Save ' + project.title + '\n[Hotkey: ctrl + s]'"></div>
-              <div class="pi pi-bars pointerOnHover folderAction" (click)="folderMenu.toggle($event)" tooltipPosition="bottom" pTooltip="More Options"></div>
+              <div class="pi pi-save pointerOnHover folderAction" (click)="this.saveToDB(this.project.title)"
+                tooltipPosition="bottom" [pTooltip]="'Save ' + project.title + '\n[Hotkey: ctrl + s]'"></div>
+              <div class="pi pi-bars pointerOnHover folderAction" (click)="folderMenu.toggle($event)"
+                tooltipPosition="bottom" pTooltip="More Options"></div>
             </div>
             <div class="folderName" [pTooltip]="project.title">{{project.title}}</div>
           </div>
           <p-contextMenu #folderMenu [model]="items"></p-contextMenu>
           <!-- Workspaces -->
-          <!-- @TODO Make Workspaces appear dynamically: When last empty workspace is used, add new one. Autoremove unselected empty workspaces except one-->
           <div *ngIf="project" class="flex flex-row toolbarWorkspaces relative">
             <div *ngFor="let workspace of project.workspaces; let index = index let isLast = last"
               [ngClass]="{ active: this.project.activeWorkspaceIndex === index, isLast: isLast }" [autoHide]="false"
@@ -56,9 +57,6 @@
                   index as i
                 " class="workspace-article"></div>
               </div>
-              <div [pTooltip]="'Close Workspace'" *ngIf="project.workspaces.length > 1"
-                class="pi pi-trash element pointerOnHover hideChildUntilHoverChild toolbarWorkspaceDelete"
-                (click)="removeView(index)"></div>
               <ng-template #tooltipContent>
                 <div class="flex flex-column toolbarWorkspaceTooltip">
                   <div *ngFor="
@@ -72,10 +70,6 @@
                   </div>
                 </div>
               </ng-template>
-            </div>
-            <div class="toolbarAddWorkspace pointerOnHover flex flex-column align-items-center justify-content-center"
-              tooltipPosition="bottom" [pTooltip]="'Add New Workspace'" (click)="addView()">
-              <div class="pi pi-plus"></div>
             </div>
           </div>
         </div>
@@ -162,7 +156,9 @@
         overflow-y: auto;
         overflow-x: hidden;
         scroll-behavior: smooth;
-      " styleClass="custombar" #contentPanel id="contentPanel">
+      " styleClass="custombar"
+      [ngClass]="{empty: project && project.workspaces[project.activeWorkspaceIndex].activeArticles.length === 0}"
+      #contentPanel id="contentPanel">
       <div *ngFor="
           let activeArticleName of project &&
           project.workspaces &&
