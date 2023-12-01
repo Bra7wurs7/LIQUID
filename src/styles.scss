@@ -45,6 +45,15 @@ p-inputSwitch {
   }
 }
 
+.p-panel-toggleable {
+  .p-panel-header {
+    background-color: var(--surface-b);
+  }
+  .p-panel-content {
+    background-color: var(--surface-b);
+  }
+}
+
 .p-panel-expanded {
   .p-panel-header {
     border-bottom-left-radius: 0px;
@@ -116,15 +125,21 @@ p-inputSwitch {
   font-weight: bold;
 
   .p-panel-header {
-    background-color: var(--surface-b);
+    background-color: var(--surface-a);
   }
 }
 
 .p-tooltip .p-tooltip-text {
   padding: 4px;
-  border-radius: 7px;
-  background-color: var(--surface-a);
-  border: 2px solid var(--surface-border);
+  border-radius: 4px;
+  background-color: var(--surface-border);
   box-shadow: none;
   font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.p-inputtext:enabled:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 0px #e0d8fc;
+  border-color: #b19df7
 }

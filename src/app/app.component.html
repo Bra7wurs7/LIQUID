@@ -4,8 +4,8 @@
     <span class="p-input-icon-right w-full">
       <i class="pi pi-search"></i>
       <input type="text" class="w-full searchInput" placeholder="Search/Add Article"
-        pTooltip="Enter a name to search for an existing article, or to add a new one" pInputText [(ngModel)]="leftSearch"
-        (keyup)="onLeftSearchValueChange(leftSearch)" />
+        pTooltip="Enter a name to search for an existing article, or to add a new one" pInputText
+        [(ngModel)]="leftSearch" (keyup)="onLeftSearchValueChange(leftSearch)" />
     </span>
     <div class="bigpseudo"></div>
     <!-- @TODO Add Button to toggle between Alphabetic Sorting Up Down, Last Changed Up Down, and Importance-->
@@ -63,10 +63,12 @@
                 <div class="flex flex-column toolbarWorkspaceTooltip">
                   <div *ngFor="
                     let workspaceArticle of workspace.activeArticles;
-                    index as i
-                  " class="toolbarWorkspaceTooltipArticle">
-                    {{ workspaceArticle }}
+                    let isLast = last;
+                  ">
+                    <div class="toolbarWorkspaceTooltipArticle">{{ workspaceArticle }}</div>
+                    <div class="pseudo" *ngIf="!isLast"></div>
                   </div>
+
                   <div *ngIf="workspace.activeArticles.length === 0">
                     Empty Workspace
                   </div>
@@ -83,8 +85,8 @@
               <div class="pi pi-comment pointerOnHover tab" [ngClass]="{ active: activeConsole === 1 }"
                 tooltipPosition="bottom" [pTooltip]="
                 activeConsole === 1
-                  ? 'Hide LLM Terminal'
-                  : 'LLM Terminal'
+                  ? 'Hide LLM Prompter'
+                  : 'LLM Prompter'
               " (click)="onToggleConsole(1, chatInput)"></div>
               <input #chatInput type="text" class="assistantInput" [ngClass]="{ active: activeConsole === 1 }"
                 placeholder="Press enter/return to send prompt" pInputText
