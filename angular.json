@@ -33,9 +33,8 @@
             "styles": [
               "node_modules/primeflex/primeflex.css",
               "node_modules/primeicons/primeicons.css",
-              "node_modules/primeng/resources/themes/saga-blue/theme.css",
+              "node_modules/primeng/resources/themes/soho-dark/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
-              "src/themes/theme.scss",
               "src/styles.scss"
             ],
             "scripts": []
