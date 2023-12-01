@@ -62,8 +62,35 @@ export class AppComponent implements OnInit {
   loadDialogVisible: boolean = false;
   settingsDialogVisible: boolean = false;
 
-  /** Header Menu */
-  items = [
+  /** Menus */
+  saveOptions = [
+    {
+      label: 'Save',
+      icon: 'pi pi-fw pi-save',
+      tooltip: `Save \"${this.project?.title}\"`,
+      command: () => {
+        if (this.project?.title) {
+          this.saveToDB(this.project.title);
+        }
+      },
+    },
+    {
+      label: 'Save As',
+      icon: 'pi pi-fw pi-save',
+      tooltip: `Save project under specific name`,
+      command: () => {
+        this.showSaveProjectOverlay = true;
+      },
+    },
+    {
+      label: 'Download',
+      icon: 'pi pi-fw pi-download',
+      command: () => {
+        this.downloadProject();
+      },
+    },
+  ];
+  moreOptions = [
     {
       label: 'New Project',
       icon: 'pi pi-fw pi-plus',
@@ -77,33 +104,7 @@ export class AppComponent implements OnInit {
     {
       label: 'Save Project',
       icon: 'pi pi-fw pi-save',
-      items: [
-        {
-          label: 'Save',
-          icon: 'pi pi-fw pi-save',
-          tooltip: `Save \"${this.project?.title}\"`,
-          command: () => {
-            if (this.project?.title) {
-              this.saveToDB(this.project.title);
-            }
-          },
-        },
-        {
-          label: 'Save As',
-          icon: 'pi pi-fw pi-save',
-          tooltip: `Save project under specific name`,
-          command: () => {
-            this.showSaveProjectOverlay = true;
-          },
-        },
-        {
-          label: 'Download',
-          icon: 'pi pi-fw pi-download',
-          command: () => {
-            this.downloadProject();
-          },
-        },
-      ],
+      items: this.saveOptions,
     },
     {
       label: 'Load Project',
@@ -142,7 +143,7 @@ export class AppComponent implements OnInit {
   ];
 
   /** Autosaver */
-  autosave = timer(1, 300000).pipe(
+  autosave = timer(300000, 300000).pipe(
     switchMap(() => {
       if (this.project) {
         this.saveToDB(this.project.title);
@@ -452,14 +453,14 @@ export class AppComponent implements OnInit {
         .then(() => {
           this.messageService.add({
             severity: 'success',
-            summary: `Saved ${this.project?.title}`,
+            summary: `Saved "${this.project?.title}" inside your browser`,
           });
           this.allProjectsPromise = this.indexedDbService.getAllProjects();
         });
     } else {
       this.messageService.add({
         severity: 'warn',
-        summary: 'You propably wanted to press "Upload" of "New", right?',
+        summary: 'Project is Undefined',
       });
     }
   }

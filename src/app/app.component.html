@@ -36,16 +36,16 @@
         <!-- Toolbar Left Side-->
         <div class="flex flex-row align-content-center">
           <!-- @TODO Fix touch devices not triggering hover event -->
+
           <div class="flex flex-column align-content-center justify-content-between loadedFolder" *ngIf="project">
-            <div class="flex flex-row justify-content-between align-content-end folderActions">
-              <div class="pi pi-save pointerOnHover folderAction" (click)="this.saveToDB(this.project.title)"
-                tooltipPosition="bottom" [pTooltip]="'Save ' + project.title + '\n[Hotkey: ctrl + s]'"></div>
-              <div class="pi pi-bars pointerOnHover folderAction" (click)="folderMenu.toggle($event)"
-                tooltipPosition="bottom" pTooltip="More Options"></div>
-            </div>
-            <div class="folderName" [pTooltip]="project.title">{{project.title}}</div>
+            <div #saveButton class="pi pi-save pointerOnHover folderAction" (click)="this.saveToDB(this.project.title)"
+              tooltipPosition="bottom" [pTooltip]="'Save ' + project.title + '\nRight click for more options'"></div>
+            <p-contextMenu #saveMenu appendTo="body" [target]="saveButton" [model]="saveOptions"></p-contextMenu>
+            <div #moreButton class="pi pi-bars pointerOnHover folderAction" (click)="folderMenu.show($event)"
+              tooltipPosition="bottom" pTooltip="More Options"></div>
+            <p-contextMenu #folderMenu appendTo="body" [target]="moreButton" [model]="moreOptions"></p-contextMenu>
           </div>
-          <p-contextMenu #folderMenu [model]="items"></p-contextMenu>
+
           <!-- Workspaces -->
           <div *ngIf="project" class="flex flex-row toolbarWorkspaces relative">
             <div *ngFor="let workspace of project.workspaces; let index = index let isLast = last"
@@ -93,7 +93,7 @@
                 (keyup)="assistantKeyUp($event, chatInput.value)" />
             </div>
             <div class="flex flex-row">
-              <div class="pi pi-sliders-h pointerOnHover tab" tooltipPosition="bottom" [pTooltip]="'Settings'"
+              <div class="pi pi-sliders-v pointerOnHover tab" tooltipPosition="bottom" [pTooltip]="'Settings'"
                 (click)="this.settingsDialogVisible = !this.settingsDialogVisible"></div>
             </div>
           </div>

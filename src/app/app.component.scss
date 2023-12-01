@@ -48,7 +48,7 @@
   }
 
   .empty{
-    border-top-right-radius: 30px;
+    border-top-right-radius: 15px;
   }
 
   .center-menubar {
@@ -71,24 +71,20 @@
     padding: 0;
 
     .toolbarWorkspaces {
+      height: 41px;
       color: var(--surface-border);
-      height: 100%;
-
-      .toolbarAddWorkspace {
-        min-width: 30px;
-        height: 41px;
-        border-right: 1px solid transparent;
-      }
+      padding-top: 3px;
+      background-color: var(--surface-border);
+      border-top-right-radius: 5px;
 
       .toolbarWorkspace {
+        background-color: var(--surface-b);
         min-width: 30px;
-        height: 41px;
         border-right: 1px solid var(--surface-border);
-        border-top: 3px solid var(--surface-border);
         padding-top: 1px;
 
         &.isLast {
-          border-top-right-radius: 7px;
+          border-top-right-radius: 5px;
         }
 
         &.active {
@@ -107,8 +103,9 @@
             border: 1px solid var(--surface-border);
             margin-left: 1px;
             margin-right: 1px;
-            padding-top: 1px;
+            padding-top: 2px;
             border-top-right-radius: 4px;
+            border-bottom-left-radius: 4px;
           }
         }
       }
@@ -129,35 +126,12 @@
 
     .loadedFolder {
       color: var(--text-color-secondary);
-      writing-mode: vertical-rl;
       background-color: var(--surface-border);
-      height: 41px;
+      border-top: 3px solid var(--surface-border);
       font-size: x-small;
       padding: 4px;
-      max-width: 1.5em;
-
-      .folderName {
-        text-overflow: "..";
-      }
-
-      .folderActions {
-        transition: opacity 0.2s;
-        visibility: collapse;
-        opacity: 0;
-
-        .folderAction {
-          font-size: small;
-          margin-top: 4px;
-        }
-      }
-
-      &:hover {
-        writing-mode: unset;
-        max-width: max-content;
-        .folderActions {
-          visibility: visible;
-          opacity: 100%;
-        }
+      .folderAction {
+        font-size: small;
       }
     }
   }
@@ -174,7 +148,7 @@
       padding: 6px;
       opacity: 1;
       //border-bottom: 1px solid var(--surface-border);
-      height: 40vh;
+      height: 35vh;
     }
 
     .assistant-chat {
@@ -507,6 +481,7 @@
   .toolbarWorkspaceTooltipArticle {
     padding: 3px;
     border-top-right-radius: 7px;
+    border-bottom-left-radius: 7px;
     background-color: var(--surface-a);
   }
 }
