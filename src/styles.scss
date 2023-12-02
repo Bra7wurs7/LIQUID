@@ -141,3 +141,7 @@ p-inputSwitch {
   box-shadow: 0 0 0 0px #e0d8fc;
   border-color: #b19df7
 }
+
+.pseudoBorder {
+  border-bottom: 1px solid var(--surface-border);
+}

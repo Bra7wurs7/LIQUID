@@ -47,7 +47,7 @@
     }
   }
 
-  .empty{
+  .empty {
     border-top-right-radius: 15px;
   }
 
@@ -130,49 +130,76 @@
       border-top: 3px solid var(--surface-border);
       font-size: x-small;
       padding: 4px;
+
       .folderAction {
         font-size: small;
       }
     }
   }
 
-  .newpanel-content {
+  .dropdown-panel {
     background-color: var(--surface-b);
     opacity: 0;
     pointer-events: all;
     height: 0vh;
     border: 0px solid var(--surface-border);
-    transition: height 0.25s, opacity 0.25s, border 0.25s;
+    transition: height 0.25s, opacity 0.25s, border 0.25s, padding 0.25s;
+
+    
 
     &.active {
       padding: 6px;
       opacity: 1;
-      //border-bottom: 1px solid var(--surface-border);
       height: 35vh;
+      .panel-box {
+        border-radius: 20px !important;
+        &.margin-v {
+          margin-top: 2px;
+          margin-bottom: 2px;
+        }
+        &.margin-h {
+          margin-right: 2px;
+          margin-left: 2px;
+        }
+      }
     }
 
-    .assistant-chat {
+    .dropdown-panel-content {
+      height: 100%;
       width: 100%;
-      margin-left: 1px;
 
-      .message {
-        padding: 6px;
-        width: 100%;
+      .panel-box {
+        transition: border-radius 0.15s, margin 0.15s;
+        padding: 10px;
+        border: 1px solid var(--surface-border);
+        border-radius: 0px;
+        height: min-content;
+        max-width: 25vw;
+        margin: 0px;
+      }
 
-        &.prompt {
-          background-color: var(--surface-border);
-          border-left: 1px solid var(--surface-border);
-          border-right: 1px solid var(--surface-border);
-          border-top: 1px solid var(--surface-border);
-          border-top-right-radius: 10px;
-          border-top-left-radius: 10px;
+      .settings {
+        .settingsTextInput {
+          border-radius: 0;
+          margin-right: 2px;
+          font-size: x-small;
+          min-width: 30px;
+
+          &.sm {
+            max-width: 75px;
+          }
+
+          &.mm {
+            max-width: 150px;
+          }
+
+          &.lg {
+            max-width: 225px;
+          }
         }
 
-        &.response {
-          background-color: var(--surface-a);
-          border-left: 1px solid var(--surface-border);
-          border-right: 1px solid var(--surface-border);
-          border-bottom: 1px solid var(--surface-border);
+        .iconButton {
+          margin: 4px;
         }
       }
     }

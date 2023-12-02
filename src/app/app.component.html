@@ -29,8 +29,34 @@
   <div class="center flex flex-column min-h-full w-full relative overflow-hide">
     <!-- Menu Bar -->
     <div class="menubar flex flex-column">
-      <div class="newpanel-content overflow-y-auto flex flex-row" [ngClass]="{ active: activeConsole }">
-        <div class="flex flex-column assistant-chat"></div>
+      <div class="dropdown-panel overflow-y-auto flex flex-row" [ngClass]="{ active: activeConsole }">
+        <div class="flex flex-row justify-content-end dropdown-panel-content">
+          <div *ngIf="true" class="settings panel-box margin-v">
+            <!-- LLM Endpoints -->
+            <div class="flex flex-column">
+              <h6 *ngIf="llmApiService.llmConfigs.length > 0">Configured Chat-AI Services (Large Language Models APIs)
+              </h6>
+              <div class="flex flex-row justify-content-between align-items-center"
+                *ngFor="let llmConfig of llmApiService.llmConfigs, index as i">
+                <input type="text" class="settingsTextInput md" placeholder="Config Name" [pTooltip]="'Config Name:\n\''+llmConfig.name+'\''" [value]="llmConfig.name"
+                  pInputText />
+                <input type="text" class="settingsTextInput md" placeholder="URL" [pTooltip]="'Api Key:\n\''+llmConfig.url+'\''" [value]="llmConfig.url" pInputText />
+                <i class="pi pi-trash iconButton" (click)="llmApiService.removeLLMConfig(i)"></i>
+              </div>
+              <h6>Add new chat-ai service configuration (Large Language Models API)</h6>
+              <div class="flex flex-row justify-content-between align-items-center">
+                <input #NewConfigName type="text" class="settingsTextInput sm" placeholder="Name" pInputText
+                  pTooltip="Choose a name for the new API configuration (e.g. 'OpenAI GPT-4')" />
+                <input #NewConfigUrl type="text" class="settingsTextInput md" placeholder="API Endpoint URL" pInputText
+                  pTooltip="Enter the web-address that points to the new API endpoint" />
+                <input #NewConfigKey type="password" class="settingsTextInput md" placeholder="Api Key" pInputText
+                  pTooltip="Enter the authorization key for the API endpoint" />
+                <i class="pi pi-box iconButton pointerOnHover" pTooltip="Add as OpenAI Config"
+                  (click)="llmApiService.addNewOpenAiConfig(NewConfigName.value, NewConfigUrl.value, NewConfigKey.value)"></i>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="flex flex-row justify-content-between align-content-center">
         <!-- Toolbar Left Side-->
@@ -41,7 +67,7 @@
             <div #saveButton class="pi pi-save pointerOnHover folderAction" (click)="this.saveToDB(this.project.title)"
               tooltipPosition="bottom" [pTooltip]="'Save ' + project.title + '\nRight click for more options'"></div>
             <p-contextMenu #saveMenu appendTo="body" [target]="saveButton" [model]="saveOptions"></p-contextMenu>
-            <div #moreButton class="pi pi-bars pointerOnHover folderAction" (click)="folderMenu.show($event)"
+            <div #moreButton class="pi pi-bars pointerOnHover folderAction" (click)="folderMenu.toggle($event)"
               tooltipPosition="bottom" pTooltip="More Options"></div>
             <p-contextMenu #folderMenu appendTo="body" [target]="moreButton" [model]="moreOptions"></p-contextMenu>
           </div>

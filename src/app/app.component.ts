@@ -159,7 +159,7 @@ export class AppComponent implements OnInit {
     private localdriveService: LocalDriveService,
     private indexedDbService: IndexedDbService,
     private confirmationService: ConfirmationService,
-    private llm: LlmApiService
+    public llmApiService: LlmApiService
   ) {
     this.allProjectsPromise = indexedDbService.getAllProjects();
   }
@@ -453,7 +453,7 @@ export class AppComponent implements OnInit {
         .then(() => {
           this.messageService.add({
             severity: 'success',
-            summary: `Saved "${this.project?.title}" inside your browser`,
+            summary: `Saved "${this.project?.title}" to your internet browser's indexed database`,
           });
           this.allProjectsPromise = this.indexedDbService.getAllProjects();
         });
@@ -569,12 +569,12 @@ export class AppComponent implements OnInit {
   }
 
   assistantKeyUp(event: KeyboardEvent, chatInput: string) {
-    if (this.llm.llmConfigs[0] && event.key === 'Enter') {
+    if (this.llmApiService.llmConfigs[0] && event.key === 'Enter') {
       console.log('AAA');
-      this.llm
+      this.llmApiService
         .sendOpenAiStylePrompt(
           [{ role: 'system', content: chatInput }],
-          this.llm.llmConfigs[0]
+          this.llmApiService.llmConfigs[0]
         )
         .subscribe((msg) => console.log(msg));
     }
