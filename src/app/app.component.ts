@@ -52,7 +52,7 @@ export class AppComponent implements OnInit {
   rightSearch: string = '';
 
   /** Assistants & Consoles */
-  activeConsole?: number;
+  dropdownPanelActiveTab?: string;
   activeAssistant?: number;
 
   /** Dialogs */
@@ -400,7 +400,7 @@ export class AppComponent implements OnInit {
     if (this.project) {
       const serializableProject = this.project?.toSerializableProject();
       this.localdriveService.saveToLocalDrive(
-        this.project.title + '.gasp',
+        this.project.title + '.lqd',
         serializableProject.serialize()
       );
     } else {
@@ -510,11 +510,11 @@ export class AppComponent implements OnInit {
     }
   }
 
-  onToggleConsole(index: number, element: HTMLInputElement) {
-    if (this.activeConsole === index) {
-      this.activeConsole = undefined;
+  onToggleConsole(id: string, element: HTMLInputElement) {
+    if (this.dropdownPanelActiveTab === id) {
+      this.dropdownPanelActiveTab = undefined;
     } else {
-      this.activeConsole = index;
+      this.dropdownPanelActiveTab = id;
       setTimeout(() => {
         element.focus();
       }, 300);

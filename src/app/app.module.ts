@@ -13,7 +13,6 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { TreeModule } from 'primeng/tree';
 import { NotePanelComponent } from './components/cards/note-panel/note-panel.component';
-import { MenubarModule } from 'primeng/menubar';
 import { PanelModule } from 'primeng/panel';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { ParseMarkupPipe } from './pipes/parseMarkup/parse-markup.pipe';
@@ -73,7 +72,6 @@ import { SettingsMenuComponent } from './components/settings-menu/settings-menu.
     ScrollPanelModule,
     PanelMenuModule,
     TreeModule,
-    MenubarModule,
     PanelModule,
     InputSwitchModule,
     InputTextareaModule,
