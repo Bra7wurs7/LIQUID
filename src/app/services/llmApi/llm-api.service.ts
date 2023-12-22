@@ -27,6 +27,7 @@ export class LlmApiService {
 
   public removeLLMConfig(index: number) {
     this.llmConfigs.splice(index, 1);
+    localStorage.setItem("llmConfigs", JSON.stringify(this.llmConfigs));
   }
 
   public sendOpenAiStylePrompt(prompt: LlmMessage[], llmConfig: LLMConfig): Observable<any> {

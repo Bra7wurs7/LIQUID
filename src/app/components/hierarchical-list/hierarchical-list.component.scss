@@ -1,3 +1,11 @@
+.searchInput {
+    border-radius: 0px;
+    text-overflow: ellipsis;
+    border: 0;
+    border-bottom: 1px solid var(--surface-border);
+    height: 42px;
+}
+
 //Article List
 .hierarchicalListContainer {
     transition: visibility 0.2s, max-height 0.2s;
@@ -10,13 +18,6 @@
 
     overflow-y: hidden;
     overflow-x: hidden;
-
-    &.showBorderLR {
-        border-right-width: 1px;
-        border-right-style: solid;
-        border-left-width: 1px !important;
-        border-left-style: solid !important;
-    }
 
     &.showBorderL {
         border-left-width: 1px !important;
@@ -35,13 +36,17 @@
         margin-bottom: 2px;
     }
 
+    &.showMargin {
+        margin: 4px;
+    }
+
     .borderBottomTop {
         padding: 6px 8px 8px 8px;
     }
 }
 
 .articleContainer {
-    transition: margin-left 0.1s;
+    transition: margin 0.1s;
 
     &.active {
         margin-left: 2px;

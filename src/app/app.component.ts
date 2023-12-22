@@ -22,6 +22,7 @@ import { switchMap, timeout } from 'rxjs/operators';
 import { ArticleHierarchyNode } from './models/articleHierarchyNode.model';
 import { ArticleActionEnum } from './enums/articleActionEnum';
 import { LlmApiService } from './services/llmApi/llm-api.service';
+import { OverlayPanel } from 'primeng/overlaypanel';
 
 @Component({
   selector: 'app-root',
@@ -31,6 +32,7 @@ import { LlmApiService } from './services/llmApi/llm-api.service';
 export class AppComponent implements OnInit {
   /** HTML Template Elements */
   @ViewChild('projectUpload', { static: false }) projectUpload!: ElementRef;
+  @ViewChild('newProjectOverlay', { static: false }) newProjectOverlay!: OverlayPanel;
   activeArticlePages: Map<string, HTMLElement> = new Map();
 
   /** Application */
@@ -50,6 +52,7 @@ export class AppComponent implements OnInit {
 
   /** Right Sidebar */
   rightSearch: string = '';
+  activeArticle?: string;
 
   /** Assistants & Consoles */
   dropdownPanelActiveTab?: string;
@@ -92,22 +95,22 @@ export class AppComponent implements OnInit {
   ];
   moreOptions = [
     {
-      label: 'New Project',
+      label: 'New Database',
       icon: 'pi pi-fw pi-plus',
       command: () => {
-        this.showNewProjectOverlay = true;
+        this.newProjectOverlay.toggle(event)
       },
     },
     {
       separator: true,
     },
     {
-      label: 'Save Project',
+      label: 'Save Database',
       icon: 'pi pi-fw pi-save',
       items: this.saveOptions,
     },
     {
-      label: 'Load Project',
+      label: 'Load Database',
       icon: 'pi pi-fw pi-folder-open',
       items: [
         {
@@ -125,21 +128,7 @@ export class AppComponent implements OnInit {
           },
         },
       ],
-    },
-    {
-      separator: true,
-    },
-    {
-      label: 'Project Manager',
-      icon: 'pi pi-fw pi-database',
-    },
-    {
-      label: 'Settings & Prf.',
-      icon: 'pi pi-fw pi-cog',
-      command: () => {
-        this.settingsDialogVisible = true;
-      },
-    },
+    }
   ];
 
   /** Autosaver */
@@ -175,20 +164,29 @@ export class AppComponent implements OnInit {
         }
       });
       await this.loadFromDB(lastProject.title);
-      if (!this.project) {
-        this.loadProject(defaultProject);
-      }
+
       this.autosave.subscribe(() => { });
     });
+  }
+
+  setActiveArticle(index: number) {
+    const activeWorkspace = this.project!.workspaces[
+      this.project!.activeWorkspaceIndex
+    ];
+    activeWorkspace.activeArticleIndex = index;
+    this.activeArticle = this.project!.workspaces[this.project!.activeWorkspaceIndex].viewedArticles[this.project!.workspaces[
+      this.project!.activeWorkspaceIndex
+      ].activeArticleIndex];
+  }
+
+  toggleNewProjectOverlay() {
+    this.showNewProjectOverlay = !this.showNewProjectOverlay
   }
 
   loadProject(project: Project) {
     this.project = project;
     this.title = this.project.title;
-    this.messageService.add({
-      severity: 'success',
-      summary: `Succesfully loaded "${this.title}"`,
-    });
+    this.messageService.add({ severity: 'success', summary: `Database "${this.project?.title}" loaded` });
     this.initializeArticleHierarchyMap();
   }
 
@@ -231,29 +229,6 @@ export class AppComponent implements OnInit {
         articleHierarchyNode.parents.push(parentHierarchyNode);
       }
     }
-    this.articleHierarchyArray = this.articleMapToFilteredList(
-      this.articleHierarchyMap,
-      this.leftSearch
-    );
-  }
-
-  articleMapToFilteredList(
-    map: Map<string, ArticleHierarchyNode>,
-    filter: string
-  ): ArticleHierarchyNode[] {
-    let filteredArticles: ArticleHierarchyNode[] = [];
-    for (const article of map.values()) {
-      if (
-        (article.parents.length === 0 && !filter) ||
-        (filter &&
-          article.node.name
-            .toLocaleLowerCase()
-            .includes(filter.toLocaleLowerCase()))
-      ) {
-        filteredArticles.push(article);
-      }
-    }
-    return filteredArticles;
   }
 
   toggleArticleActive(uniqueName: string) {
@@ -262,16 +237,16 @@ export class AppComponent implements OnInit {
     const articleActiveIndex =
       this.project.workspaces[
         this.project.activeWorkspaceIndex
-      ].activeArticles.indexOf(uniqueName);
+      ].viewedArticles.indexOf(uniqueName);
 
     if (articleActiveIndex >= 0) {
       this.project.workspaces[
         this.project.activeWorkspaceIndex
-      ].activeArticles.splice(articleActiveIndex, 1);
+      ].viewedArticles.splice(articleActiveIndex, 1);
     } else {
       this.project.workspaces[
         this.project.activeWorkspaceIndex
-      ].activeArticles.push(uniqueName);
+      ].viewedArticles.push(uniqueName);
     }
 
     this.onTouchWorkspaces();
@@ -297,11 +272,6 @@ export class AppComponent implements OnInit {
         }
       }
     }
-
-    this.articleHierarchyArray = this.articleMapToFilteredList(
-      this.articleHierarchyMap,
-      searchValue
-    );
   }
 
   shiftHighlightDown() { }
@@ -316,7 +286,7 @@ export class AppComponent implements OnInit {
       if (article.groups.includes(parentName)) {
         this.project!.workspaces[
           this.project!.activeWorkspaceIndex
-        ].activeArticles.push(articleName);
+        ].viewedArticles.push(articleName);
       } else {
         article.groups.push(parentName);
         this.messageService.add({
@@ -332,11 +302,11 @@ export class AppComponent implements OnInit {
       );
       this.project!.workspaces[
         this.project!.activeWorkspaceIndex
-      ].activeArticles.push(articleName);
+      ].viewedArticles.push(articleName);
       if (parentName) {
         this.project!.workspaces[
           this.project!.activeWorkspaceIndex
-        ].activeArticles.push(parentName);
+        ].viewedArticles.push(parentName);
         this.messageService.add({
           severity: 'success',
           summary: `Added ${articleName}`,
@@ -351,6 +321,7 @@ export class AppComponent implements OnInit {
       }
     }
     this.initializeArticleHierarchyMap();
+    this.onTouchWorkspaces();
   }
 
   scrollToPanel(child: HTMLElement, parent: HTMLDivElement) {
@@ -361,13 +332,13 @@ export class AppComponent implements OnInit {
     if (!this.project) {
       return;
     }
-    let activeArticles =
+    let viewedArticles =
       this.project?.workspaces[this.project?.activeWorkspaceIndex]
-        .activeArticles;
+        .viewedArticles;
     if (index > 0) {
-      let tmp = activeArticles[index - 1];
-      activeArticles[index - 1] = activeArticles[index];
-      activeArticles[index] = tmp;
+      let tmp = viewedArticles[index - 1];
+      viewedArticles[index - 1] = viewedArticles[index];
+      viewedArticles[index] = tmp;
     }
   }
 
@@ -375,13 +346,13 @@ export class AppComponent implements OnInit {
     if (!this.project) {
       return;
     }
-    let activeArticles =
+    let viewedArticles =
       this.project?.workspaces[this.project?.activeWorkspaceIndex]
-        .activeArticles;
-    if (index < activeArticles.length - 1) {
-      let tmp = activeArticles[index + 1];
-      activeArticles[index + 1] = activeArticles[index];
-      activeArticles[index] = tmp;
+        .viewedArticles;
+    if (index < viewedArticles.length - 1) {
+      let tmp = viewedArticles[index + 1];
+      viewedArticles[index + 1] = viewedArticles[index];
+      viewedArticles[index] = tmp;
     }
   }
 
@@ -390,10 +361,11 @@ export class AppComponent implements OnInit {
     this.toggleArticleActive(uniqueName);
   }
 
-  newProject(title?: string) {
-    this.loadProject(new Project(title ?? 'Untitled Project'));
-    this.messageService.add({ severity: 'success', summary: 'New Project' });
-    this.addWorkspace();
+  newProject(title: string) {
+    this.newProjectOverlay.hide();
+    setTimeout(() => {
+      this.loadProject(new Project(title !== '' ? title : 'New Database'));
+    }, 0);
   }
 
   downloadProject() {
@@ -406,7 +378,7 @@ export class AppComponent implements OnInit {
     } else {
       this.messageService.add({
         severity: 'warn',
-        summary: 'You propably wanted to press "Upload" of "New", right?',
+        summary: 'Can\'t download what doesn\'t exist',
       });
     }
   }
@@ -484,7 +456,7 @@ export class AppComponent implements OnInit {
     if (this.project) {
       if (this.project.articles.delete(name)) {
         for (const workspace of this.project.workspaces) {
-          workspace.activeArticles = workspace.activeArticles.filter(
+          workspace.viewedArticles = workspace.viewedArticles.filter(
             (activeArticleName) => activeArticleName !== name
           );
         }
@@ -553,7 +525,7 @@ export class AppComponent implements OnInit {
     let removedWorkspace = true;
     while (removedWorkspace && this.project) {
       removedWorkspace = false;
-      const index = this.project?.workspaces.findIndex((wrkspc) => wrkspc.activeArticles.length === 0)
+      const index = this.project?.workspaces.findIndex((wrkspc) => wrkspc.viewedArticles.length === 0)
       if (index !== -1 && index !== this.project?.workspaces.length - 1) {
         this.removeWorkspace(index)
         removedWorkspace = true;
@@ -562,21 +534,24 @@ export class AppComponent implements OnInit {
       }
     }
     // Add new empty workspace if empty workspace is no longer empty
-    if ((this.project?.workspaces[this.project?.workspaces.length - 1].activeArticles.length ?? 0) > 0) {
+    if ((this.project?.workspaces[this.project?.workspaces.length - 1].viewedArticles.length ?? 0) > 0) {
       this.addWorkspace();
     }
 
   }
 
   assistantKeyUp(event: KeyboardEvent, chatInput: string) {
-    if (this.llmApiService.llmConfigs[0] && event.key === 'Enter') {
-      console.log('AAA');
-      this.llmApiService
-        .sendOpenAiStylePrompt(
-          [{ role: 'system', content: chatInput }],
-          this.llmApiService.llmConfigs[0]
-        )
-        .subscribe((msg) => console.log(msg));
+    if (event.key === 'Enter') {
+      if (this.llmApiService.llmConfigs[0]) {
+        this.llmApiService
+          .sendOpenAiStylePrompt(
+            [{ role: 'system', content: chatInput }],
+            this.llmApiService.llmConfigs[0]
+          )
+          .subscribe((msg) => console.log(msg));
+      } else {
+        this.messageService.add({ severity: 'error', summary: `No LLM: Configure a LLM in the settings` });
+      }
     }
   }
 }

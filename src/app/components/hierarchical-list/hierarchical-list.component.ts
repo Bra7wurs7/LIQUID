@@ -13,14 +13,13 @@ import { ArticleActionEnum } from '../../enums/articleActionEnum';
 })
 export class HierarchicalListComponent {
   @Input("project") project!: Project;
-  @Input("showBorderL") showBorderL: boolean = false;
-  @Input("showBorderR") showBorderR: boolean = false;
+  @Input("hierarchyDirection") hierarchyDirection!: "down" | "up";
+  @Input("isListRoot") isListRoot: boolean = false;
   @Input("ListParent") listParent!: ArticleHierarchyNode;
-  @Input("listItems") hierarchyNodeSet!: ArticleHierarchyNode[];
+  @Input("hierarchyNodeList") hierarchyNodeList!: ArticleHierarchyNode[];
   @Input("currentWorkspace") currentWorkspace!: Workspace;
   @Input("isActive") isActive: boolean = true;
   @Input("isHighlighted") isHighlighted: boolean = true;
-  @Input("hierarchyDepth") hierarchyDepth: number = 0;
   @Input("lsArticleName") lsArticleName?: string;
   @Input("lsParentName") lsParentName?: string;
   @Input("currentArticlePath") currentArticlePath?: string;
@@ -34,6 +33,8 @@ export class HierarchicalListComponent {
   @Output("articleActionClicked") articleActionClicked = new EventEmitter<{action: ArticleActionEnum, node: Article}>();
 
   lastRightClickedArticle?: ArticleHierarchyNode;
+
+  searchValue: string = "";
 
   items = [
     {

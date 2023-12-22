@@ -43,6 +43,10 @@ import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.
 import { CenterComponent } from './components/center/center.component';
 import { WorkspaceTooltipPipe } from './pipes/workspaceTooltip/workspace-tooltip.pipe';
 import { SettingsMenuComponent } from './components/settings-menu/settings-menu.component';
+import { ContextMenusService } from './services/contextMenus/context-menus.service';
+import { ArticleHierarchyListStringFilterPipe } from './pipes/articleHierarchyListStringFilter/article-hierarchy-list-filter.pipe';
+import { MapToListPipe } from './pipes/mapToList/map-to-list.pipe';
+import { ArticleHierarchyListRootFilterPipe } from './pipes/articleHierarchyListRootFilter/article-hierarchy-list-root-filter.pipe';
 
 
 @NgModule({
@@ -57,7 +61,10 @@ import { SettingsMenuComponent } from './components/settings-menu/settings-menu.
     RightSidebarComponent,
     CenterComponent,
     WorkspaceTooltipPipe,
-    SettingsMenuComponent
+    SettingsMenuComponent,
+    ArticleHierarchyListStringFilterPipe,
+    MapToListPipe,
+    ArticleHierarchyListRootFilterPipe
   ],
   imports: [
     BrowserModule,
@@ -89,7 +96,7 @@ import { SettingsMenuComponent } from './components/settings-menu/settings-menu.
     TableModule,
     RatingModule,
   ],
-  providers: [ConfirmationService, MessageService, LocalDriveService, IndexedDbService],
+  providers: [ConfirmationService, MessageService, LocalDriveService, IndexedDbService, ContextMenusService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
