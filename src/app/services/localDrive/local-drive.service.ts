@@ -13,8 +13,8 @@ export class LocalDriveService {
   }
 
   saveToLocalDrive(fileName: string, project: string) {
-    let GASProject = new Blob([project], {type: 'LIQUID Project'})
-    FileSaver.saveAs(GASProject, fileName);
+    let LIQUIDPrjct = new Blob([project], {type: 'LIQUID Project'})
+    FileSaver.saveAs(LIQUIDPrjct, fileName);
   }
   loadFromLocalDrive(file: File): Promise<SerializableProject> {
     return new Promise<SerializableProject>((resolve, reject) => {

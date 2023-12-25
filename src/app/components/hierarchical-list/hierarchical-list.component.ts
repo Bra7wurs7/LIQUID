@@ -13,6 +13,7 @@ import { ArticleActionEnum } from '../../enums/articleActionEnum';
 })
 export class HierarchicalListComponent {
   @Input("project") project!: Project;
+  @Input("showSearch") showSearch: boolean = false;
   @Input("hierarchyDirection") hierarchyDirection!: "down" | "up";
   @Input("isListRoot") isListRoot: boolean = false;
   @Input("ListParent") listParent!: ArticleHierarchyNode;
@@ -20,17 +21,11 @@ export class HierarchicalListComponent {
   @Input("currentWorkspace") currentWorkspace!: Workspace;
   @Input("isActive") isActive: boolean = true;
   @Input("isHighlighted") isHighlighted: boolean = true;
-  @Input("lsArticleName") lsArticleName?: string;
-  @Input("lsParentName") lsParentName?: string;
   @Input("currentArticlePath") currentArticlePath?: string;
-  @Input("highlightedArticlePath") highlightedArticlePath: number = -1;
-  @Input("highlightEvents") highlightEvents!: EventEmitter<HighlightEventsEnum>;
-
-  @Input("showNewArticleButton") showNewArticleButton: boolean = false;
 
   @Output("articleClicked") articleClickedEmitter = new EventEmitter<Article>();
   @Output("addArticleClicked") addArticleClicked = new EventEmitter<string>();
-  @Output("articleActionClicked") articleActionClicked = new EventEmitter<{action: ArticleActionEnum, node: Article}>();
+  @Output("articleActionClicked") articleActionClicked = new EventEmitter<{ action: ArticleActionEnum, node: Article }>();
 
   lastRightClickedArticle?: ArticleHierarchyNode;
 
@@ -40,7 +35,7 @@ export class HierarchicalListComponent {
     {
       label: 'Open',
       icon: 'pi pi-fw pi-folder-open',
-      command: () => {if(this.lastRightClickedArticle) this.articleActionClicked.emit({action: ArticleActionEnum.toggle, node: this.lastRightClickedArticle.node})}
+      command: () => { if (this.lastRightClickedArticle) this.articleActionClicked.emit({ action: ArticleActionEnum.toggle, node: this.lastRightClickedArticle.node }) }
     },
     {
       label: 'Rename',
@@ -64,8 +59,8 @@ export class HierarchicalListComponent {
       label: 'Delete',
       icon: 'pi pi-fw pi-trash',
       command: () => {
-        if(this.lastRightClickedArticle) {
-          this.articleActionClicked.emit({action: ArticleActionEnum.delete, node: this.lastRightClickedArticle.node})
+        if (this.lastRightClickedArticle) {
+          this.articleActionClicked.emit({ action: ArticleActionEnum.delete, node: this.lastRightClickedArticle.node })
         }
       }
     },

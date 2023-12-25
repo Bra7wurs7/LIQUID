@@ -3,21 +3,13 @@
   <div class="left sidebar min-h-full w-2 p-shadow-3 overflow-hidden z-3 p-1 flex flex-column h-full">
     <!-- @TODO Add Button to toggle between Alphabetic Sorting Up Down, Last Changed Up Down, and Importance-->
     <app-hierarchical-list class="overflow-y-auto overflow-x-hidden articlesList" *ngIf="
-        (this.articleHierarchyMap.size > 0 || this.lsArticleName) &&
+        this.articleHierarchyMap.size > 0 &&
         this.project
-      " [project]="project" [hierarchyDirection]="'down'"
-      [showNewArticleButton]="leftSearch !== undefined && leftSearch !== ''"
-      [lsArticleName]="this.lsArticleName || 'New Article'" [lsParentName]="this.lsParentName" [currentWorkspace]="
+      " [project]="project" [hierarchyDirection]="'down'" [currentWorkspace]="
         this.project.workspaces[this.project.activeWorkspaceIndex]
-      " [isListRoot]="true" [hierarchyNodeList]="articleHierarchyMap | mapToList"
-      (articleClicked)="toggleArticleActive($event.name)" (articleActionClicked)="onListArticleActionClick($event)"
-      (addArticleClicked)="
-        addArticle(lsArticleName!, lsParentName);
-        leftSearch = '';
-        onLeftSearchValueChange('');
-        lsArticleName = undefined;
-        lsParentName = undefined
-      "></app-hierarchical-list>
+      " [isListRoot]="true" [showSearch]="true" [hierarchyNodeList]="articleHierarchyMap | mapToList"
+      (articleClicked)="toggleArticleActive($event.name)"
+      (articleActionClicked)="onListArticleActionClick($event)"></app-hierarchical-list>
   </div>
 
   <!-- Center Area -->
@@ -219,10 +211,9 @@
           project.workspaces.length > 0
             ? project.workspaces[project.activeWorkspaceIndex].viewedArticles
             : [];
-          let index = index
+          let index = index;
           let isLast = last
-        " (mouseenter)="setActiveArticle(index)
-        ">
+        " (mouseenter)="setActiveArticle(index)">
         <app-note-panel [isActivePanel]="
             project!.workspaces[project!.activeWorkspaceIndex]
               .activeArticleIndex === index
@@ -238,40 +229,44 @@
   <!-- Right Sidebar -->
   <div class="right sidebar min-h-full w-2 p-shadow-3 p-1 flex flex-column h-full overflow-y-auto">
     <div class="flex flex-row justify-content-between align-content-center articleTitle" *ngIf="activeArticle">
-      <div>{{activeArticle}}</div>
+      <div>{{ activeArticle }}</div>
       <div>Actions</div>
     </div>
-    <app-hierarchical-list class="overflow-y-auto overflow-x-hidden articlesList" *ngIf="activeArticle &&
-        (this.articleHierarchyMap.size > 0 || this.lsArticleName) &&
-        this.project
-      " [project]="project" [hierarchyDirection]="'up'"
-      [showNewArticleButton]="leftSearch !== undefined && leftSearch !== ''"
-      [lsArticleName]="this.lsArticleName || 'New Article'" [lsParentName]="this.lsParentName" [currentWorkspace]="
+    <app-hierarchical-list class="overflow-y-auto overflow-x-hidden articlesList" *ngIf="
+        project && activeArticle && (articleHierarchyMap | articleHierarchyMapGet:activeArticle)[0].parents.length > 0
+      " [project]="project" [hierarchyDirection]="'up'" [currentWorkspace]="
         this.project.workspaces[this.project.activeWorkspaceIndex]
-      " [isListRoot]="true" [hierarchyNodeList]="articleHierarchyMap | mapToList"
+      " [isListRoot]="true"
+      [hierarchyNodeList]="(articleHierarchyMap | articleHierarchyMapGet:activeArticle)[0].parents"
       (articleClicked)="toggleArticleActive($event.name)"
       (articleActionClicked)="onListArticleActionClick($event)"></app-hierarchical-list>
     <div *ngIf="activeArticle" class="articleDescription">
       <span class="primary"
         pTooltip="The very first paragraph of the article. This is frequently 'read' by LIQUID, like for determining if this article is relevant for a given LLM prompt.">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-        incididunt ut labore et dolore magna aliqua. Maecenas accumsan lacus vel facilisis volutpat est. Quis vel eros
-        donec ac odio tempor.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Maecenas accumsan
+        lacus vel facilisis volutpat est. Quis vel eros donec ac odio tempor.
       </span>
-      <br>
+      <br />
       <span class="secondary">
-        Nulla aliquet enim tortor at. Porta nibh venenatis cras sed felis. Non nisi est sit amet facilisis magna etiam
-        tempor orci. Sed egestas egestas fringilla phasellus faucibus scelerisque.
+        Nulla aliquet enim tortor at. Porta nibh venenatis cras sed felis. Non
+        nisi est sit amet facilisis magna etiam tempor orci. Sed egestas egestas
+        fringilla phasellus faucibus scelerisque.
       </span>
     </div>
     <div *ngIf="activeArticle" class="idea-placeholder"
-      pTooltip="The table of attributes that contain basic information on this article">Article Attributes</div>
-    <div *ngIf="activeArticle" class="idea-placeholder" pTooltip="Article section hierarchy (by headlines)">Article
-      Headlines/Sections</div>
+      pTooltip="The table of attributes that contain basic information on this article">
+      Article Attributes
+    </div>
+    <div *ngIf="activeArticle" class="idea-placeholder" pTooltip="Article section hierarchy (by headlines)">
+      Article Headlines/Sections
+    </div>
     <div *ngIf="activeArticle" class="idea-placeholder" pTooltip="Other articles that are referenced in this article">
-      Links</div>
+      Links
+    </div>
     <div *ngIf="activeArticle" class="idea-placeholder" pTooltip="All other articles that reference this article">
-      Backlinks</div>
+      Backlinks
+    </div>
   </div>
 
   <!-- Notification Outlet -->
@@ -325,11 +320,11 @@
       <p>Enter a title for the new database</p>
       <div class="flex flex-row">
         <input autofocus type="text" placeholder="New Database" pInputText
-          style="margin-bottom: 5px; width: max-content;" #newProjectTitleInput
-          (keydown.enter)="newProject(newProjectTitleInput.value);" [required]="true" />
+          style="margin-bottom: 5px; width: max-content" #newProjectTitleInput
+          (keydown.enter)="newProject(newProjectTitleInput.value)" [required]="true" />
         <div class="pseudo"></div>
-        <p-button #newProjectButton icon="pi pi-plus" [pTooltip]="'Create '+newProjectTitleInput.value"
-          (click)="newProject(newProjectTitleInput.value);"></p-button>
+        <p-button #newProjectButton icon="pi pi-plus" [pTooltip]="'Create ' + newProjectTitleInput.value"
+          (click)="newProject(newProjectTitleInput.value)"></p-button>
       </div>
     </div>
   </p-overlayPanel>

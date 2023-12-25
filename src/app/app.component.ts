@@ -40,18 +40,8 @@ export class AppComponent implements OnInit {
 
   /** Project */
   allProjectsPromise: Promise<{ title: string; lastModified: Date }[]>;
-  project?: Project;
-
-  /** Left Sidebar */
   articleHierarchyMap: Map<string, ArticleHierarchyNode> = new Map();
-  articleHierarchyArray: ArticleHierarchyNode[] = [];
-  highlightedArticlePath: ArticleHierarchyNode[] = [];
-  leftSearch: string = '';
-  lsArticleName?: string;
-  lsParentName?: string;
-
-  /** Right Sidebar */
-  rightSearch: string = '';
+  project?: Project;
   activeArticle?: string;
 
   /** Assistants & Consoles */
@@ -176,7 +166,7 @@ export class AppComponent implements OnInit {
     activeWorkspace.activeArticleIndex = index;
     this.activeArticle = this.project!.workspaces[this.project!.activeWorkspaceIndex].viewedArticles[this.project!.workspaces[
       this.project!.activeWorkspaceIndex
-      ].activeArticleIndex];
+    ].activeArticleIndex];
   }
 
   toggleNewProjectOverlay() {
@@ -251,34 +241,6 @@ export class AppComponent implements OnInit {
 
     this.onTouchWorkspaces();
   }
-
-  onLeftSearchValueChange(searchValue: string) {
-    const searchValueSeparated: string[] = searchValue.split('.');
-    this.lsArticleName = undefined;
-    this.lsParentName = undefined;
-
-    for (const s of searchValueSeparated) {
-      this.lsArticleName =
-        this.lsArticleName !== undefined
-          ? `${this.lsArticleName}.${s}`
-          : `${s}`;
-      if (
-        this.lsArticleName &&
-        this.project?.articles.has(this.lsArticleName)
-      ) {
-        if (!this.lsParentName) {
-          this.lsParentName = this.lsArticleName;
-          this.lsArticleName = undefined;
-        }
-      }
-    }
-  }
-
-  shiftHighlightDown() { }
-
-  shiftHighlightUp() { }
-
-  activateHighlighted() { }
 
   addArticle(articleName: string, parentName?: string) {
     const article = this.project?.articles.get(articleName);

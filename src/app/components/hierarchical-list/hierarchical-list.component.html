@@ -1,6 +1,6 @@
-<span class="p-input-icon-right w-full" *ngIf="isListRoot">
+<span class="p-input-icon-right w-full" *ngIf="showSearch && isListRoot">
     <input type="text" class="w-full searchInput" [placeholder]="'Search '+project.title"
-        pTooltip="Type to find or add articles" tooltipPosition="right" pInputText [(ngModel)]="searchValue" />
+        pTooltip="Find/Add Articles" tooltipPosition="right" pInputText [(ngModel)]="searchValue" />
 </span>
 <div class="hierarchicalListContainer flex flex-column overflowScroll showBorderL" [ngClass]="{
         'active': isActive,
@@ -8,22 +8,20 @@
         'showMargin': isListRoot
     }">
     <!-- Add Article Button -->
-    <!-- @TODO: Don't show the add article button when an article with the same exact name as {lsArticleName} already exists -->
-    <div class="flex-column left flex justify-content-start align-items-center" *ngIf="showNewArticleButton">
-        <div class="article borderTop w-full relative flex flex-row align-content-center justify-content-between hideChildUntilHoverParent"
-            [ngClass]="{
-                'borderBottom': hierarchyNodeList.length === 0
-            }" (click)="addArticleClicked.emit(lsArticleName)"
-            [pTooltip]="'Add ' + (lsParentName ? ('new ' + lsParentName + ' '):'article ') + lsArticleName">
+    <div class="flex-column left flex justify-content-start align-items-center" *ngIf="searchValue">
+        <div class="article borderTop w-full relative flex flex-row align-content-center justify-content-between hideChildUntilHoverParent borderBottom"
+            (click)="addArticleClicked.emit(searchValue)" [pTooltip]="'Add ' + searchValue">
             <i class="pi pi-plus activeEntryFolderIcon active"></i>
             <div class="entryUniqueName pointerOnHover flex-grow-1">
-                {{(lsParentName ? (lsParentName+": "+lsArticleName) : (lsArticleName))}}
+                {{'Add ' + searchValue}}
             </div>
         </div>
     </div>
     <div style="overflow-y: hidden; overflow-x: hidden;"
-        *ngFor="let articleHierarchyNode of isListRoot && !searchValue ? (hierarchyNodeList | articleHierarchyListRootFilter) : (hierarchyNodeList | articleHierarchyListStringFilter:searchValue); first as isFirst; last as isLast; index as i">
-        <div class="pseudoBorder top" *ngIf="isFirst"
+        *ngFor="let articleHierarchyNode of isListRoot && !searchValue 
+        ? (hierarchyDirection === 'down' ? (hierarchyNodeList | articleHierarchyListRootFilter) : hierarchyNodeList) 
+        : (hierarchyNodeList | articleHierarchyListStringFilter:searchValue); first as isFirst; last as isLast; index as i">
+        <div class="pseudoBorder top" *ngIf="isFirst && !searchValue"
             [ngClass]="{'active': currentWorkspace.viewedArticles.includes(articleHierarchyNode.node.name)}"></div>
         <div class="articleContainer flex-column left flex justify-content-start align-items-center" [ngClass]="{
                 'active': currentWorkspace.viewedArticles.includes(articleHierarchyNode.node.name),
@@ -36,8 +34,11 @@
                     'active': currentWorkspace.viewedArticles.includes(articleHierarchyNode.node.name),
                     'highlighted': false
             }">
-                <i class="pi activeEntryFolderIcon"
-                    [ngClass]="{'pi-hashtag': articleHierarchyNode.children.length > 0, 'pi-file': articleHierarchyNode.children.length === 0, 'active': currentWorkspace.viewedArticles.includes(articleHierarchyNode.node.name)}"></i>
+                <i class="pi activeEntryFolderIcon" [ngClass]="{
+                        'pi-hashtag': articleHierarchyNode.children.length > 0, 
+                        'pi-file': articleHierarchyNode.children.length === 0, 
+                        'active': currentWorkspace.viewedArticles.includes(articleHierarchyNode.node.name)
+                        }"></i>
                 <div class="entryUniqueName pointerOnHover flex-grow-1">{{articleHierarchyNode.node.name}}</div>
                 <i #contextMenuButton
                     class="contextMenuBtn absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
@@ -50,8 +51,10 @@
             <p-contextMenu #contextMenu [model]="items" [triggerEvent]="'click'"></p-contextMenu>
 
             <!-- Subarticles List -->
-            <app-hierarchical-list class="w-full" *ngIf="articleHierarchyNode.children.length > 0"
-                [project]="project" [hierarchyNodeList]="articleHierarchyNode.children"
+            <app-hierarchical-list class="w-full"
+                *ngIf="hierarchyDirection === 'down' ? articleHierarchyNode.children.length > 0 : articleHierarchyNode.parents.length > 0"
+                [project]="project"
+                [hierarchyNodeList]="hierarchyDirection === 'down' ? articleHierarchyNode.children : articleHierarchyNode.parents"
                 [isActive]="currentWorkspace.viewedArticles.includes(articleHierarchyNode.node.name)"
                 [hierarchyDirection]="hierarchyDirection" [currentWorkspace]="currentWorkspace"
                 (articleClicked)="this.articleClickedEmitter.emit($event)">

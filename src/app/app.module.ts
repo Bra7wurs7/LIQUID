@@ -47,6 +47,7 @@ import { ContextMenusService } from './services/contextMenus/context-menus.servi
 import { ArticleHierarchyListStringFilterPipe } from './pipes/articleHierarchyListStringFilter/article-hierarchy-list-filter.pipe';
 import { MapToListPipe } from './pipes/mapToList/map-to-list.pipe';
 import { ArticleHierarchyListRootFilterPipe } from './pipes/articleHierarchyListRootFilter/article-hierarchy-list-root-filter.pipe';
+import { ArticleHierarchyMapGetPipe } from './pipes/articleHierarchyMapGet/article-hierarchy-map-get.pipe';
 
 
 @NgModule({
@@ -64,7 +65,8 @@ import { ArticleHierarchyListRootFilterPipe } from './pipes/articleHierarchyList
     SettingsMenuComponent,
     ArticleHierarchyListStringFilterPipe,
     MapToListPipe,
-    ArticleHierarchyListRootFilterPipe
+    ArticleHierarchyListRootFilterPipe,
+    ArticleHierarchyMapGetPipe
   ],
   imports: [
     BrowserModule,
