@@ -232,14 +232,6 @@
       <div>{{ activeArticle }}</div>
       <div>Actions</div>
     </div>
-    <app-hierarchical-list class="overflow-y-auto overflow-x-hidden articlesList" *ngIf="
-        project && activeArticle && (articleHierarchyMap | articleHierarchyMapGet:activeArticle)[0].parents.length > 0
-      " [project]="project" [hierarchyDirection]="'up'" [currentWorkspace]="
-        this.project.workspaces[this.project.activeWorkspaceIndex]
-      " [isListRoot]="true"
-      [hierarchyNodeList]="(articleHierarchyMap | articleHierarchyMapGet:activeArticle)[0].parents"
-      (articleClicked)="toggleArticleActive($event.name)"
-      (articleActionClicked)="onListArticleActionClick($event)"></app-hierarchical-list>
     <div *ngIf="activeArticle" class="articleDescription">
       <span class="primary"
         pTooltip="The very first paragraph of the article. This is frequently 'read' by LIQUID, like for determining if this article is relevant for a given LLM prompt.">
@@ -254,15 +246,49 @@
         fringilla phasellus faucibus scelerisque.
       </span>
     </div>
+    <div class="labeled-separator flex flex-row" *ngIf="
+    project && activeArticle && (articleHierarchyMap | articleHierarchyMapGet:activeArticle)[0].parents.length > 0
+  " pTooltip="List of all categories this article belongs to directly or by extension">
+      <div class="line left"></div>
+      <div class="label">Categories</div>
+      <div class="line right"></div>
+    </div>
+    <app-hierarchical-list class="overflow-y-auto overflow-x-hidden articlesList" *ngIf="
+    project && activeArticle && (articleHierarchyMap | articleHierarchyMapGet:activeArticle)[0].parents.length > 0
+  " [project]="project" [hierarchyDirection]="'up'" [currentWorkspace]="
+    this.project.workspaces[this.project.activeWorkspaceIndex]
+  " [isListRoot]="true" [hierarchyNodeList]="(articleHierarchyMap | articleHierarchyMapGet:activeArticle)[0].parents"
+      (articleClicked)="toggleArticleActive($event.name)"
+      (articleActionClicked)="onListArticleActionClick($event)"></app-hierarchical-list>
+    <div class="labeled-separator flex flex-row" pTooltip="Table listing important attributes/characteristics of the article">
+      <div class="line left"></div>
+      <div class="label">Attributes</div>
+      <div class="line right"></div>
+    </div>
     <div *ngIf="activeArticle" class="idea-placeholder"
       pTooltip="The table of attributes that contain basic information on this article">
       Article Attributes
     </div>
+    <div class="labeled-separator flex flex-row" pTooltip="Hierarchy of article sections/headlines">
+      <div class="line left"></div>
+      <div class="label">Sections</div>
+      <div class="line right"></div>
+    </div>
     <div *ngIf="activeArticle" class="idea-placeholder" pTooltip="Article section hierarchy (by headlines)">
       Article Headlines/Sections
     </div>
-    <div *ngIf="activeArticle" class="idea-placeholder" pTooltip="Other articles that are referenced in this article">
+    <div class="labeled-separator flex flex-row" pTooltip="All links to other articles occuring in this article">
+      <div class="line left"></div>
+      <div class="label">Links</div>
+      <div class="line right"></div>
+    </div>
+    <div *ngIf="activeArticle" class="idea-placeholder" pTooltip="Other articles that are linked in this article">
       Links
+    </div>
+    <div class="labeled-separator flex flex-row" pTooltip="All other articles that link to this article">
+      <div class="line left"></div>
+      <div class="label">Backlinks</div>
+      <div class="line right"></div>
     </div>
     <div *ngIf="activeArticle" class="idea-placeholder" pTooltip="All other articles that reference this article">
       Backlinks

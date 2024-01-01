@@ -48,7 +48,7 @@
 
   .articleDescription {
     padding: 4px 4px 0px 4px;
-    font-size: xx-small;
+    font-size: x-small;
     text-align: justify;
     font-family: 'Courier New', Courier, monospace;
     .primary {
@@ -56,6 +56,31 @@
     }
     .secondary {
       color: var(--text-color-secondary);
+    }
+  }
+
+  .labeled-separator {
+    margin: 4px 4px 0px 4px;
+    width: auto;
+    .label {
+      font-size: x-small;
+      color: var(--surface-border);
+      line-height: 1;
+      margin-left: 1px;
+      margin-right: 1px;
+    }
+    .line {
+      border-bottom: 1px solid var(--surface-border);
+      margin-bottom: 2px;
+
+      &.right {
+        width: 90%;
+        border-bottom-right-radius: 3px;
+      }
+      &.left {
+        width: 10%;
+        border-bottom-left-radius: 3px;
+      }
     }
   }
 }

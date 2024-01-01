@@ -17,7 +17,6 @@ import { PanelModule } from 'primeng/panel';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { ParseMarkupPipe } from './pipes/parseMarkup/parse-markup.pipe';
 import { HttpClientModule } from '@angular/common/http';
-import { FillAttributePipe } from './pipes/fillAttribute/fill-attribute.pipe';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { ContextMenuModule } from 'primeng/contextmenu';
@@ -55,7 +54,6 @@ import { ArticleHierarchyMapGetPipe } from './pipes/articleHierarchyMapGet/artic
     AppComponent,
     NotePanelComponent,
     ParseMarkupPipe,
-    FillAttributePipe,
     PrivacyPolicyComponent,
     HierarchicalListComponent,
     LeftSidebarComponent,
