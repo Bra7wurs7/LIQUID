@@ -3,13 +3,12 @@
   <div class="left sidebar min-h-full w-2 p-shadow-3 overflow-hidden z-3 p-1 flex flex-column h-full">
     <!-- @TODO Add Button to toggle between Alphabetic Sorting Up Down, Last Changed Up Down, and Importance-->
     <app-hierarchical-list class="overflow-y-auto overflow-x-hidden articlesList" *ngIf="
-        this.articleHierarchyMap.size > 0 &&
         this.project
       " [project]="project" [hierarchyDirection]="'down'" [currentWorkspace]="
         this.project.workspaces[this.project.activeWorkspaceIndex]
       " [isListRoot]="true" [showSearch]="true" [hierarchyNodeList]="articleHierarchyMap | mapToList"
-      (articleClicked)="toggleArticleActive($event.name)"
-      (articleActionClicked)="onListArticleActionClick($event)"></app-hierarchical-list>
+      (articleClicked)="toggleArticleActive($event.name)" (articleActionClicked)="onListArticleActionClick($event)"
+      (addArticleEvent)="addArticle($event)"></app-hierarchical-list>
   </div>
 
   <!-- Center Area -->
@@ -260,7 +259,8 @@
   " [isListRoot]="true" [hierarchyNodeList]="(articleHierarchyMap | articleHierarchyMapGet:activeArticle)[0].parents"
       (articleClicked)="toggleArticleActive($event.name)"
       (articleActionClicked)="onListArticleActionClick($event)"></app-hierarchical-list>
-    <div class="labeled-separator flex flex-row" pTooltip="Table listing important attributes/characteristics of the article">
+    <div class="labeled-separator flex flex-row"
+      pTooltip="Table listing important attributes/characteristics of the article">
       <div class="line left"></div>
       <div class="label">Attributes</div>
       <div class="line right"></div>

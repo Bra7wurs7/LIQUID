@@ -121,10 +121,15 @@
     opacity: 0;
 
     &.active {
-        margin-right: 8px;
+        margin-right: 6px;
         max-width: 13px;
         opacity: 1;
+        &.pi-hashtag {
+            margin-right: 3px;
+        }
     }
+
+    
 }
 
 .contextMenuBtn {

@@ -48,9 +48,8 @@
 
   .articleDescription {
     padding: 4px 4px 0px 4px;
-    font-size: x-small;
+    font-size: small;
     text-align: justify;
-    font-family: 'Courier New', Courier, monospace;
     .primary {
       color: var(--text-color);
     }
@@ -75,11 +74,11 @@
 
       &.right {
         width: 90%;
-        border-bottom-right-radius: 3px;
+        
       }
       &.left {
         width: 10%;
-        border-bottom-left-radius: 3px;
+        border-bottom-left-radius: 50%;
       }
     }
   }
@@ -178,13 +177,14 @@
 
     .loadedFolder {
       height: 41px;
-      background-color: var(--surface-border);
+      background-color: var(--surface-b);
       border-top: 1px solid var(--surface-border);
+      border-right: 1px solid var(--surface-border);
       padding: 2px 4px 2px 4px;
 
       .folderAction {
         transition: color 0.1s;
-        color: var(--surface-b);
+        color: var(--surface-border);
 
         &:hover {
           color: var(--text-color);
@@ -239,7 +239,7 @@
 
   .newtabs {
     transition: background-color 0.1s;
-    color: var(--text-color-secondary);
+    color: var(--surface-border);
     margin-bottom: 0px;
     pointer-events: all;
     max-width: 49%;

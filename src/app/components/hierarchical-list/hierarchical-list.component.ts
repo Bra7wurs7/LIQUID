@@ -24,7 +24,7 @@ export class HierarchicalListComponent {
   @Input("currentArticlePath") currentArticlePath?: string;
 
   @Output("articleClicked") articleClickedEmitter = new EventEmitter<Article>();
-  @Output("addArticleClicked") addArticleClicked = new EventEmitter<string>();
+  @Output("addArticleEvent") addArticleEvent = new EventEmitter<string>();
   @Output("articleActionClicked") articleActionClicked = new EventEmitter<{ action: ArticleActionEnum, node: Article }>();
 
   lastRightClickedArticle?: ArticleHierarchyNode;

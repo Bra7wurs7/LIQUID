@@ -10,7 +10,7 @@
     <!-- Add Article Button -->
     <div class="flex-column left flex justify-content-start align-items-center" *ngIf="searchValue">
         <div class="article borderTop w-full relative flex flex-row align-content-center justify-content-between hideChildUntilHoverParent borderBottom"
-            (click)="addArticleClicked.emit(searchValue)" [pTooltip]="'Add ' + searchValue">
+            (click)="addArticleEvent.emit(searchValue); searchValue = ''" [pTooltip]="'Add ' + searchValue">
             <i class="pi pi-plus activeEntryFolderIcon active"></i>
             <div class="entryUniqueName pointerOnHover flex-grow-1">
                 {{'Add ' + searchValue}}
@@ -57,7 +57,7 @@
                 [hierarchyNodeList]="hierarchyDirection === 'down' ? articleHierarchyNode.children : articleHierarchyNode.parents"
                 [isActive]="currentWorkspace.viewedArticles.includes(articleHierarchyNode.node.name)"
                 [hierarchyDirection]="hierarchyDirection" [currentWorkspace]="currentWorkspace"
-                (articleClicked)="this.articleClickedEmitter.emit($event)">
+                (articleClicked)="this.articleClickedEmitter.emit($event)"> 
             </app-hierarchical-list>
         </div>
         <div class="pseudoBorder bottom"

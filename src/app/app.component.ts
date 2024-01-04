@@ -242,43 +242,58 @@ export class AppComponent implements OnInit {
     this.onTouchWorkspaces();
   }
 
-  addArticle(articleName: string, parentName?: string) {
-    const article = this.project?.articles.get(articleName);
-    if (article && parentName) {
+  addArticle(input: string) {
+    const categoryNames = input.split("#").map((n) => n.trim()).reverse()
+    const articleName = categoryNames.pop()
+    const categories: Article[] = [];
+    const newCategories
+
+    for (const cat of categoryNames) {
+      const existingCategory = this.project?.articles.get(cat)
+      if(existingCategory !== undefined) {
+        categories.push(existingCategory)
+      }
+      if(existingCategory === undefined) {
+
+      }
+    }
+
+
+    if (article) {
       if (article.groups.includes(parentName)) {
         this.project!.workspaces[
           this.project!.activeWorkspaceIndex
-        ].viewedArticles.push(articleName);
+        ].viewedArticles.push(input);
       } else {
         article.groups.push(parentName);
         this.messageService.add({
           severity: 'success',
-          summary: `${articleName} has been added to group ${parentName}`,
+          summary: `${input} has been added to group ${parentName}`,
           life: 3000,
         });
       }
     } else {
       this.project!.articles.set(
-        articleName!,
-        new Article(articleName, undefined, parentName ? [parentName] : [])
+        input!,
+        new Article(input, undefined, parentName ? [parentName] : [])
       );
       this.project!.workspaces[
         this.project!.activeWorkspaceIndex
-      ].viewedArticles.push(articleName);
+      ].viewedArticles.push(input);
       if (parentName) {
         this.project!.workspaces[
           this.project!.activeWorkspaceIndex
         ].viewedArticles.push(parentName);
         this.messageService.add({
           severity: 'success',
-          summary: `Added ${articleName}`,
-          detail: `${articleName} has been added as member of group ${parentName}`,
+          summary: `Added ${input}`,
+          detail: `${input} has been added as member of group ${parentName}`,
           life: 3000,
         });
       } else {
         this.messageService.add({
           severity: 'success',
-          summary: `Added ${articleName}`,
+          summary: `Added ${input}`,
         });
       }
     }
@@ -387,7 +402,7 @@ export class AppComponent implements OnInit {
         .then(() => {
           this.messageService.add({
             severity: 'success',
-            summary: `Saved "${this.project?.title}" to your internet browser's indexed database`,
+            summary: `Saved "${this.project?.title}" in web browser on device`,
           });
           this.allProjectsPromise = this.indexedDbService.getAllProjects();
         });
