@@ -10,10 +10,10 @@
     <!-- Add Article Button -->
     <div class="flex-column left flex justify-content-start align-items-center" *ngIf="searchValue">
         <div class="article borderTop w-full relative flex flex-row align-content-center justify-content-between hideChildUntilHoverParent borderBottom"
-            (click)="addArticleEvent.emit(searchValue); searchValue = ''" [pTooltip]="'Add ' + searchValue">
+            (click)="addArticleEvent.emit(searchValue); searchValue = ''" [pTooltip]="'Add article ' + searchValue">
             <i class="pi pi-plus activeEntryFolderIcon active"></i>
             <div class="entryUniqueName pointerOnHover flex-grow-1">
-                {{'Add ' + searchValue}}
+                {{'New: ' + searchValue}}
             </div>
         </div>
     </div>

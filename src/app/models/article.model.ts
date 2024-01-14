@@ -18,15 +18,13 @@ export class Article {
   content: string;
   constructor(
     name: string = '',
-    definition: string = '',
     groups: string[] = [],
-    attributes: Record<string, any> = {},
     content: string = '',
   ) {
     this.name = name;
-    this.definition = definition;
+    this.definition = "";
     this.groups = groups;
-    this.attributes = attributes;
+    this.attributes = {};
     this.content = content;
   }
 }

@@ -16,14 +16,14 @@
       style="margin-left: 2px"></button>
     <span class="p-buttonset">
       <button pButton pRipple type="button" icon="pi pi-angle-up" class="p-panel-header-icon"
-        (click)="moveUpEvent.emit()" pTooltip="Move panel up"></button>
+        (click)="moveUpEvent.emit()" pTooltip="Move panel up" tooltipPosition="left"></button>
       <button pButton pRipple type="button" icon="pi pi-angle-down" class="p-panel-header-icon"
-        (click)="moveDownEvent.emit()" pTooltip="Move panel down"></button>
+        (click)="moveDownEvent.emit()" pTooltip="Move panel down" tooltipPosition="left"></button>
       <button (click)="panel.toggle($event)" pButton pRipple type="button"
         [icon]="'pi ' + (panel.collapsed ? 'pi-plus' : 'pi-minus')" class="p-panel-header-icon"
-        [pTooltip]="panel.collapsed ? 'Maximize panel' : 'Minimize panel'"></button>
+        [pTooltip]="panel.collapsed ? 'Maximize panel' : 'Minimize panel'" tooltipPosition="left"></button>
       <button (click)="closePanelEvent.emit()" pButton pRipple type="button" icon="pi pi-times"
-        class="p-panel-header-icon" pTooltip="Close panel"></button>
+        class="p-panel-header-icon" pTooltip="Close panel" tooltipPosition="left"></button>
     </span>
   </ng-template>
   <ng-template pTemplate="content">

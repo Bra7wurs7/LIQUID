@@ -24,6 +24,7 @@
     &.collapsed {
       transform: translateX(100%);
       visibility: collapse;
+      border: 0px;
     }
   }
 

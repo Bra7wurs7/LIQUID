@@ -243,61 +243,36 @@ export class AppComponent implements OnInit {
   }
 
   addArticle(input: string) {
-    const categoryNames = input.split("#").map((n) => n.trim()).reverse()
+    let categoryNames = input.split("#").map((n) => n.trim()).reverse()
     const articleName = categoryNames.pop()
-    const categories: Article[] = [];
-    const newCategories
-
-    for (const cat of categoryNames) {
-      const existingCategory = this.project?.articles.get(cat)
-      if(existingCategory !== undefined) {
-        categories.push(existingCategory)
-      }
-      if(existingCategory === undefined) {
-
-      }
+    if (articleName === undefined) {
+      return;
     }
 
+    let article = this.project?.articles.get(articleName) ?? new Article(articleName, categoryNames)
+    article.groups = [...new Set<string>([...article.groups, ...categoryNames])];
+    this.project?.articles.set(articleName, article)
 
-    if (article) {
-      if (article.groups.includes(parentName)) {
-        this.project!.workspaces[
-          this.project!.activeWorkspaceIndex
-        ].viewedArticles.push(input);
-      } else {
-        article.groups.push(parentName);
-        this.messageService.add({
-          severity: 'success',
-          summary: `${input} has been added to group ${parentName}`,
-          life: 3000,
+
+    // Then checking for existance of all groups
+    categoryNames.forEach((cat) => {
+      // If a group does not exist, create it or remove it from the new article's groups set
+      if (!this.project?.articles.has(cat)) {
+        this.confirmationService.confirm({
+          message: `Unknown article '${cat}'.\n Create new article '${cat}'?`,
+          accept: () => {
+            this.addArticle(cat)
+            this.onTouchWorkspaces();
+          },
+          reject: () => {
+            const grps = new Set(article.groups)
+            grps.delete(cat)
+            article.groups = [...grps]
+          },
         });
       }
-    } else {
-      this.project!.articles.set(
-        input!,
-        new Article(input, undefined, parentName ? [parentName] : [])
-      );
-      this.project!.workspaces[
-        this.project!.activeWorkspaceIndex
-      ].viewedArticles.push(input);
-      if (parentName) {
-        this.project!.workspaces[
-          this.project!.activeWorkspaceIndex
-        ].viewedArticles.push(parentName);
-        this.messageService.add({
-          severity: 'success',
-          summary: `Added ${input}`,
-          detail: `${input} has been added as member of group ${parentName}`,
-          life: 3000,
-        });
-      } else {
-        this.messageService.add({
-          severity: 'success',
-          summary: `Added ${input}`,
-        });
-      }
-    }
-    this.initializeArticleHierarchyMap();
+    });
+
     this.onTouchWorkspaces();
   }
 
@@ -438,12 +413,11 @@ export class AppComponent implements OnInit {
           );
         }
         this.articleHierarchyMap.get(name)?.children.forEach((child) => {
-          child.node.groups.splice(
-            child.node.groups.findIndex((grp) => (grp = name)),
-            1
-          );
+          const grps = new Set(child.node.groups)
+          grps.delete(name)
+          child.node.groups = [...grps]
         });
-        this.initializeArticleHierarchyMap();
+        this.onTouchWorkspaces();
       }
     }
   }
@@ -497,6 +471,7 @@ export class AppComponent implements OnInit {
    * To be called whenever a aricle is opened or closed
    */
   onTouchWorkspaces() {
+    this.initializeArticleHierarchyMap();
     if (this.project === undefined) return;
     // Remove all empty workspaces that aren't the last workspace
     let removedWorkspace = true;

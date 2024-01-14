@@ -8,7 +8,12 @@ export class ArticleHierarchyListStringFilterPipe implements PipeTransform {
 
   transform(value: ArticleHierarchyNode[], ...args: string[]): ArticleHierarchyNode[] {
     let filter = args[0];
-    return value.filter((node) => node.node.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase()));
+    const splitFilterByHash = filter.split("#").map((n) => n.trim())
+    return value.filter((node) => 
+    {
+      const nodeName = node.node.name;
+      return nodeName.toLocaleLowerCase().includes(filter.toLocaleLowerCase()) || splitFilterByHash.some((f) => nodeName === f)
+    });
   }
 
 }
