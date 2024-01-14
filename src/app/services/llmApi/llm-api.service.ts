@@ -14,7 +14,6 @@ export class LlmApiService {
     const loadedConfig = localStorage.getItem("llmConfigs")
     if (loadedConfig) {
       this.llmConfigs = JSON.parse(loadedConfig);
-      console.log(this.llmConfigs);
       
     }
   }
@@ -34,7 +33,6 @@ export class LlmApiService {
     let headers: HttpHeaders = new HttpHeaders();
     let params: HttpParams = new HttpParams();
     for (const header of llmConfig.headers) {
-      console.log(header);
       headers = headers.set(header[0], header[1])
     }
     for (const param of llmConfig.params) {
