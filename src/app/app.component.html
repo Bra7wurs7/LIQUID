@@ -14,9 +14,9 @@
   <!-- Center Area -->
   <div class="center flex flex-column min-h-full w-full relative overflow-hide">
     <!-- Dropdown Bar -->
-    <div class="menubar flex flex-column">
+    <div class="central-header flex flex-column">
       <div class="dropdown-panel overflow-y-auto flex flex-row" [ngClass]="{ active: dropdownPanelActiveTab }">
-        <div class="flex flex-row justify-content-end dropdown-panel-content">
+        <div class="flex flex-row justify-content-start dropdown-panel-content">
           <div *ngIf="dropdownPanelActiveTab === 'settings'" class="settings box">
             <!-- LLM Endpoints -->
             <div class="flex flex-column">
@@ -57,138 +57,116 @@
               </div>
             </div>
           </div>
+          <div *ngIf="dropdownPanelActiveTab === 'console'" class="flex flex-row w-full">
+            <textarea pInputTextarea class="system-prompt-input" placeholder="System Prompt"></textarea>
+            <div class="dialog-prompt-container flex flex-column justify-content-end">
+              <div class="dialog-prompt-row us flex flex-row">
+                <textarea rows="1" pInputTextarea class="dialog-prompt-input" placeholder="User Prompt"
+                  [autoResize]="true"></textarea>
+                <div class="dialog-prompt-actions flex flex-column justify-content-around">
+                  <i class="pi pi-check-circle dialog-prompt-action"></i>
+                  <i class="pi pi-cog dialog-prompt-action"></i>
+                </div>
+              </div>
+              <div class="dialog-prompt-row them flex flex-row">
+                <div class="dialog-prompt-actions flex flex-column justify-content-around">
+                  <i class="pi pi-check-circle dialog-prompt-action"></i>
+                  <i class="pi pi-cog dialog-prompt-action"></i>
+                </div>
+                <textarea rows="1" pInputTextarea class="dialog-prompt-input" placeholder="LLM Reply"
+                  [autoResize]="true"></textarea>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="flex flex-row justify-content-between align-content-center">
-        <!-- Toolbar Left Side-->
-        <div class="flex flex-row align-content-center">
-          <div class="flex flex-column align-content-center justify-content-between loadedFolder" *ngIf="!project">
-            <div #addButton class="pi pi-plus pointerOnHover folderAction" (click)="newProjectOverlay.toggle($event)"
-              tooltipPosition="bottom" [pTooltip]="'New Database'"></div>
-            <div #moreButton class="pi pi-bars pointerOnHover folderAction" (click)="folderMenu.toggle($event)"
-              tooltipPosition="bottom" pTooltip="More Options"></div>
-            <p-contextMenu #folderMenu appendTo="body" [target]="moreButton" [model]="moreOptions"></p-contextMenu>
-          </div>
+      <!-- Menubar -->
+      <div class="flex flex-row align-content-center">
 
-          <div class="flex flex-column align-content-center justify-content-between loadedFolder" *ngIf="project">
-            <div #saveButton class="pi pi-save pointerOnHover folderAction" (click)="this.saveToDB(this.project.title)"
-              tooltipPosition="bottom" [pTooltip]="'Save ' + project.title"></div>
-            <p-contextMenu #saveMenu appendTo="body" [target]="saveButton" [model]="saveOptions"></p-contextMenu>
-            <div #moreButton class="pi pi-bars pointerOnHover folderAction" (click)="folderMenu.toggle($event)"
-              tooltipPosition="bottom" pTooltip="More Options"></div>
-            <p-contextMenu #folderMenu appendTo="body" [target]="moreButton" [model]="moreOptions"></p-contextMenu>
-          </div>
+        <!-- No Project Loaded -->
+        <div class="flex flex-column align-content-center justify-content-between loadedFolder" *ngIf="!project">
+          <div #addButton class="pi pi-plus pointerOnHover folderAction" (click)="newProjectOverlay.toggle($event)"
+            tooltipPosition="bottom" [pTooltip]="'New Database'"></div>
+          <div #moreButton class="pi pi-bars pointerOnHover folderAction" (click)="folderMenu.toggle($event)"
+            tooltipPosition="bottom" pTooltip="More Options"></div>
+          <p-contextMenu #folderMenu appendTo="body" [target]="moreButton" [model]="moreOptions"></p-contextMenu>
+        </div>
 
-          <!-- Workspaces -->
-          <div *ngIf="project" class="flex flex-row toolbarWorkspaces relative">
-            <div *ngFor="
-                let workspace of project.workspaces;
-                let index = index;
-                let isLast = last
-              " [ngClass]="{
-                active: this.project.activeWorkspaceIndex === index,
-                isLast: isLast
-              }" [autoHide]="false" tooltipPosition="bottom" [pTooltip]="tooltipContent"
-              class="hideChildUntilHoverParent toolbarWorkspace pointerOnHover relative"
-              (click)="this.project.activeWorkspaceIndex = index">
-              <div class="flex flex-column workspace-articles">
-                <div *ngFor="
-                    let &quot;workspace-article&quot; of workspace.viewedArticles;
-                    index as i
-                  " class="workspace-article"></div>
-              </div>
-              <ng-template #tooltipContent>
-                <div class="flex flex-column toolbarWorkspaceTooltip">
-                  <div *ngFor="
-                      let workspaceArticle of workspace.viewedArticles;
-                      let isLast = last
-                    ">
-                    <div class="toolbarWorkspaceTooltipArticle">
-                      {{ workspaceArticle }}
-                    </div>
-                    <div class="pseudo" *ngIf="!isLast"></div>
-                  </div>
+        <!-- A Project Loaded -->
+        <div class="flex flex-column align-content-center justify-content-between loadedFolder" *ngIf="project">
+          <div #saveButton class="pi pi-save pointerOnHover folderAction" (click)="this.saveToDB(this.project.title)"
+            tooltipPosition="bottom" [pTooltip]="'Save ' + project.title"></div>
+          <p-contextMenu #saveMenu appendTo="body" [target]="saveButton" [model]="saveOptions"></p-contextMenu>
+          <div #moreButton class="pi pi-bars pointerOnHover folderAction" (click)="folderMenu.toggle($event)"
+            tooltipPosition="bottom" pTooltip="More Options"></div>
+          <p-contextMenu #folderMenu appendTo="body" [target]="moreButton" [model]="moreOptions"></p-contextMenu>
+        </div>
 
-                  <div *ngIf="workspace.viewedArticles.length === 0">
-                    Empty Workspace
-                  </div>
-                </div>
-              </ng-template>
+        <!-- Workspaces -->
+        <div *ngIf="project" class="flex flex-row toolbarWorkspaces relative">
+          <div *ngFor="
+              let workspace of project.workspaces;
+              let index = index;
+              let isLast = last
+            " [ngClass]="{
+              active: this.project.activeWorkspaceIndex === index,
+              isLast: isLast
+            }" [autoHide]="false" tooltipPosition="bottom" [pTooltip]="tooltipContent"
+            class="hideChildUntilHoverParent toolbarWorkspace pointerOnHover relative"
+            (click)="this.project.activeWorkspaceIndex = index">
+            <div class="flex flex-column workspace-articles">
+              <div *ngFor="
+                  let &quot;workspace-article&quot; of workspace.viewedArticles;
+                  index as i
+                " class="workspace-article"></div>
             </div>
+            <ng-template #tooltipContent>
+              <div class="flex flex-column toolbarWorkspaceTooltip">
+                <div *ngFor="
+                    let workspaceArticle of workspace.viewedArticles;
+                    let isLast = last
+                  ">
+                  <div class="toolbarWorkspaceTooltipArticle">
+                    {{ workspaceArticle }}
+                  </div>
+                  <div class="pseudo" *ngIf="!isLast"></div>
+                </div>
+
+                <div *ngIf="workspace.viewedArticles.length === 0">
+                  Empty Workspace
+                </div>
+              </div>
+            </ng-template>
           </div>
         </div>
 
-        <div class="flex flex-row align-content-center">
-          <div class="flex flex-row align-items-center justify-content-start z-3 newtabs"
-            [ngClass]="{ active: dropdownPanelActiveTab }">
-            <div class="flex flex-row">
-              <div class="pi pi-comment pointerOnHover tab" [ngClass]="{ active: dropdownPanelActiveTab === 'llm' }"
-                tooltipPosition="bottom" [pTooltip]="
-                  dropdownPanelActiveTab === 'llm'
-                    ? 'Hide LLM Prompter'
-                    : 'LLM Prompter'
-                " (click)="onToggleConsole('llm', chatInput)"></div>
-              <input #chatInput type="text" class="tabInput" [ngClass]="{ active: dropdownPanelActiveTab === 'llm' }"
-                placeholder="Press enter/return to send prompt" pInputText
-                (keyup)="assistantKeyUp($event, chatInput.value)" />
+        <!-- Chat Input & Dropdown-Tabs -->
+        <div class="tabs flex-grow-1">
+          <div class="tabs-group command-line" [ngClass]="{ active: consoleHasFocus}">
+            <input #consoleinput type="text" class="input flex-grow-1" pInputText (focus)="consoleHasFocus = true"
+              (blur)="consoleHasFocus = false"/>
+            <div class="tab flex flex-column align-items-center justify-content-center"
+              [ngClass]="{ active: dropdownPanelActiveTab === 'console' }" tooltipPosition="bottom"
+              [pTooltip]="'Chat Console'" (click)="onToggleConsole('console')">
+              <div class="pi pi-comments pointerOnHover"></div>
             </div>
-            <div class="flex flex-row">
-              <div class="pi pi-sliders-v pointerOnHover tab"
-                [ngClass]="{ active: dropdownPanelActiveTab === 'settings' }" tooltipPosition="bottom"
-                [pTooltip]="'Settings'" (click)="onToggleConsole('settings', chatInput)"></div>
+          </div>
+          <div class="separator"></div>
+          <div class="flex flex-row tabs-group">
+            <div class="tab flex flex-column align-items-center justify-content-center"
+              [ngClass]="{ active: dropdownPanelActiveTab === 'alerts' }" tooltipPosition="bottom" [pTooltip]="'Alerts'"
+              (click)="onToggleConsole('alerts')">
+              <div class="pi pi-exclamation-circle pointerOnHover "></div>
+            </div>
+            <div class="tab flex flex-column align-items-center justify-content-center"
+              [ngClass]="{ active: dropdownPanelActiveTab === 'settings' }" tooltipPosition="bottom"
+              [pTooltip]="'Settings'" (click)="onToggleConsole('settings')">
+              <div class="pi pi-sliders-v pointerOnHover "></div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Assistant Panel & Selector -->
-    <!--<div
-      class="absolute left-0 bottom-0 flex flex-column align-items-start justify-content-start assistant-panel"
-      *ngIf="project"
-    >
-      <div
-        class="flex flex-row align-items-end justify-content-start z-3 tabs"
-        [ngClass]="{ active: activeAssistant }"
-      >
-        <div class="flex flex-row">
-          <div
-            class="pi pi-comments pointerOnHover tab"
-            [ngClass]="{ active: activeAssistant === 1 }"
-            [pTooltip]="
-              activeAssistant === 5
-                ? 'Hide assistant panel'
-                : 'Chat with Assistant'
-            "
-            (click)="onToggleAssistant(1, chatInput)"
-          ></div>
-          <input
-            #chatInput
-            type="text"
-            class="assistantInput"
-            [ngClass]="{ active: activeAssistant === 1 }"
-            placeholder="Press enter/return to send prompt"
-            pInputText
-            (keyup)="assistantKeyUp($event, chatInput.value)"
-          />
-        </div>
-        <div class="flex flex-row">
-          <div
-            class="pi pi-plus-circle pointerOnHover tab"
-            [pTooltip]="'Create new assistant or autonomous agent'"
-          ></div>
-        </div>
-      </div>
-      <div
-        class="panel-content overflow-y-auto flex flex-row"
-        [ngClass]="{ active: activeAssistant }"
-      >
-        <div class="flex flex-column assistant-chat">
-          <div class="message prompt">blub</div>
-          <div class="message response">bleb</div>
-        </div>
-      </div>
-    </div>-->
 
     <!-- Article Page (Content) List -->
     <div class="content" style="

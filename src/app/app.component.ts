@@ -1,16 +1,12 @@
 import {
   Component,
   ElementRef,
-  EventEmitter,
-  Input,
   OnInit,
-  Type,
   ViewChild,
 } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Article } from './models/article.model';
 import {
-  defaultProject,
   Project,
   SerializableProject,
 } from './models/project.model';
@@ -47,6 +43,7 @@ export class AppComponent implements OnInit {
   /** Assistants & Consoles */
   dropdownPanelActiveTab?: string;
   activeAssistant?: number;
+  consoleHasFocus: boolean = false;
 
   /** Dialogs */
   showSaveProjectOverlay: boolean = false;
@@ -258,10 +255,10 @@ export class AppComponent implements OnInit {
     categoryNames.forEach((cat) => {
       // If a group does not exist, create it or remove it from the new article's groups set
       if (!this.project?.articles.has(cat)) {
-        this.confirmationService.confirm({
-          message: `Unknown article '${cat}'.\n Create new article '${cat}'?`,
+        lastValueFrom(this.confirmationService.confirm({
+          message: `No article for category '${cat}' found.\n Create new article '${cat}'?`,
           accept: () => {
-            this.addArticle(cat)
+            this.addArticle(cat);
             this.onTouchWorkspaces();
           },
           reject: () => {
@@ -269,11 +266,9 @@ export class AppComponent implements OnInit {
             grps.delete(cat)
             article.groups = [...grps]
           },
-        });
+        }).accept);
       }
     });
-
-    this.onTouchWorkspaces();
   }
 
   scrollToPanel(child: HTMLElement, parent: HTMLDivElement) {
@@ -377,7 +372,7 @@ export class AppComponent implements OnInit {
         .then(() => {
           this.messageService.add({
             severity: 'success',
-            summary: `Saved "${this.project?.title}" in web browser on device`,
+            summary: `Saved "${this.project?.title}" in web browser storage on your device`,
           });
           this.allProjectsPromise = this.indexedDbService.getAllProjects();
         });
@@ -433,14 +428,11 @@ export class AppComponent implements OnInit {
     }
   }
 
-  onToggleConsole(id: string, element: HTMLInputElement) {
+  onToggleConsole(id: string) {
     if (this.dropdownPanelActiveTab === id) {
       this.dropdownPanelActiveTab = undefined;
     } else {
       this.dropdownPanelActiveTab = id;
-      setTimeout(() => {
-        element.focus();
-      }, 300);
     }
   }
 

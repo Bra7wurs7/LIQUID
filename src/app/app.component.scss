@@ -2,7 +2,81 @@
   padding: 10px;
   border: 1px solid var(--surface-border);
   max-width: 25vw;
-  border-radius: 10px;
+  border-radius: 6px;
+  overflow-y: scroll;
+}
+
+.system-prompt-input {
+  min-height: 100%;
+  width: 30vw;
+  resize: none;
+}
+
+.dialog-prompt-row {
+  &.us {
+    .dialog-prompt-input {
+      border-top-left-radius: 6px;
+    }
+
+    .dialog-prompt-actions {
+      border-left: 0;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    margin-top: 4px;
+  }
+
+  &.them {
+    .dialog-prompt-input {
+      border-bottom-right-radius: 6px;
+    }
+
+    .dialog-prompt-actions {
+      border-right: 0;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-top-left-radius: 0;
+    }
+  }
+
+  margin-top: 1px;
+}
+
+.dialog-prompt-actions {
+  border: 1px solid var(--surface-border);
+  border-radius: 6px;
+  font-size: small;
+  padding: 2px;
+
+  &.us {
+    border-right: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .dialog-prompt-action {
+    color: var(--surface-border);
+
+    &:hover {
+      cursor: pointer;
+      color: var(--text-color-primary)
+    }
+  }
+}
+
+.dialog-prompt-input {
+  border-radius: 0px;
+  width: 100%;
+  resize: none;
+}
+
+.dialog-prompt-container {
+  margin-left: 3px;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
 }
 
 // Sidebar
@@ -51,9 +125,11 @@
     padding: 4px 4px 0px 4px;
     font-size: small;
     text-align: justify;
+
     .primary {
       color: var(--text-color);
     }
+
     .secondary {
       color: var(--text-color-secondary);
     }
@@ -62,6 +138,7 @@
   .labeled-separator {
     margin: 4px 4px 0px 4px;
     width: auto;
+
     .label {
       font-size: x-small;
       color: var(--surface-border);
@@ -69,14 +146,16 @@
       margin-left: 1px;
       margin-right: 1px;
     }
+
     .line {
       border-bottom: 1px solid var(--surface-border);
       margin-bottom: 2px;
 
       &.right {
         width: 90%;
-        
+
       }
+
       &.left {
         width: 10%;
         border-bottom-left-radius: 50%;
@@ -105,20 +184,7 @@
     border-bottom-right-radius: 15px;
   }
 
-  .center-menubar {
-    position: sticky;
-    background-color: var(--surface-b);
-    width: 100%;
-    border-bottom: 1px solid var(--surface-border);
-
-    * {
-      height: 41px;
-      border-radius: 0;
-      border: 0px !important;
-    }
-  }
-
-  .menubar {
+  .central-header {
     position: sticky;
     border-bottom: 1px solid var(--surface-border);
     background-color: var(--surface-b);
@@ -200,7 +266,7 @@
     pointer-events: all;
     height: 0vh;
     border: 0px solid var(--surface-border);
-    transition: height 0.25s, opacity 0.1s cubic-bezier(.77,0,1,.23);
+    transition: height 0.25s, opacity 0.1s cubic-bezier(.77, 0, 1, .23);
 
     &.active {
       padding: 4px;
@@ -238,36 +304,71 @@
     }
   }
 
-  .newtabs {
+  .tabs {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
     transition: background-color 0.1s;
     color: var(--surface-border);
     margin-bottom: 0px;
     pointer-events: all;
-    max-width: 49%;
 
-    .tab {
-      height: 41px;
-      transition: border-color 0.1s;
-      border-bottom: 0px;
-      padding: 11px;
-      border-bottom: 1px solid transparent;
-      border-top: 1px solid transparent;
+    .tabs-group {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      height: 36px;
+      border: 1px solid var(--surface-border);
+      border-radius: 6px;
+      margin: 3px;
+      margin-right: 4px;
+      margin-top: 2px;
+      margin-left: 0px;
 
-      &:hover {
-        color: var(--text-color);
+      &.command-line {
+        margin: 3px;
+        margin-top: 2px;
+        height: 36px;
+        transition: border-color 0.2s;
+        width: 100%;
+
+        &:hover {
+          border-color: var(--primary-color);
+        }
+
+        &.active {
+          border-color: var(--primary-color);
+        }
+
+        .input {
+          border: 0;
+          height: 34px;
+          font-family: 'Courier New', Courier, monospace;
+          letter-spacing: -1px;
+        }
       }
 
-      &.active {
-        border-bottom: 0px;
-        border-bottom: 1px solid var(--primary-color);
-        color: var(--text-color);
-        background-color: var(--surface-b);
+      .tab {
+        transition: background-color 0.1s;
+        height: 30px;
+        width: 30px;
+        border-radius: 16px;
+        margin: 3px;
+
+        &:hover {
+          color: var(--text-color);
+        }
+
+        &.active {
+          color: var(--text-color);
+          background-color: var(--surface-border);
+        }
       }
     }
 
     .tabInput {
       transition: width 0.2s, padding 0.1s;
-      width: 0px;
+      width: 0;
       padding: 0;
       border: 0;
       border-radius: 0;
@@ -277,126 +378,9 @@
 
       &.active {
         visibility: visible;
-        width: 270px;
+        width: 240px;
         padding: 8px 12px 8px 0px;
         border-bottom: 1px solid var(--primary-color);
-      }
-    }
-  }
-
-  .assistant-panel {
-    margin-bottom: 4px;
-    pointer-events: none;
-    width: 100%;
-
-    .tabs {
-      opacity: 0.5;
-      transition: background-color 0.1s;
-      color: var(--text-color-secondary);
-      border-radius: 20px;
-      margin: 4px;
-      margin-bottom: 0px;
-      pointer-events: all;
-      max-width: 49%;
-
-      &:hover {
-        transition: background-color 0.1s;
-        opacity: 1;
-        background-color: var(--surface-b);
-      }
-
-      &.active {
-        opacity: 1;
-        background-color: var(--surface-border);
-        border-bottom-left-radius: 0px;
-        border-bottom-right-radius: 0px;
-      }
-
-      .tab {
-        transition: padding 0.1s;
-        border: 1px solid transparent;
-        border-bottom: 0px;
-        padding: 9px;
-        font-size: 25px;
-        border-radius: 20px;
-
-        &:hover {
-          color: var(--text-color);
-        }
-
-        &.active {
-          border: 1px solid var(--surface-border);
-          border-bottom: 0px;
-          border-radius: 0;
-          border-top-left-radius: 20px;
-          border-right: 0;
-          padding-right: 0;
-          color: var(--text-color);
-          background-color: var(--surface-b);
-        }
-      }
-
-      .assistantInput {
-        transition: width 0.2s, padding 0.1s;
-        width: 0;
-        padding: 0;
-        border: 0;
-        visibility: collapse;
-        border-radius: 0;
-        border-top-right-radius: 20px;
-        border-bottom-right-radius: 20px;
-
-        &.active {
-          visibility: visible;
-          width: 270px;
-          padding: 8px 12px 8px 12px;
-          border-top: 1px solid var(--surface-border);
-          border-right: 1px solid var(--surface-border);
-        }
-      }
-    }
-
-    .panel-content {
-      background-color: var(--surface-b);
-      opacity: 0;
-      pointer-events: all;
-      height: 0vh;
-      width: 50%;
-      border: 0px solid var(--surface-border);
-      transition: height 0.25s, opacity 0.25s, border 0.25s;
-
-      &.active {
-        padding: 6px;
-        opacity: 1;
-        border: 1px solid var(--surface-border);
-        border-left: 0px;
-        height: 45vh;
-      }
-
-      .assistant-chat {
-        width: 100%;
-        margin-left: 1px;
-
-        .message {
-          padding: 6px;
-          width: 100%;
-
-          &.prompt {
-            background-color: var(--surface-border);
-            border-left: 1px solid var(--surface-border);
-            border-right: 1px solid var(--surface-border);
-            border-top: 1px solid var(--surface-border);
-            border-top-right-radius: 10px;
-            border-top-left-radius: 10px;
-          }
-
-          &.response {
-            background-color: var(--surface-a);
-            border-left: 2px solid var(--surface-border);
-            border-right: 2px solid var(--surface-border);
-            border-bottom: 2px solid var(--surface-border);
-          }
-        }
       }
     }
   }
