@@ -13,12 +13,14 @@ import {
 import { LocalDriveService } from './services/localDrive/local-drive.service';
 import { IndexedDbService } from './services/indexedDb/indexed-db.service';
 import { Workspace } from './models/workspace.model';
-import { lastValueFrom, of, timer } from 'rxjs';
+import { Observable, lastValueFrom, of, timer } from 'rxjs';
 import { switchMap, timeout } from 'rxjs/operators';
 import { ArticleHierarchyNode } from './models/articleHierarchyNode.model';
 import { ArticleActionEnum } from './enums/articleActionEnum';
 import { LlmApiService } from './services/llmApi/llm-api.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
+import { Conversation, Msg } from './models/conversation.model';
+import { MistralRequestMessage } from './models/llm/mistral.models';
 
 @Component({
   selector: 'app-root',
@@ -43,7 +45,15 @@ export class AppComponent implements OnInit {
   /** Assistants & Consoles */
   dropdownPanelActiveTab?: string;
   activeAssistant?: number;
-  consoleHasFocus: boolean = false;
+  consoleInputFocused: boolean = false;
+  selectedLLMIndex: number = 0;
+
+  conversation: Conversation = new Conversation([{
+    active: true,
+    role: "user",
+    content: "moep"
+  },
+  ]);
 
   /** Dialogs */
   showSaveProjectOverlay: boolean = false;
@@ -484,18 +494,31 @@ export class AppComponent implements OnInit {
 
   }
 
-  assistantKeyUp(event: KeyboardEvent, chatInput: string) {
-    if (event.key === 'Enter') {
-      if (this.llmApiService.llmConfigs[0]) {
-        this.llmApiService
-          .sendOpenAiStylePrompt(
-            [{ role: 'system', content: chatInput }],
-            this.llmApiService.llmConfigs[0]
-          )
-          .subscribe((msg) => console.log(msg));
-      } else {
-        this.messageService.add({ severity: 'error', summary: `No LLM: Configure a LLM in the settings` });
+  scrollIncrementDecrement(e: WheelEvent, n: number, step: number = 1, max: number = 100, min: number = 0): number {
+    if (e.deltaY > 0) {
+      if (n - step >= min) {
+        return n - step;
+      }
+    } else {
+      if (n + step <= max) {
+        return n + step;
       }
     }
+    return n;
+  }
+
+  promptConversation() {
+    const message: Msg = { role: 'assistant', content: '', active: true }
+    this.llmApiService.sendMistralStylePrompt(this.conversation, this.llmApiService.llmConfigs[this.selectedLLMIndex]).then((o) => {
+      o?.subscribe((a) => {
+        for (const v of a) {
+          const newContent = v?.choices[0]?.delta?.content
+          if (newContent !== undefined) {
+            message.content += newContent;
+          }
+        }
+      })
+    })
+    this.conversation.messages.push(message)
   }
 }

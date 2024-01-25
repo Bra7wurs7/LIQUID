@@ -27,21 +27,6 @@ p-inputSwitch {
   line-height: unset !important;
 }
 
-.p-scrollpanel {
-  &.custombar {
-    .p-scrollpanel-wrapper {
-      .p-scrollpanel-content {
-        width: 100%;
-        padding: 0;
-      }
-    }
-
-    .p-scrollpanel-bar {
-      visibility: collapse !important;
-    }
-  }
-}
-
 .p-panel-toggleable {
   .p-panel-header {
     background-color: var(--surface-b);

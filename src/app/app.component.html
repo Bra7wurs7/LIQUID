@@ -16,65 +16,121 @@
     <!-- Dropdown Bar -->
     <div class="central-header flex flex-column">
       <div class="dropdown-panel overflow-y-auto flex flex-row" [ngClass]="{ active: dropdownPanelActiveTab }">
-        <div class="flex flex-row justify-content-start dropdown-panel-content">
-          <div *ngIf="dropdownPanelActiveTab === 'settings'" class="settings box">
-            <!-- LLM Endpoints -->
-            <div class="flex flex-column">
-              <h6>
-                Add new chat-ai service configuration (Large Language Models
-                API)
-              </h6>
-              <div class="flex flex-row justify-content-between align-items-center">
-                <div>
-                  <input #NewConfigName type="text" class="settingsTextInput sm" placeholder="Name" pInputText
-                    pTooltip="Choose a name for the new API configuration (e.g. 'OpenAI GPT-4')" />
-                  <input #NewConfigUrl type="text" class="settingsTextInput md" placeholder="API Endpoint URL"
-                    pInputText pTooltip="Enter the web-address that points to the new API endpoint" />
-                  <input #NewConfigKey type="password" class="settingsTextInput md" placeholder="Api Key" pInputText
-                    pTooltip="Enter the authorization key for the API endpoint" />
-                </div>
-                <i class="pi pi-box iconButton pointerOnHover" pTooltip="Add as OpenAI Config" (click)="
-                    llmApiService.addNewOpenAiConfig(
-                      NewConfigName.value,
-                      NewConfigUrl.value,
-                      NewConfigKey.value
-                    )
-                  "></i>
+        <div *ngIf="dropdownPanelActiveTab === 'settings'" class="settings box">
+          <!-- LLM Endpoints -->
+          <div class="flex flex-column">
+            <h6>
+              Add new chat-ai service configuration (Large Language Models
+              API)
+            </h6>
+            <div class="flex flex-row justify-content-between align-items-center">
+              <div>
+                <input #NewConfigName type="text" class="settingsTextInput sm" placeholder="Name" pInputText
+                  pTooltip="Choose a name for the new API configuration (e.g. 'OpenAI GPT-4')" />
+                <input #NewConfigUrl type="text" class="settingsTextInput md" placeholder="API Endpoint URL" pInputText
+                  pTooltip="Enter the web-address that points to the new API endpoint" />
+                <input #NewConfigKey type="password" class="settingsTextInput md" placeholder="Api Key" pInputText
+                  pTooltip="Enter the authorization key for the API endpoint" />
               </div>
-              <h6 *ngIf="llmApiService.llmConfigs.length > 0">
-                Configured Chat-AI Services (Large Language Models APIs)
-              </h6>
-              <div class="flex flex-row justify-content-between align-items-center"
-                *ngFor="let llmConfig of llmApiService.llmConfigs; index as i">
-                <div>
-                  <input type="text" class="settingsTextInput md" placeholder="Config Name"
-                    [pTooltip]="'Config Name:\n\'' + llmConfig.name + '\''" [value]="llmConfig.name" pInputText />
-                  <input type="text" class="settingsTextInput md" placeholder="URL"
-                    [pTooltip]="'Api Url:\n\'' + llmConfig.url + '\''" [value]="llmConfig.url" pInputText />
-                </div>
-                <i class="pi pi-trash iconButton pointerOnHover" pTooltip="Remove this configuration"
-                  (click)="llmApiService.removeLLMConfig(i)"></i>
+              <i class="pi pi-box iconButton pointerOnHover" pTooltip="Add as OpenAI Config" (click)="
+                  llmApiService.addNewOpenAiConfig(
+                    NewConfigName.value,
+                    NewConfigUrl.value,
+                    NewConfigKey.value
+                  )
+                "></i>
+              <i class="pi pi-box iconButton pointerOnHover" pTooltip="Add as Mistral Config" (click)="
+                llmApiService.addNewMistralConfig(
+                  NewConfigName.value,
+                  NewConfigUrl.value,
+                  NewConfigKey.value
+                )
+              "></i>
+            </div>
+            <h6 *ngIf="llmApiService.llmConfigs.length > 0">
+              Configured Chat-AI Services (Large Language Models APIs)
+            </h6>
+            <div class="flex flex-row justify-content-between align-items-center"
+              *ngFor="let llmConfig of llmApiService.llmConfigs; index as i">
+              <div>
+                <input type="text" class="settingsTextInput md" placeholder="Config Name"
+                  [pTooltip]="'Config Name:\n\'' + llmConfig.name + '\''" [value]="llmConfig.name" pInputText />
+                <input type="text" class="settingsTextInput md" placeholder="URL"
+                  [pTooltip]="'Api Url:\n\'' + llmConfig.url + '\''" [value]="llmConfig.url" pInputText />
+              </div>
+              <i class="pi pi-trash iconButton pointerOnHover" pTooltip="Remove this configuration"
+                (click)="llmApiService.removeLLMConfig(i)"></i>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="dropdownPanelActiveTab === 'console'" class="flex flex-row w-full align-content-end">
+          <textarea pInputTextarea class="system-prompt-input" placeholder="System Prompt"
+            [(ngModel)]="conversation.system"></textarea>
+          <div class="dialog-prompt-container flex flex-column justify-content-start">
+            <div class="dialog-prompt-message flex flex-row hideChildUntilHoverParent"
+              *ngFor="let msg of conversation.messages; index as idx" [ngClass]="{
+              inactive: !msg.active,
+              start: idx === 0 || msg.role === 'user',
+              end: idx === conversation.messages.length-1 || (conversation.messages[idx+1] !== undefined && conversation.messages[idx+1].role === 'user'),
+            }">
+              <textarea pInputTextarea rows="1" class="dialog-prompt-textarea" [autoResize]="true"
+                [(ngModel)]="msg.content"></textarea>
+              <div class="dialog-prompt-actions hideChildUntilHoverChild">
+                <i class="pi dialog-prompt-action"
+                  [pTooltip]="msg.active ? 'This message will not be included in prompts' : 'This message will be included in prompts'"
+                  tooltipPosition="left" (click)="msg.active = !msg.active" [ngClass]="{
+                    'pi-stop': !msg.active,
+                    'pi-check-square': msg.active,
+                  }"></i>
+                <i class="pi dialog-prompt-action" [pTooltip]="'Message by: ' + msg.role" tooltipPosition="left"
+                  (click)="msg.role === 'assistant' ? msg.role = 'user' : msg.role = 'assistant'" [ngClass]="{
+                    'pi-user': msg.role === 'user',
+                    'pi-globe': msg.role === 'assistant',
+                  }"></i>
+                <i class="pi pi-trash dialog-prompt-action" pTooltip="Remove this message from the conversation"
+                  tooltipPosition="left"></i>
+                <i class="pi pi-save dialog-prompt-action" pTooltip="Save this message into a new article"
+                  tooltipPosition="left"></i>
               </div>
             </div>
           </div>
-          <div *ngIf="dropdownPanelActiveTab === 'console'" class="flex flex-row w-full">
-            <textarea pInputTextarea class="system-prompt-input" placeholder="System Prompt"></textarea>
-            <div class="dialog-prompt-container flex flex-column justify-content-end">
-              <div class="dialog-prompt-row us flex flex-row">
-                <textarea rows="1" pInputTextarea class="dialog-prompt-input" placeholder="User Prompt"
-                  [autoResize]="true"></textarea>
-                <div class="dialog-prompt-actions flex flex-column justify-content-around">
-                  <i class="pi pi-check-circle dialog-prompt-action"></i>
-                  <i class="pi pi-cog dialog-prompt-action"></i>
-                </div>
+          <div class="dialog-prompt-control-panel">
+            <div>
+              <div class="flex flex-column align-items-center justify-content-center action"
+                [pTooltip]="llmApiService.llmConfigs[selectedLLMIndex].name+'\nScroll to change value.'"
+                tooltipPosition="left"
+                (wheel)="selectedLLMIndex = scrollIncrementDecrement($event, selectedLLMIndex, 1, llmApiService.llmConfigs.length-1)">
+                <div class="pi pi-globe"></div>
               </div>
-              <div class="dialog-prompt-row them flex flex-row">
-                <div class="dialog-prompt-actions flex flex-column justify-content-around">
-                  <i class="pi pi-check-circle dialog-prompt-action"></i>
-                  <i class="pi pi-cog dialog-prompt-action"></i>
-                </div>
-                <textarea rows="1" pInputTextarea class="dialog-prompt-input" placeholder="LLM Reply"
-                  [autoResize]="true"></textarea>
+              <div class="number"
+                (wheel)="conversation.temperature = scrollIncrementDecrement($event, conversation.temperature, 0.25, 2)"
+                [pTooltip]="'Temperature: '+conversation.temperature+'\nScroll to change value.'"
+                tooltipPosition="left">
+                <span>{{conversation.temperature}}</span>
+              </div>
+              <div class="number"
+                (wheel)="conversation.max_tokens = scrollIncrementDecrement($event, conversation.max_tokens, 32, 2048)"
+                [pTooltip]="'Max Tokens: '+conversation.max_tokens+'\nScroll to change value.'"
+                tooltipPosition="left">
+                <span>{{conversation.max_tokens}}</span>
+              </div>
+            </div>
+            <div>
+              <div class="flex flex-column align-items-center justify-content-center action"
+                pTooltip="Delete the entire conversation" tooltipPosition="left">
+                <div class="pi pi-trash"></div>
+              </div>
+              <div class="flex flex-column align-items-center justify-content-center action"
+                pTooltip="Save the entire conversation into a new article">
+                <div class="pi pi-save" tooltipPosition="left"></div>
+              </div>
+              <div class="flex flex-column align-items-center justify-content-center action"
+                pTooltip="Toggle Autoprompting" tooltipPosition="left">
+                <div class="pi pi-forward"></div>
+              </div>
+              <div class="flex flex-column align-items-center justify-content-center action" pTooltip="Prompt LLM"
+                tooltipPosition="left" (click)="promptConversation()">
+                <div class="pi pi-step-forward-alt"></div>
               </div>
             </div>
           </div>
@@ -142,9 +198,9 @@
 
         <!-- Chat Input & Dropdown-Tabs -->
         <div class="tabs flex-grow-1">
-          <div class="tabs-group command-line" [ngClass]="{ active: consoleHasFocus}">
-            <input #consoleinput type="text" class="input flex-grow-1" pInputText (focus)="consoleHasFocus = true"
-              (blur)="consoleHasFocus = false"/>
+          <div class="tabs-group command-line" [ngClass]="{ active: consoleInputFocused}">
+            <input #consoleinput type="text" class="input flex-grow-1" pInputText (focus)="consoleInputFocused = true"
+              (blur)="consoleInputFocused = false" />
             <div class="tab flex flex-column align-items-center justify-content-center"
               [ngClass]="{ active: dropdownPanelActiveTab === 'console' }" tooltipPosition="bottom"
               [pTooltip]="'Chat Console'" (click)="onToggleConsole('console')">
@@ -175,7 +231,7 @@
         overflow-y: auto;
         overflow-x: hidden;
         scroll-behavior: smooth;
-      " styleClass="custombar" [ngClass]="{
+      " [ngClass]="{
         empty:
           project &&
           project.workspaces[project.activeWorkspaceIndex].viewedArticles
