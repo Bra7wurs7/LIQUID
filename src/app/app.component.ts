@@ -521,4 +521,12 @@ export class AppComponent implements OnInit {
     })
     this.conversation.messages.push(message)
   }
+
+  commandLineKeyUp(e: KeyboardEvent, input: HTMLInputElement) {
+    if (e.key === 'Enter') {
+      this.conversation.messages.push({ active: true, role: 'user', content: input.value });
+      this.promptConversation();
+      input.value = '';
+    }
+  }
 }

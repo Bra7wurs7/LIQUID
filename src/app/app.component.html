@@ -88,7 +88,7 @@
                     'pi-globe': msg.role === 'assistant',
                   }"></i>
                 <i class="pi pi-trash dialog-prompt-action" pTooltip="Remove this message from the conversation"
-                  tooltipPosition="left"></i>
+                  (click)="conversation.messages.splice(idx, 1)" tooltipPosition="left"></i>
                 <i class="pi pi-save dialog-prompt-action" pTooltip="Save this message into a new article"
                   tooltipPosition="left"></i>
               </div>
@@ -103,21 +103,20 @@
                 <div class="pi pi-globe"></div>
               </div>
               <div class="number"
-                (wheel)="conversation.temperature = scrollIncrementDecrement($event, conversation.temperature, 0.25, 2)"
+                (wheel)="conversation.temperature = scrollIncrementDecrement($event, conversation.temperature, 0.25, 1)"
                 [pTooltip]="'Temperature: '+conversation.temperature+'\nScroll to change value.'"
                 tooltipPosition="left">
                 <span>{{conversation.temperature}}</span>
               </div>
               <div class="number"
-                (wheel)="conversation.max_tokens = scrollIncrementDecrement($event, conversation.max_tokens, 32, 2048)"
-                [pTooltip]="'Max Tokens: '+conversation.max_tokens+'\nScroll to change value.'"
-                tooltipPosition="left">
+                (wheel)="conversation.max_tokens = scrollIncrementDecrement($event, conversation.max_tokens, 128, 2048)"
+                [pTooltip]="'Max Tokens: '+conversation.max_tokens+'\nScroll to change value.'" tooltipPosition="left">
                 <span>{{conversation.max_tokens}}</span>
               </div>
             </div>
             <div>
               <div class="flex flex-column align-items-center justify-content-center action"
-                pTooltip="Delete the entire conversation" tooltipPosition="left">
+                (click)="conversation.messages = []" pTooltip="Delete the entire conversation" tooltipPosition="left">
                 <div class="pi pi-trash"></div>
               </div>
               <div class="flex flex-column align-items-center justify-content-center action"
@@ -200,7 +199,8 @@
         <div class="tabs flex-grow-1">
           <div class="tabs-group command-line" [ngClass]="{ active: consoleInputFocused}">
             <input #consoleinput type="text" class="input flex-grow-1" pInputText (focus)="consoleInputFocused = true"
-              (blur)="consoleInputFocused = false" />
+              (blur)="consoleInputFocused = false"
+              (keyup)="commandLineKeyUp($event, consoleinput)" />
             <div class="tab flex flex-column align-items-center justify-content-center"
               [ngClass]="{ active: dropdownPanelActiveTab === 'console' }" tooltipPosition="bottom"
               [pTooltip]="'Chat Console'" (click)="onToggleConsole('console')">
