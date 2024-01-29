@@ -1,5 +1,4 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Article } from 'src/app/models/article.model';
 
@@ -11,10 +10,11 @@ import { Article } from 'src/app/models/article.model';
 export class NotePanelComponent implements OnInit {
   @ViewChild('contentOutlet') contentOutlet!: HTMLElement;
   
-  @Output() internalLinkActivatedEvent: EventEmitter<string> = new EventEmitter()
-  @Output() moveUpEvent: EventEmitter<void> = new EventEmitter()
-  @Output() moveDownEvent: EventEmitter<void> = new EventEmitter()
-  @Output() closePanelEvent: EventEmitter<void> = new EventEmitter()
+  @Output() internalLinkActivatedEvent: EventEmitter<string> = new EventEmitter();
+  @Output() moveUpEvent: EventEmitter<void> = new EventEmitter();
+  @Output() moveDownEvent: EventEmitter<void> = new EventEmitter();
+  @Output() closePanelEvent: EventEmitter<void> = new EventEmitter();
+  @Output() renameEvent: EventEmitter<string> = new EventEmitter();
   @Input() isActivePanel?: boolean = false;
   @Input() articleName?: string;
   @Input() editMode: boolean = false;
@@ -22,7 +22,7 @@ export class NotePanelComponent implements OnInit {
 
   note: Article = new Article();
 
-  constructor(private http: HttpClient, private elRef: ElementRef, private messageService: MessageService) {}
+  constructor(private messageService: MessageService) {}
 
   ngOnInit() {
     if (this.articleName) {

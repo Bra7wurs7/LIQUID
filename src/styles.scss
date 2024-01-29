@@ -1,6 +1,6 @@
 :root {
   font-family: Helvetica, sans-serif;
-  --font-family:Helvetica, sans-serif;
+  --font-family: Helvetica, sans-serif;
 }
 
 html {
@@ -31,6 +31,7 @@ p-inputSwitch {
   .p-panel-header {
     background-color: var(--surface-b);
   }
+
   .p-panel-content {
     background-color: var(--surface-b);
   }
@@ -81,6 +82,7 @@ p-inputSwitch {
     border-right: 0;
     border-top: 0;
   }
+
   .p-menuitem {
     .p-menuitem-link {
       border-radius: 0 !important;
@@ -116,16 +118,35 @@ p-inputSwitch {
   border-radius: 4px;
   background-color: var(--surface-border);
   box-shadow: none;
-  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .p-inputtext:enabled:focus {
   outline: 0 none;
   outline-offset: 0;
-  box-shadow: 0 0 0 0px #e0d8fc;
-  border-color: #b19df7
+  box-shadow: 0 0 0 0px #000000;
 }
 
 .pseudoBorder {
   border-bottom: 1px solid var(--surface-border);
+}
+
+.box {
+  .p-cascadeselect-panel {
+    padding: 0px;
+    border-radius: 0;
+  }
+
+  .p-cascadeselect-panel .p-cascadeselect-item-content {
+    padding: 10px 5px 10px 5px;
+  }
+
+  .p-cascadeselect {
+    border-radius: 0;
+    margin-right: 2px;
+  }
+
+  .p-cascadeselect-label {
+    font-size: x-small;
+  }
 }

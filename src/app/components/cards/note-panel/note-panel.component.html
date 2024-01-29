@@ -1,12 +1,15 @@
 <p-panel [toggleable]="true" #panel class="panel-hide-default-toggler" [ngClass]="{ activePanel: isActivePanel }"
   *ngIf="note">
   <ng-template pTemplate="header">
-    <div class="flex flex-column align-items-start">
+    <div *ngIf="!editMode" class="flex flex-column align-items-start">
       <div class="flex flex-row">
         <span class="article-tag pointerOnHover" *ngFor="let group of note.groups"
           (click)="internalLinkActivatedEvent.emit(group)">#{{ group }}</span>
       </div>
       <span style="padding-bottom: 0px">{{ note.name }}</span>
+    </div>
+    <div *ngIf="editMode">
+      <input #nameAndCategoriesInput type="text" class="article-name-input" pInputText [value]="note | articleNameAndCategoriesToString" (change)="renameEvent.emit(nameAndCategoriesInput.value)" />
     </div>
     <div class="flex-grow-1"></div>
   </ng-template>
@@ -16,14 +19,14 @@
       style="margin-left: 2px"></button>
     <span class="p-buttonset">
       <button pButton pRipple type="button" icon="pi pi-angle-up" class="p-panel-header-icon"
-        (click)="moveUpEvent.emit()" pTooltip="Move panel up" tooltipPosition="left"></button>
+        (click)="moveUpEvent.emit()" pTooltip="Move article up" tooltipPosition="left"></button>
       <button pButton pRipple type="button" icon="pi pi-angle-down" class="p-panel-header-icon"
-        (click)="moveDownEvent.emit()" pTooltip="Move panel down" tooltipPosition="left"></button>
+        (click)="moveDownEvent.emit()" pTooltip="Move article down" tooltipPosition="left"></button>
       <button (click)="panel.toggle($event)" pButton pRipple type="button"
         [icon]="'pi ' + (panel.collapsed ? 'pi-plus' : 'pi-minus')" class="p-panel-header-icon"
-        [pTooltip]="panel.collapsed ? 'Maximize panel' : 'Minimize panel'" tooltipPosition="left"></button>
+        [pTooltip]="panel.collapsed ? 'Maximize panel' : 'Minimize article'" tooltipPosition="left"></button>
       <button (click)="closePanelEvent.emit()" pButton pRipple type="button" icon="pi pi-times"
-        class="p-panel-header-icon" pTooltip="Close panel" tooltipPosition="left"></button>
+        class="p-panel-header-icon" pTooltip="Close article" tooltipPosition="left"></button>
     </span>
   </ng-template>
   <ng-template pTemplate="content">

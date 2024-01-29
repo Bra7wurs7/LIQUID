@@ -1,16 +1,16 @@
 .box {
   padding: 10px;
   border: 1px solid var(--surface-border);
-  max-width: 25vw;
+  max-width: max-content;
   border-radius: 6px;
   overflow-y: scroll;
 }
 
 .system-prompt-input {
-  font-size: small;
   min-height: 100%;
   width: 30vw;
   resize: none;
+  border-radius: 6px;
 }
 
 .dialog-prompt-control-panel {
@@ -23,8 +23,8 @@
   margin-left: 3px;
 
   .action {
-    height: 30px;
-    width: 30px;
+    height: 27px;
+    width: 27px;
     margin: 3px;
     color: var(--surface-border);
 
@@ -38,8 +38,8 @@
     font-family: 'Courier New', Courier, monospace;
     text-align: center;
     line-height: 30px;
-    height: 30px;
-    width: 30px;
+    height: 27px;
+    width: 27px;
     margin: 3px;
     font-size: 14px;
     text-overflow: clip;
@@ -79,7 +79,7 @@
 
   .dialog-prompt-actions {
     position: absolute;
-    right: 1px;
+    right: 15px;
     top: 1px;
     border-radius: 6px;
 
@@ -88,7 +88,6 @@
     }
 
     .dialog-prompt-action {
-      font-size: small;
       transition: color 0.1s;
       color: var(--text-color-secondary);
       margin: 3px;
@@ -101,7 +100,8 @@
 
   .dialog-prompt-textarea {
     padding: 10px;
-    font-size: small;
+    box-shadow: transparent, transparent;
+    resize: none;
 
     &:hover {
       background-color: var(--surface-a);
@@ -109,6 +109,7 @@
 
     &:focus {
       background-color: var(--surface-a);
+      resize: vertical;
     }
   }
 
@@ -121,8 +122,8 @@
 
   &.start {
     .dialog-prompt-textarea {
-      border-bottom: 0;
-      border-bottom: 0;
+      border-bottom-width: 0;
+      border-bottom-width: 0;
       border-top-left-radius: 6px;
       border-top-right-radius: 6px;
     }
@@ -334,7 +335,7 @@
     &.active {
       padding: 3px;
       opacity: 1;
-      height: 35vh;
+      height: 60vh;
       border-bottom: solid 1px var(--surface-border);
     }
 
@@ -397,6 +398,7 @@
         }
 
         .input {
+          background-color: transparent;
           border: 0;
           height: 100%;
           font-family: 'Courier New', Courier, monospace;

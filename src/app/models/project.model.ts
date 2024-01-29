@@ -10,7 +10,7 @@ export class Project {
   workspaces: Workspace[] = [];
   /** */
   activeWorkspaceIndex: number;
-  /** version of GAS that this Project last saved with */
+  /** version of LIQUID that this Project last saved with */
   version: string;
   constructor(
     title: string,
@@ -27,12 +27,11 @@ export class Project {
   }
 
   toSerializableProject(): SerializableProject {
-    const notes: any = {};
-    const categories: any = {};
+    const articles: any = {};
     this.articles.forEach((value, key) => {
-      notes[key] = value;
+      articles[key] = value;
     })
-    return new SerializableProject(this.title, notes, categories, this.workspaces, this.activeWorkspaceIndex, this.version);
+    return new SerializableProject(this.title, articles, this.workspaces, this.activeWorkspaceIndex, this.version);
   }
 }
 
@@ -41,9 +40,7 @@ export class SerializableProject {
   readonly className: string = 'SerializableProject';
   title: string;
   /** Object representing a map of all notes for this project */
-  notes: any;
-  /** Object representing a map of all note categories for this project*/
-  categories: any;
+  articles: any;
   /** */
   workspaces: Workspace[] = [];
   /** */
@@ -53,15 +50,13 @@ export class SerializableProject {
 
   constructor(
     title: string = '',
-    notes: any = {},
-    categories: any = {},
+    articles: any = {},
     workspaces: Workspace[] = [],
     activeWorkspaceIndex: number = 0,
     version: string = "0.0.1",
   ) {
     this.title = title
-    this.notes = notes;
-    this.categories = categories;
+    this.articles = articles;
     this.workspaces = workspaces;
     this.activeWorkspaceIndex = activeWorkspaceIndex;
     this.version = version
@@ -69,8 +64,8 @@ export class SerializableProject {
 
   toProject(): Project {
     const notes: Map<string, Article> = new Map();
-    Object.keys(this.notes).forEach((key: string) => {
-      notes.set(key, this.notes[key] as Article)
+    Object.keys(this.articles).forEach((key: string) => {
+      notes.set(key, this.articles[key] as Article)
     });
     return new Project(this.title, notes, this.workspaces, this.activeWorkspaceIndex, this.version);
   }

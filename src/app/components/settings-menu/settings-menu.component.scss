@@ -2,20 +2,27 @@
     border-radius: 0;
     margin-right: 2px;
     font-size: x-small;
-
-    &.sm {
-        width: 75px;
-    }
-
-    &.mm {
-        width: 150px;
-    }
-
-    &.lg {
-        width: 225px;
-    }
+    width: 100%;
 }
 
 .iconButton {
-    margin: 4px;
+    height: auto;
+    width: 30px;
+    border: 1px solid var(--surface-border);
+    color: var(--text-color-secondary);
+    .pi {
+        margin: 5px;
+    }
+    &:hover {
+        cursor: pointer;
+        color: var(--text-color-primary);
+    }
 }
+
+.box-header {
+    font-size: smaller;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+

@@ -1,17 +1,21 @@
 <!-- LLM Endpoints -->
 <div class="flex flex-column">
-    <h6 *ngIf="llmApiService.llmConfigs.length > 0">Configured Chat-AI Services (Large Language Models APIs)</h6>
-    <div class="flex flex-row justify-content-between align-items-center"
-        *ngFor="let llmConfig of llmApiService.llmConfigs, index as i">
-        <input type="text" class="settingsTextInput md" placeholder="Config Name" [value]="llmConfig.name" pInputText />
-        <input type="text" class="settingsTextInput md" placeholder="URL" [value]="llmConfig.url" pInputText />
-        <i class="pi pi-trash" (click)="llmApiService.removeLLMConfig(i)"></i>
+    <div class="box-header">Add LLM Api Endpoint</div>
+    <div class="flex flex-row justify-content-between align-items-stretch">
+        <p-cascadeSelect  pTooltip="Select an LLM Api Provider" [(ngModel)]="selectedLLM" [options]="llms" optionLabel="mname" optionGroupLabel="name" [optionGroupChildren]="['models']" placeholder="Select a LLM"></p-cascadeSelect>
+        <input #ApiKey type="password" class="settingsTextInput" placeholder="Api Key" pInputText pTooltip="Enter the authorization key for the API endpoint" />
+        <div class="iconButton flex flex-column justify-content-center" pTooltip="Add Api Endpoint" (click)="llmApiService.addLLMConfig(selectedLLM.code, ApiKey.value)">
+            <i class="pi pi-plus"></i>
+        </div>
     </div>
-    <h6>Add new chat-ai service configuration  (Large Language Models API)</h6>
-    <div class="flex flex-row justify-content-between align-items-center">
-        <input #NewConfigName type="text" class="settingsTextInput sm" placeholder="Name" pInputText pTooltip="Choose a name for the new API configuration (e.g. 'OpenAI GPT-4')" />
-        <input #NewConfigUrl type="text" class="settingsTextInput md" placeholder="API Endpoint URL" pInputText pTooltip="Enter the web-address that points to the new API endpoint" />
-        <input #NewConfigKey type="password" class="settingsTextInput md" placeholder="Api Key" pInputText pTooltip="Enter the authorization key for the API endpoint" />
-        <i class="pi pi-box iconButton pointerOnHover" pTooltip="Add as OpenAI Config" (click)="llmApiService.addNewOpenAiConfig(NewConfigName.value, NewConfigUrl.value, NewConfigKey.value)"></i>
+    <div class="box-header" *ngIf="llmApiService.llmConfigs.length > 0">Configured LLM Api Endpoints</div>
+    <div class="flex flex-row justify-content-between align-items-stretch" style="margin-bottom: 2px;"
+        *ngFor="let llmConfig of llmApiService.llmConfigs, index as i">
+        <input type="text" class="settingsTextInput" placeholder="Config Name" [value]="llmConfig.name" pInputText />
+        <input type="text" class="settingsTextInput" placeholder="URL" [value]="llmConfig.url" pInputText />
+        <div class="iconButton flex flex-column justify-content-center" pTooltip="Remove Api Endpoint" (click)="llmApiService.removeLLMConfig(i)">
+            <i class="pi pi-trash"></i>
+        </div>
+        
     </div>
 </div>

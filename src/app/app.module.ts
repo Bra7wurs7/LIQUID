@@ -40,13 +40,15 @@ import { HierarchicalListComponent } from './components/hierarchical-list/hierar
 import { LeftSidebarComponent } from './components/left-sidebar/left-sidebar.component';
 import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.component';
 import { CenterComponent } from './components/center/center.component';
-import { WorkspaceTooltipPipe } from './pipes/workspaceTooltip/workspace-tooltip.pipe';
 import { SettingsMenuComponent } from './components/settings-menu/settings-menu.component';
 import { ContextMenusService } from './services/contextMenus/context-menus.service';
 import { ArticleHierarchyListStringFilterPipe } from './pipes/articleHierarchyListStringFilter/article-hierarchy-list-filter.pipe';
 import { MapToListPipe } from './pipes/mapToList/map-to-list.pipe';
 import { ArticleHierarchyListRootFilterPipe } from './pipes/articleHierarchyListRootFilter/article-hierarchy-list-root-filter.pipe';
 import { ArticleHierarchyMapGetPipe } from './pipes/articleHierarchyMapGet/article-hierarchy-map-get.pipe';
+import { CascadeSelectModule } from 'primeng/cascadeselect';
+import { ArticleNameAndCategoriesToStringPipe } from './pipes/articleNameAndCategoriesToString/article-name-and-categories-to-string.pipe';
+
 
 
 @NgModule({
@@ -59,7 +61,6 @@ import { ArticleHierarchyMapGetPipe } from './pipes/articleHierarchyMapGet/artic
     LeftSidebarComponent,
     RightSidebarComponent,
     CenterComponent,
-    WorkspaceTooltipPipe,
     SettingsMenuComponent,
     ArticleHierarchyListStringFilterPipe,
     MapToListPipe,
@@ -95,6 +96,8 @@ import { ArticleHierarchyMapGetPipe } from './pipes/articleHierarchyMapGet/artic
     DialogModule,
     TableModule,
     RatingModule,
+    CascadeSelectModule,
+    ArticleNameAndCategoriesToStringPipe,
   ],
   providers: [ConfirmationService, MessageService, LocalDriveService, IndexedDbService, ContextMenusService],
   bootstrap: [AppComponent]

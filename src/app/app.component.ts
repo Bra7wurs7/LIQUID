@@ -20,7 +20,6 @@ import { ArticleActionEnum } from './enums/articleActionEnum';
 import { LlmApiService } from './services/llmApi/llm-api.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { Conversation, Msg } from './models/conversation.model';
-import { MistralRequestMessage } from './models/llm/mistral.models';
 
 @Component({
   selector: 'app-root',
@@ -48,12 +47,8 @@ export class AppComponent implements OnInit {
   consoleInputFocused: boolean = false;
   selectedLLMIndex: number = 0;
 
-  conversation: Conversation = new Conversation([{
-    active: true,
-    role: "user",
-    content: "moep"
-  },
-  ]);
+  conversation: Conversation = this.loadConversation();
+  focusedTextArea?: HTMLTextAreaElement;
 
   /** Dialogs */
   showSaveProjectOverlay: boolean = false;
@@ -164,6 +159,18 @@ export class AppComponent implements OnInit {
 
       this.autosave.subscribe(() => { });
     });
+  }
+
+  loadConversation(): Conversation {
+    const lastConversation = localStorage.getItem('last_conversation')
+    if (lastConversation) {
+      return JSON.parse(lastConversation)
+    }
+    return new Conversation()
+  }
+
+  saveConversation() {
+    localStorage.setItem('last_conversation', JSON.stringify(this.conversation));
   }
 
   setActiveArticle(index: number) {
@@ -279,6 +286,36 @@ export class AppComponent implements OnInit {
         }).accept);
       }
     });
+  }
+
+  async renameArticle(oldName: string, newNameAndCategories: string) {
+    let categoryNames = newNameAndCategories.split("#").map((n) => n.trim()).reverse()
+    const articleName = categoryNames.pop()
+    if (articleName === undefined) {
+      return;
+    }
+
+    const hierarchyNode = this.articleHierarchyMap.get(oldName);
+    if(!hierarchyNode) {
+      throw new Error()
+    }
+    const childArticles = hierarchyNode?.children;
+
+    if (articleName !== oldName && (childArticles?.length ?? 0) > 0) {
+      await lastValueFrom(this.confirmationService.confirm({
+        message: `You are renaming '${oldName}' into '${articleName}'.\n ${(childArticles?.length ?? 0)} articles name '${oldName}' as one of their categories. Update those references to '${articleName}'?`,
+        accept: () => {
+          for (const child of childArticles ?? []) {
+            const oldCategoryIndex = child.node.groups.findIndex((g) => g === oldName);
+            child.node.groups.splice(oldCategoryIndex, 1);
+            child.node.groups.push(articleName);
+          }
+        },
+      }).accept);
+    }
+
+    hierarchyNode.node.name = articleName;
+    hierarchyNode.node.groups = categoryNames;
   }
 
   scrollToPanel(child: HTMLElement, parent: HTMLDivElement) {
@@ -509,7 +546,7 @@ export class AppComponent implements OnInit {
 
   promptConversation() {
     const message: Msg = { role: 'assistant', content: '', active: true }
-    this.llmApiService.sendMistralStylePrompt(this.conversation, this.llmApiService.llmConfigs[this.selectedLLMIndex]).then((o) => {
+    this.llmApiService.sendLLMPrompt(this.conversation, this.llmApiService.llmConfigs[this.selectedLLMIndex]).then((o) => {
       o?.subscribe((a) => {
         for (const v of a) {
           const newContent = v?.choices[0]?.delta?.content
@@ -517,6 +554,7 @@ export class AppComponent implements OnInit {
             message.content += newContent;
           }
         }
+        this.saveConversation()
       })
     })
     this.conversation.messages.push(message)

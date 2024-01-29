@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { LLMConfig } from './llm-config.model';
 import { HttpClient, HttpHeaders, HttpParameterCodec, HttpParams, HttpRequest } from '@angular/common/http';
-import { LlmMessage } from '../../models/llm/llmMessage.model';
 import { Observable, map } from 'rxjs';
 import { Conversation, Msg } from '../../models/conversation.model';
-import { MistralRequestBody } from '../../models/llm/mistral.models';
+import { LlmRequestBody } from '../../models/llm/llmRequestBody.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,15 +18,9 @@ export class LlmApiService {
     }
   }
 
-  public addNewOpenAiConfig(name: string, url: string, key: string) {
-    const newOpenAiConfig = new LLMConfig(name, url, {}, { 'Authorization': `Bearer ${key}` }, { model: "gpt-4", stream: true })
-    this.llmConfigs.push(newOpenAiConfig);
-    localStorage.setItem("llmConfigs", JSON.stringify(this.llmConfigs));
-  }
-
-  public addNewMistralConfig(name: string, url: string, key: string) {
-    const newMistralConfig = new LLMConfig(name, url, {}, { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' }, { model: "mistral-medium", stream: true })
-    this.llmConfigs.push(newMistralConfig);
+  public addLLMConfig(llm: [string, string, string], key: string) {
+    const newLLMConfig = new LLMConfig(llm[1], llm[0], {}, { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' }, { model: llm[1] })
+    this.llmConfigs.push(newLLMConfig);
     localStorage.setItem("llmConfigs", JSON.stringify(this.llmConfigs));
   }
 
@@ -36,15 +29,15 @@ export class LlmApiService {
     localStorage.setItem("llmConfigs", JSON.stringify(this.llmConfigs));
   }
 
-  public async sendMistralStylePrompt(prompt: Conversation, llmConfig: LLMConfig): Promise<Observable<Record<string, any>[]> | undefined> {
-    const body: MistralRequestBody = { ...new MistralRequestBody(), ...llmConfig.body, temperature: prompt.temperature, max_tokens: prompt.max_tokens }
+  public async sendLLMPrompt(prompt: Conversation, llmConfig: LLMConfig): Promise<Observable<Record<string, any>[]> | undefined> {
+    const body: LlmRequestBody = { ...new LlmRequestBody(), ...llmConfig.body, temperature: prompt.temperature, max_tokens: prompt.max_tokens }
     body.messages.push({ role: "system", content: prompt.system ?? "" })
     for (const msg of prompt.messages) {
-      if(msg.active) body.messages.push({ role: msg.role, content: msg.content });
+      if (msg.active) body.messages.push({ role: msg.role, content: msg.content });
     }
     const response = await fetch(llmConfig.url + this.httpParamsToStringSuffix(llmConfig.params), {
       method: 'POST',
-      headers: llmConfig.headers,
+      headers: {...llmConfig.headers, "Content-Type": "application/json"},
       body: JSON.stringify(body)
     });
 
