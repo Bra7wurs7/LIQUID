@@ -17,7 +17,7 @@ export class SettingsMenuComponent {
         models: [
           {
             mname: 'GPT 3.5 Turbo',
-            code: ["https://api.openai.com/v1/chat/completions", 'gpt-3-turbo', 'openai'],
+            code: ["https://api.openai.com/v1/chat/completions", 'gpt-3.5-turbo', 'openai'],
           },
           {
             mname: 'GPT 4',

@@ -14,7 +14,7 @@ import { LocalDriveService } from './services/localDrive/local-drive.service';
 import { IndexedDbService } from './services/indexedDb/indexed-db.service';
 import { Workspace } from './models/workspace.model';
 import { Observable, lastValueFrom, of, timer } from 'rxjs';
-import { switchMap, timeout } from 'rxjs/operators';
+import { map, switchMap, timeout } from 'rxjs/operators';
 import { ArticleHierarchyNode } from './models/articleHierarchyNode.model';
 import { ArticleActionEnum } from './enums/articleActionEnum';
 import { LlmApiService } from './services/llmApi/llm-api.service';
@@ -191,11 +191,16 @@ export class AppComponent implements OnInit {
     this.project = project;
     this.title = this.project.title;
     this.messageService.add({ severity: 'success', summary: `Database "${this.project?.title}" loaded` });
-    this.initializeArticleHierarchyMap();
+    this.initializeArticleHierarchyMap(true);
   }
 
-  initializeArticleHierarchyMap() {
-    this.articleHierarchyMap.clear();
+  initializeArticleHierarchyMap(refresh: boolean = false) {
+    if (refresh) {
+      this.articleHierarchyMap = new Map();
+    } else {
+      this.articleHierarchyMap.clear();
+    }
+
     // Iterate over every article in project
     for (let article of this.project?.articles.values() ?? []) {
       // Get from groupNameArticlesMap the ArticleHierarchyNode for the currently iterated article
@@ -212,7 +217,7 @@ export class AppComponent implements OnInit {
           this.project?.articles.get(parentName);
         if (hierarchicalListContainer === undefined) {
           // @TODO: Implement automatic group creation option
-          throw new Error('Unknown Group Name');
+          throw new Error(`Unknown Group Name ${parentName}`);
         }
         // Get the ArticleHierarchyNode for the group (parent) article from the groupNameArticlesMap
         let parentHierarchyNode = this.articleHierarchyMap.get(
@@ -253,7 +258,7 @@ export class AppComponent implements OnInit {
       ].viewedArticles.push(uniqueName);
     }
 
-    this.onTouchWorkspaces();
+    this.onTouchWorkspaces(false);
   }
 
   addArticle(input: string) {
@@ -263,29 +268,30 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    let article = this.project?.articles.get(articleName) ?? new Article(articleName, categoryNames)
-    article.groups = [...new Set<string>([...article.groups, ...categoryNames])];
+    if(this.project?.articles.has(articleName)) {
+      this.messageService.add({severity: 'error', summary: 'An article by this name already exists'})
+      return;
+    }
+    let article = this.project?.articles.get(articleName) ?? new Article(articleName)
     this.project?.articles.set(articleName, article)
+    this.onTouchWorkspaces(true);
 
 
-    // Then checking for existance of all groups
-    categoryNames.forEach((cat) => {
-      // If a group does not exist, create it or remove it from the new article's groups set
-      if (!this.project?.articles.has(cat)) {
-        lastValueFrom(this.confirmationService.confirm({
-          message: `No article for category '${cat}' found.\n Create new article '${cat}'?`,
-          accept: () => {
+    // Then checking for existance of all groups    
+    const newCategories = categoryNames.filter((name) => !this.project?.articles.has(name));
+
+    if (newCategories.length > 0) {
+      lastValueFrom(this.confirmationService.confirm({
+        message: `${newCategories.length} Unknown Categories. Add Articles for those categories?`,
+        accept: () => {
+          for (const cat of newCategories) {
             this.addArticle(cat);
-            this.onTouchWorkspaces();
-          },
-          reject: () => {
-            const grps = new Set(article.groups)
-            grps.delete(cat)
-            article.groups = [...grps]
-          },
-        }).accept);
-      }
-    });
+            article.groups.push(cat);
+          };
+          this.onTouchWorkspaces();
+        },
+      }).accept).then();
+    }
   }
 
   async renameArticle(oldName: string, newNameAndCategories: string) {
@@ -296,7 +302,7 @@ export class AppComponent implements OnInit {
     }
 
     const hierarchyNode = this.articleHierarchyMap.get(oldName);
-    if(!hierarchyNode) {
+    if (!hierarchyNode) {
       throw new Error()
     }
     const childArticles = hierarchyNode?.children;
@@ -459,7 +465,7 @@ export class AppComponent implements OnInit {
           grps.delete(name)
           child.node.groups = [...grps]
         });
-        this.onTouchWorkspaces();
+        this.onTouchWorkspaces(true);
       }
     }
   }
@@ -509,8 +515,8 @@ export class AppComponent implements OnInit {
   /**
    * To be called whenever a aricle is opened or closed
    */
-  onTouchWorkspaces() {
-    this.initializeArticleHierarchyMap();
+  onTouchWorkspaces(refresh: boolean = false) {
+    this.initializeArticleHierarchyMap(refresh);
     if (this.project === undefined) return;
     // Remove all empty workspaces that aren't the last workspace
     let removedWorkspace = true;
@@ -528,7 +534,6 @@ export class AppComponent implements OnInit {
     if ((this.project?.workspaces[this.project?.workspaces.length - 1].viewedArticles.length ?? 0) > 0) {
       this.addWorkspace();
     }
-
   }
 
   scrollIncrementDecrement(e: WheelEvent, n: number, step: number = 1, max: number = 100, min: number = 0): number {
