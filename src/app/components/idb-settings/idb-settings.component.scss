@@ -1,0 +1,45 @@
+.textBox {
+    transition: border-color 0.2s;
+    border: 1px solid var(--surface-border);
+    padding: 8px;
+    width: max-content;
+    margin-right: 2px;
+    white-space: nowrap;
+    border-radius: 3px;
+
+
+    &.active {
+        border: 1px solid var(--text-color-secondary);
+    }
+}
+
+.settingsTextInput {
+    margin-right: 2px;
+    width: 100%;
+
+    &.active:not(:focus):not(:hover) {
+        border: 1px solid var(--text-color-secondary);
+    }
+}
+
+.iconButton {
+    transition: border-color 0.2s;
+    height: auto;
+    width: 30px;
+    border: 1px solid var(--surface-border);
+    color: var(--text-color-secondary);
+    border-radius: 3px;
+
+    &.active {
+        border: 1px solid var(--text-color-secondary);
+    }
+
+    .pi {
+        margin: 5px;
+    }
+
+    &:hover {
+        cursor: pointer;
+        color: var(--text-color-primary);
+    }
+}

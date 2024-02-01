@@ -7,7 +7,7 @@
       " [project]="project" [hierarchyDirection]="'down'" [currentWorkspace]="
         this.project.workspaces[this.project.activeWorkspaceIndex]
       " [isListRoot]="true" [showSearch]="true" [hierarchyNodeList]="articleHierarchyMap | mapToList"
-      (articleClicked)="toggleArticleActive($event.name)" (articleActionClicked)="onListArticleActionClick($event)"
+      (articleClickedEmitter)="toggleArticleActive($event.name)" (articleActionClicked)="onListArticleActionClick($event)"
       (addArticleEvent)="addArticle($event)"></app-hierarchical-list>
   </div>
 
@@ -16,7 +16,11 @@
     <!-- Dropdown Bar -->
     <div class="central-header flex flex-column">
       <div class="dropdown-panel overflow-y-auto flex flex-row" [ngClass]="{ active: dropdownPanelActiveTab }">
-        <app-settings-menu *ngIf="dropdownPanelActiveTab === 'settings'" class="settings box"></app-settings-menu>
+        <div class="flex flex-row" *ngIf="dropdownPanelActiveTab === 'menu'">
+          <app-llm-settings class="box"></app-llm-settings>
+          <app-idb-settings [activeProject]="project?.title ?? ''" [allProjects]="allProjectsPromise | async" (projectEventEmitter)="handleProjectEvent($event)" class="box"></app-idb-settings>
+        </div>
+
         <div *ngIf="dropdownPanelActiveTab === 'console'" class="flex flex-row w-full align-content-end">
           <textarea pInputTextarea class="system-prompt-input" placeholder="System Prompt"
             [(ngModel)]="conversation.system"></textarea>
@@ -27,7 +31,8 @@
               start: idx === 0 || msg.role === 'user',
               end: idx === conversation.messages.length-1 || (conversation.messages[idx+1] !== undefined && conversation.messages[idx+1].role === 'user'),
             }">
-              <textarea #msgarea pInputTextarea rows="1" class="dialog-prompt-textarea" [(ngModel)]="msg.content" [autoResize]="true"></textarea>
+              <textarea #msgarea pInputTextarea rows="1" class="dialog-prompt-textarea" [(ngModel)]="msg.content"
+                [autoResize]="true"></textarea>
               <div class="dialog-prompt-actions hideChildUntilHoverChild">
                 <i class="pi dialog-prompt-action"
                   [pTooltip]="msg.active ? 'This message will be included in prompts' : 'This message will not be included in prompts'"
@@ -89,27 +94,9 @@
           </div>
         </div>
       </div>
+
       <!-- Menubar -->
       <div class="flex flex-row align-content-center">
-
-        <!-- No Project Loaded -->
-        <div class="flex flex-column align-content-center justify-content-between loadedFolder" *ngIf="!project">
-          <div #addButton class="pi pi-plus pointerOnHover folderAction" (click)="newProjectOverlay.toggle($event)"
-            tooltipPosition="bottom" [pTooltip]="'New Database'"></div>
-          <div #moreButton class="pi pi-bars pointerOnHover folderAction" (click)="folderMenu.toggle($event)"
-            tooltipPosition="bottom" pTooltip="More Options"></div>
-          <p-contextMenu #folderMenu appendTo="body" [target]="moreButton" [model]="moreOptions"></p-contextMenu>
-        </div>
-
-        <!-- A Project Loaded -->
-        <div class="flex flex-column align-content-center justify-content-between loadedFolder" *ngIf="project">
-          <div #saveButton class="pi pi-save pointerOnHover folderAction" (click)="this.saveToDB(this.project.title)"
-            tooltipPosition="bottom" [pTooltip]="'Save ' + project.title"></div>
-          <p-contextMenu #saveMenu appendTo="body" [target]="saveButton" [model]="saveOptions"></p-contextMenu>
-          <div #moreButton class="pi pi-bars pointerOnHover folderAction" (click)="folderMenu.toggle($event)"
-            tooltipPosition="bottom" pTooltip="More Options"></div>
-          <p-contextMenu #folderMenu appendTo="body" [target]="moreButton" [model]="moreOptions"></p-contextMenu>
-        </div>
 
         <!-- Workspaces -->
         <div *ngIf="project" class="flex flex-row toolbarWorkspaces relative">
@@ -157,7 +144,7 @@
             <div class="tab flex flex-column align-items-center justify-content-center"
               [ngClass]="{ active: dropdownPanelActiveTab === 'console' }" tooltipPosition="bottom"
               [pTooltip]="'LLM Interface'" (click)="onToggleConsole('console')">
-              <div class="pi pi-comments pointerOnHover"></div>
+              <div class="pi pi-comments"></div>
             </div>
           </div>
           <div class="separator"></div>
@@ -165,12 +152,12 @@
             <div class="tab flex flex-column align-items-center justify-content-center"
               [ngClass]="{ active: dropdownPanelActiveTab === 'alerts' }" tooltipPosition="bottom" [pTooltip]="'Alerts'"
               (click)="onToggleConsole('alerts')">
-              <div class="pi pi-exclamation-circle pointerOnHover "></div>
+              <div class="pi pi-exclamation-circle "></div>
             </div>
             <div class="tab flex flex-column align-items-center justify-content-center"
-              [ngClass]="{ active: dropdownPanelActiveTab === 'settings' }" tooltipPosition="bottom"
-              [pTooltip]="'Settings'" (click)="onToggleConsole('settings')">
-              <div class="pi pi-sliders-v pointerOnHover "></div>
+              [ngClass]="{ active: dropdownPanelActiveTab === 'menu' }" tooltipPosition="bottom"
+              [pTooltip]="'Menu'" (click)="onToggleConsole('menu')">
+              <div class="pi pi-bars "></div>
             </div>
           </div>
         </div>
@@ -205,8 +192,7 @@
               .activeArticleIndex === index
           " [articles]="project!.articles" [articleName]="activeArticleName"
           (closePanelEvent)="toggleArticleActive(activeArticleName)" (moveUpEvent)="moveUp(index)"
-          (moveDownEvent)="moveDown(index)"
-          (internalLinkActivatedEvent)="this.toggleArticleActive($event)"
+          (moveDownEvent)="moveDown(index)" (internalLinkActivatedEvent)="this.toggleArticleActive($event)"
           (renameEvent)="renameArticle(activeArticleName, $event)"></app-note-panel>
         <div class="pseudo" *ngIf="!isLast"></div>
       </div>
@@ -245,7 +231,7 @@
   " [project]="project" [hierarchyDirection]="'up'" [currentWorkspace]="
     this.project.workspaces[this.project.activeWorkspaceIndex]
   " [isListRoot]="true" [hierarchyNodeList]="(articleHierarchyMap | articleHierarchyMapGet:activeArticle)[0].parents"
-      (articleClicked)="toggleArticleActive($event.name)"
+      (articleClickedEmitter)="toggleArticleActive($event.name)"
       (articleActionClicked)="onListArticleActionClick($event)"></app-hierarchical-list>
     <div class="labeled-separator flex flex-row"
       pTooltip="Table listing important attributes/characteristics of the article">
@@ -288,68 +274,13 @@
 
   <!-- Load Modal Dialog -->
   <p-dialog header="Load from indexedDB" appendTo="body" #loadDialog [(visible)]="loadDialogVisible">
-    <p-table *ngIf="((allProjectsPromise | async)?.length ?? -1) > 0" [value]="
-        (allProjectsPromise | async) ??
-        [{ title: 'loading', lastModified: undefined }]
-      " responsiveLayout="scroll">
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Title</th>
-          <th>Last Saved</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-project>
-        <tr>
-          <td>{{ project.title }}</td>
-          <td>{{ project.lastModified }}</td>
-          <td>
-            <p-button label="Load" icon="pi pi-folder-open" styleClass="p-button-sm"
-              (click)="loadFromDB(project.title)"></p-button>
-          </td>
-          <td>
-            <p-button label="Delete" icon="pi pi-folder-open" styleClass="p-button-sm p-button-danger"
-              (click)="deleteFromDB(project.title)"></p-button>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
-    <div *ngIf="((allProjectsPromise | async)?.length ?? 0) === 0">
-      No projects saved in indexedDB of Browser
-    </div>
+    
   </p-dialog>
   <p-confirmDialog #overlayOverlay [baseZIndex]="3000" width="425" appendTo="body"></p-confirmDialog>
 
   <!-- Project Uploader Input -->
   <input style="visibility: collapse; width: 0; height: 0" type="file" class="file-input"
     (change)="onFileSelected(projectUpload)" #projectUpload />
-
-  <!-- New Project Overlay -->
-  <p-overlayPanel #newProjectOverlay>
-    <div class="flex flex-wrap flex-column">
-      <p>Enter a title for the new database</p>
-      <div class="flex flex-row">
-        <input autofocus type="text" placeholder="New Database" pInputText
-          style="margin-bottom: 5px; width: max-content" #newProjectTitleInput
-          (keydown.enter)="newProject(newProjectTitleInput.value)" [required]="true" />
-        <div class="pseudo"></div>
-        <p-button #newProjectButton icon="pi pi-plus" [pTooltip]="'Create ' + newProjectTitleInput.value"
-          (click)="newProject(newProjectTitleInput.value)"></p-button>
-      </div>
-    </div>
-  </p-overlayPanel>
-
-  <!-- Save Project Overlay -->
-  <p-dialog header="Save Project in IndexedDB of Browser" [(visible)]="showSaveProjectOverlay" #saveProjectOverlay>
-    <ng-template pTemplate>
-      <div class="flex flex-wrap flex-column" *ngIf="project">
-        <input autofocus (keydown.enter)="saveProjectButton.click()" type="text" placeholder="Project title (required)"
-          pInputText style="margin-bottom: 5px" #projectTitleInput [(ngModel)]="project.title" />
-        <button #saveProjectButton [disabled]="!project.title" pButton pRipple type="button" icon="pi pi-save"
-          label="Save to indexedDB" (click)="saveToDB(project.title); showSaveProjectOverlay = false"
-          class="p-button-outlined"></button>
-      </div>
-    </ng-template>
-  </p-dialog>
 
   <!-- Privacy Policy Modal Dialog-->
   <p-dialog header="Privacy Policy" #privacyPolicyDialog [(visible)]="showPrivacyPolicyDialog">

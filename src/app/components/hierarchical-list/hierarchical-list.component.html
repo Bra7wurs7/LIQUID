@@ -57,7 +57,7 @@
                 [hierarchyNodeList]="hierarchyDirection === 'down' ? articleHierarchyNode.children : articleHierarchyNode.parents"
                 [isActive]="currentWorkspace.viewedArticles.includes(articleHierarchyNode.node.name)"
                 [hierarchyDirection]="hierarchyDirection" [currentWorkspace]="currentWorkspace"
-                (articleClicked)="this.articleClickedEmitter.emit($event)"> 
+                (articleClickedEmitter)="this.articleClickedEmitter.emit($event)"> 
             </app-hierarchical-list>
         </div>
         <div class="pseudoBorder bottom"

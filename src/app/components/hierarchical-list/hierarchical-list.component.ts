@@ -12,20 +12,20 @@ import { ArticleActionEnum } from '../../enums/articleActionEnum';
   styleUrls: ['./hierarchical-list.component.scss']
 })
 export class HierarchicalListComponent {
-  @Input("project") project!: Project;
-  @Input("showSearch") showSearch: boolean = false;
-  @Input("hierarchyDirection") hierarchyDirection!: "down" | "up";
-  @Input("isListRoot") isListRoot: boolean = false;
-  @Input("ListParent") listParent!: ArticleHierarchyNode;
-  @Input("hierarchyNodeList") hierarchyNodeList!: ArticleHierarchyNode[];
-  @Input("currentWorkspace") currentWorkspace!: Workspace;
-  @Input("isActive") isActive: boolean = true;
-  @Input("isHighlighted") isHighlighted: boolean = true;
-  @Input("currentArticlePath") currentArticlePath?: string;
+  @Input() project!: Project;
+  @Input() showSearch: boolean = false;
+  @Input() hierarchyDirection!: "down" | "up";
+  @Input() isListRoot: boolean = false;
+  @Input() listParent!: ArticleHierarchyNode;
+  @Input() hierarchyNodeList!: ArticleHierarchyNode[];
+  @Input() currentWorkspace!: Workspace;
+  @Input() isActive: boolean = true;
+  @Input() isHighlighted: boolean = true;
+  @Input() currentArticlePath?: string;
 
-  @Output("articleClicked") articleClickedEmitter = new EventEmitter<Article>();
-  @Output("addArticleEvent") addArticleEvent = new EventEmitter<string>();
-  @Output("articleActionClicked") articleActionClicked = new EventEmitter<{ action: ArticleActionEnum, node: Article }>();
+  @Output() articleClickedEmitter = new EventEmitter<Article>();
+  @Output() addArticleEvent = new EventEmitter<string>();
+  @Output() articleActionClicked = new EventEmitter<{ action: ArticleActionEnum, node: Article }>();
 
   lastRightClickedArticle?: ArticleHierarchyNode;
 

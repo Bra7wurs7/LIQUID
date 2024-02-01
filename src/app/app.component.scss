@@ -1,9 +1,10 @@
 .box {
-  padding: 10px;
+  padding: 8px;
   border: 1px solid var(--surface-border);
   max-width: max-content;
   border-radius: 6px;
   overflow-y: scroll;
+  margin-right: 2px;
 }
 
 .system-prompt-input {
@@ -26,7 +27,7 @@
     height: 27px;
     width: 27px;
     margin: 3px;
-    color: var(--surface-border);
+    color: var(--text-color-secondary);
 
     &:hover {
       cursor: pointer;
@@ -43,7 +44,7 @@
     margin: 3px;
     font-size: 14px;
     text-overflow: clip;
-    color: var(--surface-border);
+    color: var(--text-color-secondary);
     letter-spacing: -2px;
 
     &:hover {
@@ -135,6 +136,7 @@
       border-bottom-right-radius: 6px;
       border-bottom-left-radius: 6px;
     }
+
     margin-bottom: 3px;
   }
 }
@@ -267,12 +269,14 @@
         border-right: 1px solid var(--surface-border);
         padding-top: 1px;
 
-        &.isLast {
-          border-bottom-right-radius: 10px;
-        }
-
         &.active {
           background-color: var(--surface-a);
+
+          .workspace-articles {
+            .workspace-article {
+              background-color: var(--text-color-secondary);
+            }
+          }
         }
 
         .workspace-articles {
@@ -285,10 +289,9 @@
           .workspace-article {
             background-color: var(--surface-border);
             margin-bottom: 1px;
-            border: 1px solid var(--surface-border);
             margin-left: 1px;
             margin-right: 1px;
-            padding-top: 3px;
+            padding-top: 4px;
           }
         }
       }
@@ -307,19 +310,12 @@
       }
     }
 
-    .loadedFolder {
-      height: 41px;
-      background-color: var(--surface-b);
-      border-right: 1px solid var(--surface-border);
-      padding: 2px 4px 2px 4px;
+    .folderAction {
+      transition: color 0.1s;
+      color: var(--text-color-secondary);
 
-      .folderAction {
-        transition: color 0.1s;
-        color: var(--surface-border);
-
-        &:hover {
-          color: var(--text-color);
-        }
+      &:hover {
+        color: var(--text-color);
       }
     }
   }
@@ -335,32 +331,8 @@
     &.active {
       padding: 3px;
       opacity: 1;
-      height: 60vh;
+      height: 50vh;
       border-bottom: solid 1px var(--surface-border);
-    }
-
-    .settings {
-      .settingsTextInput {
-        margin-right: 2px;
-        font-size: x-small;
-        min-width: 30px;
-
-        &.sm {
-          max-width: 75px;
-        }
-
-        &.mm {
-          max-width: 150px;
-        }
-
-        &.lg {
-          max-width: 225px;
-        }
-      }
-
-      .iconButton {
-        margin: 4px;
-      }
     }
   }
 
@@ -369,7 +341,7 @@
     flex-direction: row;
     justify-content: center;
     transition: background-color 0.1s;
-    color: var(--surface-border);
+    color: var(--text-color-secondary);
     margin-bottom: 0px;
     pointer-events: all;
 
@@ -415,6 +387,7 @@
 
         &:hover {
           color: var(--text-color);
+          cursor: pointer;
         }
 
         &.active {

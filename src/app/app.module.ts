@@ -40,7 +40,7 @@ import { HierarchicalListComponent } from './components/hierarchical-list/hierar
 import { LeftSidebarComponent } from './components/left-sidebar/left-sidebar.component';
 import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.component';
 import { CenterComponent } from './components/center/center.component';
-import { SettingsMenuComponent } from './components/settings-menu/settings-menu.component';
+import { LlmSettingsComponent } from './components/llm-settings/llm-settings.component';
 import { ContextMenusService } from './services/contextMenus/context-menus.service';
 import { ArticleHierarchyListStringFilterPipe } from './pipes/articleHierarchyListStringFilter/article-hierarchy-list-filter.pipe';
 import { MapToListPipe } from './pipes/mapToList/map-to-list.pipe';
@@ -48,6 +48,7 @@ import { ArticleHierarchyListRootFilterPipe } from './pipes/articleHierarchyList
 import { ArticleHierarchyMapGetPipe } from './pipes/articleHierarchyMapGet/article-hierarchy-map-get.pipe';
 import { CascadeSelectModule } from 'primeng/cascadeselect';
 import { ArticleNameAndCategoriesToStringPipe } from './pipes/articleNameAndCategoriesToString/article-name-and-categories-to-string.pipe';
+import { IdbSettingsComponent } from './components/idb-settings/idb-settings.component';
 
 
 
@@ -61,11 +62,12 @@ import { ArticleNameAndCategoriesToStringPipe } from './pipes/articleNameAndCate
     LeftSidebarComponent,
     RightSidebarComponent,
     CenterComponent,
-    SettingsMenuComponent,
+    LlmSettingsComponent,
     ArticleHierarchyListStringFilterPipe,
     MapToListPipe,
     ArticleHierarchyListRootFilterPipe,
-    ArticleHierarchyMapGetPipe
+    ArticleHierarchyMapGetPipe,
+    IdbSettingsComponent,
   ],
   imports: [
     BrowserModule,

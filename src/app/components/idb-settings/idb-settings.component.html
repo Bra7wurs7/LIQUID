@@ -1,0 +1,56 @@
+<div class="flex flex-column">
+  <div class="flex flex-row">
+    <input #projectName type="text" class="settingsTextInput" placeholder="Enter Project Name" pInputText
+      pTooltip="Enter a name for the saved/new project" />
+    <div class="iconButton flex flex-column justify-content-center" style="margin-right: 2px"
+      [pTooltip]="projectName.value ? 'Save As\n\'' + projectName.value + '\'' : 'Save As\n\'Unnamed Project\''">
+      <i class="pi pi-save" (click)="projectEventEmitter.emit(['saveas', projectName.value || 'Unnamed Project'])"></i>
+    </div>
+    <div class="iconButton flex flex-column justify-content-center" style="margin-right: 2px"
+      [pTooltip]="projectName.value ? 'New Project \n\'' + projectName.value + '\'' : 'New Project'">
+      <i class="pi pi-plus" (click)="projectEventEmitter.emit(['new', projectName.value])"></i>
+    </div>
+    <div class="iconButton flex flex-column justify-content-center" [pTooltip]="'More Options'">
+      <i class="pi pi-ellipsis-v" (click)="projectEventEmitter.emit(['new', projectName.value])"></i>
+    </div>
+  </div>
+  <div class="pseudoBorder vmarg"></div>
+  <div class="flex flex-row" style="margin-bottom: 2px;" *ngFor="let p of allProjects ?? []">
+    <input #projectName type="text" class="settingsTextInput" placeholder="Project Name" pInputText
+      pTooltip="You may change the name of the project" [(ngModel)]="p.title" [ngClass]="{
+        'active': p.title === activeProject,
+      }" />
+    <div [ngClass]="{
+      'active': p.title === activeProject,
+    }" class="flex flex-row textBox justify-content-between" pTooltip="Last Save">
+      <div>{{ p.lastModified | date:'short'}}</div>
+    </div>
+    <div *ngIf="p.title !== activeProject" [ngClass]="{
+      'active': p.title === activeProject,
+    }" class="iconButton flex flex-column justify-content-center" style="margin-right: 2px;"
+      (click)="projectEventEmitter.emit(['load', p.title])">
+      <div class="pi pi-folder-open"></div>
+    </div>
+    <div *ngIf="p.title === activeProject" [ngClass]="{
+      'active': p.title === activeProject,
+    }" class="iconButton flex flex-column justify-content-center" style="margin-right: 2px;"
+      (click)="projectEventEmitter.emit(['saveas', p.title])">
+      <div class="pi pi-save"></div>
+    </div>
+    <div [ngClass]="{
+      'active': p.title === activeProject,
+    }" class="iconButton flex flex-column justify-content-center" style="margin-right: 2px;"
+      (click)="projectEventEmitter.emit(['delete', p.title])">
+      <div class="pi pi-times"></div>
+    </div>
+    <div [ngClass]="{
+      'active': p.title === activeProject,
+    }" class="iconButton flex flex-column justify-content-center" [pTooltip]="'More Options'">
+      <i class="pi pi-ellipsis-v" (click)="projectEventEmitter.emit(['new', projectName.value])"></i>
+    </div>
+  </div>
+
+  <div *ngIf="((allProjects ?? []).length ?? 0) === 0">
+    No projects saved in indexedDB of Browser
+  </div>
+</div>

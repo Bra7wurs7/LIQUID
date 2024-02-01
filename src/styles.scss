@@ -29,7 +29,8 @@ p-inputSwitch {
 
 .p-panel-toggleable {
   .p-panel-header {
-    background-color: var(--surface-b);
+    background-color: var(--surface-a);
+    //background-image: linear-gradient(to right, var(--surface-border) , var(--surface-a));;
   }
 
   .p-panel-content {
@@ -45,8 +46,8 @@ p-inputSwitch {
 }
 
 .p-panel-header {
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 
 .sidemenuPanel {
@@ -131,6 +132,11 @@ p-inputSwitch {
   border-bottom: 1px solid var(--surface-border);
 }
 
+.vmarg {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
 .box {
   .p-cascadeselect-panel {
     padding: 0px;
@@ -138,15 +144,10 @@ p-inputSwitch {
   }
 
   .p-cascadeselect-panel .p-cascadeselect-item-content {
-    padding: 10px 5px 10px 5px;
+    padding: 8px 8px 8px 8px;
   }
 
   .p-cascadeselect {
-    border-radius: 0;
     margin-right: 2px;
-  }
-
-  .p-cascadeselect-label {
-    font-size: x-small;
   }
 }

@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { LlmApiService } from '../../services/llmApi/llm-api.service';
 
 @Component({
-  selector: 'app-settings-menu',
-  templateUrl: './settings-menu.component.html',
-  styleUrls: ['./settings-menu.component.scss']
+  selector: 'app-llm-settings',
+  templateUrl: './llm-settings.component.html',
+  styleUrls: ['./llm-settings.component.scss']
 })
-export class SettingsMenuComponent {
+export class LlmSettingsComponent {
   llms: any[];
   selectedLLM: any;
   constructor(public llmApiService: LlmApiService) {

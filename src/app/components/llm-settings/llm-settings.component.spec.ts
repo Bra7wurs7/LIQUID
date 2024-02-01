@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SettingsMenuComponent } from './settings-menu.component';
+import { LlmSettingsComponent } from './llm-settings.component';
 
 describe('SettingsMenuComponent', () => {
-  let component: SettingsMenuComponent;
-  let fixture: ComponentFixture<SettingsMenuComponent>;
+  let component: LlmSettingsComponent;
+  let fixture: ComponentFixture<LlmSettingsComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SettingsMenuComponent]
+      declarations: [LlmSettingsComponent]
     });
-    fixture = TestBed.createComponent(SettingsMenuComponent);
+    fixture = TestBed.createComponent(LlmSettingsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

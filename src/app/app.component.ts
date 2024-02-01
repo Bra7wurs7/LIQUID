@@ -29,7 +29,6 @@ import { Conversation, Msg } from './models/conversation.model';
 export class AppComponent implements OnInit {
   /** HTML Template Elements */
   @ViewChild('projectUpload', { static: false }) projectUpload!: ElementRef;
-  @ViewChild('newProjectOverlay', { static: false }) newProjectOverlay!: OverlayPanel;
   activeArticlePages: Map<string, HTMLElement> = new Map();
 
   /** Application */
@@ -56,72 +55,6 @@ export class AppComponent implements OnInit {
   showPrivacyPolicyDialog: boolean = false;
   loadDialogVisible: boolean = false;
   settingsDialogVisible: boolean = false;
-
-  /** Menus */
-  saveOptions = [
-    {
-      label: 'Save',
-      icon: 'pi pi-fw pi-save',
-      tooltip: `Save \"${this.project?.title}\"`,
-      command: () => {
-        if (this.project?.title) {
-          this.saveToDB(this.project.title);
-        }
-      },
-    },
-    {
-      label: 'Save As',
-      icon: 'pi pi-fw pi-save',
-      tooltip: `Save project under specific name`,
-      command: () => {
-        this.showSaveProjectOverlay = true;
-      },
-    },
-    {
-      label: 'Download',
-      icon: 'pi pi-fw pi-download',
-      command: () => {
-        this.downloadProject();
-      },
-    },
-  ];
-  moreOptions = [
-    {
-      label: 'New Database',
-      icon: 'pi pi-fw pi-plus',
-      command: () => {
-        this.newProjectOverlay.toggle(event)
-      },
-    },
-    {
-      separator: true,
-    },
-    {
-      label: 'Save Database',
-      icon: 'pi pi-fw pi-save',
-      items: this.saveOptions,
-    },
-    {
-      label: 'Load Database',
-      icon: 'pi pi-fw pi-folder-open',
-      items: [
-        {
-          label: 'Load',
-          icon: 'pi pi-fw pi-folder-open',
-          command: () => {
-            this.loadDialogVisible = true;
-          },
-        },
-        {
-          label: 'Upload',
-          icon: 'pi pi-fw pi-upload',
-          command: () => {
-            this.projectUpload.nativeElement.click();
-          },
-        },
-      ],
-    }
-  ];
 
   /** Autosaver */
   autosave = timer(300000, 300000).pipe(
@@ -268,8 +201,8 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    if(this.project?.articles.has(articleName)) {
-      this.messageService.add({severity: 'error', summary: 'An article by this name already exists'})
+    if (this.project?.articles.has(articleName)) {
+      this.messageService.add({ severity: 'error', summary: 'An article by this name already exists' })
       return;
     }
     let article = this.project?.articles.get(articleName) ?? new Article(articleName)
@@ -362,7 +295,6 @@ export class AppComponent implements OnInit {
   }
 
   newProject(title: string) {
-    this.newProjectOverlay.hide();
     setTimeout(() => {
       this.loadProject(new Project(title !== '' ? title : 'New Database'));
     }, 0);
@@ -570,6 +502,23 @@ export class AppComponent implements OnInit {
       this.conversation.messages.push({ active: true, role: 'user', content: input.value });
       this.promptConversation();
       input.value = '';
+    }
+  }
+
+  handleProjectEvent(event: ["load" | "delete" | "saveas" | "new", string]) {
+    switch (event[0]) {
+      case "load":
+        this.loadFromDB(event[1])
+        break;
+      case "delete":
+        this.deleteFromDB(event[1])
+        break;
+      case "saveas":
+        this.saveToDB(event[1])
+        break;
+      case "new":
+        this.newProject(event[1])
+        break;
     }
   }
 }

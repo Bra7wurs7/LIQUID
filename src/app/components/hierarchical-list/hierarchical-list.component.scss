@@ -65,7 +65,6 @@
 
     &.showBorderL {
         &.active {
-            background-color: var(--surface-a);
             border-left-width: 1px !important;
             border-left-style: solid !important;
         }
@@ -79,7 +78,7 @@
     }
 
     &.active {
-        background-color: var(--surface-a);
+        background-image: linear-gradient(to right, var(--surface-border) , var(--surface-a));;
     }
 
     &.highlighted {
@@ -142,15 +141,10 @@
     padding-bottom: 3px;
     margin-left: 2px;
     margin-right: 2px;
-    background-color: var(--surface-b);
     color: var(--text-color-secondary);
 
     &:hover {
         color: var(--text-color);
-    }
-
-    &.active {
-        background-color: var(--surface-a);
     }
 
 }

@@ -1,11 +1,10 @@
 .settingsTextInput {
-    border-radius: 0;
     margin-right: 2px;
-    font-size: x-small;
     width: 100%;
 }
 
 .iconButton {
+    border-radius: 3px;
     height: auto;
     width: 30px;
     border: 1px solid var(--surface-border);
@@ -25,4 +24,3 @@
     margin-top: 10px;
     margin-bottom: 5px;
 }
-
