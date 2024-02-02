@@ -20,6 +20,7 @@ import { ArticleActionEnum } from './enums/articleActionEnum';
 import { LlmApiService } from './services/llmApi/llm-api.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { Conversation, Msg } from './models/conversation.model';
+import { ProjectEvent } from './models/projectEvent.model';
 
 @Component({
   selector: 'app-root',
@@ -30,9 +31,6 @@ export class AppComponent implements OnInit {
   /** HTML Template Elements */
   @ViewChild('projectUpload', { static: false }) projectUpload!: ElementRef;
   activeArticlePages: Map<string, HTMLElement> = new Map();
-
-  /** Application */
-  title = 'LIQUID';
 
   /** Project */
   allProjectsPromise: Promise<{ title: string; lastModified: Date }[]>;
@@ -88,7 +86,9 @@ export class AppComponent implements OnInit {
           lastProject = project;
         }
       });
-      await this.loadFromDB(lastProject.title);
+      this.getProjectFromDB(lastProject.title).then((project) => {
+        this.loadProject(project);
+      });
 
       this.autosave.subscribe(() => { });
     });
@@ -120,9 +120,12 @@ export class AppComponent implements OnInit {
     this.showNewProjectOverlay = !this.showNewProjectOverlay
   }
 
-  loadProject(project: Project) {
+  loadProject(project: Project | undefined) {
+    if (project === undefined) {
+      this.messageService.add({ severity: 'error', summary: `Loading Failed` });
+      return;
+    }
     this.project = project;
-    this.title = this.project.title;
     this.messageService.add({ severity: 'success', summary: `Database "${this.project?.title}" loaded` });
     this.initializeArticleHierarchyMap(true);
   }
@@ -300,11 +303,11 @@ export class AppComponent implements OnInit {
     }, 0);
   }
 
-  downloadProject() {
-    if (this.project) {
-      const serializableProject = this.project?.toSerializableProject();
+  downloadProject(project: Project | undefined) {
+    if (project) {
+      const serializableProject = project?.toSerializableProject();
       this.localdriveService.saveToLocalDrive(
-        this.project.title + '.lqd',
+        project.title + '.zip',
         serializableProject.serialize()
       );
     } else {
@@ -323,12 +326,12 @@ export class AppComponent implements OnInit {
     }
   }
 
-  async loadFromDB(title: string) {
+  async getProjectFromDB(title: string): Promise<Project | undefined> {
     const project = await this.indexedDbService.loadProject(title);
     if (project) {
-      this.loadProject(
-        SerializableProject.deserialize(project.projectJSON).toProject()
-      );
+      return SerializableProject.deserialize(project.projectJSON).toProject()
+    } else {
+      return undefined;
     }
   }
 
@@ -448,7 +451,10 @@ export class AppComponent implements OnInit {
    * To be called whenever a aricle is opened or closed
    */
   onTouchWorkspaces(refresh: boolean = false) {
-    this.initializeArticleHierarchyMap(refresh);
+    try {
+      this.initializeArticleHierarchyMap(refresh);
+    } catch { }
+
     if (this.project === undefined) return;
     // Remove all empty workspaces that aren't the last workspace
     let removedWorkspace = true;
@@ -505,10 +511,12 @@ export class AppComponent implements OnInit {
     }
   }
 
-  handleProjectEvent(event: ["load" | "delete" | "saveas" | "new", string]) {
+  handleProjectEvent(event: ProjectEvent) {
     switch (event[0]) {
       case "load":
-        this.loadFromDB(event[1])
+        this.getProjectFromDB(event[1]).then((project) => {
+          this.loadProject(project)
+        })
         break;
       case "delete":
         this.deleteFromDB(event[1])
@@ -518,6 +526,14 @@ export class AppComponent implements OnInit {
         break;
       case "new":
         this.newProject(event[1])
+        break;
+      case "download":
+        this.getProjectFromDB(event[1]).then((project) => {
+          this.downloadProject(project)
+        })
+        break;
+      case "upload":
+        this.projectUpload.nativeElement.click();
         break;
     }
   }

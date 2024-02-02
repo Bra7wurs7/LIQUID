@@ -3,12 +3,16 @@
     <input #projectName type="text" class="settingsTextInput" placeholder="New Project Name" pInputText
       pTooltip="Enter a name for the new project" />
     <div class="iconButton flex flex-column justify-content-center" style="margin-right: 2px"
+      (click)="projectEventEmitter.emit(['new', projectName.value])"
       [pTooltip]="projectName.value ? 'New Project \n\'' + projectName.value + '\'' : 'New Project'">
-      <i class="pi pi-plus" (click)="projectEventEmitter.emit(['new', projectName.value])"></i>
+      <i class="pi pi-plus"></i>
     </div>
-    <div class="iconButton flex flex-column justify-content-center" [pTooltip]="'More Options'">
-      <i class="pi pi-ellipsis-v" (click)="projectEventEmitter.emit(['new', projectName.value])"></i>
+    <div class="iconButton flex flex-column justify-content-center" [pTooltip]="'More Options'"
+      (click)="newProjectMenu.show($event)">
+      <i class="pi pi-ellipsis-v"></i>
+      <p-contextMenu #newProjectMenu appendTo="body" [model]="newProjectMenuItems"></p-contextMenu>
     </div>
+
   </div>
   <div class="pseudoBorder vmarg"></div>
   <div class="flex flex-row" style="margin-bottom: 2px;" *ngFor="let p of allProjects ?? []">
@@ -18,7 +22,8 @@
       }" />
     <div [ngClass]="{
       'active': p.title === activeProject,
-    }" class="flex flex-row textBox justify-content-between" [pTooltip]="'Project was last saved\n' + ((p.lastModified | date:'dd.MMM.yy, hh:mm a') ?? 'some point in time')">
+    }" class="flex flex-row textBox justify-content-between"
+      [pTooltip]="'Project was last saved\n' + ((p.lastModified | date:'dd.MMM.yy, hh:mm a') ?? 'some point in time')">
       <div>{{ p.lastModified | date:'dd.MMM.yy, hh:mm a'}}</div>
     </div>
     <!--<div [ngClass]="{
@@ -26,22 +31,21 @@
     }" class="flex flex-row textBox justify-content-between" pTooltip="Amound of articles in this project">
       <div>Article Count</div>
     </div>-->
-    <div *ngIf="p.title !== activeProject" [ngClass]="{
+    <div *ngIf="p.title !== activeProject" (click)="projectEventEmitter.emit(['load', p.title])" [ngClass]="{
       'active': p.title === activeProject,
-    }" class="iconButton flex flex-column justify-content-center" style="margin-right: 2px;"
-      (click)="projectEventEmitter.emit(['load', p.title])">
+    }" class="iconButton flex flex-column justify-content-center" style="margin-right: 2px;">
       <div class="pi pi-folder-open"></div>
     </div>
-    <div *ngIf="p.title === activeProject" [ngClass]="{
+    <div *ngIf="p.title === activeProject" (click)="projectEventEmitter.emit(['saveas', p.title])" [ngClass]="{
       'active': p.title === activeProject,
-    }" class="iconButton flex flex-column justify-content-center" style="margin-right: 2px;"
-      (click)="projectEventEmitter.emit(['saveas', p.title])">
+    }" class="iconButton flex flex-column justify-content-center" style="margin-right: 2px;">
       <div class="pi pi-save"></div>
     </div>
-    <div [ngClass]="{
+    <div (click)="lastClickedProject = p.title; existingProjectMenu.show($event)" [ngClass]="{
       'active': p.title === activeProject,
     }" class="iconButton flex flex-column justify-content-center" [pTooltip]="'More Options'">
-      <i class="pi pi-ellipsis-v" (click)="projectEventEmitter.emit(['new', projectName.value])"></i>
+      <i class="pi pi-ellipsis-v"></i>
+      <p-contextMenu #existingProjectMenu appendTo="body" [model]="existingProjectMenuItems"></p-contextMenu>
     </div>
   </div>
 

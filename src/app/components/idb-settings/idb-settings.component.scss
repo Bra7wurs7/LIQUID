@@ -1,5 +1,5 @@
 .textBox {
-    transition: border-color 0.2s;
+    transition: border 0.2s;
     border: 1px solid var(--surface-border);
     padding: 8px;
     width: max-content;
@@ -25,7 +25,7 @@
 }
 
 .iconButton {
-    transition: border-color 0.2s;
+    transition: border 0.2s;
     height: auto;
     width: 30px;
     border: 1px solid var(--surface-border);

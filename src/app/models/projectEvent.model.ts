@@ -1,0 +1,1 @@
+export type ProjectEvent = ["load" | "delete" | "saveas" | "new" | "download" | "upload", string];

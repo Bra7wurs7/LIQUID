@@ -28,7 +28,7 @@
             }">
             <!-- Article Name & Buttons -->
             <div #articleNameAndButtons (click)="articleClickedEmitter.emit(articleHierarchyNode.node)"
-                (contextmenu)="$event.preventDefault(); setlastRightClickedArticle(articleHierarchyNode); contextMenu.toggle($event); dummy.click()"
+                (contextmenu)="$event.preventDefault(); setlastRightClickedArticle(articleHierarchyNode); contextMenu.toggle($event)"
                 class="article w-full relative flex flex-row align-content-center hideChildUntilHoverParent showBorderL"
                 [pTooltip]="articleHierarchyNode.node.name" [ngClass]="{
                     'active': currentWorkspace.viewedArticles.includes(articleHierarchyNode.node.name),
@@ -44,7 +44,7 @@
                     class="contextMenuBtn absoluteRight pi pi-ellipsis-v hideChildUntilHoverChild pointerOnHover"
                     [ngClass]="{'active': currentWorkspace.viewedArticles.includes(articleHierarchyNode.node.name)}"
                     pTooltip="Open Context Menu"
-                    (click)="$event.stopPropagation(); setlastRightClickedArticle(articleHierarchyNode); contextMenu.toggle($event); dummy.click()"></i>
+                    (click)="$event.stopPropagation(); setlastRightClickedArticle(articleHierarchyNode); contextMenu.toggle($event)"></i>
             </div>
 
             <!-- Article Entry Context Menu -->
@@ -64,5 +64,3 @@
             [ngClass]="{'active': currentWorkspace.viewedArticles.includes(articleHierarchyNode.node.name)}"></div>
     </div>
 </div>
-<!-- This element exists purely to fix the #contextMenu requiring two clicks to close -->
-<div #dummy style="visibility: hidden;"></div>
