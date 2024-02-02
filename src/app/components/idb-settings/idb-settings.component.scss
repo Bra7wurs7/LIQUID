@@ -6,10 +6,12 @@
     margin-right: 2px;
     white-space: nowrap;
     border-radius: 3px;
+    font-family: 'Courier New', Courier, monospace;
+    letter-spacing: -2px;
 
 
     &.active {
-        border: 1px solid var(--text-color-secondary);
+        border-bottom: 1px solid var(--primary-color);
     }
 }
 
@@ -18,7 +20,7 @@
     width: 100%;
 
     &.active:not(:focus):not(:hover) {
-        border: 1px solid var(--text-color-secondary);
+        border-bottom: 1px solid var(--primary-color);
     }
 }
 
@@ -31,7 +33,7 @@
     border-radius: 3px;
 
     &.active {
-        border: 1px solid var(--text-color-secondary);
+        border-bottom: 1px solid var(--primary-color);
     }
 
     .pi {

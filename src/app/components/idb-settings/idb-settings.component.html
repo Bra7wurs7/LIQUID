@@ -1,11 +1,7 @@
 <div class="flex flex-column">
   <div class="flex flex-row">
-    <input #projectName type="text" class="settingsTextInput" placeholder="Enter Project Name" pInputText
-      pTooltip="Enter a name for the saved/new project" />
-    <div class="iconButton flex flex-column justify-content-center" style="margin-right: 2px"
-      [pTooltip]="projectName.value ? 'Save As\n\'' + projectName.value + '\'' : 'Save As\n\'Unnamed Project\''">
-      <i class="pi pi-save" (click)="projectEventEmitter.emit(['saveas', projectName.value || 'Unnamed Project'])"></i>
-    </div>
+    <input #projectName type="text" class="settingsTextInput" placeholder="New Project Name" pInputText
+      pTooltip="Enter a name for the new project" />
     <div class="iconButton flex flex-column justify-content-center" style="margin-right: 2px"
       [pTooltip]="projectName.value ? 'New Project \n\'' + projectName.value + '\'' : 'New Project'">
       <i class="pi pi-plus" (click)="projectEventEmitter.emit(['new', projectName.value])"></i>
@@ -22,9 +18,14 @@
       }" />
     <div [ngClass]="{
       'active': p.title === activeProject,
-    }" class="flex flex-row textBox justify-content-between" pTooltip="Last Save">
-      <div>{{ p.lastModified | date:'short'}}</div>
+    }" class="flex flex-row textBox justify-content-between" [pTooltip]="'Project was last saved\n' + ((p.lastModified | date:'dd.MMM.yy, hh:mm a') ?? 'some point in time')">
+      <div>{{ p.lastModified | date:'dd.MMM.yy, hh:mm a'}}</div>
     </div>
+    <!--<div [ngClass]="{
+      'active': p.title === activeProject,
+    }" class="flex flex-row textBox justify-content-between" pTooltip="Amound of articles in this project">
+      <div>Article Count</div>
+    </div>-->
     <div *ngIf="p.title !== activeProject" [ngClass]="{
       'active': p.title === activeProject,
     }" class="iconButton flex flex-column justify-content-center" style="margin-right: 2px;"
@@ -36,12 +37,6 @@
     }" class="iconButton flex flex-column justify-content-center" style="margin-right: 2px;"
       (click)="projectEventEmitter.emit(['saveas', p.title])">
       <div class="pi pi-save"></div>
-    </div>
-    <div [ngClass]="{
-      'active': p.title === activeProject,
-    }" class="iconButton flex flex-column justify-content-center" style="margin-right: 2px;"
-      (click)="projectEventEmitter.emit(['delete', p.title])">
-      <div class="pi pi-times"></div>
     </div>
     <div [ngClass]="{
       'active': p.title === activeProject,
