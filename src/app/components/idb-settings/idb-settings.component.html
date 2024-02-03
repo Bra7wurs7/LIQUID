@@ -2,12 +2,12 @@
   <div class="flex flex-row">
     <input #projectName type="text" class="settingsTextInput" placeholder="New Project Name" pInputText
       pTooltip="Enter a name for the new project" />
-    <div class="iconButton flex flex-column justify-content-center" style="margin-right: 2px"
+    <div class="iconButton" style="margin-right: 2px"
       (click)="projectEventEmitter.emit(['new', projectName.value])"
       [pTooltip]="projectName.value ? 'New Project \n\'' + projectName.value + '\'' : 'New Project'">
       <i class="pi pi-plus"></i>
     </div>
-    <div class="iconButton flex flex-column justify-content-center" [pTooltip]="'More Options'"
+    <div class="iconButton" [pTooltip]="'More Options'"
       (click)="newProjectMenu.show($event)">
       <i class="pi pi-ellipsis-v"></i>
       <p-contextMenu #newProjectMenu appendTo="body" [model]="newProjectMenuItems"></p-contextMenu>
@@ -33,17 +33,17 @@
     </div>-->
     <div *ngIf="p.title !== activeProject" (click)="projectEventEmitter.emit(['load', p.title])" [ngClass]="{
       'active': p.title === activeProject,
-    }" class="iconButton flex flex-column justify-content-center" style="margin-right: 2px;">
+    }" class="iconButton" style="margin-right: 2px;">
       <div class="pi pi-folder-open"></div>
     </div>
     <div *ngIf="p.title === activeProject" (click)="projectEventEmitter.emit(['saveas', p.title])" [ngClass]="{
       'active': p.title === activeProject,
-    }" class="iconButton flex flex-column justify-content-center" style="margin-right: 2px;">
+    }" class="iconButton" style="margin-right: 2px;">
       <div class="pi pi-save"></div>
     </div>
     <div (click)="lastClickedProject = p.title; existingProjectMenu.show($event)" [ngClass]="{
       'active': p.title === activeProject,
-    }" class="iconButton flex flex-column justify-content-center" [pTooltip]="'More Options'">
+    }" class="iconButton" [pTooltip]="'More Options'">
       <i class="pi pi-ellipsis-v"></i>
       <p-contextMenu #existingProjectMenu appendTo="body" [model]="existingProjectMenuItems"></p-contextMenu>
     </div>

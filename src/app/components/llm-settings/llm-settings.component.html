@@ -1,21 +1,28 @@
 <!-- LLM Settings -->
 <div class="flex flex-column">
     <div class="flex flex-row justify-content-between align-items-stretch">
-        <p-cascadeSelect class="radius-topleft-6" pTooltip="Select an LLM Api Provider" [(ngModel)]="selectedLLM" [options]="llms" optionLabel="mname" optionGroupLabel="name" [optionGroupChildren]="['models']" placeholder="Select a LLM"></p-cascadeSelect>
+        <p-cascadeSelect class="radius-topleft-6" pTooltip="Select an LLM Api Provider" [(ngModel)]="selectedLLM"
+            [options]="llms" optionLabel="mname" optionGroupLabel="name" [optionGroupChildren]="['models']"
+            placeholder="Select a LLM"></p-cascadeSelect>
         <!-- @TODO Suggest Api Keys based on existing configurations -->
-        <input #ApiKey type="password" class="settingsTextInput" placeholder="Api Key" pInputText pTooltip="Enter the authorization key for the API endpoint" />
-        <div class="iconButton flex flex-column justify-content-center" pTooltip="Add Api Endpoint" (click)="llmApiService.addLLMConfig(selectedLLM.code, ApiKey.value)">
+        <input #ApiKey type="password" class="settingsTextInput" placeholder="Api Key" pInputText
+            pTooltip="Enter the authorization key for the API endpoint" />
+        <div class="iconButton flex flex-column justify-content-center" pTooltip="Add Api Endpoint"
+            (click)="llmApiService.addLLMConfig(selectedLLM.code, ApiKey.value)">
             <i class="pi pi-plus"></i>
         </div>
     </div>
-    <div  *ngIf="llmApiService.llmConfigs.length === 0"></div>
+    <div *ngIf="llmApiService.llmConfigs.length === 0"></div>
     <div class="pseudoBorder vmarg"></div>
     <div class="flex flex-row justify-content-between align-items-stretch" style="margin-bottom: 2px;"
         *ngFor="let llmConfig of llmApiService.llmConfigs, index as i">
         <input type="text" class="settingsTextInput" placeholder="Config Name" [value]="llmConfig.name" pInputText />
-        <input type="text" class="settingsTextInput" placeholder="URL" [value]="llmConfig.url" pInputText />
-        <div class="iconButton flex flex-column justify-content-center" pTooltip="Remove Api Endpoint" (click)="llmApiService.removeLLMConfig(i)">
-            <i class="pi pi-times"></i>
+        <div class="flex flex-row textBox justify-content-between" pTooltip="Api Endpoint URL">
+            <div>{{ llmConfig.url }}</div>
+        </div>
+        <div class="iconButton flex flex-column justify-content-center" pTooltip="Remove Api Endpoint"
+            (click)="llmApiService.removeLLMConfig(i)">
+            <i class="pi pi-cog"></i>
         </div>
     </div>
 </div>

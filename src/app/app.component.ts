@@ -475,7 +475,7 @@ export class AppComponent implements OnInit {
   }
 
   scrollIncrementDecrement(e: WheelEvent, n: number, step: number = 1, max: number = 100, min: number = 0): number {
-    if (e.deltaY > 0) {
+    if (e.deltaY < 0) {
       if (n - step >= min) {
         return n - step;
       }

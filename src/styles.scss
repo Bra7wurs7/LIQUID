@@ -151,3 +151,48 @@ p-inputSwitch {
     margin-right: 2px;
   }
 }
+
+.iconButton {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  padding: 4px;
+  transition: border 0.2s, background-color 0.05s;
+  height: auto;
+  border: 1px solid var(--surface-border);
+  color: var(--text-color-secondary);
+  border-radius: 3px;
+
+  &.active {
+      border-bottom: 1px solid var(--primary-color);
+  }
+
+  &:active{
+    transition: background-color 0s;
+    background-color: var(--surface-border);
+  }
+
+  &:hover {
+      cursor: pointer;
+      color: var(--text-color-primary);
+      border-color: var(--text-color-secondary);
+  }
+}
+
+.textBox {
+  transition: border 0.2s;
+  border: 1px solid var(--surface-border);
+  padding: 8px;
+  width: max-content;
+  margin-right: 2px;
+  white-space: nowrap;
+  border-radius: 3px;
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: -2px;
+
+  &.active {
+      border-bottom: 1px solid var(--primary-color);
+  }
+}

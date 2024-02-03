@@ -49,6 +49,7 @@ import { ArticleHierarchyMapGetPipe } from './pipes/articleHierarchyMapGet/artic
 import { CascadeSelectModule } from 'primeng/cascadeselect';
 import { ArticleNameAndCategoriesToStringPipe } from './pipes/articleNameAndCategoriesToString/article-name-and-categories-to-string.pipe';
 import { IdbSettingsComponent } from './components/idb-settings/idb-settings.component';
+import { MouseTooltipComponent } from './components/mouse-tooltip/mouse-tooltip.component';
 
 
 
@@ -68,6 +69,7 @@ import { IdbSettingsComponent } from './components/idb-settings/idb-settings.com
     ArticleHierarchyListRootFilterPipe,
     ArticleHierarchyMapGetPipe,
     IdbSettingsComponent,
+    MouseTooltipComponent,
   ],
   imports: [
     BrowserModule,

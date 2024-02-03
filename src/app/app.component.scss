@@ -1,7 +1,7 @@
 .box {
   padding: 8px;
   border: 1px solid var(--surface-border);
-  max-width: max-content;
+  width: max-content;
   border-radius: 6px;
   overflow-y: scroll;
   margin-right: 3px;
@@ -583,4 +583,80 @@
   font-size: xx-small;
   text-align: center;
   font-family: 'Courier New', Courier, monospace;
+}
+
+.graphic-tooltip {
+  background-color: var(--surface-a);
+  border-radius: 10px;
+  width: 104px;
+  color: var(--surface-border);
+
+  .leftButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-bottom: 1px solid var(--surface-border);
+    border-right: 1px solid var(--surface-border);
+    border-top-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background-image: linear-gradient(to top, var(--surface-a), var(--surface-b));
+  }
+
+  .scrollwheel {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+    width: 20px;
+    height: 40px;
+    border: 1px solid var(--surface-border);
+    margin-right: 2px;
+    margin-left: 2px;
+    border-radius: 10px;
+    background-image: linear-gradient(to top, var(--surface-b), var(--surface-a), var(--surface-b));
+
+    .pi {
+      font-size: small;
+    }
+  }
+
+  .rightButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-bottom: 1px solid var(--surface-border);
+    border-left: 1px solid var(--surface-border);
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-image: linear-gradient(to top, var(--surface-a), var(--surface-b));
+  }
+
+  .scrollwheel-selector {
+    margin-top: 2px;
+    height: 20px;
+    width: 104px;
+
+    border: 1px solid var(--surface-border);
+    padding: 0px 4px 0px 4px;
+    color: var(--surface-border);
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: small;
+
+    &:last-child {
+      border-bottom-right-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+
+    &.active {
+      border-bottom-color: var(--primary-color);
+      color: var(--text-color-secondary);
+    }
+  }
 }
