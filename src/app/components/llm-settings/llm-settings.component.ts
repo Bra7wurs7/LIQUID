@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { LlmApiService } from '../../services/llmApi/llm-api.service';
+import { LLMConfig } from 'src/app/services/llmApi/llm-config.model';
 
 @Component({
   selector: 'app-llm-settings',
@@ -7,8 +8,12 @@ import { LlmApiService } from '../../services/llmApi/llm-api.service';
   styleUrls: ['./llm-settings.component.scss']
 })
 export class LlmSettingsComponent {
+  JSON = JSON;
   llms: any[];
   selectedLLM: any;
+
+  editConfig?: string;
+
   constructor(public llmApiService: LlmApiService) {
     this.llms = [
       {

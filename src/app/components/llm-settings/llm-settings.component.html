@@ -20,9 +20,26 @@
         <div class="flex flex-row textBox justify-content-between" pTooltip="Api Endpoint URL">
             <div>{{ llmConfig.url }}</div>
         </div>
-        <div class="iconButton flex flex-column justify-content-center" pTooltip="Remove Api Endpoint"
-            (click)="llmApiService.removeLLMConfig(i)">
+        <div class="iconButton flex flex-column justify-content-center" pTooltip="Configure Api Endpoint"
+            (click)="editConfig = JSON.stringify(llmConfig, null ,2)">
             <i class="pi pi-cog"></i>
         </div>
     </div>
 </div>
+
+<p-dialog header="Edit LLM Configuration" [visible]="editConfig !== undefined" [style]="{width: '40vw'}"
+    (onHide)="editConfig = undefined">
+    <ng-template pTemplate="closeicon"></ng-template>
+    <div class="flex flex-column">
+        <textarea pInputTextarea class="system-prompt-input" placeholder="System Prompt"
+            style="width: 100%; height: 40vh;" [(ngModel)]="editConfig"></textarea>
+        <div class="flex flex-row justify-content-between" style="margin-top: 2px;">
+            <button pButton pRipple label="Delete" class="p-button-danger" style="margin-right: 2px"></button>
+            <div>
+                <button pButton pRipple label="Save" class="p-button-primary" style="margin-right: 2px"></button>
+                <button pButton pRipple label="Cancel" class="p-button-secondary"
+                    (click)="editConfig = undefined"></button>
+            </div>
+        </div>
+    </div>
+</p-dialog>
