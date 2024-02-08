@@ -13,6 +13,7 @@ export class LlmSettingsComponent {
   selectedLLM: any;
 
   editConfig?: string;
+  editConfigIndex?: number;
 
   constructor(public llmApiService: LlmApiService) {
     this.llms = [
@@ -53,5 +54,15 @@ export class LlmSettingsComponent {
         ]
       }
     ];
+  }
+
+  saveLLMConfigJSON(config: string, index: number) {
+    if (this.editConfigIndex !== undefined) {
+      try {
+        const conf: LLMConfig = JSON.parse(config);
+        this.llmApiService.llmConfigs[index] = conf;
+        this.llmApiService.saveLLMConfigs();
+      } catch { }
+    }
   }
 }

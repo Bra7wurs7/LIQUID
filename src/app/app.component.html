@@ -143,19 +143,20 @@
               (wheel)="selectedLLMIndex = scrollIncrementDecrement($event, selectedLLMIndex, 1, llmApiService.llmConfigs.length-1)">
               <div class="pi pi-comments"></div>
               <ng-template #seeees>
-                <div class="graphic-tooltip flex flex-column">
-                  <div class="flex flex-row">
-                    <div class="leftButton">
+                <div class="graphic-tooltip">
+                  <div>AI Interface</div>
+                  <div class="flex flex-row" style="margin-bottom: 2px;">
+                    <div class="leftButton mouseButton">
                       <div class="pi pi-angle-double-down" *ngIf="!dropdownPanelActiveTab"></div>
                       <div class="pi pi-angle-double-up" *ngIf="dropdownPanelActiveTab === 'console'"></div>
-                      <div class="pi pi-comments" *ngIf="dropdownPanelActiveTab && dropdownPanelActiveTab !== 'console'"></div>
+                      <div class="pi pi-comments"
+                        *ngIf="dropdownPanelActiveTab && dropdownPanelActiveTab !== 'console'"></div>
                     </div>
                     <div class="scrollwheel">
                       <div class="pi pi-arrow-circle-up"></div>
                       <div class="pi pi-arrow-circle-down"></div>
                     </div>
-                    <div class="rightButton">
-                      <div class="pi pi-sliders-v"></div>
+                    <div class="rightButton mouseButton">
                     </div>
                   </div>
                   <div class="scrollwheel-selector" [ngClass]="{'active': selectedLLMIndex === i}"

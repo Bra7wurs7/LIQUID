@@ -62,6 +62,7 @@
     padding: 6px 8px 8px 8px;
     border-right-color: var(--surface-border);
     border-left-color: var(--surface-border);
+    color: var(--text-color-secondary);
 
     &.showBorderL {
         &.active {
@@ -78,7 +79,8 @@
     }
 
     &.active {
-        background-image: linear-gradient(to right, var(--surface-border) , var(--surface-a));;
+        background-image: linear-gradient(to right, var(--surface-b) , var(--surface-a));
+        color: var(--text-color-primary);
     }
 
     &.highlighted {
@@ -123,12 +125,9 @@
     opacity: 0;
 
     &.active {
-        margin-right: 6px;
+        margin-right: 5px;
         max-width: 13px;
         opacity: 1;
-        &.pi-hashtag {
-            margin-right: 3px;
-        }
     }
 
     

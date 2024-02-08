@@ -27,51 +27,17 @@ p-inputSwitch {
   line-height: unset !important;
 }
 
-.p-panel-toggleable {
-  .p-panel-header {
-    background-color: var(--surface-a);
-    //background-image: linear-gradient(to right, var(--surface-border) , var(--surface-a));;
-  }
+.activePanel {
+  font-weight: bold;
 
-  .p-panel-content {
+  .p-panel-header {
     background-color: var(--surface-b);
-  }
-}
-
-.p-panel-expanded {
-  .p-panel-header {
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
   }
 }
 
 .p-panel-header {
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
-}
-
-.sidemenuPanel {
-  margin-bottom: 1px;
-
-  .p-panel {
-    .p-panel-header {
-      padding: 0px !important;
-      height: 35px;
-
-      span {
-        margin-left: 1px;
-        align-items: center;
-      }
-    }
-
-    .p-panel-content {
-      padding: 0px !important;
-
-      .element {
-        height: 35px;
-      }
-    }
-  }
 }
 
 .menubar {
@@ -106,18 +72,9 @@ p-inputSwitch {
   }
 }
 
-.activePanel {
-  font-weight: bold;
-
-  .p-panel-header {
-    background-color: var(--surface-a);
-  }
-}
-
 .p-tooltip .p-tooltip-text {
-  padding: 4px;
-  border-radius: 4px;
-  background-color: var(--surface-border);
+  padding: 4px 6px 4px 6px;
+  border-radius: 15px;
   box-shadow: none;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
@@ -166,18 +123,18 @@ p-inputSwitch {
   border-radius: 3px;
 
   &.active {
-      border-bottom: 1px solid var(--primary-color);
+    border-bottom: 1px solid var(--primary-color);
   }
 
-  &:active{
+  &:active {
     transition: background-color 0s;
     background-color: var(--surface-border);
   }
 
   &:hover {
-      cursor: pointer;
-      color: var(--text-color-primary);
-      border-color: var(--text-color-secondary);
+    cursor: pointer;
+    color: var(--text-color-primary);
+    border-color: var(--text-color-secondary);
   }
 }
 
@@ -193,6 +150,6 @@ p-inputSwitch {
   letter-spacing: -2px;
 
   &.active {
-      border-bottom: 1px solid var(--primary-color);
+    border-bottom: 1px solid var(--primary-color);
   }
 }

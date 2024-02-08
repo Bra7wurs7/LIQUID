@@ -21,11 +21,17 @@ export class LlmApiService {
   public addLLMConfig(llm: [string, string, string], key: string) {
     const newLLMConfig = new LLMConfig(llm[1], llm[0], {}, { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' }, { model: llm[1] })
     this.llmConfigs.push(newLLMConfig);
-    localStorage.setItem("llmConfigs", JSON.stringify(this.llmConfigs));
+    this.saveLLMConfigs();
   }
 
-  public removeLLMConfig(index: number) {
-    this.llmConfigs.splice(index, 1);
+  public removeLLMConfig(index?: number) {
+    if (index !== undefined) {
+      this.llmConfigs.splice(index, 1);
+      this.saveLLMConfigs();
+    }
+  }
+
+  public saveLLMConfigs() {
     localStorage.setItem("llmConfigs", JSON.stringify(this.llmConfigs));
   }
 
@@ -37,7 +43,7 @@ export class LlmApiService {
     }
     const response = await fetch(llmConfig.url + this.httpParamsToStringSuffix(llmConfig.params), {
       method: 'POST',
-      headers: {...llmConfig.headers, "Content-Type": "application/json"},
+      headers: { ...llmConfig.headers, "Content-Type": "application/json" },
       body: JSON.stringify(body)
     });
 
