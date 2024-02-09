@@ -52,7 +52,6 @@ import { IdbSettingsComponent } from './components/idb-settings/idb-settings.com
 import { MouseTooltipComponent } from './components/mouse-tooltip/mouse-tooltip.component';
 
 
-
 @NgModule({
   declarations: [
     AppComponent,

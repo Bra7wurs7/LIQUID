@@ -45,6 +45,7 @@ export class AppComponent implements OnInit {
   selectedLLMIndex: number = 0;
 
   conversation: Conversation = this.loadConversation();
+  conversations: Conversation[] = [];
   focusedTextArea?: HTMLTextAreaElement;
 
   /** Dialogs */
@@ -53,6 +54,8 @@ export class AppComponent implements OnInit {
   showPrivacyPolicyDialog: boolean = false;
   loadDialogVisible: boolean = false;
   settingsDialogVisible: boolean = false;
+
+  foo: number = 0;
 
   /** Autosaver */
   autosave = timer(300000, 300000).pipe(
