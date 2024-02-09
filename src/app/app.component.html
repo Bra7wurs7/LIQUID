@@ -47,8 +47,6 @@
                     'pi-user': msg.role === 'user',
                     'pi-globe': msg.role === 'assistant',
                   }"></i>
-                <i class="pi pi-save dialog-prompt-action" pTooltip="Save this message into a new article"
-                  tooltipPosition="left"></i>
                 <i class="pi pi-trash dialog-prompt-action" pTooltip="Remove this message from the conversation"
                   (click)="conversation.messages.splice(idx, 1); this.saveConversation()" tooltipPosition="left"></i>
               </div>
@@ -74,14 +72,10 @@
                 tooltipPosition="left">
                 <div class="pi pi-trash"></div>
               </div>
-              <div class="flex flex-column align-items-center justify-content-center action"
-                pTooltip="Save the entire conversation into a new article">
-                <div class="pi pi-save" tooltipPosition="left"></div>
-              </div>
-              <div class="flex flex-column align-items-center justify-content-center action"
+              <!--<div class="flex flex-column align-items-center justify-content-center action"
                 pTooltip="Toggle Autoprompting" tooltipPosition="left">
                 <div class="pi pi-forward"></div>
-              </div>
+              </div>-->
               <div class="flex flex-column align-items-center justify-content-center action" pTooltip="Prompt LLM"
                 tooltipPosition="left" (click)="promptConversation()">
                 <div class="pi pi-step-forward-alt"></div>
