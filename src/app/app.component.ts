@@ -44,8 +44,8 @@ export class AppComponent implements OnInit {
   consoleInputFocused: boolean = false;
   selectedLLMIndex: number = 0;
 
-  conversation: Conversation = this.loadConversation();
-  conversations: Conversation[] = [];
+  conversations: Conversation[] = this.loadConversations();
+  activeConversation: number = 0;
   focusedTextArea?: HTMLTextAreaElement;
 
   /** Dialogs */
@@ -97,16 +97,16 @@ export class AppComponent implements OnInit {
     });
   }
 
-  loadConversation(): Conversation {
-    const lastConversation = localStorage.getItem('last_conversation')
-    if (lastConversation) {
-      return JSON.parse(lastConversation)
+  loadConversations(): Conversation[] {
+    const lastConversations = localStorage.getItem('conversations')
+    if (lastConversations) {
+      return JSON.parse(lastConversations)
     }
-    return new Conversation()
+    return [new Conversation()]
   }
 
-  saveConversation() {
-    localStorage.setItem('last_conversation', JSON.stringify(this.conversation));
+  saveConversations() {
+    localStorage.setItem('conversations', JSON.stringify(this.conversations));
   }
 
   setActiveArticle(index: number) {
@@ -500,7 +500,7 @@ export class AppComponent implements OnInit {
             message.content += newContent;
           }
         }
-        this.saveConversation()
+        this.saveConversations()
       })
     })
     this.conversation.messages.push(message)
