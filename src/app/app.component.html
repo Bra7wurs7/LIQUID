@@ -25,7 +25,7 @@
 
         <div *ngIf="dropdownPanelActiveTab === 'console'" class="flex flex-row w-full align-content-end">
           <textarea pInputTextarea class="system-prompt-input" placeholder="System Prompt"
-            [(ngModel)]="conversations[activeConversation].system"></textarea>
+            (change)="onTouchConversations()" [(ngModel)]="conversations[activeConversation].system"></textarea>
           <div class="dialog-prompt-container flex flex-column justify-content-start">
             <div class="dialog-prompt-message flex flex-row hideChildUntilHoverParent"
               *ngFor="let msg of conversations[activeConversation].messages; index as idx" [ngClass]="{
@@ -34,7 +34,7 @@
               end: idx === conversations[activeConversation].messages.length-1 || (conversations[activeConversation].messages[idx+1] !== undefined && conversations[activeConversation].messages[idx+1].role === 'user'),
             }">
               <textarea #msgarea pInputTextarea rows="1" class="dialog-prompt-textarea" [(ngModel)]="msg.content"
-                [autoResize]="true"></textarea>
+                [autoResize]="true" (change)="onTouchConversations()"></textarea>
               <div class="dialog-prompt-actions hideChildUntilHoverChild">
                 <i class="pi dialog-prompt-action"
                   [pTooltip]="msg.active ? 'This message will be included in prompts' : 'This message will not be included in prompts'"
@@ -48,24 +48,28 @@
                     'pi-globe': msg.role === 'assistant',
                   }"></i>
                 <i class="pi pi-trash dialog-prompt-action" pTooltip="Remove this message from the conversation"
-                  (click)="conversations[activeConversation].messages.splice(idx, 1); this.saveConversations()" tooltipPosition="left"></i>
+                  (click)="conversations[activeConversation].messages.splice(idx, 1); "
+                  tooltipPosition="left"></i>
               </div>
             </div>
           </div>
           <div class="dialog-prompt-control-panel">
-            <div>
-              <div>
-
+            <div class="conversations">
+              <div class="conversation" [pTooltip]="conversation.system && conversation.system.length > 70 ?
+                (conversation.system | slice:0:70) : conversation.system ?? ''" [ngClass]="{'active': i === activeConversation}"
+                *ngFor="let conversation of conversations; let i = index" (click)="activeConversation = i">{{conversation.system?.length ?? 0 > 5 ?
+                (conversation.system | slice:0:5) : conversation.system}}
               </div>
             </div>
+
             <div>
               <div class="flex flex-column align-items-center justify-content-center action"
                 [pTooltip]="llmSettingsTooltip" tooltipPosition="left" [autoHide]="false">
                 <div class="pi pi-cog"></div>
               </div>
               <div class="flex flex-column align-items-center justify-content-center action"
-                (click)="conversations[activeConversation].messages = []; this.saveConversations()" pTooltip="Delete the entire conversation"
-                tooltipPosition="left">
+                (click)="conversations[activeConversation].messages = []; onTouchConversations()"
+                pTooltip="Delete the entire conversation" tooltipPosition="left">
                 <div class="pi pi-eraser"></div>
               </div>
               <div class="flex flex-column align-items-center justify-content-center action" pTooltip="Prompt LLM"
@@ -296,14 +300,19 @@
 
 <ng-template #llmSettingsTooltip>
   <div class="flex flex-column">
-    <div tooltipPosition="left"
-      [pTooltip]="'The maximum number of text the LLM may generate.\n(4 tokens ≈ 3 words)'">Max Tokens</div>
-    <input type="number" [min]="0" [max]="4096" [step]="128" pInputText [(ngModel)]="conversations[activeConversation].max_tokens" />
+    <div tooltipPosition="left" [pTooltip]="'The maximum number of text the LLM may generate.\n(4 tokens ≈ 3 words)'">
+      Max Tokens</div>
+    <input type="number" [min]="0" [max]="4096" [step]="128" pInputText
+      [(ngModel)]="conversations[activeConversation].max_tokens" />
     <div style="margin-top: 3px;" tooltipPosition="left"
-      [pTooltip]="'A higher temperature setting makes the LLM more likely to select less probable tokens when generating text.\nA temperature of 0 makes the LLM always select the most probable option.'">Temperature</div>
-    <input type="number" [min]="0" [max]="1" [step]="0.1" pInputText [(ngModel)]="conversations[activeConversation].temperature" />
+      [pTooltip]="'A higher temperature setting makes the LLM more likely to select less probable tokens when generating text.\nA temperature of 0 makes the LLM always select the most probable option.'">
+      Temperature</div>
+    <input type="number" [min]="0" [max]="1" [step]="0.1" pInputText
+      [(ngModel)]="conversations[activeConversation].temperature" />
     <div style="margin-top: 3px;" tooltipPosition="left"
-      [pTooltip]="'A lower  \'Top P\' removes less probable tokens from the selection of possible tokens when generating text.\nA \'Top P\' of 1 makes the LLM consider 100% of options when selecting the next token'">Top P</div>
-    <input type="number" [min]="0" [max]="1" [step]="0.1" pInputText [(ngModel)]="conversations[activeConversation].top_p" />
+      [pTooltip]="'A lower  \'Top P\' removes less probable tokens from the selection of possible tokens when generating text.\nA \'Top P\' of 1 makes the LLM consider 100% of options when selecting the next token'">
+      Top P</div>
+    <input type="number" [min]="0" [max]="1" [step]="0.1" pInputText
+      [(ngModel)]="conversations[activeConversation].top_p" />
   </div>
 </ng-template>

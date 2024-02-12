@@ -105,10 +105,6 @@ export class AppComponent implements OnInit {
     return [new Conversation()]
   }
 
-  saveConversations() {
-    localStorage.setItem('conversations', JSON.stringify(this.conversations));
-  }
-
   setActiveArticle(index: number) {
     const activeWorkspace = this.project!.workspaces[
       this.project!.activeWorkspaceIndex
@@ -492,7 +488,7 @@ export class AppComponent implements OnInit {
 
   promptConversation() {
     const message: Msg = { role: 'assistant', content: '', active: true }
-    this.llmApiService.sendLLMPrompt(this.conversation, this.llmApiService.llmConfigs[this.selectedLLMIndex]).then((o) => {
+    this.llmApiService.sendLLMPrompt(this.conversations[this.activeConversation], this.llmApiService.llmConfigs[this.selectedLLMIndex]).then((o) => {
       o?.subscribe((a) => {
         for (const v of a) {
           const newContent = v?.choices[0]?.delta?.content
@@ -500,15 +496,14 @@ export class AppComponent implements OnInit {
             message.content += newContent;
           }
         }
-        this.saveConversations()
       })
     })
-    this.conversation.messages.push(message)
+    this.conversations[this.activeConversation].messages.push(message)
   }
 
   commandLineKeyUp(e: KeyboardEvent, input: HTMLInputElement) {
     if (e.key === 'Enter') {
-      this.conversation.messages.push({ active: true, role: 'user', content: input.value });
+      this.conversations[this.activeConversation].messages.push({ active: true, role: 'user', content: input.value });
       this.promptConversation();
       input.value = '';
     }
@@ -539,5 +534,27 @@ export class AppComponent implements OnInit {
         this.projectUpload.nativeElement.click();
         break;
     }
+  }
+
+
+  onTouchConversations() {
+    // Remove all empty conversations that aren't the last conversation
+    let removedConversation = true;
+    while (removedConversation) {
+      removedConversation = false;
+      const index = this.conversations.findIndex((conv) => !conv.system && conv.messages.length === 0)
+      if (index !== -1 && index !== this.conversations.length - 1) {
+        this.conversations.splice(index, 1)
+        removedConversation = true;
+      } else {
+        removedConversation = false;
+      }
+    }
+    // Add new empty conversation if empty conversation is no longer empty
+    if (this.conversations[this.conversations.length - 1].system || this.conversations[this.conversations.length - 1].messages.length > 0) {
+      this.conversations.push(new Conversation())
+    }
+
+    localStorage.setItem('conversations', JSON.stringify(this.conversations));
   }
 }

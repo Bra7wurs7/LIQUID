@@ -23,6 +23,8 @@
   border: 1px solid var(--surface-border);
   border-radius: 6px;
   margin-left: 3px;
+  min-width: 35px;
+  overflow: scroll;
 
   .action {
     height: 27px;
@@ -51,6 +53,33 @@
     &:hover {
       cursor: pointer;
       color: var(--text-color-primary);
+    }
+  }
+
+  .conversations {
+    display: flex;
+    flex-direction: column;
+    width: 33px;
+
+    .conversation {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 25px;
+      border-bottom: 1px solid var(--surface-border);
+      font-size: xx-small;
+      line-height: 1;
+      color: var(--text-color-secondary);
+      padding: 2px;
+      text-overflow: ellipsis;
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      &.active {
+        background-color: var(--surface-a);
+      }
     }
   }
 }
@@ -639,7 +668,7 @@
 
     border-left: 1px solid var(--surface-a);
     border-right: 1px solid var(--surface-a);
-    
+
     padding: 0px 5px 0px 5px;
 
     text-overflow: ellipsis;
@@ -656,7 +685,4 @@
       background-color: var(--surface-b);
     }
   }
-}
-.llm-settings-tooltip {
-  
 }
