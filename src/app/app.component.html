@@ -48,16 +48,17 @@
                     'pi-globe': msg.role === 'assistant',
                   }"></i>
                 <i class="pi pi-trash dialog-prompt-action" pTooltip="Remove this message from the conversation"
-                  (click)="conversations[activeConversation].messages.splice(idx, 1); "
-                  tooltipPosition="left"></i>
+                  (click)="conversations[activeConversation].messages.splice(idx, 1); " tooltipPosition="left"></i>
               </div>
             </div>
           </div>
           <div class="dialog-prompt-control-panel">
             <div class="conversations">
               <div class="conversation" [pTooltip]="conversation.system && conversation.system.length > 70 ?
-                (conversation.system | slice:0:70) : conversation.system ?? ''" [ngClass]="{'active': i === activeConversation}"
-                *ngFor="let conversation of conversations; let i = index" (click)="activeConversation = i">{{conversation.system?.length ?? 0 > 5 ?
+                (conversation.system | slice:0:70) : conversation.system ?? ''"
+                [ngClass]="{'active': i === activeConversation}"
+                *ngFor="let conversation of conversations; let i = index" (click)="activeConversation = i">
+                {{conversation.system?.length ?? 0 > 5 ?
                 (conversation.system | slice:0:5) : conversation.system}}
               </div>
             </div>
@@ -300,7 +301,8 @@
 
 <ng-template #llmSettingsTooltip>
   <div class="flex flex-column">
-    <div tooltipPosition="left" [pTooltip]="'The maximum number of text the LLM may generate.\n(4 tokens ≈ 3 words)'">
+    <div tooltipPosition="left" class="settings-tooltip-header"
+      [pTooltip]="'The maximum number of text the LLM may generate.\n(4 tokens ≈ 3 words)'">
       Max Tokens</div>
     <input type="number" [min]="0" [max]="4096" [step]="128" pInputText
       [(ngModel)]="conversations[activeConversation].max_tokens" />
