@@ -126,6 +126,7 @@ export class AppComponent implements OnInit {
     }
     this.project = project;
     this.messageService.add({ severity: 'success', summary: `Database "${this.project?.title}" loaded` });
+    this.saveToDB(project.title)
     this.initializeArticleHierarchyMap(true);
   }
 
