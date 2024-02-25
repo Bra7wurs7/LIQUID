@@ -500,6 +500,7 @@ export class AppComponent implements OnInit {
       })
     })
     this.conversations[this.activeConversation].messages.push(message)
+    this.onTouchConversations();
   }
 
   commandLineKeyUp(e: KeyboardEvent, input: HTMLInputElement) {
@@ -551,7 +552,7 @@ export class AppComponent implements OnInit {
         removedConversation = false;
       }
     }
-    // Add new empty conversation if empty conversation is no longer empty
+    // Add new empty conversation if the last conversation is no longer empty
     if (this.conversations[this.conversations.length - 1].system || this.conversations[this.conversations.length - 1].messages.length > 0) {
       this.conversations.push(new Conversation())
     }
