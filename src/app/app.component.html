@@ -306,19 +306,19 @@
 <ng-template #llmSettingsTooltip>
   <div class="flex flex-column">
     <div class="settings-tooltip-header flex justify-content-between align-items-center">Max Tokens <div
-        class="iconoir-mouse-scroll-wheel"></div>
+        class="iconoir-mouse-scroll-wheel" style="font-size: larger;"></div>
     </div>
     <input type="number" [min]="0" [max]="4096" [step]="128" pInputText
       [(ngModel)]="conversations[activeConversation].max_tokens" tooltipPosition="left"
       [pTooltip]="'The maximum number of text the LLM may generate.\n(4 tokens ≈ 3 words)'" />
     <div class="settings-tooltip-header flex justify-content-between align-items-center" style="margin-top: 3px;">
-      Temperature <div class="iconoir-mouse-button-left"></div>
+      Temperature <div class="iconoir-mouse-button-left" style="font-size: larger;"></div>
     </div>
     <input type="number" [min]="0" [max]="1" [step]="0.1" pInputText
       [(ngModel)]="conversations[activeConversation].temperature" tooltipPosition="left"
       [pTooltip]="'A higher temperature setting makes the LLM more likely to select less probable tokens when generating text.\nA temperature of 0 makes the LLM always select the most probable option.'" />
     <div class="settings-tooltip-header flex justify-content-between align-items-center" style="margin-top: 3px;">Top P
-      <div class="iconoir-mouse-button-right"></div>
+      <div class="iconoir-mouse-button-right" style="font-size: larger;"></div>
     </div>
     <input type="number" [min]="0" [max]="1" [step]="0.1" pInputText
       [(ngModel)]="conversations[activeConversation].top_p" tooltipPosition="left"
