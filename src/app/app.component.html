@@ -24,6 +24,11 @@
         </div>
 
         <div *ngIf="dropdownPanelActiveTab === 'console'" class="flex flex-row w-full align-content-end">
+          <div class="flex flex-column" style="margin-right: 3px;">
+            <div class="message-preview">{{conversations[activeConversation].system}}</div>
+            <div class="message-preview" *ngFor="let msg of conversations[activeConversation].messages; index as idx">{{msg.content}}</div>
+          </div>
+          
           <textarea pInputTextarea class="system-prompt-input" placeholder="System Prompt"
             (change)="onTouchConversations()" [(ngModel)]="conversations[activeConversation].system"></textarea>
           <div class="dialog-prompt-container flex flex-column justify-content-start">
@@ -64,13 +69,15 @@
             </div>
 
             <div>
-              <div class="flex flex-column align-items-center justify-content-center action" [pTooltip]="seeees"
+              <div class="flex flex-column align-items-center justify-content-center action" [pTooltip]="llm_selector"
                 tooltipPosition="left" [autoHide]="false"
-                (wheel)="selectedLLMIndex = scrollIncrementDecrement($event, selectedLLMIndex, 1, llmApiService.llmConfigs.length-1)">
+                (wheel)="selectedLLMIndex = scrollIncrementDecrement(false, $event, selectedLLMIndex, 1, llmApiService.llmConfigs.length-1)">
                 <div class="pi pi-globe"></div>
               </div>
               <div class="flex flex-column align-items-center justify-content-center action"
-                [pTooltip]="llmSettingsTooltip" tooltipPosition="left" [autoHide]="false">
+                [pTooltip]="llmSettingsTooltip" tooltipPosition="left" [autoHide]="false"
+                (wheel)="conversations[activeConversation].max_tokens= scrollIncrementDecrement(true, $event, conversations[activeConversation].max_tokens, 128, 4096)"
+                (click)="temp.nativeElement.focus(); $event.stopImmediatePropagation()">
                 <div class="pi pi-cog"></div>
               </div>
               <div class="flex flex-column align-items-center justify-content-center action"
@@ -137,27 +144,13 @@
               [ngClass]="{ active: dropdownPanelActiveTab === 'console' }" tooltipPosition="bottom"
               [pTooltip]="'LLM Interface'" (click)="onToggleConsole('console')" [autoHide]="false">
               <div class="pi pi-comments"></div>
-              <ng-template #seeees>
-                <div class="graphic-tooltip">
-                  <div>AI Interface</div>
-                  <div class="flex flex-row" style="margin-bottom: 2px;">
-                    <div class="leftButton mouseButton">
-                      <div class="pi pi-angle-double-down" *ngIf="!dropdownPanelActiveTab"></div>
-                      <div class="pi pi-angle-double-up" *ngIf="dropdownPanelActiveTab === 'console'"></div>
-                      <div class="pi pi-comments"
-                        *ngIf="dropdownPanelActiveTab && dropdownPanelActiveTab !== 'console'"></div>
-                    </div>
-                    <div class="scrollwheel">
-                      <div class="pi pi-arrow-circle-up"></div>
-                      <div class="pi pi-arrow-circle-down"></div>
-                    </div>
-                    <div class="rightButton mouseButton">
-                    </div>
-                  </div>
-                  <div class="scrollwheel-selector" [ngClass]="{'active': selectedLLMIndex === i}"
-                    *ngFor="let option of llmApiService.llmConfigs; let i = index">
-                    {{option.name}}
-                  </div>
+              <ng-template #llm_selector>
+                <div class="settings-tooltip-header flex justify-content-between align-items-center">LLM Endpoint<div
+                    class="iconoir-mouse-scroll-wheel" style="font-size: larger; margin-left: 5px;"></div>
+                </div>
+                <div class="settings-tooltip-selector" [ngClass]="{'active': selectedLLMIndex === i}"
+                  *ngFor="let option of llmApiService.llmConfigs; let i = index" (click)="selectedLLMIndex = i">
+                  {{option.name}}
                 </div>
               </ng-template>
             </div>
@@ -305,22 +298,22 @@
 
 <ng-template #llmSettingsTooltip>
   <div class="flex flex-column">
-    <div class="settings-tooltip-header flex justify-content-between align-items-center">Max Tokens <div
+    <div class="settings-tooltip-header flex justify-content-between align-items-center">Max Tokens<div
         class="iconoir-mouse-scroll-wheel" style="font-size: larger;"></div>
     </div>
-    <input type="number" [min]="0" [max]="4096" [step]="128" pInputText
+    <input #max_tokens type="number" [min]="0" [max]="4096" [step]="128" pInputText
       [(ngModel)]="conversations[activeConversation].max_tokens" tooltipPosition="left"
       [pTooltip]="'The maximum number of text the LLM may generate.\n(4 tokens ≈ 3 words)'" />
     <div class="settings-tooltip-header flex justify-content-between align-items-center" style="margin-top: 3px;">
       Temperature <div class="iconoir-mouse-button-left" style="font-size: larger;"></div>
     </div>
-    <input type="number" [min]="0" [max]="1" [step]="0.1" pInputText
+    <input #temp type="number" [min]="0" [max]="1" [step]="0.1" pInputText
       [(ngModel)]="conversations[activeConversation].temperature" tooltipPosition="left"
       [pTooltip]="'A higher temperature setting makes the LLM more likely to select less probable tokens when generating text.\nA temperature of 0 makes the LLM always select the most probable option.'" />
     <div class="settings-tooltip-header flex justify-content-between align-items-center" style="margin-top: 3px;">Top P
       <div class="iconoir-mouse-button-right" style="font-size: larger;"></div>
     </div>
-    <input type="number" [min]="0" [max]="1" [step]="0.1" pInputText
+    <input #top_p type="number" [min]="0" [max]="1" [step]="0.1" pInputText
       [(ngModel)]="conversations[activeConversation].top_p" tooltipPosition="left"
       [pTooltip]="'A lower  \'Top P\' removes less probable tokens from the selection when generating text.\nA \'Top P\' of 1 makes the LLM consider 100% of options when selecting the next token'" />
   </div>

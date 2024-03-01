@@ -92,6 +92,23 @@
 
 .dialog-prompt-message {
   position: relative;
+  color: var(--text-color-primary);
+
+  .do-not-display {
+    height: 0px !important;
+    width: 0px !important;
+    background-color: red;
+    visibility: collapse;
+  }
+
+  .dialog-prompt-textarea-pseudo {
+    padding: 10px;
+    border: 1px solid var(--surface-border);
+    width: 100%;
+    min-height: 39px;
+    white-space: pre-wrap;
+    cursor: pointer;
+  }
 
   &.inactive {
     .dialog-prompt-textarea {
@@ -130,9 +147,11 @@
   }
 
   .dialog-prompt-textarea {
+    resize: none !important;
     padding: 10px;
     box-shadow: transparent, transparent;
-    resize: none;
+    border-radius: 0px;
+    width: 100%;
 
     &:hover {
       background-color: var(--surface-a);
@@ -149,10 +168,22 @@
       border-bottom: 0;
       border-top: 0;
     }
+
+    dialog-prompt-textarea-pseudo {
+      border-bottom: 0;
+      border-top: 0;
+    }
   }
 
   &.start {
     .dialog-prompt-textarea {
+      border-bottom-width: 0;
+      border-bottom-width: 0;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+    }
+
+    .dialog-prompt-textarea-pseudo {
       border-bottom-width: 0;
       border-bottom-width: 0;
       border-top-left-radius: 6px;
@@ -167,14 +198,14 @@
       border-bottom-left-radius: 6px;
     }
 
+    .dialog-prompt-textarea-pseudo {
+      border-top: 0;
+      border-bottom-right-radius: 6px;
+      border-bottom-left-radius: 6px;
+    }
+
     margin-bottom: 3px;
   }
-}
-
-.dialog-prompt-textarea {
-  border-radius: 0px;
-  width: 100%;
-  resize: none;
 }
 
 // Sidebar
@@ -614,83 +645,39 @@
   font-family: 'Courier New', Courier, monospace;
 }
 
-.graphic-tooltip {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 15px;
-  width: 104px;
-  background-color: var(--surface-b);
-
-  .mouseButton {
-    color: var(--text-color-secondary);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    background-color: var(--surface-a);
-  }
-
-  .leftButton {
-    border-bottom-left-radius: 15px;
-    border-top-left-radius: 15px;
-  }
-
-  .scrollwheel {
-    color: var(--text-color-secondary);
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    flex-direction: column;
-    width: 20px;
-    height: 40px;
-    //border: 1px solid var(--surface-a);
-    margin-right: 2px;
-    margin-left: 2px;
-    border-radius: 10px;
-    background-color: var(--surface-a);
-
-    .pi {
-      font-size: small;
-    }
-  }
-
-  .rightButton {
-    border-bottom-right-radius: 15px;
-    border-top-right-radius: 15px;
-  }
-
-  .scrollwheel-selector {
-    height: 25px;
-    width: 104px;
-    background-color: var(--surface-a);
-
-    border-left: 1px solid var(--surface-a);
-    border-right: 1px solid var(--surface-a);
-
-    padding: 0px 5px 0px 5px;
-
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-
-    &:last-child {
-      border-bottom-right-radius: 15px;
-      border-bottom-left-radius: 15px;
-      border-bottom: 1px solid var(--surface-a);
-    }
-
-    &.active {
-      background-color: var(--surface-b);
-    }
-  }
-}
-
 .settings-tooltip-header {
   background-color: var(--surface-a);
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   padding: 3px 7px 3px 7px;
   margin: 0 1px 0 1px;
+}
+
+.settings-tooltip-selector {
+  background-color: var(--surface-a);
+  padding: 3px 7px 3px 7px;
+  margin: 1px 1px 0 1px;
+  color: var(--text-color-secondary);
+  user-select: none;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &.active {
+    background-color: var(--surface-b);
+    color: var(--text-color-primary);
+  }
+}
+
+.message-preview {
+  border: 1px solid var(--surface-border);
+  border-radius: 6px;
+  padding: 6px 10px 6px 10px;
+  margin-bottom: 2px;
+  width: 15vw;
+  height: 2em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }

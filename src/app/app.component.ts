@@ -30,6 +30,7 @@ import { ProjectEvent } from './models/projectEvent.model';
 export class AppComponent implements OnInit {
   /** HTML Template Elements */
   @ViewChild('projectUpload', { static: false }) projectUpload!: ElementRef;
+  @ViewChild('temp', { static: false }) temp!: ElementRef;
   activeArticlePages: Map<string, HTMLElement> = new Map();
 
   /** Project */
@@ -46,7 +47,7 @@ export class AppComponent implements OnInit {
 
   conversations: Conversation[] = this.loadConversations();
   activeConversation: number = 0;
-  focusedTextArea?: HTMLTextAreaElement;
+  activeMessageTextArea: number = -1;
 
   /** Dialogs */
   showSaveProjectOverlay: boolean = false;
@@ -474,8 +475,8 @@ export class AppComponent implements OnInit {
     }
   }
 
-  scrollIncrementDecrement(e: WheelEvent, n: number, step: number = 1, max: number = 100, min: number = 0): number {
-    if (e.deltaY < 0) {
+  scrollIncrementDecrement(invert: boolean, e: WheelEvent, n: number, step: number = 1, max: number = 100, min: number = 0): number {
+    if (invert ? e.deltaY > 0 : e.deltaY < 0) {
       if (n - step >= min) {
         return n - step;
       }
