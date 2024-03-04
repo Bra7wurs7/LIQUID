@@ -17,73 +17,91 @@
     <!-- Dropdown Bar -->
     <div class="central-header flex flex-column">
       <div class="dropdown-panel overflow-y-auto flex flex-row" [ngClass]="{ active: dropdownPanelActiveTab }">
-        <div class="flex flex-row" *ngIf="dropdownPanelActiveTab === 'menu'">
-          <app-llm-settings class="box"></app-llm-settings>
-          <app-idb-settings [activeProject]="project?.title ?? ''" [allProjects]="allProjectsPromise | async"
-            (projectEventEmitter)="handleProjectEvent($event)" class="box"></app-idb-settings>
-        </div>
-
-        <div *ngIf="dropdownPanelActiveTab === 'console'" class="flex flex-row w-full align-content-end">
-          <div class="flex flex-column" style="margin-right: 3px;">
-            <div class="message-preview">{{conversations[activeConversation].system}}</div>
-            <div class="message-preview" *ngFor="let msg of conversations[activeConversation].messages; index as idx">{{msg.content}}</div>
-          </div>
-          
-          <textarea pInputTextarea class="system-prompt-input" placeholder="System Prompt"
-            (change)="onTouchConversations()" [(ngModel)]="conversations[activeConversation].system"></textarea>
-          <div class="dialog-prompt-container flex flex-column justify-content-start">
-            <div class="dialog-prompt-message flex flex-row hideChildUntilHoverParent"
-              *ngFor="let msg of conversations[activeConversation].messages; index as idx" [ngClass]="{
-              inactive: !msg.active,
-              start: idx === 0 || msg.role === 'user',
-              end: idx === conversations[activeConversation].messages.length-1 || (conversations[activeConversation].messages[idx+1] !== undefined && conversations[activeConversation].messages[idx+1].role === 'user'),
-            }">
-              <textarea #msgarea pInputTextarea rows="1" class="dialog-prompt-textarea" [(ngModel)]="msg.content"
-                [autoResize]="true" (change)="onTouchConversations()"></textarea>
-              <div class="dialog-prompt-actions hideChildUntilHoverChild">
-                <i class="pi dialog-prompt-action"
-                  [pTooltip]="msg.active ? 'This message will be included in prompts' : 'This message will not be included in prompts'"
-                  tooltipPosition="left" (click)="msg.active = !msg.active" [ngClass]="{
+        <div *ngIf="dropdownPanelActiveTab === 'console'" class="flex flex-row w-full justify-content-end">
+          <div class="w-full h-full flex flex-row"
+            *ngIf="conversations[activeConversation].messages.length > 0 && conversations[activeConversation].messages[activeMessage] !== undefined">
+            <textarea #msgarea pInputTextarea class="dialog-prompt-textarea" [ngClass]="{
+              'inactive': !(conversations[activeConversation].messages[activeMessage].active)
+            }" [(ngModel)]="conversations[activeConversation].messages[activeMessage].content"
+              (change)="onTouchConversations()"></textarea>
+            <div class="flex flex-column justify-content-end message-list">
+              <div class="message-preview hideChildUntilHoverParent" [ngClass]="{
+                'active':activeMessage === idx, 
+                'system': msg.role === 'system',
+                'user': msg.role === 'user',
+                'assistant': msg.role === 'assistant',
+                'inactive': !msg.active
+                }" (click)="activeMessage = idx; msgarea.focus()"
+                *ngFor="let msg of conversations[activeConversation].messages ?? []; index as idx">{{msg.content}}
+                <div class="dialog-prompt-actions hideChildUntilHoverChild">
+                  <i class="pi dialog-prompt-action"
+                    [pTooltip]="msg.active ? 'This message will be included in prompts' : 'This message will not be included in prompts'"
+                    tooltipPosition="left" (click)="msg.active = !msg.active; $event.stopPropagation()" [ngClass]="{
                     'pi-stop': !msg.active,
                     'pi-check-square': msg.active,
                   }"></i>
-                <i class="pi dialog-prompt-action" [pTooltip]="'Message by: ' + msg.role" tooltipPosition="left"
-                  (click)="msg.role === 'assistant' ? msg.role = 'user' : msg.role = 'assistant'" [ngClass]="{
+                  <i class="pi dialog-prompt-action" [pTooltip]="'Role: ' + msg.role" tooltipPosition="left"
+                    (click)="msg.role === 'assistant' ? msg.role = 'user' : (msg.role === 'user' ? msg.role = 'system' : msg.role = 'assistant'); $event.stopPropagation()"
+                    [ngClass]="{
                     'pi-user': msg.role === 'user',
                     'pi-globe': msg.role === 'assistant',
+                    'pi-wrench': msg.role === 'system',
                   }"></i>
-                <i class="pi pi-trash dialog-prompt-action" pTooltip="Remove this message from the conversation"
-                  (click)="conversations[activeConversation].messages.splice(idx, 1); " tooltipPosition="left"></i>
+                  <i class="pi pi-trash dialog-prompt-action" pTooltip="Remove this message from the conversation"
+                    (click)="conversations[activeConversation].messages.splice(idx, 1); activeMessage = (idx === 0 ? idx : idx - 1); $event.stopPropagation()"
+                    tooltipPosition="left"></i>
+                </div>
               </div>
             </div>
           </div>
+
           <div class="dialog-prompt-control-panel">
             <div class="conversations">
-              <div class="conversation" [pTooltip]="conversation.system && conversation.system.length > 70 ?
-                (conversation.system | slice:0:70) : conversation.system ?? ''"
-                [ngClass]="{'active': i === activeConversation}"
-                *ngFor="let conversation of conversations; let i = index" (click)="activeConversation = i">
-                {{conversation.system?.length ?? 0 > 5 ?
-                (conversation.system | slice:0:5) : conversation.system}}
+              <div class="conversation" [pTooltip]="''+i" [ngClass]="{'active': i === activeConversation}"
+                *ngFor="let conversation of conversations; let i = index"
+                (click)="activeConversation = i; activeMessage = 0">
+                {{i}}
               </div>
             </div>
-
             <div>
               <div class="flex flex-column align-items-center justify-content-center action" [pTooltip]="llm_selector"
                 tooltipPosition="left" [autoHide]="false"
                 (wheel)="selectedLLMIndex = scrollIncrementDecrement(false, $event, selectedLLMIndex, 1, llmApiService.llmConfigs.length-1)">
                 <div class="pi pi-globe"></div>
               </div>
+              <ng-template #llm_selector>
+                <div class="settings-tooltip-header flex justify-content-between align-items-center">LLM Endpoint<div
+                    class="iconoir-mouse-scroll-wheel" style="font-size: larger; margin-left: 5px;"></div>
+                </div>
+                <div class="settings-tooltip-selector" [ngClass]="{'active': selectedLLMIndex === i}"
+                  *ngFor="let option of llmApiService.llmConfigs; let i = index" (click)="selectedLLMIndex = i">
+                  {{option.name}}
+                </div>
+              </ng-template>
               <div class="flex flex-column align-items-center justify-content-center action"
                 [pTooltip]="llmSettingsTooltip" tooltipPosition="left" [autoHide]="false"
                 (wheel)="conversations[activeConversation].max_tokens= scrollIncrementDecrement(true, $event, conversations[activeConversation].max_tokens, 128, 4096)"
                 (click)="temp.nativeElement.focus(); $event.stopImmediatePropagation()">
                 <div class="pi pi-cog"></div>
               </div>
-              <div class="flex flex-column align-items-center justify-content-center action"
-                (click)="conversations[activeConversation].messages = []; onTouchConversations()"
-                pTooltip="Delete the entire conversation" tooltipPosition="left">
+              <div class="flex flex-column align-items-center justify-content-center action" tooltipPosition="left"
+                [autoHide]="false" (click)="deleteMessages()"
+                (contextmenu)="deleteMessages(true); $event.preventDefault()" [pTooltip]="deleteConversation"
+                tooltipPosition="left">
                 <div class="pi pi-eraser"></div>
+                <ng-template #deleteConversation>
+                  <div class="flex justify-content-between align-items-center tooltip-background border-warn clickable"
+                    (click)="deleteMessages()" style="margin-bottom: 2px;">
+                    Clear conversation <div class="iconoir-mouse-button-left" style="font-size: larger;">
+                    </div>
+                  </div>
+                  <div
+                    class="flex justify-content-between align-items-center tooltip-background border-danger clickable"
+                    (click)="deleteMessages(true)">
+                    Clear all messages (incl. system msgs) <div class="iconoir-mouse-button-right"
+                      style="font-size: larger;"></div>
+                  </div>
+                </ng-template>
               </div>
               <div class="flex flex-column align-items-center justify-content-center action" pTooltip="Prompt LLM"
                 tooltipPosition="left" (click)="promptConversation()">
@@ -92,6 +110,15 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <div *ngIf="dropdownPanelActiveTab === 'alerts'">
+      </div>
+
+      <div class="flex flex-row" *ngIf="dropdownPanelActiveTab === 'menu'">
+        <app-llm-settings class="box"></app-llm-settings>
+        <app-idb-settings [activeProject]="project?.title ?? ''" [allProjects]="allProjectsPromise | async"
+          (projectEventEmitter)="handleProjectEvent($event)" class="box"></app-idb-settings>
       </div>
 
       <!-- Menubar -->
@@ -139,20 +166,11 @@
         <div class="tabs flex-grow-1">
           <div class="tabs-group command-line" [ngClass]="{ active: consoleInputFocused}">
             <input #consoleinput type="text" class="input flex-grow-1" pInputText (focus)="consoleInputFocused = true"
-              (blur)="consoleInputFocused = false" (keyup)="commandLineKeyUp($event, consoleinput)" />
+              [pTooltip]="''" (blur)="consoleInputFocused = false" (keyup)="commandLineKeyUp($event, consoleinput)" />
             <div class="tab flex flex-column align-items-center justify-content-center"
               [ngClass]="{ active: dropdownPanelActiveTab === 'console' }" tooltipPosition="bottom"
               [pTooltip]="'LLM Interface'" (click)="onToggleConsole('console')" [autoHide]="false">
               <div class="pi pi-comments"></div>
-              <ng-template #llm_selector>
-                <div class="settings-tooltip-header flex justify-content-between align-items-center">LLM Endpoint<div
-                    class="iconoir-mouse-scroll-wheel" style="font-size: larger; margin-left: 5px;"></div>
-                </div>
-                <div class="settings-tooltip-selector" [ngClass]="{'active': selectedLLMIndex === i}"
-                  *ngFor="let option of llmApiService.llmConfigs; let i = index" (click)="selectedLLMIndex = i">
-                  {{option.name}}
-                </div>
-              </ng-template>
             </div>
           </div>
           <div class="separator"></div>

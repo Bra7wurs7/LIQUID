@@ -1,7 +1,6 @@
 export class Conversation {
-    system?: string = undefined;
     messages: Msg[] = []
-    temperature: number = 1;
+    temperature: number = 0.5;
     top_p: number = 1;
     max_tokens: number = 512;
     random_seed: number | null = null;

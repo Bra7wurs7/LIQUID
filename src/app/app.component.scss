@@ -84,127 +84,35 @@
   }
 }
 
-.dialog-prompt-container {
-  margin-left: 3px;
+.dialog-prompt-textarea {
+  resize: none !important;
+  padding: 10px;
   width: 100%;
-  overflow-y: auto;
-}
+  height: 100%;
+  margin-right: 3px;
+  border-radius: 6px;
+  overflow-x: scroll;
 
-.dialog-prompt-message {
-  position: relative;
-  color: var(--text-color-primary);
-
-  .do-not-display {
-    height: 0px !important;
-    width: 0px !important;
-    background-color: red;
-    visibility: collapse;
+  &:hover {
+    background-color: var(--surface-a);
   }
 
-  .dialog-prompt-textarea-pseudo {
-    padding: 10px;
-    border: 1px solid var(--surface-border);
-    width: 100%;
-    min-height: 39px;
-    white-space: pre-wrap;
-    cursor: pointer;
+  &:focus {
+    background-color: var(--surface-a);
+    resize: vertical;
   }
 
   &.inactive {
-    .dialog-prompt-textarea {
-      color: var(--gray-800);
-      border-color: var(--gray-800);
-
-      &:hover {
-        color: var(--text-color-secondary);
-      }
-
-      &:focus {
-        color: var(--text-color-secondary);
-      }
-    }
-  }
-
-  .dialog-prompt-actions {
-    position: absolute;
-    right: 15px;
-    top: 1px;
-    border-radius: 6px;
+    color: var(--gray-800);
+    border-color: var(--gray-800);
 
     &:hover {
-      background-color: var(--surface-b);
-    }
-
-    .dialog-prompt-action {
-      transition: color 0.1s;
       color: var(--text-color-secondary);
-      margin: 3px;
-
-      &:hover {
-        color: var(--text-color-primary);
-      }
-    }
-  }
-
-  .dialog-prompt-textarea {
-    resize: none !important;
-    padding: 10px;
-    box-shadow: transparent, transparent;
-    border-radius: 0px;
-    width: 100%;
-
-    &:hover {
-      background-color: var(--surface-a);
     }
 
     &:focus {
-      background-color: var(--surface-a);
-      resize: vertical;
+      color: var(--text-color-secondary);
     }
-  }
-
-  &:not(.start, .end) {
-    .dialog-prompt-textarea {
-      border-bottom: 0;
-      border-top: 0;
-    }
-
-    dialog-prompt-textarea-pseudo {
-      border-bottom: 0;
-      border-top: 0;
-    }
-  }
-
-  &.start {
-    .dialog-prompt-textarea {
-      border-bottom-width: 0;
-      border-bottom-width: 0;
-      border-top-left-radius: 6px;
-      border-top-right-radius: 6px;
-    }
-
-    .dialog-prompt-textarea-pseudo {
-      border-bottom-width: 0;
-      border-bottom-width: 0;
-      border-top-left-radius: 6px;
-      border-top-right-radius: 6px;
-    }
-  }
-
-  &.end {
-    .dialog-prompt-textarea {
-      border-top: 0;
-      border-bottom-right-radius: 6px;
-      border-bottom-left-radius: 6px;
-    }
-
-    .dialog-prompt-textarea-pseudo {
-      border-top: 0;
-      border-bottom-right-radius: 6px;
-      border-bottom-left-radius: 6px;
-    }
-
-    margin-bottom: 3px;
   }
 }
 
@@ -670,14 +578,100 @@
   }
 }
 
-.message-preview {
-  border: 1px solid var(--surface-border);
-  border-radius: 6px;
-  padding: 6px 10px 6px 10px;
-  margin-bottom: 2px;
+.tooltip-background {
+  background-color: var(--surface-a);
+  border-radius: 10px;
+  padding: 5px;
+
+  &.clickable {
+    &:hover {
+      background-color: var(--surface-b);
+      cursor: pointer;
+    }
+  }
+
+  &.border-warn {
+    border-bottom: 1px solid var(--yellow-600);
+  }
+
+  &.border-danger {
+    border-bottom: 1px solid var(--red-600);
+  }
+}
+
+.message-list {
+  height: 100%;
   width: 15vw;
-  height: 2em;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+  overflow-y: scroll;
+
+  .message-preview {
+    position: relative;
+    transition: border-color 0.2s;
+    border: 1px solid var(--surface-border);
+    border-radius: 15px;
+    margin-bottom: 2px;
+    min-height: 30px;
+    line-height: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    user-select: none;
+
+    .dialog-prompt-actions {
+      position: absolute;
+      right: 0px;
+      top: 0;
+      border-radius: 6px;
+
+      &:hover {
+        background-color: var(--surface-b);
+      }
+
+      .dialog-prompt-action {
+        transition: color 0.1s;
+        color: var(--text-color-secondary);
+        margin: 3px;
+
+        &:hover {
+          color: var(--text-color-primary);
+        }
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+      border-color: var(--primary-color);
+    }
+
+    &.active {
+      border-color: var(--primary-color);
+    }
+
+    &.inactive {
+      color: var(--gray-800);
+      border-color: var(--gray-800);
+    }
+
+    &.system {
+      padding: 6px 6px 6px 6px;
+      border-left-width: 4px;
+      border-right-width: 4px;
+    }
+
+    &.user {
+      padding: 6px 6px 6px 9px;
+      border-bottom-right-radius: 0px;
+      border-right-width: 4px;
+    }
+
+    &.assistant {
+      padding: 6px 9px 6px 6px;
+      border-top-left-radius: 0px;
+      border-left-width: 4px;
+
+      .dialog-prompt-actions {
+        right: 3px;
+      }
+    }
+  }
 }

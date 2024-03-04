@@ -47,7 +47,7 @@ export class AppComponent implements OnInit {
 
   conversations: Conversation[] = this.loadConversations();
   activeConversation: number = 0;
-  activeMessageTextArea: number = -1;
+  activeMessage: number = 0;
 
   /** Dialogs */
   showSaveProjectOverlay: boolean = false;
@@ -101,7 +101,8 @@ export class AppComponent implements OnInit {
   loadConversations(): Conversation[] {
     const lastConversations = localStorage.getItem('conversations')
     if (lastConversations) {
-      return JSON.parse(lastConversations)
+      let convs = JSON.parse(lastConversations)
+      return convs;
     }
     return [new Conversation()]
   }
@@ -493,14 +494,21 @@ export class AppComponent implements OnInit {
     this.llmApiService.sendLLMPrompt(this.conversations[this.activeConversation], this.llmApiService.llmConfigs[this.selectedLLMIndex]).then((o) => {
       o?.subscribe((a) => {
         for (const v of a) {
-          const newContent = v?.choices[0]?.delta?.content
-          if (newContent !== undefined) {
-            message.content += newContent;
+          if (v && v.choices) {
+            const newContent = v.choices[0]?.delta?.content;
+            const finishReason = v.choices[0]?.finish_reason;
+            if (newContent !== undefined) {
+              message.content += newContent;
+            }
+            if (finishReason) {
+              localStorage.setItem('conversations', JSON.stringify(this.conversations));
+            }
           }
         }
       })
     })
     this.conversations[this.activeConversation].messages.push(message)
+    this.activeMessage = this.conversations[this.activeConversation].messages.length - 1;
     this.onTouchConversations();
   }
 
@@ -545,7 +553,7 @@ export class AppComponent implements OnInit {
     let removedConversation = true;
     while (removedConversation) {
       removedConversation = false;
-      const index = this.conversations.findIndex((conv) => !conv.system && conv.messages.length === 0)
+      const index = this.conversations.findIndex((conv) => conv.messages.length === 0)
       if (index !== -1 && index !== this.conversations.length - 1) {
         this.conversations.splice(index, 1)
         removedConversation = true;
@@ -554,10 +562,20 @@ export class AppComponent implements OnInit {
       }
     }
     // Add new empty conversation if the last conversation is no longer empty
-    if (this.conversations[this.conversations.length - 1].system || this.conversations[this.conversations.length - 1].messages.length > 0) {
+    if (this.conversations[this.conversations.length - 1].messages.length > 0) {
       this.conversations.push(new Conversation())
     }
 
     localStorage.setItem('conversations', JSON.stringify(this.conversations));
+  }
+
+  deleteMessages(deleteSystem: boolean = false) {
+    if (deleteSystem) {
+      this.conversations[this.activeConversation].messages = [];
+    } else {
+      this.conversations[this.activeConversation].messages = this.conversations[this.activeConversation].messages.filter((msg) => msg.role === 'system')
+    }
+    this.onTouchConversations();
+    this.activeMessage = 0;
   }
 }

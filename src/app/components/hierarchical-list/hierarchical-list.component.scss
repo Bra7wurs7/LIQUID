@@ -63,6 +63,7 @@
     border-right-color: var(--surface-border);
     border-left-color: var(--surface-border);
     color: var(--text-color-secondary);
+    line-height: 1;
 
     &.showBorderL {
         &.active {

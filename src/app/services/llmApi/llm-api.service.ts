@@ -37,7 +37,6 @@ export class LlmApiService {
 
   public async sendLLMPrompt(prompt: Conversation, llmConfig: LLMConfig): Promise<Observable<Record<string, any>[]> | undefined> {
     const body: LlmRequestBody = { ...new LlmRequestBody(), ...llmConfig.body, temperature: prompt.temperature, max_tokens: prompt.max_tokens }
-    body.messages.push({ role: "system", content: prompt.system ?? "" })
     for (const msg of prompt.messages) {
       if (msg.active) body.messages.push({ role: msg.role, content: msg.content });
     }
