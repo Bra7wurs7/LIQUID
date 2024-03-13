@@ -37,9 +37,6 @@ import { TableModule } from 'primeng/table';
 import { RatingModule } from 'primeng/rating';
 import { PrivacyPolicyComponent } from './components/popup-modals/privacy-policy/privacy-policy.component';
 import { HierarchicalListComponent } from './components/hierarchical-list/hierarchical-list.component';
-import { LeftSidebarComponent } from './components/left-sidebar/left-sidebar.component';
-import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.component';
-import { CenterComponent } from './components/center/center.component';
 import { LlmSettingsComponent } from './components/llm-settings/llm-settings.component';
 import { ContextMenusService } from './services/contextMenus/context-menus.service';
 import { ArticleHierarchyListStringFilterPipe } from './pipes/articleHierarchyListStringFilter/article-hierarchy-list-filter.pipe';
@@ -49,7 +46,9 @@ import { ArticleHierarchyMapGetPipe } from './pipes/articleHierarchyMapGet/artic
 import { CascadeSelectModule } from 'primeng/cascadeselect';
 import { ArticleNameAndCategoriesToStringPipe } from './pipes/articleNameAndCategoriesToString/article-name-and-categories-to-string.pipe';
 import { IdbSettingsComponent } from './components/idb-settings/idb-settings.component';
-import { MouseTooltipComponent } from './components/mouse-tooltip/mouse-tooltip.component';
+import { UrlDomainPipe } from './pipes/urlDomain/url-domain.pipe';
+import { ConversationViewerComponent } from './components/conversation-viewer/conversation-viewer.component';
+import { AlertsListComponent } from './components/alerts-list/alerts-list.component';
 
 
 @NgModule({
@@ -59,16 +58,14 @@ import { MouseTooltipComponent } from './components/mouse-tooltip/mouse-tooltip.
     ParseMarkupPipe,
     PrivacyPolicyComponent,
     HierarchicalListComponent,
-    LeftSidebarComponent,
-    RightSidebarComponent,
-    CenterComponent,
     LlmSettingsComponent,
     ArticleHierarchyListStringFilterPipe,
     MapToListPipe,
     ArticleHierarchyListRootFilterPipe,
     ArticleHierarchyMapGetPipe,
     IdbSettingsComponent,
-    MouseTooltipComponent,
+    ConversationViewerComponent,
+    AlertsListComponent,
   ],
   imports: [
     BrowserModule,
@@ -101,6 +98,7 @@ import { MouseTooltipComponent } from './components/mouse-tooltip/mouse-tooltip.
     RatingModule,
     CascadeSelectModule,
     ArticleNameAndCategoriesToStringPipe,
+    UrlDomainPipe,
   ],
   providers: [ConfirmationService, MessageService, LocalDriveService, IndexedDbService, ContextMenusService],
   bootstrap: [AppComponent]

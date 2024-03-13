@@ -1,42 +1,51 @@
 <!-- LLM Settings -->
-<div class="flex flex-column">
+<div class="flex flex-column h-full">
     <div class="flex flex-row justify-content-between align-items-stretch">
-        <p-cascadeSelect class="radius-topleft-6" pTooltip="Select an LLM Api Provider" [(ngModel)]="selectedLLM"
+        <p-cascadeSelect pTooltip="Select an LLM Api Provider" tooltipPosition="left" [(ngModel)]="selectedLLM"
             [options]="llms" optionLabel="mname" optionGroupLabel="name" [optionGroupChildren]="['models']"
-            placeholder="Select a LLM"></p-cascadeSelect>
+            placeholder="Select LLM Provider"></p-cascadeSelect>
         <!-- @TODO Suggest Api Keys based on existing configurations -->
         <input #ApiKey type="password" class="settingsTextInput" placeholder="Api Key" pInputText
-            pTooltip="Enter the authorization key for the API endpoint" />
+            pTooltip="Enter the authorization key for the API endpoint" tooltipPosition="bottom" />
         <div class="iconButton flex flex-column justify-content-center" pTooltip="Add Api Endpoint"
-            (click)="llmApiService.addLLMConfig(selectedLLM.code, ApiKey.value)">
+            tooltipPosition="bottom" (click)="llmApiService.addLLMConfig(selectedLLM.code, ApiKey.value)">
             <i class="pi pi-plus"></i>
         </div>
     </div>
-    <div *ngIf="llmApiService.llmConfigs.length === 0"></div>
     <div class="pseudoBorder vmarg"></div>
     <div class="flex flex-row justify-content-between align-items-stretch" style="margin-bottom: 2px;"
         *ngFor="let llmConfig of llmApiService.llmConfigs, index as i">
-        <input type="text" class="settingsTextInput" placeholder="Config Name" [(ngModel)]="llmConfig.name" (change)="llmApiService.saveLLMConfigs()" pInputText />
-        <div class="flex flex-row textBox justify-content-between" pTooltip="Api Endpoint URL">
-            <div>{{ llmConfig.url }}</div>
+        <input type="text" class="settingsTextInput" placeholder="Config Name" tooltipPosition="bottom"
+            [(ngModel)]="llmConfig.name" (change)="llmApiService.saveLLMConfigs()" pInputText />
+        <div class="flex flex-row textBox justify-content-between" [pTooltip]="llmConfig.url || 'Api endpoint URL'"
+            tooltipPosition="bottom">
+            <div>{{ llmConfig.url | urlDomain }}</div>
         </div>
         <div class="iconButton flex flex-column justify-content-center" pTooltip="Configure Api Endpoint"
-            (click)="editConfig = JSON.stringify(llmConfig, null ,2); editConfigIndex = i">
+            tooltipPosition="bottom" (click)="editConfig = JSON.stringify(llmConfig, null ,2); editConfigIndex = i">
             <i class="pi pi-cog"></i>
+        </div>
+    </div>
+    <div class="flex flex-column h-full justify-content-center align-items-center">
+        <div class="faint-text" *ngIf="llmApiService.llmConfigs.length === 0">
+            <p>To use generative AI in LIQUID, you need API access to a Large Language Model like GPT-3.5</p>
+            <p>Click <a href="https://console.mistral.ai" target="_blank" rel="noopener noreferrer">here</a> to get API access from MistralAI, or <a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">here</a> for OpenAI</p>
+            <p>Select your LLM provider, enter your API key and click + to allow LIQUID to use that LLM</p>
         </div>
     </div>
 </div>
 
-<p-dialog header="Edit LLM Configuration" [visible]="editConfig !== undefined && editConfigIndex !== undefined" [style]="{width: '40vw'}"
-    (onHide)="editConfig = undefined">
+<p-dialog header="Edit LLM Configuration" [visible]="editConfig !== undefined && editConfigIndex !== undefined"
+    [style]="{width: '40vw'}" (onHide)="editConfig = undefined">
     <ng-template pTemplate="closeicon"></ng-template>
     <div class="flex flex-column">
-        <textarea pInputTextarea class="system-prompt-input" placeholder="System Prompt"
-            style="width: 100%; height: 40vh;" [(ngModel)]="editConfig"></textarea>
+        <textarea pInputTextarea style="width: 100%; height: 40vh;" [(ngModel)]="editConfig"></textarea>
         <div class="flex flex-row justify-content-between" style="margin-top: 2px;">
-            <button pButton pRipple label="Delete" class="p-button-danger" style="margin-right: 2px" (click)="llmApiService.removeLLMConfig(editConfigIndex); closeButton.click()"></button>
+            <button pButton pRipple label="Delete" class="p-button-danger" style="margin-right: 2px"
+                (click)="llmApiService.removeLLMConfig(editConfigIndex); closeButton.click()"></button>
             <div>
-                <button pButton pRipple label="Save" class="p-button-primary" style="margin-right: 2px" (click)="saveLLMConfigJSON(editConfig ?? '', editConfigIndex ?? -1); closeButton.click()"></button>
+                <button pButton pRipple label="Save" class="p-button-primary" style="margin-right: 2px"
+                    (click)="saveLLMConfigJSON(editConfig ?? '', editConfigIndex ?? -1); closeButton.click()"></button>
                 <button #closeButton pButton pRipple label="Cancel" class="p-button-secondary"
                     (click)="editConfig = undefined; editConfigIndex = undefined"></button>
             </div>

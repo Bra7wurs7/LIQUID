@@ -13,14 +13,15 @@ import {
 import { LocalDriveService } from './services/localDrive/local-drive.service';
 import { IndexedDbService } from './services/indexedDb/indexed-db.service';
 import { Workspace } from './models/workspace.model';
-import { Observable, lastValueFrom, of, timer } from 'rxjs';
-import { map, switchMap, timeout } from 'rxjs/operators';
+import { lastValueFrom, of, timer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { ArticleHierarchyNode } from './models/articleHierarchyNode.model';
 import { ArticleActionEnum } from './enums/articleActionEnum';
 import { LlmApiService } from './services/llmApi/llm-api.service';
-import { OverlayPanel } from 'primeng/overlaypanel';
 import { Conversation, Msg } from './models/conversation.model';
 import { ProjectEvent } from './models/projectEvent.model';
+import { scrollIncrementDecrement } from './util/functions'
+import { ConversationViewerComponent } from './components/conversation-viewer/conversation-viewer.component';
 
 @Component({
   selector: 'app-root',
@@ -30,7 +31,8 @@ import { ProjectEvent } from './models/projectEvent.model';
 export class AppComponent implements OnInit {
   /** HTML Template Elements */
   @ViewChild('projectUpload', { static: false }) projectUpload!: ElementRef;
-  @ViewChild('temp', { static: false }) temp!: ElementRef;
+  @ViewChild('conversationViewer', { static: false }) conversationViewer!: ConversationViewerComponent;
+  scrollIncrementDecrement = scrollIncrementDecrement;
   activeArticlePages: Map<string, HTMLElement> = new Map();
 
   /** Project */
@@ -43,7 +45,6 @@ export class AppComponent implements OnInit {
   dropdownPanelActiveTab?: string;
   activeAssistant?: number;
   consoleInputFocused: boolean = false;
-  selectedLLMIndex: number = 0;
 
   conversations: Conversation[] = this.loadConversations();
   activeConversation: number = 0;
@@ -127,7 +128,6 @@ export class AppComponent implements OnInit {
       return;
     }
     this.project = project;
-    this.messageService.add({ severity: 'success', summary: `Database "${this.project?.title}" loaded` });
     this.saveToDB(project.title)
     this.initializeArticleHierarchyMap(true);
   }
@@ -344,8 +344,12 @@ export class AppComponent implements OnInit {
         this.indexedDbService
           .deleteProject(title)
           .then(
-            () =>
-              (this.allProjectsPromise = this.indexedDbService.getAllProjects())
+            () => {
+              this.allProjectsPromise = this.indexedDbService.getAllProjects();
+              if (this.project?.title === title) {
+                this.project = undefined;
+              }
+            }
           );
       },
     });
@@ -362,7 +366,7 @@ export class AppComponent implements OnInit {
         .then(() => {
           this.messageService.add({
             severity: 'success',
-            summary: `Saved "${this.project?.title}" in web browser storage on your device`,
+            summary: `"${this.project?.title}" Saved`,
           });
           this.allProjectsPromise = this.indexedDbService.getAllProjects();
         });
@@ -476,46 +480,10 @@ export class AppComponent implements OnInit {
     }
   }
 
-  scrollIncrementDecrement(invert: boolean, e: WheelEvent, n: number, step: number = 1, max: number = 100, min: number = 0): number {
-    if (invert ? e.deltaY > 0 : e.deltaY < 0) {
-      if (n - step >= min) {
-        return n - step;
-      }
-    } else {
-      if (n + step <= max) {
-        return n + step;
-      }
-    }
-    return n;
-  }
-
-  promptConversation() {
-    const message: Msg = { role: 'assistant', content: '', active: true }
-    this.llmApiService.sendLLMPrompt(this.conversations[this.activeConversation], this.llmApiService.llmConfigs[this.selectedLLMIndex]).then((o) => {
-      o?.subscribe((a) => {
-        for (const v of a) {
-          if (v && v.choices) {
-            const newContent = v.choices[0]?.delta?.content;
-            const finishReason = v.choices[0]?.finish_reason;
-            if (newContent !== undefined) {
-              message.content += newContent;
-            }
-            if (finishReason) {
-              localStorage.setItem('conversations', JSON.stringify(this.conversations));
-            }
-          }
-        }
-      })
-    })
-    this.conversations[this.activeConversation].messages.push(message)
-    this.activeMessage = this.conversations[this.activeConversation].messages.length - 1;
-    this.onTouchConversations();
-  }
-
   commandLineKeyUp(e: KeyboardEvent, input: HTMLInputElement) {
     if (e.key === 'Enter') {
       this.conversations[this.activeConversation].messages.push({ active: true, role: 'user', content: input.value });
-      this.promptConversation();
+      this.conversationViewer.promptConversation();
       input.value = '';
     }
   }
@@ -545,37 +513,5 @@ export class AppComponent implements OnInit {
         this.projectUpload.nativeElement.click();
         break;
     }
-  }
-
-
-  onTouchConversations() {
-    // Remove all empty conversations that aren't the last conversation
-    let removedConversation = true;
-    while (removedConversation) {
-      removedConversation = false;
-      const index = this.conversations.findIndex((conv) => conv.messages.length === 0)
-      if (index !== -1 && index !== this.conversations.length - 1) {
-        this.conversations.splice(index, 1)
-        removedConversation = true;
-      } else {
-        removedConversation = false;
-      }
-    }
-    // Add new empty conversation if the last conversation is no longer empty
-    if (this.conversations[this.conversations.length - 1].messages.length > 0) {
-      this.conversations.push(new Conversation())
-    }
-
-    localStorage.setItem('conversations', JSON.stringify(this.conversations));
-  }
-
-  deleteMessages(deleteSystem: boolean = false) {
-    if (deleteSystem) {
-      this.conversations[this.activeConversation].messages = [];
-    } else {
-      this.conversations[this.activeConversation].messages = this.conversations[this.activeConversation].messages.filter((msg) => msg.role === 'system')
-    }
-    this.onTouchConversations();
-    this.activeMessage = 0;
   }
 }

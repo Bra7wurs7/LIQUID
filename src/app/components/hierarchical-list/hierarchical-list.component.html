@@ -1,11 +1,11 @@
 <span class="p-input-icon-right w-full" *ngIf="showSearch && isListRoot">
-    <input type="text" class="w-full searchInput" [placeholder]="'Search '+project.title"
+    <input type="text" class="w-full searchInput" [placeholder]="'Search '+ project.title"
         pTooltip="Find/Add Articles" tooltipPosition="right" pInputText [(ngModel)]="searchValue" />
 </span>
-<div class="hierarchicalListContainer flex flex-column overflowScroll showBorderL" [ngClass]="{
+<div class="hierarchicalListContainer flex flex-column showBorderL" [ngClass]="{
         'active': isActive,
         'showBorderR': isListRoot,
-        'showMargin': isListRoot
+        'isRoot': isListRoot
     }">
     <!-- Add Article Button -->
     <div class="flex-column left flex justify-content-start align-items-center" *ngIf="searchValue">
@@ -17,7 +17,7 @@
             </div>
         </div>
     </div>
-    <div style="overflow-y: hidden; overflow-x: hidden;"
+    <div
         *ngFor="let articleHierarchyNode of isListRoot && !searchValue 
         ? (hierarchyDirection === 'down' ? (hierarchyNodeList | articleHierarchyListRootFilter) : hierarchyNodeList) 
         : (hierarchyNodeList | articleHierarchyListStringFilter:searchValue); first as isFirst; last as isLast; index as i">
@@ -62,5 +62,10 @@
         </div>
         <div class="pseudoBorder bottom"
             [ngClass]="{'active': currentWorkspace.viewedArticles.includes(articleHierarchyNode.node.name)}"></div>
+    </div>
+</div>
+<div class="w-full" *ngIf="hierarchyNodeList.length === 0 && !searchValue">
+    <div class="faint-text w-full" style="padding: 5px;" >
+        Type a name into the search bar above to <b>find</b> or <b>add</b> an article by that name
     </div>
 </div>

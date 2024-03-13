@@ -1,0 +1,22 @@
+.alert {
+    border: 1px solid var(--surface-border);
+    border-radius: 10px;
+    width: 300px;
+    .summary {
+        width: 100%;
+        padding: 10px;
+    }
+    .actions{
+        padding: 10px;
+        border-left: 1px solid var(--surface-border);
+        .pi {
+            transition: color 0.1s;
+            color: var(--text-color-secondary);
+            font-size: larger;
+            &:hover {
+                cursor: pointer;
+                color: var(--text-color);
+            }
+        }
+    }
+}

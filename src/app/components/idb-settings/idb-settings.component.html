@@ -1,29 +1,28 @@
-<div class="flex flex-column">
+<div class="flex flex-column h-full">
   <div class="flex flex-row">
-    <input #projectName type="text" class="settingsTextInput" placeholder="New Project Name" pInputText
-      pTooltip="Enter a name for the new project" />
-    <div class="iconButton" style="margin-right: 2px"
-      (click)="projectEventEmitter.emit(['new', projectName.value])"
-      [pTooltip]="projectName.value ? 'New Project \n\'' + projectName.value + '\'' : 'New Project'">
+    <input #projectName type="text" class="projectTitleInput" placeholder="New Project Name" pInputText
+      tooltipPosition="bottom" pTooltip="Enter a name for the new project" />
+    <div class="iconButton" style="margin-right: 2px" (click)="projectEventEmitter.emit(['new', projectName.value])"
+      tooltipPosition="bottom"
+      [pTooltip]="projectName.value ? 'Create Project \n\'' + projectName.value + '\'' : 'Create New\nProject'">
       <i class="pi pi-plus"></i>
     </div>
-    <div class="iconButton" [pTooltip]="'More Options'"
-      (click)="newProjectMenu.show($event)">
+    <div class="iconButton" [pTooltip]="'More Options'" (click)="newProjectMenu.show($event)">
       <i class="pi pi-ellipsis-v"></i>
       <p-contextMenu #newProjectMenu appendTo="body" [model]="newProjectMenuItems"></p-contextMenu>
     </div>
-
   </div>
   <div class="pseudoBorder vmarg"></div>
   <div class="flex flex-row" style="margin-bottom: 2px;" *ngFor="let p of allProjects ?? []">
     <input #projectName type="text" class="settingsTextInput" placeholder="Project Name" pInputText
-      pTooltip="You may change the name of the project" [(ngModel)]="p.title" [ngClass]="{
+      pTooltip="You may change the name of the project" tooltipPosition="bottom" [(ngModel)]="p.title" [ngClass]="{
         'active': p.title === activeProject,
       }" />
     <div [ngClass]="{
       'active': p.title === activeProject,
     }" class="flex flex-row textBox justify-content-between"
-      [pTooltip]="'Project was last saved\n' + ((p.lastModified | date:'dd.MMM.yy, hh:mm a') ?? 'some point in time')">
+      [pTooltip]="'Project was last saved\n' + ((p.lastModified | date:'dd.MMM.yy, hh:mm a') ?? 'some point in time')"
+      tooltipPosition="bottom">
       <div>{{ p.lastModified | date:'dd.MMM.yy, hh:mm a'}}</div>
     </div>
     <!--<div [ngClass]="{
@@ -33,23 +32,27 @@
     </div>-->
     <div *ngIf="p.title !== activeProject" (click)="projectEventEmitter.emit(['load', p.title])" [ngClass]="{
       'active': p.title === activeProject,
-    }" class="iconButton" style="margin-right: 2px;">
+    }" class="iconButton" style="margin-right: 2px;" [pTooltip]="'Load ' + p.title" tooltipPosition="left">
       <div class="pi pi-folder-open"></div>
     </div>
     <div *ngIf="p.title === activeProject" (click)="projectEventEmitter.emit(['saveas', p.title])" [ngClass]="{
       'active': p.title === activeProject,
-    }" class="iconButton" style="margin-right: 2px;">
+    }" class="iconButton" style="margin-right: 2px;" [pTooltip]="'Save changes to ' + p.title" tooltipPosition="left">
       <div class="pi pi-save"></div>
     </div>
     <div (click)="lastClickedProject = p.title; existingProjectMenu.show($event)" [ngClass]="{
       'active': p.title === activeProject,
-    }" class="iconButton" [pTooltip]="'More Options'">
+    }" class="iconButton" [pTooltip]="'More Options'" tooltipPosition="left">
       <i class="pi pi-ellipsis-v"></i>
       <p-contextMenu #existingProjectMenu appendTo="body" [model]="existingProjectMenuItems"></p-contextMenu>
     </div>
   </div>
 
-  <div *ngIf="((allProjects ?? []).length ?? 0) === 0">
-    No projects saved in indexedDB of Browser
+  <div class="flex flex-column h-full justify-content-center align-items-center">
+    <div class="faint-text" *ngIf="((allProjects ?? []).length ?? 0) === 0">
+      <p>Your projects will be listed here</p>
+      <p>Enter a project name and click + to add a the project</p>
+      <p>You can also import an existing project by clicking ︙</p>
+    </div>
   </div>
 </div>

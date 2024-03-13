@@ -21,6 +21,11 @@
 
     overflow-y: hidden;
     overflow-x: hidden;
+    
+    &.isRoot {
+        margin: 4px;
+        overflow-y: auto;
+    }
 
     &.showBorderL {
         border-left-width: 1px !important;
@@ -37,10 +42,6 @@
         opacity: 1;
         visibility: visible;
         margin-bottom: 2px;
-    }
-
-    &.showMargin {
-        margin: 4px;
     }
 
     .borderBottomTop {
@@ -81,7 +82,7 @@
 
     &.active {
         background-image: linear-gradient(to right, var(--surface-b) , var(--surface-a));
-        color: var(--text-color-primary);
+        color: var(--text-color);
     }
 
     &.highlighted {
@@ -102,10 +103,6 @@
     border-bottom-width: 1px;
     border-bottom-style: solid;
     border-bottom-color: var(--surface-border);
-}
-
-.marginBottom {
-    margin-bottom: 2px;
 }
 
 .entryUniqueName {
@@ -152,34 +149,4 @@
 .absoluteRight {
     position: absolute;
     right: 0;
-}
-
-.overflowScroll {
-    overflow: scroll;
-}
-
-.pseudo {
-    padding: 1.5px;
-}
-
-.bigpseudo {
-    padding: 2px;
-}
-
-.hideChildUntilHoverParent {
-    >.hideChildUntilHoverChild {
-        visibility: hidden;
-    }
-
-    &:hover {
-        >.hideChildUntilHoverChild {
-            visibility: visible;
-        }
-    }
-}
-
-.pointerOnHover {
-    &:hover {
-        cursor: pointer;
-    }
 }

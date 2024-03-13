@@ -22,15 +22,15 @@ export class LlmSettingsComponent {
         code: ["https://api.openai.com/v1/chat/completions", '', 'openai'],
         models: [
           {
-            mname: 'GPT 3.5 Turbo',
+            mname: 'GPT-3.5 Turbo',
             code: ["https://api.openai.com/v1/chat/completions", 'gpt-3.5-turbo', 'openai'],
           },
           {
-            mname: 'GPT 4',
+            mname: 'GPT-4',
             code: ["https://api.openai.com/v1/chat/completions", 'gpt-4', 'openai'],
           },
           {
-            mname: 'GPT 4 Turbo Preview',
+            mname: 'GPT-4 Turbo Preview',
             code: ["https://api.openai.com/v1/chat/completions", 'gpt-4-turbo-preview', 'openai'],
           },
         ]
@@ -50,6 +50,16 @@ export class LlmSettingsComponent {
           {
             mname: 'Mistral Medium',
             code: ["https://api.mistral.ai/v1/chat/completions", 'mistral-medium', 'mistral'],
+          },
+        ]
+      },
+      {
+        name: 'custom.domain',
+        code: ["https://api.some-domain.ai/v1/chat/completions", '', 'custom'],
+        models: [
+          {
+            mname: 'Custom Model',
+            code: ["https://api.some-domain.com/v1/chat/completions", 'custom-model', 'custom'],
           },
         ]
       }

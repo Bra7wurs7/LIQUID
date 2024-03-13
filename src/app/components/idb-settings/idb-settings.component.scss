@@ -1,8 +1,13 @@
 .settingsTextInput {
     margin-right: 2px;
-    width: 100%;
+    width: 150px;
 
     &.active:not(:focus):not(:hover) {
         border-bottom: 1px solid var(--primary-color);
     }
+}
+
+.projectTitleInput {
+    margin-right: 2px;
+    width: 100%;
 }

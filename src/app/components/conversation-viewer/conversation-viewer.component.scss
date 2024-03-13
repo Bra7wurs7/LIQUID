@@ -1,0 +1,213 @@
+.dialog-prompt-textarea {
+    resize: none !important;
+    padding: 10px;
+    width: 100%;
+    height: 100%;
+    margin-right: 3px;
+    border-radius: 0;
+    border-bottom-right-radius: 6px;
+
+    &:hover {
+        background-color: var(--surface-a);
+    }
+
+    &:focus {
+        background-color: var(--surface-a);
+        resize: vertical;
+    }
+
+    &.inactive {
+        color: var(--gray-800);
+        border-color: var(--gray-800);
+
+        &:hover {
+            color: var(--text-color-secondary);
+        }
+
+        &:focus {
+            color: var(--text-color-secondary);
+        }
+    }
+}
+
+.message-list {
+    height: max-content;
+    margin-top: 3px;
+
+    .message-preview-text {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        user-select: none;
+        padding-top: 4px;
+        font-size: small;
+        width: auto;
+        align-self: flex-start;
+    }
+
+    .new-message-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4px 7px 4px 7px;
+        border: 1px solid var(--surface-border);
+        border-radius: 6px;
+        color: var(--text-color-secondary);
+        user-select: none;
+        height: 30px;
+        font-size: small;
+
+        &:hover {
+            cursor: pointer;
+            border-color: var(--primary-700);
+        }
+    }
+
+    .message-preview {
+        transition: color 0.1s, border-color 0.1s;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border: 1px solid var(--surface-border);
+        margin-right: 2px;
+        padding: 4px 5px 4px 5px;
+        min-width: 100px;
+        max-width: 300px;
+        height: 30px;
+
+        border-bottom-right-radius: 6px;
+
+        &:hover {
+            cursor: pointer;
+            border-color: var(--primary-700);
+        }
+
+        &.active {
+            border-color: var(--primary-color);
+        }
+
+        &.inactive {
+            color: var(--gray-800);
+            border-color: var(--gray-800);
+
+            .dialog-prompt-action {
+                color: var(--gray-800);
+
+                &:hover {
+                    color: var(--text-color);
+                }
+
+                &.author-icon {
+                    background-color: var(--gray-800);
+                    color: var(--surface-b);
+
+                    &:hover {
+                        background-color: var(--text-color);
+                    }
+                }
+            }
+
+            &.active {
+                border-color: var(--primary-900);
+            }
+        }
+
+        &.system {
+            border-left-width: 4px;
+            padding-left: 2px;
+        }
+
+        &.assistant {
+            border-right-width: 4px;
+            padding-right: 2px;
+        }
+    }
+}
+
+.dialog-prompt-action {
+    color: var(--text-color-secondary);
+    transition: color 0.1s;
+
+    &:hover {
+        color: var(--text-color);
+    }
+
+    &:not(:first-child) {
+        margin-left: 2px;
+    }
+
+    &.author-icon {
+        background-color: var(--text-color-secondary);
+        color: var(--surface-b);
+        border-radius: 5px;
+        margin-right: 2px;
+    }
+}
+
+.dialog-prompt-control-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid var(--surface-border);
+    border-radius: 6px;
+    margin-left: 3px;
+    min-width: 35px;
+
+    .action {
+        height: 27px;
+        width: 27px;
+        margin: 3px;
+        color: var(--text-color-secondary);
+
+        &:hover {
+            cursor: pointer;
+            color: var(--text-color);
+        }
+    }
+
+    .number {
+        font-family: 'Courier New', Courier, monospace;
+        text-align: center;
+        line-height: 30px;
+        height: 27px;
+        width: 27px;
+        margin: 3px;
+        font-size: 14px;
+        text-overflow: clip;
+        color: var(--text-color-secondary);
+        letter-spacing: -2px;
+
+        &:hover {
+            cursor: pointer;
+            color: var(--text-color);
+        }
+    }
+
+    .conversations {
+        display: flex;
+        flex-direction: column;
+        width: 33px;
+
+        .conversation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 25px;
+            border-bottom: 1px solid var(--surface-border);
+            font-size: xx-small;
+            line-height: 1;
+            color: var(--text-color-secondary);
+            padding: 2px;
+            text-overflow: ellipsis;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            &.active {
+                background-color: var(--surface-a);
+            }
+        }
+    }
+}

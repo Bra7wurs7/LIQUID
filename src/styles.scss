@@ -5,6 +5,7 @@
 
 html {
   height: 100%;
+  background-color: var(--surface-a);
 
   body {
     height: 100%;
@@ -89,12 +90,32 @@ p-inputSwitch {
   border-bottom: 1px solid var(--surface-border);
 }
 
+.pseudo {
+  padding: 1.5px;
+}
+
+.bigpseudo {
+  padding: 2px;
+}
+
 .vmarg {
   margin-top: 2px;
   margin-bottom: 2px;
 }
 
 .box {
+  padding: 8px;
+  border: 1px solid var(--surface-border);
+  width: max-content;
+  border-radius: 6px;
+  background-color: var(--surface-a);
+  width: 450px;
+  overflow: hidden;
+
+  &:not(:last-child) {
+    margin-right: 3px;
+  }
+
   .p-cascadeselect-panel {
     padding: 0px;
     border-radius: 0;
@@ -133,7 +154,7 @@ p-inputSwitch {
 
   &:hover {
     cursor: pointer;
-    color: var(--text-color-primary);
+    color: var(--text-color);
     border-color: var(--text-color-secondary);
   }
 }
@@ -142,7 +163,8 @@ p-inputSwitch {
   transition: border 0.2s;
   border: 1px solid var(--surface-border);
   padding: 8px;
-  width: max-content;
+  min-width: max-content;
+  width: 100%;
   margin-right: 2px;
   white-space: nowrap;
   border-radius: 3px;
@@ -152,4 +174,84 @@ p-inputSwitch {
   &.active {
     border-bottom: 1px solid var(--primary-color);
   }
+}
+
+.faint-text {
+  width: 60%;
+  align-self: center;
+  text-align: center;
+  color: rgba(128, 128, 128, 0.75);
+}
+
+.tooltipList {
+  .tooltipListItem {
+    padding: 4px 8px 4px 8px;
+    border-radius: 10px;
+    background-color: var(--surface-a);
+    &.small-text{
+      font-size: small;
+    }
+  }
+}
+
+.tooltip-background {
+  background-color: var(--surface-a);
+  border-radius: 10px;
+  padding: 3px 7px 3px 7px;
+
+  &.clickable {
+    &:hover {
+      background-color: var(--surface-b);
+      cursor: pointer;
+    }
+  }
+
+  &.border-warn {
+    border-bottom: 1px solid var(--yellow-600);
+  }
+
+  &.border-danger {
+    border-bottom: 1px solid var(--red-600);
+  }
+}
+
+.settings-tooltip-header {
+  background-color: var(--surface-a);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding: 3px 7px 3px 7px;
+  margin: 0 1px 0 1px;
+}
+
+.settings-tooltip-selector {
+  background-color: var(--surface-a);
+  padding: 3px 7px 3px 7px;
+  margin: 1px 1px 0 1px;
+  color: var(--text-color-secondary);
+  user-select: none;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &.active {
+    background-color: var(--surface-b);
+    color: var(--text-color);
+  }
+}
+
+.hideChildUntilHoverParent {
+  >.hideChildUntilHoverChild {
+      visibility: hidden;
+  }
+
+  &:hover {
+      >.hideChildUntilHoverChild {
+          visibility: visible;
+      }
+  }
+}
+
+.iconoir {
+  font-size: larger;
 }

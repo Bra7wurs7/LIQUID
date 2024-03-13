@@ -1,0 +1,146 @@
+<div class="w-full h-full flex flex-column justify-content-end">
+    <textarea
+        *ngIf="conversations[activeConversation].messages.length > 0 && conversations[activeConversation].messages[activeMessage] !== undefined"
+        #msgarea pInputTextarea class="dialog-prompt-textarea" placeholder="Enter message text here" [ngClass]="{
+              'inactive': !(conversations[activeConversation].messages[activeMessage].active)
+            }" [(ngModel)]="conversations[activeConversation].messages[activeMessage].content"
+        (change)="onTouchConversations()"></textarea>
+    <div class="flex flex-row message-list"
+        (wheel)="activeMessage = scrollIncrementDecrement(false, $event, activeMessage, 1, conversations[activeConversation].messages.length-1)">
+        <div class="message-preview flex flex-row justify-content-between" [ngClass]="{
+                'active':activeMessage === idx, 
+                'system': msg.role === 'system',
+                'user': msg.role === 'user',
+                'assistant': msg.role === 'assistant',
+                'inactive': !msg.active
+                }" (click)="activeMessage = idx;"
+            *ngFor="let msg of conversations[activeConversation].messages ?? []; index as idx"
+            [pTooltip]="(msg.content || 'Empty Message' | slice:0:100) + '...'" tooltipPosition="bottom">
+            <i class="iconoir dialog-prompt-action author-icon" [pTooltip]="'Role: ' + msg.role"
+                    tooltipPosition="top"
+                    (click)="msg.role === 'assistant' ? msg.role = 'user' : (msg.role === 'user' ? msg.role = 'system' : msg.role = 'assistant'); $event.stopPropagation()"
+                    [ngClass]="{
+                    'iconoir-user': msg.role === 'user',
+                    'iconoir-brain-electricity': msg.role === 'assistant',
+                    'iconoir-wrench': msg.role === 'system',
+                  }"></i>
+            <div class="message-preview-text">{{msg.content}}</div>
+
+            <div class="flex flex-row">
+                <i class="iconoir dialog-prompt-action"
+                    [pTooltip]="msg.active ? 'This message will be included in prompts' : 'This message will not be included in prompts'"
+                    tooltipPosition="top" (click)="msg.active = !msg.active; $event.stopPropagation()" [ngClass]="{
+                    'iconoir-circle': !msg.active,
+                    'iconoir-check-circle': msg.active,
+                  }"></i>
+                <i class="iconoir iconoir-xmark-square dialog-prompt-action"
+                    pTooltip="Remove this message from the conversation"
+                    (click)="conversations[activeConversation].messages.splice(idx, 1); activeMessage = (idx === 0 ? idx : idx - 1); onTouchConversations(); $event.stopPropagation()"
+                    tooltipPosition="top"></i>
+            </div>
+        </div>
+        <div class="new-message-button" pTooltip="Add empty message"
+            (click)="addEmptyMessage(conversations[activeConversation].messages)">
+            <div class="iconoir iconoir-plus dialog-prompt-action"></div>
+            <div style="margin-left: 7px;" *ngIf="conversations[activeConversation].messages.length === 0">Add empty
+                message</div>
+        </div>
+    </div>
+</div>
+
+<div class="dialog-prompt-control-panel">
+    <div class="conversations">
+        <div class="conversation" [pTooltip]="conversationTooltip" [ngClass]="{'active': i === activeConversation}"
+            *ngFor="let conversation of conversations; let i = index"
+            (click)="activeConversation = i; activeMessage = 0">
+            {{conversation.messages.length || ''}}
+            <ng-template #conversationTooltip>
+                <div class="flex flex-column tooltipList">
+                    <div *ngFor="
+                let message of conversation.messages;
+                let isLast = last
+              ">
+                        <div class="tooltipListItem small-text">
+                            {{ (message.content | slice:0:50) + '...' }}
+                        </div>
+                        <div class="pseudo" *ngIf="!isLast"></div>
+                    </div>
+
+                    <div *ngIf="conversation.messages.length === 0">
+                        Empty Conversation
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+    <div>
+        <div class="flex flex-column align-items-center justify-content-center action" [pTooltip]="llm_selector"
+            tooltipPosition="left"
+            (wheel)="selectedLLMIndex = scrollIncrementDecrement(false, $event, selectedLLMIndex, 1, llmConfigs.length-1)">
+            <div class="pi pi-globe"></div>
+        </div>
+        <ng-template #llm_selector>
+            <div class="settings-tooltip-header flex justify-content-between align-items-center">LLM Endpoint<div
+                    class="iconoir-mouse-scroll-wheel" style="font-size: larger; margin-left: 5px;"></div>
+            </div>
+            <div class="settings-tooltip-selector" [ngClass]="{'active': selectedLLMIndex === i}"
+                *ngFor="let option of llmConfigs; let i = index" (click)="selectedLLMIndex = i">
+                {{option.name}}
+            </div>
+        </ng-template>
+        <div class="flex flex-column align-items-center justify-content-center action" [pTooltip]="llmSettingsTooltip"
+            tooltipPosition="left" [autoHide]="false"
+            (wheel)="conversations[activeConversation].max_tokens= scrollIncrementDecrement(true, $event, conversations[activeConversation].max_tokens, 128, 4096)"
+            (click)="$event.stopImmediatePropagation()">
+            <div class="pi pi-cog"></div>
+            <ng-template #llmSettingsTooltip>
+                <div class="flex flex-column">
+                    <div class="settings-tooltip-header flex justify-content-between align-items-center">Max Tokens
+                        <div>
+                            <div class="iconoir iconoir-mouse-scroll-wheel"></div>
+                            <div class="iconoir iconoir-cursor-pointer"></div>
+                        </div>
+                    </div>
+                    <input #max_tokens type="number" [min]="0" [max]="4096" [step]="128" pInputText
+                        [(ngModel)]="conversations[activeConversation].max_tokens" tooltipPosition="left"
+                        [pTooltip]="'The maximum number of text the LLM may generate.\n(4 tokens ≈ 3 words)'" />
+                    <div class="settings-tooltip-header flex justify-content-between align-items-center"
+                        style="margin-top: 3px;">
+                        Temperature <div class="iconoir iconoir-cursor-pointer"></div>
+                    </div>
+                    <input #tempr type="number" [min]="0" [max]="1" [step]="0.1" pInputText
+                        [(ngModel)]="conversations[activeConversation].temperature" tooltipPosition="left"
+                        [pTooltip]="'A higher temperature setting makes the LLM more likely to select less probable tokens when generating text.\nA temperature of 0 makes the LLM always select the most probable option.'" />
+                    <div class="settings-tooltip-header flex justify-content-between align-items-center"
+                        style="margin-top: 3px;">Top P
+                        <div class="iconoir iconoir-cursor-pointer"></div>
+                    </div>
+                    <input #top_p type="number" [min]="0" [max]="1" [step]="0.1" pInputText
+                        [(ngModel)]="conversations[activeConversation].top_p" tooltipPosition="left"
+                        [pTooltip]="'A lower  \'Top P\' removes less probable tokens from the selection when generating text.\nA \'Top P\' of 1 makes the LLM consider 100% of options when selecting the next token'" />
+                </div>
+            </ng-template>
+        </div>
+        <div class="flex flex-column align-items-center justify-content-center action" tooltipPosition="left"
+            (click)="deleteMessages()" (contextmenu)="deleteMessages(true); $event.preventDefault()"
+            [pTooltip]="deleteConversation" tooltipPosition="left">
+            <div class="pi pi-eraser"></div>
+            <ng-template #deleteConversation>
+                <div class="flex justify-content-between align-items-center tooltip-background border-warn"
+                    (click)="deleteMessages()" style="margin-bottom: 2px;">
+                    Clear conversation <div class="iconoir-mouse-button-left" style="font-size: larger;">
+                    </div>
+                </div>
+                <div class="flex justify-content-between align-items-center tooltip-background border-danger"
+                    (click)="deleteMessages(true)">
+                    Clear all messages (incl. system msgs) <div class="iconoir-mouse-button-right"
+                        style="font-size: larger;"></div>
+                </div>
+            </ng-template>
+        </div>
+        <div class="flex flex-column align-items-center justify-content-center action" pTooltip="Prompt LLM"
+            tooltipPosition="left" (click)="promptConversation()">
+            <div class="pi pi-step-forward-alt"></div>
+        </div>
+    </div>
+</div>
