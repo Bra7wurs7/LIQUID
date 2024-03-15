@@ -434,7 +434,6 @@ export class AppComponent implements OnInit {
     action: ArticleActionEnum;
     node: Article;
   }) {
-    console.log(event.node);
     switch (event.action) {
       case ArticleActionEnum.toggle:
         this.toggleArticleActive(event.node.name);
@@ -513,5 +512,18 @@ export class AppComponent implements OnInit {
         this.projectUpload.nativeElement.click();
         break;
     }
+  }
+
+  saveMessageAsArticle(msg: Msg) {
+    const articleName = msg.content.slice(0, 15)    
+
+    if (this.project?.articles.has(articleName)) {
+      this.messageService.add({ severity: 'error', summary: 'An article by this name already exists' })
+      return;
+    }
+    
+    let article = new Article(articleName, [], msg.content);
+    this.project?.articles.set(articleName, article)
+    this.onTouchWorkspaces(true);
   }
 }

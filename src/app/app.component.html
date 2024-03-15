@@ -18,7 +18,7 @@
     <div class="central-header flex flex-column">
       <div class="dropdown-panel flex flex-row" [ngClass]="{ active: dropdownPanelActiveTab }">
         <div *ngIf="dropdownPanelActiveTab === 'console'" class="flex flex-row w-full justify-content-end">
-          <app-conversation-viewer #conversationViewer [conversations]="conversations"
+          <app-conversation-viewer #conversationViewer [conversations]="conversations" (saveMessageEmitter)="saveMessageAsArticle($event)"
             class="w-full flex flex-row justify-content-end"></app-conversation-viewer>
         </div>
 

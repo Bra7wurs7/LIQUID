@@ -18,6 +18,16 @@ export class LlmSettingsComponent {
   constructor(public llmApiService: LlmApiService) {
     this.llms = [
       {
+        name: 'custom.domain',
+        code: ["https://api.some-domain.ai/v1/chat/completions", '', 'custom'],
+        models: [
+          {
+            mname: 'Custom Model',
+            code: ["https://api.some-domain.com/v1/chat/completions", 'custom-model', 'custom'],
+          },
+        ]
+      },
+      {
         name: 'openai.com',
         code: ["https://api.openai.com/v1/chat/completions", '', 'openai'],
         models: [
@@ -50,16 +60,6 @@ export class LlmSettingsComponent {
           {
             mname: 'Mistral Medium',
             code: ["https://api.mistral.ai/v1/chat/completions", 'mistral-medium', 'mistral'],
-          },
-        ]
-      },
-      {
-        name: 'custom.domain',
-        code: ["https://api.some-domain.ai/v1/chat/completions", '', 'custom'],
-        models: [
-          {
-            mname: 'Custom Model',
-            code: ["https://api.some-domain.com/v1/chat/completions", 'custom-model', 'custom'],
           },
         ]
       }

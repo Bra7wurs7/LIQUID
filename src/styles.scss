@@ -176,7 +176,7 @@ p-inputSwitch {
   }
 }
 
-.faint-text {
+.tutorial-text {
   width: 60%;
   align-self: center;
   text-align: center;
@@ -188,9 +188,9 @@ p-inputSwitch {
     padding: 4px 8px 4px 8px;
     border-radius: 10px;
     background-color: var(--surface-a);
-    &.small-text{
-      font-size: small;
-    }
+    min-height: 27px;
+    min-width: 100px;
+    font-size: small;
   }
 }
 
@@ -254,4 +254,9 @@ p-inputSwitch {
 
 .iconoir {
   font-size: larger;
+}
+
+.maximize {
+  width: 100%;
+  height: 100%;
 }
