@@ -481,7 +481,9 @@ export class AppComponent implements OnInit {
 
   commandLineKeyUp(e: KeyboardEvent, input: HTMLInputElement) {
     if (e.key === 'Enter') {
-      this.conversations[this.activeConversation].messages.push({ active: true, role: 'user', content: input.value });
+      if (input.value) {
+        this.conversations[this.activeConversation].messages.push({ active: true, role: 'user', content: input.value });
+      }
       this.conversationViewer.promptConversation();
       input.value = '';
     }
@@ -515,13 +517,13 @@ export class AppComponent implements OnInit {
   }
 
   saveMessageAsArticle(msg: Msg) {
-    const articleName = msg.content.slice(0, 15)    
+    const articleName = msg.content.slice(0, 15)
 
     if (this.project?.articles.has(articleName)) {
       this.messageService.add({ severity: 'error', summary: 'An article by this name already exists' })
       return;
     }
-    
+
     let article = new Article(articleName, [], msg.content);
     this.project?.articles.set(articleName, article)
     this.onTouchWorkspaces(true);

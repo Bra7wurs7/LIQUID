@@ -18,7 +18,8 @@
     <div class="central-header flex flex-column">
       <div class="dropdown-panel flex flex-row" [ngClass]="{ active: dropdownPanelActiveTab }">
         <div *ngIf="dropdownPanelActiveTab === 'console'" class="flex flex-row w-full justify-content-end">
-          <app-conversation-viewer #conversationViewer [conversations]="conversations" (saveMessageEmitter)="saveMessageAsArticle($event)"
+          <app-conversation-viewer #conversationViewer [conversations]="conversations"
+            (saveMessageEmitter)="saveMessageAsArticle($event)"
             class="w-full flex flex-row justify-content-end"></app-conversation-viewer>
         </div>
 
@@ -50,7 +51,7 @@
             (click)="this.project.activeWorkspaceIndex = index">
             <div class="flex flex-column workspace-articles">
               <div *ngFor="
-                  let &quot;workspace-article&quot; of workspace.viewedArticles;
+                  let workspace-article of workspace.viewedArticles;
                   index as i
                 " class="workspace-article"></div>
             </div>

@@ -1,22 +1,24 @@
 <div class="w-full h-full flex flex-row">
     <div class="flex flex-column messages justify-content-between">
         <div>
-            <!--<div class="flex flex-row conversation-list"
+            <div class="flex flex-row conversation-list"
                 (wheel)="activeConversation = scrollIncrementDecrement(false, $event, activeConversation, 1, conversations.length-1)">
-                <div class="conversation-preview" (click)="activeConversation = idx;"
+                <div class="conversation-preview flex flex-column" (click)="activeConversation = idx;"
                     [ngClass]="{'active':activeConversation === idx}"
                     *ngFor="let conversation of conversations; index as idx" [pTooltip]="conversationTooltip"
                     (contextmenu)="rightClickedConversation = idx; conversationContextMenu.toggle($event)"
                     tooltipPosition="bottom">
 
-                    <div class="conversation-preview-text"></div>
+                    <div *ngFor="
+                            let message of conversation.messages;
+                            index as i
+                          " class="conversation-message" [ngClass]="{'active':i === activeMessage}"></div>
 
                     <ng-template #conversationTooltip>
                         <div class="flex flex-column tooltipList">
                             <div *ngFor="let message of conversation.messages; let isLast = last">
-                                <div class="tooltipListItem">
-                                    {{ message.content.length > 50 ? (message.content | slice:0:50) + '...' :
-                                    message.content }}
+                                <div class="tooltipListItem" [ngClass]="{'faint': message.content.length === 0}">
+                                    {{ message.content.length === 0 ? 'Empty Message' : (message.content | slice:0:50) }}
                                 </div>
                                 <div class="pseudo" *ngIf="!isLast"></div>
                             </div>
@@ -29,7 +31,7 @@
                 </div>
                 <p-contextMenu #conversationContextMenu [model]="conversationContextMenuItems" [triggerEvent]="'click'"
                     appendTo="body"></p-contextMenu>
-            </div>-->
+            </div>
             <div class="flex flex-column message-list"
                 (wheel)="activeMessage = scrollIncrementDecrement(false, $event, activeMessage, 1, conversations[activeConversation].messages.length-1)">
                 <div class="message-container" (click)="activeMessage = idx;"
@@ -41,7 +43,7 @@
                     'assistant': msg.role === 'assistant',
                     'inactive': !msg.active
                     }" (contextmenu)="rightClickedMessage = idx; messageContextMenu.toggle($event)">
-                        <div class="author-icon iconoir" [pTooltip]="'Role: ' + msg.role" tooltipPosition="top"
+                        <div class="author-icon iconoir" [pTooltip]="msg.role === 'user' ? 'Outgoing message' : (msg.role === 'assistant' ? 'Incoming message' : 'Conversation context')" tooltipPosition="top"
                             (click)="msg.role === 'assistant' ? msg.role = 'system' : (msg.role === 'user' ? msg.role = 'assistant' : msg.role = 'user'); $event.stopPropagation()"
                             [ngClass]="{
                                 'iconoir-bubble-outcome': msg.role === 'user',
@@ -134,7 +136,7 @@
     </div>
     <textarea
         *ngIf="conversations[activeConversation].messages.length > 0 && conversations[activeConversation].messages[activeMessage] !== undefined"
-        #msgarea pInputTextarea class="dialog-prompt-textarea" placeholder="Enter message text here" [ngClass]="{
+        #msgarea pInputTextarea class="dialog-prompt-textarea" placeholder="Edit message text here" [ngClass]="{
               'inactive': !(conversations[activeConversation].messages[activeMessage].active)
             }" [(ngModel)]="conversations[activeConversation].messages[activeMessage].content"
         (change)="onTouchConversations()"></textarea>

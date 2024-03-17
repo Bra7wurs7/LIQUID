@@ -33,6 +33,7 @@ export class ConversationViewerComponent {
     {
       label: 'Delete', icon: 'pi pi-fw pi-trash', command: () => {
         this.conversations[this.activeConversation].messages.splice(this.rightClickedMessage, 1)
+        this.activeMessage = this.rightClickedMessage > this.activeMessage ? this.activeMessage : this.activeMessage - 1
         this.onTouchConversations()
       }
     },
