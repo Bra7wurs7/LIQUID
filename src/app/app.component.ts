@@ -71,6 +71,18 @@ export class AppComponent implements OnInit {
     })
   );
 
+  rightClickedWorkspace: number = -1;
+  workspaceContextMenuItems = [
+    {
+      label: 'Delete', icon: 'pi pi-fw pi-trash', command: () => {
+        if (this.rightClickedWorkspace !== (this.project?.workspaces.length ?? 0) - 1) {
+          this.removeWorkspace(this.rightClickedWorkspace)
+        }
+      }
+    },
+  ];
+
+
   constructor(
     private messageService: MessageService,
     private localdriveService: LocalDriveService,
@@ -92,7 +104,9 @@ export class AppComponent implements OnInit {
         }
       });
       this.getProjectFromDB(lastProject.title).then((project) => {
-        this.loadProject(project);
+        if (project) {
+          this.loadProject(project);
+        }
       });
 
       this.autosave.subscribe(() => { });
@@ -205,31 +219,31 @@ export class AppComponent implements OnInit {
     if (articleName === undefined) {
       return;
     }
-
+    // @TODO If article exists and categories are given proceed and assign categories
     if (this.project?.articles.has(articleName)) {
       this.messageService.add({ severity: 'error', summary: 'An article by this name already exists' })
       return;
     }
     let article = this.project?.articles.get(articleName) ?? new Article(articleName)
     this.project?.articles.set(articleName, article)
-    this.onTouchWorkspaces(true);
-
 
     // Then checking for existance of all groups    
     const newCategories = categoryNames.filter((name) => !this.project?.articles.has(name));
 
     if (newCategories.length > 0) {
       lastValueFrom(this.confirmationService.confirm({
-        message: `${newCategories.length} Unknown Categories. Add Articles for those categories?`,
+        message: `${newCategories.length} unknown parents. Add Articles for those categories?`,
         accept: () => {
           for (const cat of newCategories) {
             this.addArticle(cat);
-            article.groups.push(cat);
           };
           this.onTouchWorkspaces();
         },
       }).accept).then();
     }
+
+    article.groups = categoryNames;
+    this.onTouchWorkspaces(true);
   }
 
   async renameArticle(oldName: string, newNameAndCategories: string) {
@@ -247,7 +261,7 @@ export class AppComponent implements OnInit {
 
     if (articleName !== oldName && (childArticles?.length ?? 0) > 0) {
       await lastValueFrom(this.confirmationService.confirm({
-        message: `You are renaming '${oldName}' into '${articleName}'.\n ${(childArticles?.length ?? 0)} articles name '${oldName}' as one of their categories. Update those references to '${articleName}'?`,
+        message: `You are renaming '${oldName}' into '${articleName}'.\n ${(childArticles?.length ?? 0)} articles have '${oldName}' as their parent. Update those references to '${articleName}'?`,
         accept: () => {
           for (const child of childArticles ?? []) {
             const oldCategoryIndex = child.node.groups.findIndex((g) => g === oldName);
@@ -258,8 +272,23 @@ export class AppComponent implements OnInit {
       }).accept);
     }
 
+    const newCategories = categoryNames.filter((name) => !this.project?.articles.has(name));
+
+    if (newCategories.length > 0) {
+      lastValueFrom(this.confirmationService.confirm({
+        message: `${newCategories.length} unknown parents. Add Articles for those categories?`,
+        accept: () => {
+          for (const cat of newCategories) {
+            this.addArticle(cat);
+          };
+          this.onTouchWorkspaces();
+        },
+      }).accept).then();
+    }
+
     hierarchyNode.node.name = articleName;
     hierarchyNode.node.groups = categoryNames;
+    this.onTouchWorkspaces(true);
   }
 
   scrollToPanel(child: HTMLElement, parent: HTMLDivElement) {
@@ -300,9 +329,16 @@ export class AppComponent implements OnInit {
   }
 
   newProject(title: string) {
-    setTimeout(() => {
-      this.loadProject(new Project(title !== '' ? title : 'New Database'));
-    }, 0);
+    this.getProjectFromDB(title).then((p) => {
+      if (p === undefined) {
+        this.loadProject(new Project(title !== '' ? title : 'New Database'));
+      } else {
+        this.messageService.add({
+          severity: 'error',
+          summary: `Project "${title}" already exists`,
+        })
+      }
+    });
   }
 
   downloadProject(project: Project | undefined) {

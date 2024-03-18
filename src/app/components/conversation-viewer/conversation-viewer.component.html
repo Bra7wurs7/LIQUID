@@ -64,7 +64,7 @@
         </div>
         <div class="dialog-prompt-control-panel">
             <div class="flex flex-column align-items-center justify-content-center action"
-                [pTooltip]="llmSettingsTooltip" tooltipPosition="left" [autoHide]="false"
+                [pTooltip]="llmSettingsTooltip" tooltipPosition="bottom" [autoHide]="false"
                 (wheel)="conversations[activeConversation].max_tokens= scrollIncrementDecrement(true, $event, conversations[activeConversation].max_tokens, 128, 4096)"
                 (click)="$event.stopImmediatePropagation()">
                 <div class="pi pi-cog"></div>
@@ -98,7 +98,7 @@
                 </ng-template>
             </div>
             <div class="flex flex-column align-items-center justify-content-center action" [pTooltip]="llm_selector"
-                tooltipPosition="left"
+                tooltipPosition="bottom"
                 (wheel)="selectedLLMIndex = scrollIncrementDecrement(false, $event, selectedLLMIndex, 1, llmConfigs.length-1)">
                 <div class="pi pi-globe"></div>
             </div>
@@ -112,18 +112,13 @@
                 </div>
             </ng-template>
             <div class="flex flex-column align-items-center justify-content-center action" tooltipPosition="left"
-                (click)="deleteMessages()" (contextmenu)="deleteMessages(true); $event.preventDefault()"
-                [pTooltip]="deleteConversation" tooltipPosition="left">
-                <div class="pi pi-eraser"></div>
+                (click)="repeatPrompt()"
+                [pTooltip]="deleteConversation" tooltipPosition="bottom">
+                <div class="pi pi-refresh"></div>
                 <ng-template #deleteConversation>
-                    <div class="flex justify-content-between align-items-center tooltip-background border-warn"
+                    <div class="flex justify-content-between align-items-center tooltip-background"
                         (click)="deleteMessages()" style="margin-bottom: 2px;">
-                        Clear conversation <div class="iconoir-mouse-button-left" style="font-size: larger;">
-                        </div>
-                    </div>
-                    <div class="flex justify-content-between align-items-center tooltip-background border-danger"
-                        (click)="deleteMessages(true)">
-                        Delete conversation <div class="iconoir-mouse-button-right" style="font-size: larger;">
+                        Delete last message and repeat prompt <div class="iconoir-mouse-button-left" style="font-size: larger;">
                         </div>
                     </div>
                 </ng-template>

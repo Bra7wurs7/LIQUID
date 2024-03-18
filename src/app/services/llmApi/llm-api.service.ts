@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { LLMConfig } from './llm-config.model';
-import { HttpClient, HttpHeaders, HttpParameterCodec, HttpParams, HttpRequest } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { Conversation, Msg } from '../../models/conversation.model';
+import { Conversation } from '../../models/conversation.model';
 import { LlmRequestBody } from '../../models/llm/llmRequestBody.model';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ import { LlmRequestBody } from '../../models/llm/llmRequestBody.model';
 export class LlmApiService {
   llmConfigs: LLMConfig[] = [];
 
-  constructor(private http: HttpClient) {
+  constructor(private messageService: MessageService) {
     const loadedConfig = localStorage.getItem("llmConfigs")
     if (loadedConfig) {
       this.llmConfigs = JSON.parse(loadedConfig);
@@ -45,6 +45,10 @@ export class LlmApiService {
       headers: { ...llmConfig.headers, "Content-Type": "application/json" },
       body: JSON.stringify(body)
     });
+
+    if(!response.ok) {
+      this.messageService.add({ severity: 'error', summary: `Something went wrong trying to prompt the LLM. Code: ` + response.status })
+    }
 
     const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader();
 

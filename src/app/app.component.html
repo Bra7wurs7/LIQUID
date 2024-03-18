@@ -22,7 +22,6 @@
             (saveMessageEmitter)="saveMessageAsArticle($event)"
             class="w-full flex flex-row justify-content-end"></app-conversation-viewer>
         </div>
-
         <div class="flex flex-row w-full justify-content-end" *ngIf="dropdownPanelActiveTab === 'alerts'">
           <app-alerts-list></app-alerts-list>
         </div>
@@ -48,7 +47,9 @@
               isLast: isLast
             }" [autoHide]="false" tooltipPosition="bottom" [pTooltip]="tooltipContent"
             class="hideChildUntilHoverParent toolbarWorkspace pointerOnHover relative"
-            (click)="this.project.activeWorkspaceIndex = index">
+            (click)="this.project.activeWorkspaceIndex = index" (contextmenu)="rightClickedWorkspace = index; workspaceContextMenu.toggle($event)">
+            <p-contextMenu #workspaceContextMenu [model]="workspaceContextMenuItems" [triggerEvent]="'click'"
+                    appendTo="body"></p-contextMenu>
             <div class="flex flex-column workspace-articles">
               <div *ngFor="
                   let workspace-article of workspace.viewedArticles;
@@ -90,11 +91,11 @@
           </div>
           <div class="flex-grow-1"></div>
           <div class="flex flex-row tabs-group">
-            <div class="tab flex flex-column align-items-center justify-content-center"
+            <!--<div class="tab flex flex-column align-items-center justify-content-center"
               [ngClass]="{ active: dropdownPanelActiveTab === 'alerts' }" tooltipPosition="bottom" [pTooltip]="'Alerts'"
               (click)="onToggleConsole('alerts')">
               <div class="pi pi-exclamation-circle "></div>
-            </div>
+            </div>-->
             <div class="tab flex flex-column align-items-center justify-content-center"
               [ngClass]="{ active: dropdownPanelActiveTab === 'menu' }" [pTooltip]="'Menu'"
               (click)="onToggleConsole('menu')">

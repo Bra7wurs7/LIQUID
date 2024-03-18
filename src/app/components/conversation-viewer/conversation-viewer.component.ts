@@ -40,6 +40,7 @@ export class ConversationViewerComponent {
   ];
   rightClickedMessage: number = -1;
   conversationContextMenuItems = [
+    /*
     {
       label: 'Save as article', icon: 'pi pi-fw pi-save', command: () => {
         this.saveMessageEmitter.emit(this.conversations[this.activeConversation].messages[this.rightClickedMessage])
@@ -48,14 +49,15 @@ export class ConversationViewerComponent {
     {
       separator: true
     },
+    */
     {
       label: 'Clear', icon: 'pi pi-fw pi-eraser', command: () => {
-        this.deleteMessages(false ,this.rightClickedConversation)
+        this.deleteMessages(false, this.rightClickedConversation)
       }
     },
     {
       label: 'Delete', icon: 'pi pi-fw pi-trash', command: () => {
-        this.deleteMessages(true ,this.rightClickedConversation)
+        this.deleteMessages(true, this.rightClickedConversation)
       }
     },
   ];
@@ -70,12 +72,17 @@ export class ConversationViewerComponent {
 
   deleteMessages(deleteSystem: boolean = false, index?: number) {
     if (deleteSystem) {
-      this.conversations[ index !== undefined ? index : this.activeConversation].messages = [];
+      this.conversations[index !== undefined ? index : this.activeConversation].messages = [];
     } else {
       this.conversations[index !== undefined ? index : this.activeConversation].messages = this.conversations[index !== undefined ? index : this.activeConversation].messages.filter((msg) => msg.role === 'system')
     }
     this.activeMessage = 0;
     this.onTouchConversations();
+  }
+
+  repeatPrompt() {
+    this.conversations[this.activeConversation].messages.pop()
+    this.promptConversation();
   }
 
   addEmptyMessage(messages: Msg[]) {
@@ -105,7 +112,7 @@ export class ConversationViewerComponent {
           }
         }
       })
-    })
+    });
     this.conversations[this.activeConversation].messages.push(message)
     this.onTouchConversations();
     this.activeMessage = this.conversations[this.activeConversation].messages.length - 1;

@@ -37,6 +37,7 @@ export class HierarchicalListComponent {
       icon: 'pi pi-fw pi-folder-open',
       command: () => { if (this.lastRightClickedArticle) this.articleActionClicked.emit({ action: ArticleActionEnum.toggle, node: this.lastRightClickedArticle.node }) }
     },
+    /*
     {
       label: 'Rename',
       icon: 'pi pi-fw pi-pencil',
@@ -52,6 +53,7 @@ export class HierarchicalListComponent {
       label: 'Save as File',
       icon: 'pi pi-fw pi-download',
     },
+    */
     {
       separator: true
     },
@@ -66,9 +68,6 @@ export class HierarchicalListComponent {
     },
   ];
   constructor() {
-    this.articleActionClicked.subscribe((event) => {
-      console.log(event)
-    })
   }
 
   setlastRightClickedArticle(article: ArticleHierarchyNode) {

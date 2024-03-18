@@ -205,14 +205,6 @@ p-inputSwitch {
       cursor: pointer;
     }
   }
-
-  &.border-warn {
-    border-bottom: 1px solid var(--yellow-600);
-  }
-
-  &.border-danger {
-    border-bottom: 1px solid var(--red-600);
-  }
 }
 
 .settings-tooltip-header {
