@@ -47,8 +47,6 @@ export class AppComponent implements OnInit {
   consoleInputFocused: boolean = false;
 
   conversations: Conversation[] = this.loadConversations();
-  activeConversation: number = 0;
-  activeMessage: number = 0;
 
   /** Dialogs */
   showSaveProjectOverlay: boolean = false;
@@ -518,7 +516,7 @@ export class AppComponent implements OnInit {
   commandLineKeyUp(e: KeyboardEvent, input: HTMLInputElement) {
     if (e.key === 'Enter') {
       if (input.value) {
-        this.conversations[this.activeConversation].messages.push({ active: true, role: 'user', content: input.value });
+        this.conversations[this.conversationViewer.activeConversation].messages.push({ active: true, role: 'user', content: input.value });
       }
       this.conversationViewer.promptConversation();
       input.value = '';
