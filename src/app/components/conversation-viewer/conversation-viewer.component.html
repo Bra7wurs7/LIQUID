@@ -18,7 +18,8 @@
                         <div class="flex flex-column tooltipList">
                             <div *ngFor="let message of conversation.messages; let isLast = last">
                                 <div class="tooltipListItem" [ngClass]="{'faint': message.content.length === 0}">
-                                    {{ message.content.length === 0 ? 'Empty Message' : (message.content | slice:0:50) }}
+                                    {{ message.content.length === 0 ? 'Empty Message' : (message.content | slice:0:50)
+                                    }}
                                 </div>
                                 <div class="pseudo" *ngIf="!isLast"></div>
                             </div>
@@ -43,7 +44,9 @@
                     'assistant': msg.role === 'assistant',
                     'inactive': !msg.active
                     }" (contextmenu)="rightClickedMessage = idx; messageContextMenu.toggle($event)">
-                        <div class="author-icon iconoir" [pTooltip]="msg.role === 'user' ? 'Outgoing message' : (msg.role === 'assistant' ? 'Incoming message' : 'Conversation context')" tooltipPosition="top"
+                        <div class="author-icon iconoir"
+                            [pTooltip]="msg.role === 'user' ? 'Outgoing message' : (msg.role === 'assistant' ? 'Incoming message' : 'Conversation context')"
+                            tooltipPosition="top"
                             (click)="msg.role === 'assistant' ? msg.role = 'system' : (msg.role === 'user' ? msg.role = 'assistant' : msg.role = 'user'); $event.stopPropagation()"
                             [ngClass]="{
                                 'iconoir-bubble-outcome': msg.role === 'user',
@@ -112,13 +115,13 @@
                 </div>
             </ng-template>
             <div class="flex flex-column align-items-center justify-content-center action" tooltipPosition="left"
-                (click)="repeatPrompt()"
-                [pTooltip]="deleteConversation" tooltipPosition="bottom">
+                (click)="repeatPrompt()" [pTooltip]="deleteConversation" tooltipPosition="bottom">
                 <div class="pi pi-refresh"></div>
                 <ng-template #deleteConversation>
                     <div class="flex justify-content-between align-items-center tooltip-background"
                         (click)="deleteMessages()" style="margin-bottom: 2px;">
-                        Delete last message and repeat prompt <div class="iconoir-mouse-button-left" style="font-size: larger;">
+                        Delete last message and repeat prompt <div class="iconoir-mouse-button-left"
+                            style="font-size: larger;">
                         </div>
                     </div>
                 </ng-template>
@@ -135,4 +138,10 @@
               'inactive': !(conversations[activeConversation].messages[activeMessage].active)
             }" [(ngModel)]="conversations[activeConversation].messages[activeMessage].content"
         (change)="onTouchConversations()"></textarea>
+    <div *ngIf="conversations[activeConversation].messages.length === 0 || conversations[activeConversation].messages[activeMessage] === undefined"
+        class="dialog-prompt-textarea-placeholder">
+        Empty conversation<br>
+        Press <span class="iconoir iconoir-chat-plus-in"></span>
+        or enter new message
+    </div>
 </div>

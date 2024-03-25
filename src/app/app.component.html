@@ -1,231 +1,223 @@
-<div class="flex flex-row h-full">
-  <!-- Left Sidebar -->
-  <div class="left sidebar overflow-hidden flex flex-column h-full" [ngClass]="{'collapsed': !project}">
-    <!-- @TODO Add sorting mechanics -->
-    <app-hierarchical-list *ngIf="
-        this.project
-      " [project]="project" [hierarchyDirection]="'down'" [currentWorkspace]="
-        this.project.workspaces[this.project.activeWorkspaceIndex]
-      " [isListRoot]="true" [showSearch]="true" [hierarchyNodeList]="articleHierarchyMap | mapToList"
-      (articleClickedEmitter)="toggleArticleActive($event.name)"
-      (articleActionClicked)="onListArticleActionClick($event)"
-      (addArticleEvent)="addArticle($event)"></app-hierarchical-list>
-  </div>
-
-  <!-- Center Area -->
-  <div class="center flex flex-column min-h-full w-full relative overflow-hide">
-    <!-- Dropdown Bar -->
-    <div class="central-header flex flex-column">
-      <div class="dropdown-panel flex flex-row" [ngClass]="{ active: dropdownPanelActiveTab }">
-        <div *ngIf="dropdownPanelActiveTab === 'console'" class="flex flex-row w-full justify-content-end">
-          <app-conversation-viewer #conversationViewer [conversations]="conversations"
-            (saveMessageEmitter)="saveMessageAsArticle($event)"
-            class="w-full flex flex-row justify-content-end"></app-conversation-viewer>
-        </div>
-        <div class="flex flex-row w-full justify-content-end" *ngIf="dropdownPanelActiveTab === 'alerts'">
-          <app-alerts-list></app-alerts-list>
-        </div>
-
-        <div class="flex flex-row w-full justify-content-end" *ngIf="dropdownPanelActiveTab === 'menu'">
-          <app-llm-settings class="box"></app-llm-settings>
-          <app-idb-settings [activeProject]="project?.title ?? ''" [allProjects]="allProjectsPromise | async"
-            (projectEventEmitter)="handleProjectEvent($event)" class="box"></app-idb-settings>
-        </div>
-      </div>
-
-      <!-- Menubar -->
-      <div class="flex flex-row align-content-center menubar">
-
-        <!-- Workspaces -->
-        <div *ngIf="project" class="flex flex-row toolbarWorkspaces relative">
-          <div *ngFor="
-              let workspace of project.workspaces;
-              let index = index;
-              let isLast = last
-            " [ngClass]="{
-              active: this.project.activeWorkspaceIndex === index,
-              isLast: isLast
-            }" [autoHide]="false" tooltipPosition="bottom" [pTooltip]="tooltipContent"
-            class="hideChildUntilHoverParent toolbarWorkspace pointerOnHover relative"
-            (click)="this.project.activeWorkspaceIndex = index" (contextmenu)="rightClickedWorkspace = index; workspaceContextMenu.toggle($event)">
-            <p-contextMenu #workspaceContextMenu [model]="workspaceContextMenuItems" [triggerEvent]="'click'"
-                    appendTo="body"></p-contextMenu>
-            <div class="flex flex-column workspace-articles">
-              <div *ngFor="
-                  let workspace-article of workspace.viewedArticles;
-                  index as i
-                " class="workspace-article"></div>
-            </div>
-            <ng-template #tooltipContent>
-              <div class="flex flex-column tooltipList">
-                <div *ngFor="
-                    let workspaceArticle of workspace.viewedArticles;
-                    let isLast = last
-                  ">
-                  <div class="tooltipListItem">
-                    {{ workspaceArticle }}
-                  </div>
-                  <div class="pseudo" *ngIf="!isLast"></div>
-                </div>
-
-                <div *ngIf="workspace.viewedArticles.length === 0">
-                  Empty Workspace
-                </div>
-              </div>
-            </ng-template>
-          </div>
-        </div>
-
-        <!-- Chat Input & Dropdown-Tabs -->
-        <div class="tabs flex-grow-1">
-          <div class="tabs-group command-line" [ngClass]="{ active: consoleInputFocused}"
-            *ngIf="llmApiService.llmConfigs.length > 0">
-            <input #consoleinput type="text" class="input flex-grow-1" pInputText (focus)="consoleInputFocused = true"
-              tooltipPosition="bottom" (blur)="consoleInputFocused = false"
-              (keyup)="commandLineKeyUp($event, consoleinput)" />
-            <div class="tab flex flex-column align-items-center justify-content-center"
-              [ngClass]="{ active: dropdownPanelActiveTab === 'console' }" tooltipPosition="bottom"
-              [pTooltip]="'LLM Interface'" (click)="onToggleConsole('console')" [autoHide]="false">
-              <div class="pi pi-comments"></div>
-            </div>
-          </div>
-          <div class="flex-grow-1"></div>
-          <div class="flex flex-row tabs-group">
-            <!--<div class="tab flex flex-column align-items-center justify-content-center"
-              [ngClass]="{ active: dropdownPanelActiveTab === 'alerts' }" tooltipPosition="bottom" [pTooltip]="'Alerts'"
-              (click)="onToggleConsole('alerts')">
-              <div class="pi pi-exclamation-circle "></div>
-            </div>-->
-            <div class="tab flex flex-column align-items-center justify-content-center"
-              [ngClass]="{ active: dropdownPanelActiveTab === 'menu' }" [pTooltip]="'Menu'"
-              (click)="onToggleConsole('menu')">
-              <div class="pi pi-bars "></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Article Page (Content) List -->
-    <div class="content" style="
-        width: 100%;
-        height: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
-        scroll-behavior: smooth;
-      " [ngClass]="{
-        empty:
-          project &&
-          project.workspaces[project.activeWorkspaceIndex].viewedArticles
-            .length === 0
-      }" #contentPanel id="contentPanel">
-      <!-- Active Articles -->
-      <div *ngFor="
-          let activeArticleName of project &&
-          project.workspaces &&
-          project.workspaces.length > 0
-            ? project.workspaces[project.activeWorkspaceIndex].viewedArticles
-            : [];
-          let index = index;
-          let isLast = last
-        " (mouseenter)="setActiveArticle(index)">
-        <app-note-panel [isActivePanel]="
-            project!.workspaces[project!.activeWorkspaceIndex]
-              .activeArticleIndex === index
-          " [articles]="project!.articles" [articleName]="activeArticleName"
-          (closePanelEvent)="toggleArticleActive(activeArticleName)" (moveUpEvent)="moveUp(index)"
-          (moveDownEvent)="moveDown(index)" (internalLinkActivatedEvent)="this.toggleArticleActive($event)"
-          (renameEvent)="renameArticle(activeArticleName, $event)"></app-note-panel>
-        <div class="pseudo" *ngIf="!isLast"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Right Sidebar -->
-  <div class="right sidebar overflow-hidden flex flex-column h-full" [ngClass]="{'collapsed': true}">
-    <div class="flex flex-row justify-content-between align-content-center articleTitle" *ngIf="activeArticle">
-      <div>{{ activeArticle }}</div>
-      <div>Actions</div>
-    </div>
-    <div *ngIf="activeArticle" class="articleDescription">
-      <span class="primary"
-        pTooltip="The very first paragraph of the article. This is frequently 'read' by LIQUID, like for determining if this article is relevant for a given LLM prompt.">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Maecenas accumsan
-        lacus vel facilisis volutpat est. Quis vel eros donec ac odio tempor.
-      </span>
-      <br />
-      <span class="secondary">
-        Nulla aliquet enim tortor at. Porta nibh venenatis cras sed felis. Non
-        nisi est sit amet facilisis magna etiam tempor orci. Sed egestas egestas
-        fringilla phasellus faucibus scelerisque.
-      </span>
-    </div>
-    <div class="labeled-separator flex flex-row" *ngIf="
-    project && activeArticle && (articleHierarchyMap | articleHierarchyMapGet:activeArticle)[0].parents.length > 0
-  " pTooltip="List of all categories this article belongs to directly or by extension">
-      <div class="line left"></div>
-      <div class="label">Categories</div>
-      <div class="line right"></div>
-    </div>
-    <app-hierarchical-list class="overflow-y-auto overflow-x-hidden articlesList" *ngIf="
-    project && activeArticle && (articleHierarchyMap | articleHierarchyMapGet:activeArticle)[0].parents.length > 0
-  " [project]="project" [hierarchyDirection]="'up'" [currentWorkspace]="
-    this.project.workspaces[this.project.activeWorkspaceIndex]
-  " [isListRoot]="true" [hierarchyNodeList]="(articleHierarchyMap | articleHierarchyMapGet:activeArticle)[0].parents"
-      (articleClickedEmitter)="toggleArticleActive($event.name)"
-      (articleActionClicked)="onListArticleActionClick($event)"></app-hierarchical-list>
-    <div class="labeled-separator flex flex-row"
-      pTooltip="Table listing important attributes/characteristics of the article">
-      <div class="line left"></div>
-      <div class="label">Attributes</div>
-      <div class="line right"></div>
-    </div>
-    <div *ngIf="activeArticle" class="idea-placeholder"
-      pTooltip="The table of attributes that contain basic information on this article">
-      Article Attributes
-    </div>
-    <div class="labeled-separator flex flex-row" pTooltip="Hierarchy of article sections/headlines">
-      <div class="line left"></div>
-      <div class="label">Sections</div>
-      <div class="line right"></div>
-    </div>
-    <div *ngIf="activeArticle" class="idea-placeholder" pTooltip="Article section hierarchy (by headlines)">
-      Article Headlines/Sections
-    </div>
-    <div class="labeled-separator flex flex-row" pTooltip="All links to other articles occuring in this article">
-      <div class="line left"></div>
-      <div class="label">Links</div>
-      <div class="line right"></div>
-    </div>
-    <div *ngIf="activeArticle" class="idea-placeholder" pTooltip="Other articles that are linked in this article">
-      Links
-    </div>
-    <div class="labeled-separator flex flex-row" pTooltip="All other articles that link to this article">
-      <div class="line left"></div>
-      <div class="label">Backlinks</div>
-      <div class="line right"></div>
-    </div>
-    <div *ngIf="activeArticle" class="idea-placeholder" pTooltip="All other articles that reference this article">
-      Backlinks
-    </div>
-  </div>
-
-  <!-- Notification Outlet -->
-  <p-toast position="bottom-center"></p-toast>
-
-  <!-- Load Modal Dialog -->
-  <p-dialog header="Load from indexedDB" appendTo="body" #loadDialog [(visible)]="loadDialogVisible">
-
-  </p-dialog>
-  <p-confirmDialog #overlayOverlay [baseZIndex]="3000" width="425" appendTo="body"></p-confirmDialog>
-
-  <!-- Project Uploader Input -->
-  <input style="visibility: collapse; width: 0; height: 0" type="file" class="file-input"
-    (change)="onFileSelected(projectUpload)" #projectUpload />
-
-  <!-- Privacy Policy Modal Dialog-->
-  <p-dialog header="Privacy Policy" #privacyPolicyDialog [(visible)]="showPrivacyPolicyDialog">
-    <app-privacy-policy></app-privacy-policy>
-  </p-dialog>
+<!-- LEFT SIDEBAR -->
+<div class="left sidebar" [ngClass]="{'collapsed': !project}">
+  <!-- @TODO Add sorting mechanics -->
+  <app-hierarchical-list *ngIf="
+      this.project
+    " [project]="project" [hierarchyDirection]="'down'" [currentWorkspace]="
+      this.project.workspaces[this.project.activeWorkspaceIndex]
+    " [isListRoot]="true" [showSearch]="true" [hierarchyNodeList]="articleHierarchyMap | mapToList"
+    (articleClickedEmitter)="toggleArticleActive($event.name)" (articleActionClicked)="onListArticleActionClick($event)"
+    (addArticleEvent)="addArticle($event)"></app-hierarchical-list>
 </div>
+
+<!-- CENTRAL AREA -->
+<div class="center">
+  <!-- Dropdown Bar -->
+  <div class="central-header">
+    <div class="dropdown-panel" [ngClass]="{ active: dropdownPanelActiveTab }">
+      <div *ngIf="dropdownPanelActiveTab === 'console'" class="panel-content">
+        <app-conversation-viewer #conversationViewer [conversations]="conversations"
+          (saveMessageEmitter)="saveMessageAsArticle($event)" class="panel-content"></app-conversation-viewer>
+      </div>
+      <div class="panel-content" *ngIf="dropdownPanelActiveTab === 'alerts'">
+        <app-alerts-list></app-alerts-list>
+      </div>
+
+      <div class="panel-content" *ngIf="dropdownPanelActiveTab === 'menu'">
+        <app-llm-settings class="box"></app-llm-settings>
+        <app-idb-settings [activeProject]="project?.title ?? ''" [allProjects]="allProjectsPromise | async"
+          (projectEventEmitter)="handleProjectEvent($event)" class="box"></app-idb-settings>
+      </div>
+    </div>
+
+    <!-- Menubar -->
+    <div class="menubar">
+
+      <!-- Workspaces -->
+      <div *ngIf="project" class="toolbarWorkspaces">
+        <div *ngFor="
+            let workspace of project.workspaces;
+            let index = index;
+            let isLast = last
+          " [ngClass]="{
+            active: this.project.activeWorkspaceIndex === index,
+            isLast: isLast
+          }" [autoHide]="false" tooltipPosition="bottom" [pTooltip]="tooltipContent"
+          class="hideChildUntilHoverParent toolbarWorkspace" (click)="this.project.activeWorkspaceIndex = index"
+          (contextmenu)="rightClickedWorkspace = index; workspaceContextMenu.toggle($event)">
+          <p-contextMenu #workspaceContextMenu [model]="workspaceContextMenuItems" [triggerEvent]="'click'"
+            appendTo="body"></p-contextMenu>
+          <div class="workspace-articles">
+            <div *ngFor="
+                let workspace-article of workspace.viewedArticles;
+                index as i
+              " class="workspace-article"></div>
+          </div>
+          <ng-template #tooltipContent>
+            <div class="tooltipList">
+              <div *ngFor="
+                  let workspaceArticle of workspace.viewedArticles;
+                  let isLast = last
+                ">
+                <div class="tooltipListItem">
+                  {{ workspaceArticle }}
+                </div>
+                <div class="pseudo" *ngIf="!isLast"></div>
+              </div>
+
+              <div *ngIf="workspace.viewedArticles.length === 0">
+                Empty Workspace
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- Chat Input & Dropdown-Tabs -->
+      <div class="tabs">
+        <div class="tabs-group command-line" [ngClass]="{ active: consoleInputFocused}"
+          *ngIf="llmApiService.llmConfigs.length > 0">
+          <input #consoleinput type="text" placeholder="Enter message here" class="input" pInputText (focus)="consoleInputFocused = true"
+            tooltipPosition="bottom" (blur)="consoleInputFocused = false"
+            (keyup)="commandLineKeyUp($event, consoleinput)" />
+          <div class="tab" [ngClass]="{ active: dropdownPanelActiveTab === 'console' }" tooltipPosition="bottom"
+            [pTooltip]="'LLM Interface'" (click)="onToggleConsole('console')" [autoHide]="false">
+            <div class="pi pi-comments"></div>
+          </div>
+        </div>
+        <div class="tabs-group">
+          <!--<div class="tab"
+            [ngClass]="{ active: dropdownPanelActiveTab === 'alerts' }" tooltipPosition="bottom" [pTooltip]="'Alerts'"
+            (click)="onToggleConsole('alerts')">
+            <div class="pi pi-exclamation-circle "></div>
+          </div>-->
+          <div class="tab" [ngClass]="{ active: dropdownPanelActiveTab === 'menu' }" [pTooltip]="'Menu'"
+            (click)="onToggleConsole('menu')">
+            <div class="pi pi-bars "></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Article Page (Content) List -->
+  <div class="content" style="
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    " [ngClass]="{
+      empty:
+        project &&
+        project.workspaces[project.activeWorkspaceIndex].viewedArticles
+          .length === 0
+    }" #contentPanel id="contentPanel">
+    <!-- Active Articles -->
+    <div *ngFor="
+        let activeArticleName of project &&
+        project.workspaces &&
+        project.workspaces.length > 0
+          ? project.workspaces[project.activeWorkspaceIndex].viewedArticles
+          : [];
+        let index = index;
+        let isLast = last
+      " (mouseenter)="setActiveArticle(index)">
+      <app-note-panel [isActivePanel]="
+          project!.workspaces[project!.activeWorkspaceIndex]
+            .activeArticleIndex === index
+        " [articles]="project!.articles" [articleName]="activeArticleName"
+        (closePanelEvent)="toggleArticleActive(activeArticleName)" (moveUpEvent)="moveUp(index)"
+        (moveDownEvent)="moveDown(index)" (internalLinkActivatedEvent)="this.toggleArticleActive($event)"
+        (renameEvent)="renameArticle(activeArticleName, $event)"></app-note-panel>
+      <div class="pseudo" *ngIf="!isLast"></div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT SIDEBAR -->
+<div class="right sidebar" [ngClass]="{'collapsed': true}">
+  <div class="articleTitle" *ngIf="activeArticle">
+    <div>{{ activeArticle }}</div>
+    <div>Actions</div>
+  </div>
+  <div *ngIf="activeArticle" class="articleDescription">
+    <span class="primary"
+      pTooltip="The very first paragraph of the article. This is frequently 'read' by LIQUID, like for determining if this article is relevant for a given LLM prompt.">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Maecenas accumsan
+      lacus vel facilisis volutpat est. Quis vel eros donec ac odio tempor.
+    </span>
+    <br />
+    <span class="secondary">
+      Nulla aliquet enim tortor at. Porta nibh venenatis cras sed felis. Non
+      nisi est sit amet facilisis magna etiam tempor orci. Sed egestas egestas
+      fringilla phasellus faucibus scelerisque.
+    </span>
+  </div>
+  <div class="labeled-separator" *ngIf="
+  project && activeArticle && (articleHierarchyMap | articleHierarchyMapGet:activeArticle)[0].parents.length > 0
+" pTooltip="List of all categories this article belongs to directly or by extension">
+    <div class="line left"></div>
+    <div class="label">Categories</div>
+    <div class="line right"></div>
+  </div>
+  <app-hierarchical-list class="overflow-y-auto overflow-x-hidden articlesList" *ngIf="
+  project && activeArticle && (articleHierarchyMap | articleHierarchyMapGet:activeArticle)[0].parents.length > 0
+" [project]="project" [hierarchyDirection]="'up'" [currentWorkspace]="
+  this.project.workspaces[this.project.activeWorkspaceIndex]
+" [isListRoot]="true" [hierarchyNodeList]="(articleHierarchyMap | articleHierarchyMapGet:activeArticle)[0].parents"
+    (articleClickedEmitter)="toggleArticleActive($event.name)"
+    (articleActionClicked)="onListArticleActionClick($event)"></app-hierarchical-list>
+  <div class="labeled-separator"
+    pTooltip="Table listing important attributes/characteristics of the article">
+    <div class="line left"></div>
+    <div class="label">Attributes</div>
+    <div class="line right"></div>
+  </div>
+  <div *ngIf="activeArticle" class="idea-placeholder"
+    pTooltip="The table of attributes that contain basic information on this article">
+    Article Attributes
+  </div>
+  <div class="labeled-separator" pTooltip="Hierarchy of article sections/headlines">
+    <div class="line left"></div>
+    <div class="label">Sections</div>
+    <div class="line right"></div>
+  </div>
+  <div *ngIf="activeArticle" class="idea-placeholder" pTooltip="Article section hierarchy (by headlines)">
+    Article Headlines/Sections
+  </div>
+  <div class="labeled-separator" pTooltip="All links to other articles occuring in this article">
+    <div class="line left"></div>
+    <div class="label">Links</div>
+    <div class="line right"></div>
+  </div>
+  <div *ngIf="activeArticle" class="idea-placeholder" pTooltip="Other articles that are linked in this article">
+    Links
+  </div>
+  <div class="labeled-separator" pTooltip="All other articles that link to this article">
+    <div class="line left"></div>
+    <div class="label">Backlinks</div>
+    <div class="line right"></div>
+  </div>
+  <div *ngIf="activeArticle" class="idea-placeholder" pTooltip="All other articles that reference this article">
+    Backlinks
+  </div>
+</div>
+
+<!-- Notification Outlet -->
+<p-toast position="bottom-center"></p-toast>
+
+<!-- Load Modal Dialog -->
+<p-dialog header="Load from indexedDB" appendTo="body" #loadDialog [(visible)]="loadDialogVisible">
+
+</p-dialog>
+<p-confirmDialog #overlayOverlay [baseZIndex]="3000" width="425" appendTo="body"></p-confirmDialog>
+
+<!-- Project Uploader Input -->
+<input type="file" class="file-input" (change)="onFileSelected(projectUpload)" #projectUpload />
+
+<!-- Privacy Policy Modal Dialog-->
+<p-dialog header="Privacy Policy" #privacyPolicyDialog [(visible)]="showPrivacyPolicyDialog">
+  <app-privacy-policy></app-privacy-policy>
+</p-dialog>

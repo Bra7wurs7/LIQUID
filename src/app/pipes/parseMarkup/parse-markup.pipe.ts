@@ -1,12 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { SafeHtml } from '@angular/platform-browser';
-import { marked } from 'marked';
+import MarkdownIt from 'markdown-it';
+
+
 
 @Pipe({
   name: 'parseMarkup'
 })
 export class ParseMarkupPipe implements PipeTransform {
-  transform(value: string, ...args: unknown[]): SafeHtml {
-    return marked(value, {headerIds: false, mangle: false});
+  md = new MarkdownIt();
+  transform(value: string, ...args: unknown[]): string {
+    return this.md.render(value);
   }
 }

@@ -101,5 +101,17 @@ span {
 }
 
 .article-name-input {
-  height: 32px;
+  height: 30px;
+  padding: 2px;
+}
+
+.article-input {
+
+}
+
+.article-content {
+  padding: 9px;
+  :first-child {
+    background-color: pink;
+  }
 }

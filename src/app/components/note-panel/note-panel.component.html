@@ -31,10 +31,10 @@
   </ng-template>
   <ng-template pTemplate="content">
     <div *ngIf="!editMode" #contentOutlet [innerHtml]="note.content | parseMarkup"
-      style="overflow: hidden; overflow-wrap: break-word"></div>
+      style="overflow: hidden; overflow-wrap: break-word" class="article-content"></div>
     <div *ngIf="editMode">
       <textarea pInputTextarea [placeholder]="'Enter note text here'" [(ngModel)]="note.content"
-        style="width: 100%; max-width: 100%" [autoResize]="true"></textarea>
+        style="width: 100%; max-width: 100%" [autoResize]="true" class="article-input"></textarea>
     </div>
   </ng-template>
 </p-panel>

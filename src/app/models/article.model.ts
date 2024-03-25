@@ -5,11 +5,6 @@ export class Article {
   readonly className: string = 'Article';
   /** The name of the article as well as its unique identifier. e.g. "mammal" or "Richard Small" */
   name: string;
-  /** Very short summary of this article, explaining its most important ideas e.g. 
-    * "Mammals are a group of warm-blooded vertebrates within the class Mammalia that have hair or fur,
-    * internal fertilization, and nourish their young with milk produced by the female's mammary glands." 
-    */
-  definition: string;
   /** A list of article names that define the groups that this article has been declared to belong to e.g. ["animal", "viviparous", "nursing"] or ["blacksmith", "human", "father"] */
   groups: string[];
   /** Object (map) of meta attributes of this article */
@@ -22,7 +17,6 @@ export class Article {
     content: string = '',
   ) {
     this.name = name;
-    this.definition = "";
     this.groups = groups;
     this.attributes = {};
     this.content = content;

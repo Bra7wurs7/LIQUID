@@ -1,16 +1,24 @@
+html {
+  height: 100%;
+  background-color: var(--surface-a);
+  overflow: hidden;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  
+}
+
 :root {
   font-family: Helvetica, sans-serif;
   --font-family: Helvetica, sans-serif;
 }
 
-html {
+app-root {
+  display: flex;
+  flex-direction: row;
   height: 100%;
-  background-color: var(--surface-a);
-
-  body {
-    height: 100%;
-    margin: 0;
-  }
 }
 
 p-inputSwitch {
@@ -39,6 +47,17 @@ p-inputSwitch {
 .p-panel-header {
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
+  padding-left: 9px;
+}
+
+.p-panel-content {
+  padding: 5px;
+}
+
+.article-content {
+  :first-child {
+    margin-top: 0px;
+  }
 }
 
 .menubar {
@@ -109,7 +128,7 @@ p-inputSwitch {
   width: max-content;
   border-radius: 6px;
   background-color: var(--surface-a);
-  width: 450px;
+  width: 400px;
   overflow: hidden;
 
   &:not(:last-child) {
@@ -184,6 +203,8 @@ p-inputSwitch {
 }
 
 .tooltipList {
+  display: flex;
+  flex-direction: column;
   .tooltipListItem {
     padding: 4px 8px 4px 8px;
     border-radius: 10px;
