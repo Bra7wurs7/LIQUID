@@ -16,12 +16,13 @@ export class HierarchicalListComponent {
   @Input() showSearch: boolean = false;
   @Input() hierarchyDirection!: "down" | "up";
   @Input() isListRoot: boolean = false;
-  @Input() listParent!: ArticleHierarchyNode;
+  @Input() listParent?: ArticleHierarchyNode;
   @Input() hierarchyNodeList!: ArticleHierarchyNode[];
   @Input() currentWorkspace!: Workspace;
   @Input() isActive: boolean = true;
   @Input() isHighlighted: boolean = true;
   @Input() currentArticlePath?: string;
+  @Input() searchValue: string = "";
 
   @Output() articleClickedEmitter = new EventEmitter<Article>();
   @Output() addArticleEvent = new EventEmitter<string>();
@@ -29,37 +30,20 @@ export class HierarchicalListComponent {
 
   lastRightClickedArticle?: ArticleHierarchyNode;
 
-  searchValue: string = "";
+  
 
   items = [
     {
       label: 'Open',
-      icon: 'pi pi-fw pi-folder-open',
+      icon: 'iconoir iconoir-submit-document',
       command: () => { if (this.lastRightClickedArticle) this.articleActionClicked.emit({ action: ArticleActionEnum.toggle, node: this.lastRightClickedArticle.node }) }
     },
-    /*
-    {
-      label: 'Rename',
-      icon: 'pi pi-fw pi-pencil',
-    },
-    {
-      label: 'Edit Categories',
-      icon: 'pi pi-fw pi-tags',
-    },
-    {
-      separator: true
-    },
-    {
-      label: 'Save as File',
-      icon: 'pi pi-fw pi-download',
-    },
-    */
     {
       separator: true
     },
     {
       label: 'Delete',
-      icon: 'pi pi-fw pi-trash',
+      icon: 'iconoir iconoir-page-minus-in',
       command: () => {
         if (this.lastRightClickedArticle) {
           this.articleActionClicked.emit({ action: ArticleActionEnum.delete, node: this.lastRightClickedArticle.node })

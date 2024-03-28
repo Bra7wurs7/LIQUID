@@ -5,10 +5,10 @@
     <div class="iconButton" style="margin-right: 2px" (click)="projectEventEmitter.emit(['new', projectName.value])"
       tooltipPosition="bottom"
       [pTooltip]="projectName.value ? 'Create Project \n\'' + projectName.value + '\'' : 'Create New\nProject'">
-      <i class="pi pi-plus"></i>
+      <i class="iconoir iconoir-plus"></i>
     </div>
     <div class="iconButton" [pTooltip]="'More Options'" (click)="newProjectMenu.show($event)">
-      <i class="pi pi-ellipsis-v"></i>
+      <i class="iconoir iconoir-more-vert"></i>
       <p-contextMenu #newProjectMenu appendTo="body" [model]="newProjectMenuItems"></p-contextMenu>
     </div>
   </div>
@@ -33,17 +33,17 @@
     <div *ngIf="p.title !== activeProject" (click)="projectEventEmitter.emit(['load', p.title])" [ngClass]="{
       'active': p.title === activeProject,
     }" class="iconButton" style="margin-right: 2px;" [pTooltip]="'Load ' + p.title" tooltipPosition="left">
-      <div class="pi pi-folder-open"></div>
+      <div class="iconoir iconoir-open-in-browser"></div>
     </div>
     <div *ngIf="p.title === activeProject" (click)="projectEventEmitter.emit(['saveas', p.title])" [ngClass]="{
       'active': p.title === activeProject,
     }" class="iconButton" style="margin-right: 2px;" [pTooltip]="'Save changes to ' + p.title" tooltipPosition="left">
-      <div class="pi pi-save"></div>
+      <div class="iconoir iconoir-floppy-disk-arrow-in"></div>
     </div>
     <div (click)="lastClickedProject = p.title; existingProjectMenu.show($event)" [ngClass]="{
       'active': p.title === activeProject,
     }" class="iconButton" [pTooltip]="'More Options'" tooltipPosition="left">
-      <i class="pi pi-ellipsis-v"></i>
+      <i class="iconoir iconoir-more-vert"></i>
       <p-contextMenu #existingProjectMenu appendTo="body" [model]="existingProjectMenuItems"></p-contextMenu>
     </div>
   </div>

@@ -9,7 +9,7 @@
             pTooltip="Enter the authorization key for the API endpoint" tooltipPosition="bottom" />
         <div class="iconButton flex flex-column justify-content-center" pTooltip="Add Api Endpoint"
             tooltipPosition="bottom" (click)="llmApiService.addLLMConfig(selectedLLM.code, ApiKey.value)">
-            <i class="pi pi-plus"></i>
+            <i class="iconoir iconoir-plus"></i>
         </div>
     </div>
     <div class="pseudoBorder vmarg"></div>
@@ -23,7 +23,7 @@
         </div>
         <div class="iconButton flex flex-column justify-content-center" pTooltip="Configure Api Endpoint"
             tooltipPosition="bottom" (click)="editConfig = JSON.stringify(llmConfig, null ,2); editConfigIndex = i">
-            <i class="pi pi-cog"></i>
+            <i class="iconoir iconoir-settings"></i>
         </div>
     </div>
     <div class="flex flex-column h-full justify-content-center align-items-center">

@@ -5,7 +5,7 @@
       this.project
     " [project]="project" [hierarchyDirection]="'down'" [currentWorkspace]="
       this.project.workspaces[this.project.activeWorkspaceIndex]
-    " [isListRoot]="true" [showSearch]="true" [hierarchyNodeList]="articleHierarchyMap | mapToList"
+    " [isListRoot]="true" [showSearch]="true" [hierarchyNodeList]="articleHierarchyMap | mapToList" [searchValue]="input"
     (articleClickedEmitter)="toggleArticleActive($event.name)" (articleActionClicked)="onListArticleActionClick($event)"
     (addArticleEvent)="addArticle($event)"></app-hierarchical-list>
 </div>
@@ -15,7 +15,7 @@
   <!-- Dropdown Bar -->
   <div class="central-header">
     <div class="dropdown-panel" [ngClass]="{ active: dropdownPanelActiveTab }">
-      <div *ngIf="dropdownPanelActiveTab === 'console'" class="panel-content">
+      <div *ngIf="dropdownPanelActiveTab === 'llm'" class="panel-content">
         <app-conversation-viewer #conversationViewer [conversations]="conversations"
           (saveMessageEmitter)="saveMessageAsArticle($event)" class="panel-content"></app-conversation-viewer>
       </div>
@@ -23,7 +23,8 @@
         <app-alerts-list></app-alerts-list>
       </div>
 
-      <div class="panel-content" *ngIf="dropdownPanelActiveTab === 'menu'">
+      <div class="menu-panel" *ngIf="dropdownPanelActiveTab === 'menu'">
+        <div class="box"></div>
         <app-llm-settings class="box"></app-llm-settings>
         <app-idb-settings [activeProject]="project?.title ?? ''" [allProjects]="allProjectsPromise | async"
           (projectEventEmitter)="handleProjectEvent($event)" class="box"></app-idb-settings>
@@ -32,10 +33,32 @@
 
     <!-- Menubar -->
     <div class="menubar">
-
-      <!-- Workspaces -->
-      <div *ngIf="project" class="toolbarWorkspaces">
-        <div *ngFor="
+      <!-- Chat Input & Dropdown-Tabs -->
+      <div class="tabs">
+        <div class="tabs-group command-line" [ngClass]="{ active: consoleInputFocused}">
+          <input #consoleinput type="text" placeholder="Enter message here" class="input" pInputText
+            (focus)="consoleInputFocused = true" tooltipPosition="bottom" (blur)="consoleInputFocused = false"
+            (keyup)="commandLineKeyUp($event, consoleinput)" [(ngModel)]="input"/>
+          <div class="tab" [ngClass]="{ active: dropdownPanelActiveTab === 'chat' }" tooltipPosition="bottom"
+            [pTooltip]="'Chat'" (click)="onToggleConsole('chat')" [autoHide]="false">
+            <div class="iconoir iconoir-chat-lines"></div>
+          </div>
+          <div class="tab" [ngClass]="{ active: dropdownPanelActiveTab === 'llm' }" tooltipPosition="bottom"
+            [pTooltip]="'LLM'" (click)="onToggleConsole('llm')" [autoHide]="false">
+            <div class="iconoir iconoir-message-text"></div>
+          </div>
+          <div class="tab" [ngClass]="{ active: dropdownPanelActiveTab === 'files' }" tooltipPosition="bottom"
+            [pTooltip]="'Files'" (click)="onToggleConsole('files')" [autoHide]="false">
+            <div class="iconoir iconoir-folder"></div>
+          </div>
+          <div class="tab" [ngClass]="{ active: dropdownPanelActiveTab === 'git' }" tooltipPosition="bottom"
+            [pTooltip]="'Synchronization'" (click)="onToggleConsole('git')" [autoHide]="false">
+            <div class="iconoir iconoir-git-compare"></div>
+          </div>
+        </div>
+        <!-- Workspaces -->
+        <div *ngIf="project" class="toolbarWorkspaces">
+          <div *ngFor="
             let workspace of project.workspaces;
             let index = index;
             let isLast = last
@@ -43,57 +66,39 @@
             active: this.project.activeWorkspaceIndex === index,
             isLast: isLast
           }" [autoHide]="false" tooltipPosition="bottom" [pTooltip]="tooltipContent"
-          class="hideChildUntilHoverParent toolbarWorkspace" (click)="this.project.activeWorkspaceIndex = index"
-          (contextmenu)="rightClickedWorkspace = index; workspaceContextMenu.toggle($event)">
-          <p-contextMenu #workspaceContextMenu [model]="workspaceContextMenuItems" [triggerEvent]="'click'"
-            appendTo="body"></p-contextMenu>
-          <div class="workspace-articles">
-            <div *ngFor="
+            class="hideChildUntilHoverParent toolbarWorkspace" (click)="this.project.activeWorkspaceIndex = index"
+            (contextmenu)="rightClickedWorkspace = index; workspaceContextMenu.toggle($event)">
+            <p-contextMenu #workspaceContextMenu [model]="workspaceContextMenuItems" [triggerEvent]="'click'"
+              appendTo="body"></p-contextMenu>
+            <div class="workspace-articles">
+              <div *ngFor="
                 let workspace-article of workspace.viewedArticles;
                 index as i
               " class="workspace-article"></div>
-          </div>
-          <ng-template #tooltipContent>
-            <div class="tooltipList">
-              <div *ngFor="
+            </div>
+            <ng-template #tooltipContent>
+              <div class="tooltipList">
+                <div *ngFor="
                   let workspaceArticle of workspace.viewedArticles;
                   let isLast = last
                 ">
-                <div class="tooltipListItem">
-                  {{ workspaceArticle }}
+                  <div class="tooltipListItem">
+                    {{ workspaceArticle }}
+                  </div>
+                  <div class="pseudo" *ngIf="!isLast"></div>
                 </div>
-                <div class="pseudo" *ngIf="!isLast"></div>
-              </div>
 
-              <div *ngIf="workspace.viewedArticles.length === 0">
-                Empty Workspace
+                <div *ngIf="workspace.viewedArticles.length === 0">
+                  Empty Workspace
+                </div>
               </div>
-            </div>
-          </ng-template>
-        </div>
-      </div>
-
-      <!-- Chat Input & Dropdown-Tabs -->
-      <div class="tabs">
-        <div class="tabs-group command-line" [ngClass]="{ active: consoleInputFocused}"
-          *ngIf="llmApiService.llmConfigs.length > 0">
-          <input #consoleinput type="text" placeholder="Enter message here" class="input" pInputText (focus)="consoleInputFocused = true"
-            tooltipPosition="bottom" (blur)="consoleInputFocused = false"
-            (keyup)="commandLineKeyUp($event, consoleinput)" />
-          <div class="tab" [ngClass]="{ active: dropdownPanelActiveTab === 'console' }" tooltipPosition="bottom"
-            [pTooltip]="'LLM Interface'" (click)="onToggleConsole('console')" [autoHide]="false">
-            <div class="pi pi-comments"></div>
+            </ng-template>
           </div>
         </div>
         <div class="tabs-group">
-          <!--<div class="tab"
-            [ngClass]="{ active: dropdownPanelActiveTab === 'alerts' }" tooltipPosition="bottom" [pTooltip]="'Alerts'"
-            (click)="onToggleConsole('alerts')">
-            <div class="pi pi-exclamation-circle "></div>
-          </div>-->
           <div class="tab" [ngClass]="{ active: dropdownPanelActiveTab === 'menu' }" [pTooltip]="'Menu'"
             (click)="onToggleConsole('menu')">
-            <div class="pi pi-bars "></div>
+            <div class="iconoir iconoir-menu "></div>
           </div>
         </div>
       </div>
@@ -169,8 +174,7 @@
 " [isListRoot]="true" [hierarchyNodeList]="(articleHierarchyMap | articleHierarchyMapGet:activeArticle)[0].parents"
     (articleClickedEmitter)="toggleArticleActive($event.name)"
     (articleActionClicked)="onListArticleActionClick($event)"></app-hierarchical-list>
-  <div class="labeled-separator"
-    pTooltip="Table listing important attributes/characteristics of the article">
+  <div class="labeled-separator" pTooltip="Table listing important attributes/characteristics of the article">
     <div class="line left"></div>
     <div class="label">Attributes</div>
     <div class="line right"></div>

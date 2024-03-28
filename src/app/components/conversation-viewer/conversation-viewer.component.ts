@@ -17,7 +17,7 @@ export class ConversationViewerComponent {
 
   messageContextMenuItems = [
     {
-      label: 'Save as article', icon: 'pi pi-fw pi-save', command: () => {
+      label: 'Save as article', icon: 'iconoir iconoir-page-plus-in', command: () => {
         this.saveMessageEmitter.emit(this.conversations[this.activeConversation].messages[this.rightClickedMessage])
       }
     },
@@ -25,13 +25,13 @@ export class ConversationViewerComponent {
       separator: true
     },
     {
-      label: 'Toggle Visibility', icon: 'pi pi-fw pi-eye', command: () => {
+      label: 'Toggle Visibility', icon: 'iconoir iconoir-eye-solid', command: () => {
         this.conversations[this.activeConversation].messages[this.rightClickedMessage].active = !this.conversations[this.activeConversation].messages[this.rightClickedMessage].active
         this.onTouchConversations()
       }
     },
     {
-      label: 'Delete', icon: 'pi pi-fw pi-trash', command: () => {
+      label: 'Delete', icon: 'iconoir iconoir-chat-bubble-xmark', command: () => {
         this.conversations[this.activeConversation].messages.splice(this.rightClickedMessage, 1)
         this.activeMessage = this.rightClickedMessage > this.activeMessage ? this.activeMessage : this.activeMessage - 1
         this.onTouchConversations()
@@ -51,12 +51,12 @@ export class ConversationViewerComponent {
     },
     */
     {
-      label: 'Clear', icon: 'pi pi-fw pi-eraser', command: () => {
+      label: 'Clear', icon: 'iconoir iconoir-erase', command: () => {
         this.deleteMessages(false, this.rightClickedConversation)
       }
     },
     {
-      label: 'Delete', icon: 'pi pi-fw pi-trash', command: () => {
+      label: 'Delete', icon: 'iconoir iconoir-bin-half', command: () => {
         this.deleteMessages(true, this.rightClickedConversation)
       }
     },

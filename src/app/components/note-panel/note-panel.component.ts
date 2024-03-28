@@ -26,9 +26,9 @@ export class NotePanelComponent implements OnInit {
 
   ngOnInit() {
     if (this.articleName) {
-      let articleOrUndefined = this.articles?.get(this.articleName);
-      if (articleOrUndefined) {
-        this.note = articleOrUndefined;
+      let article = this.articles?.get(this.articleName);
+      if (article) {
+        this.note = article;
       } else {
         this.messageService.add({severity: 'error', summary: `Article with name ${this.articleName} does not exist.`})
         this.closePanelEvent.emit();

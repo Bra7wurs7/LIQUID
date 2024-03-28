@@ -15,17 +15,17 @@
   </ng-template>
   <ng-template pTemplate="icons">
     <button (click)="$event.stopPropagation(); editMode = !editMode" pButton pRipple type="button"
-      icon="pi pi-file-edit" class="p-panel-header-icon" [ngClass]="{ buttonActive: editMode }" pTooltip="Edit note"
+      icon="iconoir iconoir-page-edit" class="p-panel-header-icon" [ngClass]="{ buttonActive: editMode }" pTooltip="Edit note"
       style="margin-left: 2px"></button>
     <span class="p-buttonset">
-      <button pButton pRipple type="button" icon="pi pi-angle-up" class="p-panel-header-icon"
+      <button pButton pRipple type="button" icon="iconoir iconoir-nav-arrow-up" class="p-panel-header-icon"
         (click)="moveUpEvent.emit()" pTooltip="Move article up" tooltipPosition="left"></button>
-      <button pButton pRipple type="button" icon="pi pi-angle-down" class="p-panel-header-icon"
+      <button pButton pRipple type="button" icon="iconoir iconoir-nav-arrow-down" class="p-panel-header-icon"
         (click)="moveDownEvent.emit()" pTooltip="Move article down" tooltipPosition="left"></button>
       <button (click)="panel.toggle($event)" pButton pRipple type="button"
-        [icon]="'pi ' + (panel.collapsed ? 'pi-plus' : 'pi-minus')" class="p-panel-header-icon"
+        [icon]="'iconoir ' + (panel.collapsed ? 'iconoir-plus-circle' : 'iconoir-minus-circle')" class="p-panel-header-icon"
         [pTooltip]="panel.collapsed ? 'Maximize panel' : 'Minimize article'" tooltipPosition="left"></button>
-      <button (click)="closePanelEvent.emit()" pButton pRipple type="button" icon="pi pi-times"
+      <button (click)="closePanelEvent.emit()" pButton pRipple type="button" icon="iconoir iconoir-xmark-circle"
         class="p-panel-header-icon" pTooltip="Close article" tooltipPosition="left"></button>
     </span>
   </ng-template>

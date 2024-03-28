@@ -42,6 +42,7 @@ export class AppComponent implements OnInit {
   activeArticle?: string;
 
   /** Assistants & Consoles */
+  input: string = '';
   dropdownPanelActiveTab?: string;
   activeAssistant?: number;
   consoleInputFocused: boolean = false;
@@ -72,7 +73,7 @@ export class AppComponent implements OnInit {
   rightClickedWorkspace: number = -1;
   workspaceContextMenuItems = [
     {
-      label: 'Delete', icon: 'pi pi-fw pi-trash', command: () => {
+      label: 'Delete', icon: 'iconoir iconoir-bin-half', command: () => {
         if (this.rightClickedWorkspace !== (this.project?.workspaces.length ?? 0) - 1) {
           this.removeWorkspace(this.rightClickedWorkspace)
         }
@@ -257,17 +258,22 @@ export class AppComponent implements OnInit {
     }
     const childArticles = hierarchyNode?.children;
 
-    if (articleName !== oldName && (childArticles?.length ?? 0) > 0) {
-      await lastValueFrom(this.confirmationService.confirm({
-        message: `You are renaming '${oldName}' into '${articleName}'.\n ${(childArticles?.length ?? 0)} articles have '${oldName}' as their parent. Update those references to '${articleName}'?`,
-        accept: () => {
-          for (const child of childArticles ?? []) {
-            const oldCategoryIndex = child.node.groups.findIndex((g) => g === oldName);
-            child.node.groups.splice(oldCategoryIndex, 1);
-            child.node.groups.push(articleName);
-          }
-        },
-      }).accept);
+    if (articleName !== oldName) {
+      this.project?.articles.set(articleName, hierarchyNode.node);
+      this.project?.articles.delete(oldName);
+
+      if ((childArticles?.length ?? 0) > 0) {
+        await lastValueFrom(this.confirmationService.confirm({
+          message: `You are renaming '${oldName}' into '${articleName}'.\n ${(childArticles?.length ?? 0)} articles have '${oldName}' as their parent. Update those references to '${articleName}'?`,
+          accept: () => {
+            for (const child of childArticles ?? []) {
+              const oldCategoryIndex = child.node.groups.findIndex((g) => g === oldName);
+              child.node.groups.splice(oldCategoryIndex, 1);
+              child.node.groups.push(articleName);
+            }
+          },
+        }).accept);
+      }
     }
 
     const newCategories = categoryNames.filter((name) => !this.project?.articles.has(name));

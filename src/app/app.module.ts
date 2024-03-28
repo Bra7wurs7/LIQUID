@@ -48,6 +48,7 @@ import { IdbSettingsComponent } from './components/idb-settings/idb-settings.com
 import { UrlDomainPipe } from './pipes/urlDomain/url-domain.pipe';
 import { ConversationViewerComponent } from './components/conversation-viewer/conversation-viewer.component';
 import { AlertsListComponent } from './components/alerts-list/alerts-list.component';
+import { ArticleHierarchyNodesFilterPipe } from './pipes/articleHierarchyNodeFilter/article-hierarchy-nodes-filter.pipe';
 
 
 @NgModule({
@@ -98,6 +99,7 @@ import { AlertsListComponent } from './components/alerts-list/alerts-list.compon
     CascadeSelectModule,
     ArticleNameAndCategoriesToStringPipe,
     UrlDomainPipe,
+    ArticleHierarchyNodesFilterPipe,
   ],
   providers: [ConfirmationService, MessageService, LocalDriveService, IndexedDbService, ContextMenusService],
   bootstrap: [AppComponent]

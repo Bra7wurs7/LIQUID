@@ -70,7 +70,7 @@
                 [pTooltip]="llmSettingsTooltip" tooltipPosition="bottom" [autoHide]="false"
                 (wheel)="conversations[activeConversation].max_tokens= scrollIncrementDecrement(true, $event, conversations[activeConversation].max_tokens, 128, 4096)"
                 (click)="$event.stopImmediatePropagation()">
-                <div class="pi pi-cog"></div>
+                <div class="iconoir iconoir-settings"></div>
                 <ng-template #llmSettingsTooltip>
                     <div class="flex flex-column">
                         <div class="settings-tooltip-header flex justify-content-between align-items-center">Max
@@ -84,14 +84,14 @@
                             [(ngModel)]="conversations[activeConversation].max_tokens" tooltipPosition="left"
                             [pTooltip]="'The maximum number of text the LLM may generate.\n(4 tokens ≈ 3 words)'" />
                         <div class="settings-tooltip-header flex justify-content-between align-items-center"
-                            style="margin-top: 3px;">
+                            style="margin-top: 2px;">
                             Temperature <div class="iconoir iconoir-cursor-pointer"></div>
                         </div>
                         <input #tempr type="number" [min]="0" [max]="1" [step]="0.1" pInputText
                             [(ngModel)]="conversations[activeConversation].temperature" tooltipPosition="left"
                             [pTooltip]="'A higher temperature setting makes the LLM more likely to select less probable tokens when generating text.\nA temperature of 0 makes the LLM always select the most probable option.'" />
                         <div class="settings-tooltip-header flex justify-content-between align-items-center"
-                            style="margin-top: 3px;">Top P
+                            style="margin-top: 2px;">Top P
                             <div class="iconoir iconoir-cursor-pointer"></div>
                         </div>
                         <input #top_p type="number" [min]="0" [max]="1" [step]="0.1" pInputText
@@ -103,10 +103,10 @@
             <div class="flex flex-column align-items-center justify-content-center action" [pTooltip]="llm_selector"
                 tooltipPosition="bottom"
                 (wheel)="selectedLLMIndex = scrollIncrementDecrement(false, $event, selectedLLMIndex, 1, llmConfigs.length-1)">
-                <div class="pi pi-globe"></div>
+                <div class="iconoir iconoir-at-sign"></div>
             </div>
             <ng-template #llm_selector>
-                <div class="settings-tooltip-header flex justify-content-between align-items-center">LLM Endpoint
+                <div class="settings-tooltip-header flex justify-content-between align-items-center">Chat Endpoint
                     <div class="iconoir-mouse-scroll-wheel" style="font-size: larger; margin-left: 5px;"></div>
                 </div>
                 <div class="settings-tooltip-selector" [ngClass]="{'active': selectedLLMIndex === i}"
@@ -116,7 +116,7 @@
             </ng-template>
             <div class="flex flex-column align-items-center justify-content-center action" tooltipPosition="left"
                 (click)="repeatPrompt()" [pTooltip]="deleteConversation" tooltipPosition="bottom">
-                <div class="pi pi-refresh"></div>
+                <div class="iconoir iconoir-refresh-circle"></div>
                 <ng-template #deleteConversation>
                     <div class="flex justify-content-between align-items-center tooltip-background"
                         (click)="deleteMessages()" style="margin-bottom: 2px;">
@@ -128,7 +128,7 @@
             </div>
             <div class="flex flex-column align-items-center justify-content-center action"
                 pTooltip="Prompt Conversation" tooltipPosition="bottom" (click)="promptConversation()">
-                <div class="pi pi-step-forward-alt"></div>
+                <div class="iconoir iconoir-play"></div>
             </div>
         </div>
     </div>

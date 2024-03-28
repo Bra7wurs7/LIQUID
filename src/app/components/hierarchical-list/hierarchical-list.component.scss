@@ -4,7 +4,8 @@
     border: 0;
     border-bottom: 1px solid var(--surface-border);
     height: 43px;
-    &:hover{
+
+    &:hover {
         border-color: var(--primary-color)
     }
 }
@@ -21,9 +22,9 @@
 
     overflow-y: hidden;
     overflow-x: hidden;
-    
+
     &.isRoot {
-        margin: 3px;
+        margin: 2px;
         overflow-y: auto;
     }
 
@@ -60,7 +61,10 @@
 // Text and button container displaying the article name and a context menu button
 .article {
     // transition: border-left-width 0.1s, border-right-width 0.1s;
-    padding: 6px 8px 8px 8px;
+    padding: 0px 8px 0px 8px;
+    height: 36px;
+    display: flex;
+    align-items: center;
     border-right-color: var(--surface-border);
     border-left-color: var(--surface-border);
     color: var(--text-color-secondary);
@@ -81,7 +85,7 @@
     }
 
     &.active {
-        background-image: linear-gradient(to right, var(--surface-b) , var(--surface-a));
+        background-image: linear-gradient(to right, var(--surface-b), var(--surface-a));
         color: var(--text-color);
     }
 
@@ -105,35 +109,41 @@
     border-bottom-color: var(--surface-border);
 }
 
-.entryUniqueName {
-    width: auto;
+.entryText {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
     overflow: hidden;
     text-overflow: ellipsis;
     font-family: var(--font-family);
     height: 20px;
-    padding-top: 3px;
-    padding-bottom: 3px;
     user-select: none;
+    white-space: nowrap;
+
+    .articleParent {
+        font-size: xx-small;
+        margin-left: 2px;
+        height: 10px;
+        color: var(--surface-border);
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
 }
 
 .activeEntryFolderIcon {
-    margin-right: 0px;
     transition: max-width 0.1s, opacity 0.1s;
     max-width: 0;
     opacity: 0;
 
     &.active {
-        margin-right: 5px;
-        max-width: 13px;
+        max-width: 19px;
         opacity: 1;
     }
 
-    
+
 }
 
 .contextMenuBtn {
-    font-size: small;
-    height: 20px;
     padding-top: 3px;
     padding-bottom: 3px;
     margin-left: 2px;

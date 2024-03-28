@@ -12,7 +12,7 @@
   transition: width 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99);
   width: 20vw;
   height: 100%;
-  overflow-y: none;
+  overflow-y: hidden;
 
   &.left {
     background-color: var(--surface-b);
@@ -107,7 +107,7 @@
     background-color: var(--surface-a);
     width: 100%;
     height: 100%;
-    padding: 3px;
+    padding: 2px;
 
     .card {
       background-color: var(--surface-b);
@@ -121,14 +121,15 @@
   }
 
   .menubar {
-    border-top: 1px solid var(--surface-border);
+    //border-top: 1px solid var(--surface-border);
     display: flex;
     flex-direction: row;
     align-content: center;
+    background-color: var(--surface-a);
   }
 
   .central-header {
-    border-bottom: 1px solid var(--surface-border);
+    //border-bottom: 1px solid var(--surface-border);
     background-color: var(--surface-b);
     padding: 0;
 
@@ -141,16 +142,24 @@
       height: 0vh;
       border: 0px solid var(--surface-border);
       transition: height 0.25s, opacity 0.1s cubic-bezier(.77, 0, 1, .23);
+      overflow: hidden;
 
       .panel-content {
         width: 100%;
         display: flex;
         flex-direction: row;
-        justify-content: end;
+        justify-content: flex-end;
+      }
+
+      .menu-panel {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        flex-grow: 1;
       }
 
       &.active {
-        padding: 3px;
+        padding: 2px;
         opacity: 1;
         height: 50vh;
       }
@@ -159,20 +168,23 @@
     .toolbarWorkspaces {
       display: flex;
       flex-direction: row;
-      height: 41px;
+      height: 40px;
       color: var(--surface-border);
-      background-color: var(--surface-border);
 
       .toolbarWorkspace {
         background-color: var(--surface-b);
         min-width: 30px;
-        border-right: 1px solid var(--surface-border);
         padding-top: 1px;
+        border-right: 1px solid var(--surface-border);
+
+        &:first-of-type {
+          border-left: 1px solid var(--surface-border);
+        }
 
         .workspace-articles {
           width: 100%;
+          height: 100%;
           overflow-y: hidden;
-          height: 41px;
 
           .workspace-article {
             background-color: var(--surface-border);
@@ -185,6 +197,7 @@
 
         &.active {
           background-color: var(--surface-a);
+
           .workspace-articles {
             .workspace-article {
               background-color: var(--text-color-secondary);
@@ -226,7 +239,8 @@
     flex-grow: 1;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-end;
+    align-items: center;
     transition: background-color 0.1s;
     color: var(--text-color-secondary);
     margin-bottom: 0px;
@@ -236,17 +250,12 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      border-radius: 6px;
-      margin: 3px;
-      margin-left: 0px;
-      height: 35px;
+      height: 40px;
+      background-color: var(--surface-b);
 
       &.command-line {
-        margin: 3px;
-        height: 35px;
         transition: border-color 0.2s;
         width: 100%;
-        border: 1px solid var(--surface-border);
 
 
         &:hover {
@@ -259,11 +268,11 @@
 
         .input {
           flex-grow: 1;
-          background-color: transparent;
           border: 0;
           height: 100%;
           font-family: 'Courier New', Courier, monospace;
           letter-spacing: -1px;
+          background-color: transparent;
         }
       }
 
@@ -272,11 +281,11 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        transition: background-color 0.1s;
         height: 30px;
         width: 30px;
         border-radius: 16px;
         margin: 2px;
+        padding: 4px;
 
         &:hover {
           color: var(--text-color);
