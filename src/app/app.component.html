@@ -51,10 +51,6 @@
             [pTooltip]="'Files'" (click)="onToggleConsole('files')" [autoHide]="false">
             <div class="iconoir iconoir-folder"></div>
           </div>
-          <div class="tab" [ngClass]="{ active: dropdownPanelActiveTab === 'git' }" tooltipPosition="bottom"
-            [pTooltip]="'Synchronization'" (click)="onToggleConsole('git')" [autoHide]="false">
-            <div class="iconoir iconoir-git-compare"></div>
-          </div>
         </div>
         <!-- Workspaces -->
         <div *ngIf="project" class="toolbarWorkspaces">
@@ -219,7 +215,7 @@
 <p-confirmDialog #overlayOverlay [baseZIndex]="3000" width="425" appendTo="body"></p-confirmDialog>
 
 <!-- Project Uploader Input -->
-<input type="file" class="file-input" (change)="onFileSelected(projectUpload)" #projectUpload />
+<input type="file" class="file-input" (change)="onFileSelected(projectUpload)" accept="application/zip" #projectUpload />
 
 <!-- Privacy Policy Modal Dialog-->
 <p-dialog header="Privacy Policy" #privacyPolicyDialog [(visible)]="showPrivacyPolicyDialog">
