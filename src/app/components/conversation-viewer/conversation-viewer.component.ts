@@ -40,16 +40,6 @@ export class ConversationViewerComponent {
   ];
   rightClickedMessage: number = -1;
   conversationContextMenuItems = [
-    /*
-    {
-      label: 'Save as article', icon: 'pi pi-fw pi-save', command: () => {
-        this.saveMessageEmitter.emit(this.conversations[this.activeConversation].messages[this.rightClickedMessage])
-      }
-    },
-    {
-      separator: true
-    },
-    */
     {
       label: 'Clear', icon: 'iconoir iconoir-erase', command: () => {
         this.deleteMessages(false, this.rightClickedConversation)

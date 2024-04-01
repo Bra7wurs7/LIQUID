@@ -13,12 +13,12 @@ export class IdbSettingsComponent {
   @Output() projectEventEmitter: EventEmitter<ProjectEvent> = new EventEmitter();
 
   newProjectMenuItems = [
-    { label: 'Import from .zip', icon: 'pi pi-fw pi-upload', command: () => this.projectEventEmitter.emit(["upload", '']) }
+    { label: 'Import archive', icon: 'iconoir iconoir-archive', command: () => this.projectEventEmitter.emit(["upload", '']) }
   ]
 
   lastClickedProject?: string;
   existingProjectMenuItems = [
-    { label: 'Export as .zip', icon: 'pi pi-fw pi-download', command: () => this.projectEventEmitter.emit(["download", this.lastClickedProject ?? '']) },
-    { label: 'Delete', icon: 'pi pi-fw pi-trash', command: () => this.projectEventEmitter.emit(["delete", this.lastClickedProject ?? '']) }
+    { label: 'Export archive', icon: 'iconoir iconoir-download-square', command: () => this.projectEventEmitter.emit(["download", this.lastClickedProject ?? '']) },
+    { label: 'Delete', icon: 'iconoir iconoir-bin-half', command: () => this.projectEventEmitter.emit(["delete", this.lastClickedProject ?? '']) }
   ]
 }
