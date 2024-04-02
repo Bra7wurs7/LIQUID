@@ -36,22 +36,27 @@ p-inputSwitch {
   line-height: unset !important;
 }
 
-.activePanel {
-  font-weight: bold;
-
-  .p-panel-header {
-    background-color: var(--surface-b);
-  }
-}
-
 .p-panel-header {
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
   padding-left: 9px;
+  border: 0;
 }
 
 .p-panel-content {
   padding: 5px;
+  border: 0;
+}
+
+.activePanel {
+  font-weight: bold;
+
+  .p-panel-header {
+    border-radius: 0px;
+    background-color: var(--surface-b);
+  }
+  .p-panel-content {
+    border-radius: 0px;
+    background-color: var(--surface-b);
+  }
 }
 
 .article-content {
@@ -106,9 +111,10 @@ p-inputSwitch {
 
 .box {
   padding: 8px;
-  border: 1px solid var(--surface-border);
   width: max-content;
-  border-radius: 6px;
+  border-radius: 20px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
   background-color: var(--surface-a);
   width: 400px;
   overflow: hidden;

@@ -13,18 +13,7 @@
   width: 20vw;
   height: 100%;
   overflow-y: hidden;
-
-  &.left {
-    background-color: var(--surface-b);
-    border-right: 1px solid var(--surface-d);
-    left: 0;
-  }
-
-  &.right {
-    background-color: var(--surface-b);
-    border-left: 1px solid var(--surface-d);
-    right: 0;
-  }
+  background-color: var(--surface-b);
 
   &.collapsed {
     width: 0;
@@ -107,7 +96,6 @@
     background-color: var(--surface-a);
     width: 100%;
     height: 100%;
-    padding: 2px;
 
     .card {
       background-color: var(--surface-b);
@@ -121,7 +109,7 @@
   }
 
   .menubar {
-    //border-top: 1px solid var(--surface-border);
+    border-left: 2px solid var(--surface-border);
     display: flex;
     flex-direction: row;
     align-content: center;
@@ -144,22 +132,14 @@
       transition: height 0.25s, opacity 0.1s cubic-bezier(.77, 0, 1, .23);
       overflow: hidden;
 
-      .panel-content {
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-      }
-
-      .menu-panel {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
+      .tab-content {
         flex-grow: 1;
+        display: flex;
+        flex-direction: row;
       }
 
       &.active {
-        padding: 2px;
+        padding-top: 2px;
         opacity: 1;
         height: 50vh;
       }
