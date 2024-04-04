@@ -3,6 +3,8 @@ import * as FileSaver from 'file-saver';
 import { MessageService } from 'primeng/api';
 import { Project, SerializableProject } from 'src/app/models/project.model';
 import JSZip from 'jszip';
+import { Article } from 'src/app/models/article.model';
+import { Vault } from 'src/app/models/vault.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,15 +23,26 @@ export class LocalDriveService {
   vaultToZip() {
   }
 
-  zipToVault(file: File) {
-    JSZip.loadAsync(file).then((zip) => {
-      zip.forEach((filename) => {
-        if (!filename.endsWith('/')) {
+  async zipToVault(file: File): Promise<Project> {
+    const zip = await JSZip.loadAsync(file);
+    const new_files: Map<string, Article> = new Map();
+    zip.forEach((filename: string) => {
+      if (!filename.endsWith('/')) {
+        if (filename.endsWith('.md')) {
+          const filename_typeless = filename.substring(0,filename.length-3)
+          const category_names = filename_typeless.split("#").map((n) => n.trim()).reverse();
+          const primary_filename = category_names.pop();
           const f = zip.files[filename];
-          f.async('text').then((text) => )
+          const new_article = new Article(filename_typeless, category_names);
+          new_files.set(filename_typeless, new_article);
+          f.async('text').then((text) => {
+            new_article.content = text;
+          });
         }
-      })
+      }
     })
+    console.log(new_files)
+    return new Project(file.name, new_files)
   }
 
   loadFromLocalDrive(file: File): Promise<SerializableProject> {

@@ -363,7 +363,7 @@ export class AppComponent implements OnInit {
   onFileSelected(input: HTMLInputElement) {
     if (input.files) {
       const file = input.files[0]
-      this.localdriveService.zipToVault(file)
+      this.localdriveService.zipToVault(file).then((project) => this.loadProject(project));
       /*
       this.localdriveService
         .loadFromLocalDrive(input.files[0])
