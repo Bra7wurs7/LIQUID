@@ -7,7 +7,7 @@ html {
 body {
   height: 100%;
   margin: 0;
-  
+
 }
 
 :root {
@@ -36,22 +36,43 @@ p-inputSwitch {
   line-height: unset !important;
 }
 
+.p-panel-expanded {
+  .p-panel-header {
+    border-bottom: 0;
+  }
+}
+
+.p-panel-header {
+  border-radius: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  border-left: 0;
+  border-right: 0;
+}
+
+.p-panel-content {
+  border-radius: 0px;
+  padding: 5px;
+  margin-bottom: 2px;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+
+  :last-child {
+    margin-bottom: 0;
+  }
+}
+
 .activePanel {
   font-weight: bold;
 
   .p-panel-header {
     background-color: var(--surface-b);
   }
-}
 
-.p-panel-header {
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
-  padding-left: 9px;
-}
-
-.p-panel-content {
-  padding: 5px;
+  .p-panel-content {
+    background-color: var(--surface-b);
+  }
 }
 
 .article-content {
@@ -106,9 +127,10 @@ p-inputSwitch {
 
 .box {
   padding: 8px;
-  border: 1px solid var(--surface-border);
   width: max-content;
-  border-radius: 6px;
+  border-radius: 20px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
   background-color: var(--surface-a);
   width: 400px;
   overflow: hidden;
@@ -187,6 +209,7 @@ p-inputSwitch {
 .tooltipList {
   display: flex;
   flex-direction: column;
+
   .tooltipListItem {
     padding: 4px 8px 4px 8px;
     border-radius: 10px;
@@ -237,13 +260,13 @@ p-inputSwitch {
 
 .hideChildUntilHoverParent {
   >.hideChildUntilHoverChild {
-      visibility: hidden;
+    visibility: hidden;
   }
 
   &:hover {
-      >.hideChildUntilHoverChild {
-          visibility: visible;
-      }
+    >.hideChildUntilHoverChild {
+      visibility: visible;
+    }
   }
 }
 

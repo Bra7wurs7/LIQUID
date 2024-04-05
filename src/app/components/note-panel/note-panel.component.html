@@ -1,12 +1,10 @@
 <p-panel [toggleable]="true" #panel class="panel-hide-default-toggler" [ngClass]="{ activePanel: isActivePanel }"
   *ngIf="note">
   <ng-template pTemplate="header">
-    <div *ngIf="!editMode" class="flex flex-column align-items-start">
-      <div class="flex flex-row">
-        <span class="article-tag pointerOnHover" *ngFor="let group of note.groups"
-          (click)="internalLinkActivatedEvent.emit(group)">#{{ group }}</span>
-      </div>
-      <span style="padding-bottom: 0px">{{ note.name }}</span>
+    <div *ngIf="!editMode" class="title">
+      <span style="padding: 0">{{ note.name }}</span>
+      <span class="article-tag pointerOnHover" *ngFor="let group of note.groups"
+      (click)="internalLinkActivatedEvent.emit(group)">#{{ group }}</span>
     </div>
     <div *ngIf="editMode">
       <input #nameAndCategoriesInput type="text" class="article-name-input" pInputText [value]="note | articleNameAndCategoriesToString" (change)="renameEvent.emit(nameAndCategoriesInput.value)" />
