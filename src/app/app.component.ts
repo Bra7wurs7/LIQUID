@@ -43,9 +43,18 @@ export class AppComponent implements OnInit {
 
   /** Assistants & Consoles */
   input: string = '';
-  dropdownPanelActiveTab?: string;
+  dropdownPanelActiveTab: 'chat' | 'llm' | 'files' | 'git' | '' | 'menu' | 'alerts' = '';
   activeAssistant?: number;
   consoleInputFocused: boolean = false;
+  input_placeholders = {
+    chat: 'Enter chat message here',
+    llm: 'Enter LLM prompt here',
+    files: 'Search for files',
+    git: '',
+    alerts: '',
+    menu: '',
+    '': 'Type here to do stuff'
+  }
 
   conversations: Conversation[] = this.loadConversations();
 
@@ -462,9 +471,9 @@ export class AppComponent implements OnInit {
     }
   }
 
-  onToggleConsole(id: string) {
+  onToggleConsole(id: 'chat' | 'llm' | 'files' | 'git' | 'menu' | 'alerts' | '') {
     if (this.dropdownPanelActiveTab === id) {
-      this.dropdownPanelActiveTab = undefined;
+      this.dropdownPanelActiveTab = '';
     } else {
       this.dropdownPanelActiveTab = id;
     }

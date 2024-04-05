@@ -25,6 +25,10 @@
       visibility: collapse;
     }
   }
+
+  &.left {
+    border-right: 1px solid var(--surface-border);
+  }
 }
 
 
@@ -96,6 +100,7 @@
     background-color: var(--surface-a);
     width: 100%;
     height: 100%;
+    padding: 2px 0px 2px 0px;
 
     .card {
       background-color: var(--surface-b);
@@ -109,7 +114,6 @@
   }
 
   .menubar {
-    border-left: 2px solid var(--surface-border);
     display: flex;
     flex-direction: row;
     align-content: center;

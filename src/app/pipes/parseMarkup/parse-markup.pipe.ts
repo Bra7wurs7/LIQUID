@@ -9,6 +9,7 @@ import MarkdownIt from 'markdown-it';
 export class ParseMarkupPipe implements PipeTransform {
   md = new MarkdownIt();
   transform(value: string, ...args: unknown[]): string {
+    console.log(this.md.parse(value, {}))
     return this.md.render(value);
   }
 }

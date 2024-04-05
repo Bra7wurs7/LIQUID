@@ -7,7 +7,7 @@ html {
 body {
   height: 100%;
   margin: 0;
-  
+
 }
 
 :root {
@@ -36,25 +36,41 @@ p-inputSwitch {
   line-height: unset !important;
 }
 
+.p-panel-expanded {
+  .p-panel-header {
+    border-bottom: 0;
+  }
+}
+
 .p-panel-header {
-  padding-left: 9px;
-  border: 0;
+  border-radius: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  border-left: 0;
+  border-right: 0;
 }
 
 .p-panel-content {
+  border-radius: 0px;
   padding: 5px;
-  border: 0;
+  margin-bottom: 2px;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+
+  :last-child {
+    margin-bottom: 0;
+  }
 }
 
 .activePanel {
   font-weight: bold;
 
   .p-panel-header {
-    border-radius: 0px;
     background-color: var(--surface-b);
   }
+
   .p-panel-content {
-    border-radius: 0px;
     background-color: var(--surface-b);
   }
 }
@@ -193,6 +209,7 @@ p-inputSwitch {
 .tooltipList {
   display: flex;
   flex-direction: column;
+
   .tooltipListItem {
     padding: 4px 8px 4px 8px;
     border-radius: 10px;
@@ -243,13 +260,13 @@ p-inputSwitch {
 
 .hideChildUntilHoverParent {
   >.hideChildUntilHoverChild {
-      visibility: hidden;
+    visibility: hidden;
   }
 
   &:hover {
-      >.hideChildUntilHoverChild {
-          visibility: visible;
-      }
+    >.hideChildUntilHoverChild {
+      visibility: visible;
+    }
   }
 }
 

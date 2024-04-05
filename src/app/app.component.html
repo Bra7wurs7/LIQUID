@@ -35,7 +35,7 @@
       <!-- Chat Input & Dropdown-Tabs -->
       <div class="tabs">
         <div class="tabs-group command-line" [ngClass]="{ active: consoleInputFocused}">
-          <input #consoleinput type="text" placeholder="Enter message here" class="input" pInputText
+          <input #consoleinput type="text" [placeholder]="input_placeholders[dropdownPanelActiveTab]" class="input" pInputText
             (focus)="consoleInputFocused = true" tooltipPosition="bottom" (blur)="consoleInputFocused = false"
             (keyup)="commandLineKeyUp($event, consoleinput)" [(ngModel)]="input"/>
           <!--<div class="tab" [ngClass]="{ active: dropdownPanelActiveTab === 'chat' }" tooltipPosition="bottom"
