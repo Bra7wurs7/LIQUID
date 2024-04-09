@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Project } from '../../models/project.model';
+import { Vault } from '../../models/vault.model';
 import { ProjectEvent } from 'src/app/models/projectEvent.model';
 
 @Component({

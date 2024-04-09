@@ -29,7 +29,6 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { LocalDriveService } from './services/localDrive/local-drive.service';
 import { IndexedDbService } from './services/indexedDb/indexed-db.service';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
@@ -101,7 +100,7 @@ import { ArticleHierarchyNodesFilterPipe } from './pipes/articleHierarchyNodeFil
     UrlDomainPipe,
     ArticleHierarchyNodesFilterPipe,
   ],
-  providers: [ConfirmationService, MessageService, LocalDriveService, IndexedDbService, ContextMenusService],
+  providers: [ConfirmationService, MessageService, IndexedDbService, ContextMenusService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

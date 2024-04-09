@@ -1,12 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ArticleHierarchyNode } from 'src/app/models/articleHierarchyNode.model';
+import { FileHierarchNode } from 'src/app/models/articleHierarchyNode.model';
 
 @Pipe({
   name: 'articleHierarchyListStringFilter'
 })
 export class ArticleHierarchyListStringFilterPipe implements PipeTransform {
 
-  transform(value: ArticleHierarchyNode[], ...args: string[]): ArticleHierarchyNode[] {
+  transform(value: FileHierarchNode[], ...args: string[]): FileHierarchNode[] {
     let filter = args[0];
     const splitFilterByHash = filter.split("#").map((n) => n.trim())
     return value.filter((node) => 

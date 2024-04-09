@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Workspace } from '../../models/workspace.model';
-import { ArticleHierarchyNode } from '../../models/articleHierarchyNode.model';
+import { FileHierarchNode } from '../../models/articleHierarchyNode.model';
 import { Article } from '../../models/article.model';
 import { HighlightEventsEnum } from '../../enums/highlightEvents.enum';
-import { Project } from '../../models/project.model';
+import { Vault } from '../../models/vault.model';
 import { ArticleActionEnum } from '../../enums/articleActionEnum';
 
 @Component({
@@ -12,12 +12,12 @@ import { ArticleActionEnum } from '../../enums/articleActionEnum';
   styleUrls: ['./hierarchical-list.component.scss']
 })
 export class HierarchicalListComponent {
-  @Input() project!: Project;
+  @Input() project!: Vault;
   @Input() showSearch: boolean = false;
   @Input() hierarchyDirection!: "down" | "up";
   @Input() isListRoot: boolean = false;
-  @Input() listParent?: ArticleHierarchyNode;
-  @Input() hierarchyNodeList!: ArticleHierarchyNode[];
+  @Input() listParent?: FileHierarchNode;
+  @Input() hierarchyNodeList!: FileHierarchNode[];
   @Input() currentWorkspace!: Workspace;
   @Input() isActive: boolean = true;
   @Input() isHighlighted: boolean = true;
@@ -28,7 +28,7 @@ export class HierarchicalListComponent {
   @Output() addArticleEvent = new EventEmitter<string>();
   @Output() articleActionClicked = new EventEmitter<{ action: ArticleActionEnum, node: Article }>();
 
-  lastRightClickedArticle?: ArticleHierarchyNode;
+  lastRightClickedArticle?: FileHierarchNode;
 
   
 
@@ -54,7 +54,7 @@ export class HierarchicalListComponent {
   constructor() {
   }
 
-  setlastRightClickedArticle(article: ArticleHierarchyNode) {
+  setlastRightClickedArticle(article: FileHierarchNode) {
     this.lastRightClickedArticle = article;
   }
 }

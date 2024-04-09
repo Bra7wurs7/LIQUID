@@ -5,23 +5,19 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Article } from './models/article.model';
-import {
-  Project,
-  SerializableProject,
-} from './models/project.model';
-import { LocalDriveService } from './services/localDrive/local-drive.service';
+import { Vault } from './models/vault.model';
 import { IndexedDbService } from './services/indexedDb/indexed-db.service';
 import { Workspace } from './models/workspace.model';
 import { lastValueFrom, of, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { ArticleHierarchyNode } from './models/articleHierarchyNode.model';
+import { FileHierarchNode } from './models/articleHierarchyNode.model';
 import { ArticleActionEnum } from './enums/articleActionEnum';
 import { LlmApiService } from './services/llmApi/llm-api.service';
 import { Conversation, Msg } from './models/conversation.model';
 import { ProjectEvent } from './models/projectEvent.model';
 import { scrollIncrementDecrement } from './util/functions'
 import { ConversationViewerComponent } from './components/conversation-viewer/conversation-viewer.component';
+import { FileName } from './models/fileName.model';
 
 @Component({
   selector: 'app-root',
@@ -37,9 +33,9 @@ export class AppComponent implements OnInit {
 
   /** Project */
   allProjectsPromise: Promise<{ title: string; lastModified: Date }[]>;
-  articleHierarchyMap: Map<string, ArticleHierarchyNode> = new Map();
-  project?: Project;
-  activeArticle?: string;
+  fileHierarchyMap: Map<string, FileHierarchNode> = new Map();
+  activeVault?: Vault;
+  activeArticleName?: string;
 
   /** Assistants & Consoles */
   input: string = '';
@@ -56,6 +52,10 @@ export class AppComponent implements OnInit {
     '': 'Type here to do stuff'
   }
 
+  /** Workspaces */
+  workspaces: Workspace[] = [];
+  activeWorkspaceIndex: number = 0;
+
   conversations: Conversation[] = this.loadConversations();
 
   /** Dialogs */
@@ -70,8 +70,8 @@ export class AppComponent implements OnInit {
   /** Autosaver */
   autosave = timer(300000, 300000).pipe(
     switchMap(() => {
-      if (this.project) {
-        this.saveToDB(this.project.title);
+      if (this.activeVault) {
+        this.saveToDB(this.activeVault.name);
         return of({});
       } else {
         return of({});
@@ -83,7 +83,7 @@ export class AppComponent implements OnInit {
   workspaceContextMenuItems = [
     {
       label: 'Delete', icon: 'iconoir iconoir-bin-half', command: () => {
-        if (this.rightClickedWorkspace !== (this.project?.workspaces.length ?? 0) - 1) {
+        if (this.rightClickedWorkspace !== (this.workspaces.length ?? 0) - 1) {
           this.removeWorkspace(this.rightClickedWorkspace)
         }
       }
@@ -93,7 +93,6 @@ export class AppComponent implements OnInit {
 
   constructor(
     private messageService: MessageService,
-    private localdriveService: LocalDriveService,
     private indexedDbService: IndexedDbService,
     private confirmationService: ConfirmationService,
     public llmApiService: LlmApiService
@@ -131,12 +130,12 @@ export class AppComponent implements OnInit {
   }
 
   setActiveArticle(index: number) {
-    const activeWorkspace = this.project!.workspaces[
-      this.project!.activeWorkspaceIndex
+    const activeWorkspace = this.workspaces[
+      this.activeWorkspaceIndex
     ];
     activeWorkspace.activeArticleIndex = index;
-    this.activeArticle = this.project!.workspaces[this.project!.activeWorkspaceIndex].viewedArticles[this.project!.workspaces[
-      this.project!.activeWorkspaceIndex
+    this.activeArticleName = this.workspaces[this.activeWorkspaceIndex].viewedArticles[this.workspaces[
+      this.activeWorkspaceIndex
     ].activeArticleIndex];
   }
 
@@ -144,77 +143,75 @@ export class AppComponent implements OnInit {
     this.showNewProjectOverlay = !this.showNewProjectOverlay
   }
 
-  loadProject(project: Project | undefined) {
+  loadProject(project: Vault | undefined) {
     if (project === undefined) {
       this.messageService.add({ severity: 'error', summary: `Loading Failed` });
       return;
     }
-    this.project = project;
-    this.saveToDB(project.title)
+    this.activeVault = project;
+    this.saveToDB(project.name)
     this.initializeArticleHierarchyMap(true);
   }
 
   initializeArticleHierarchyMap(refresh: boolean = false) {
     if (refresh) {
-      this.articleHierarchyMap = new Map();
+      this.fileHierarchyMap = new Map();
     } else {
-      this.articleHierarchyMap.clear();
+      this.fileHierarchyMap.clear();
     }
 
-    // Iterate over every article in project
-    for (let article of this.project?.articles.values() ?? []) {
-      // Get from groupNameArticlesMap the ArticleHierarchyNode for the currently iterated article
-      let articleHierarchyNode = this.articleHierarchyMap.get(article.name);
-      // Check if the ArticleHierarchyNode for the group (parent) article exists
-      if (!articleHierarchyNode) {
+    // Iterate over every file in vault
+    for (let entry of this.activeVault?.files.entries() ?? []) {
+      // check if a hierarchy node for the currently iterated file exists
+      let fileHierarchyNode = this.fileHierarchyMap.get(entry[0].toString());
+      if (!fileHierarchyNode) {
         // If it doesn't exist, create it.
-        articleHierarchyNode = new ArticleHierarchyNode(article);
-        this.articleHierarchyMap.set(article.name, articleHierarchyNode);
+        fileHierarchyNode = new FileHierarchNode(entry);
+        this.fileHierarchyMap.set(entry[0], fileHierarchyNode);
       }
-      // Iterate over the names of all groups (parent articles) that this article is a group member (child) of
-      for (let parentName of article.groups) {
+      // Iterate over the names of all parent files of the currently iterated file
+      for (let parentName of (new FileName(entry[0])).parents) {
         const hierarchicalListContainer =
-          this.project?.articles.get(parentName);
+          this.activeVault?.files.get(parentName);
         if (hierarchicalListContainer === undefined) {
-          // @TODO: Implement automatic group creation option
-          throw new Error(`Unknown Group Name ${parentName}`);
+          throw new Error(`Unknown parent ${parentName}`);
         }
         // Get the ArticleHierarchyNode for the group (parent) article from the groupNameArticlesMap
-        let parentHierarchyNode = this.articleHierarchyMap.get(
+        let parentHierarchyNode = this.fileHierarchyMap.get(
           hierarchicalListContainer.name
         );
         // Check if the ArticleHierarchyNode for the group (parent) article exists
         if (!parentHierarchyNode) {
           // If it doesn't exist, create it.
-          parentHierarchyNode = new ArticleHierarchyNode(
+          parentHierarchyNode = new FileHierarchNode(
             hierarchicalListContainer
           );
-          this.articleHierarchyMap.set(
+          this.fileHierarchyMap.set(
             hierarchicalListContainer.name,
             parentHierarchyNode
           );
         }
-        parentHierarchyNode.children.push(articleHierarchyNode);
-        articleHierarchyNode.parents.push(parentHierarchyNode);
+        parentHierarchyNode.children.push(fileHierarchyNode);
+        fileHierarchyNode.parents.push(parentHierarchyNode);
       }
     }
   }
 
   toggleArticleActive(uniqueName: string) {
-    if (!this.project) return;
+    if (!this.activeVault) return;
 
     const articleActiveIndex =
-      this.project.workspaces[
-        this.project.activeWorkspaceIndex
+      this.activeVault.workspaces[
+        this.activeVault.activeWorkspaceIndex
       ].viewedArticles.indexOf(uniqueName);
 
     if (articleActiveIndex >= 0) {
-      this.project.workspaces[
-        this.project.activeWorkspaceIndex
+      this.activeVault.workspaces[
+        this.activeVault.activeWorkspaceIndex
       ].viewedArticles.splice(articleActiveIndex, 1);
     } else {
-      this.project.workspaces[
-        this.project.activeWorkspaceIndex
+      this.activeVault.workspaces[
+        this.activeVault.activeWorkspaceIndex
       ].viewedArticles.push(uniqueName);
     }
 
@@ -228,15 +225,15 @@ export class AppComponent implements OnInit {
       return;
     }
     // @TODO If article exists and categories are given proceed and assign categories
-    if (this.project?.articles.has(articleName)) {
+    if (this.activeVault?.files.has(articleName)) {
       this.messageService.add({ severity: 'error', summary: 'An article by this name already exists' })
       return;
     }
-    let article = this.project?.articles.get(articleName) ?? new Article(articleName)
-    this.project?.articles.set(articleName, article)
+    let article = this.activeVault?.files.get(articleName) ?? new Article(articleName)
+    this.activeVault?.files.set(articleName, article)
 
     // Then checking for existance of all groups    
-    const newCategories = categoryNames.filter((name) => !this.project?.articles.has(name));
+    const newCategories = categoryNames.filter((name) => !this.activeVault?.files.has(name));
 
     if (newCategories.length > 0) {
       lastValueFrom(this.confirmationService.confirm({
@@ -261,15 +258,15 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    const hierarchyNode = this.articleHierarchyMap.get(oldName);
+    const hierarchyNode = this.fileHierarchyMap.get(oldName);
     if (!hierarchyNode) {
       throw new Error()
     }
     const childArticles = hierarchyNode?.children;
 
     if (articleName !== oldName) {
-      this.project?.articles.set(articleName, hierarchyNode.node);
-      this.project?.articles.delete(oldName);
+      this.activeVault?.files.set(articleName, hierarchyNode.node);
+      this.activeVault?.files.delete(oldName);
 
       if ((childArticles?.length ?? 0) > 0) {
         await lastValueFrom(this.confirmationService.confirm({
@@ -285,7 +282,7 @@ export class AppComponent implements OnInit {
       }
     }
 
-    const newCategories = categoryNames.filter((name) => !this.project?.articles.has(name));
+    const newCategories = categoryNames.filter((name) => !this.activeVault?.files.has(name));
 
     if (newCategories.length > 0) {
       lastValueFrom(this.confirmationService.confirm({
@@ -309,11 +306,11 @@ export class AppComponent implements OnInit {
   }
 
   moveUp(index: number) {
-    if (!this.project) {
+    if (!this.activeVault) {
       return;
     }
     let viewedArticles =
-      this.project?.workspaces[this.project?.activeWorkspaceIndex]
+      this.activeVault?.workspaces[this.activeVault?.activeWorkspaceIndex]
         .viewedArticles;
     if (index > 0) {
       let tmp = viewedArticles[index - 1];
@@ -323,11 +320,11 @@ export class AppComponent implements OnInit {
   }
 
   moveDown(index: number) {
-    if (!this.project) {
+    if (!this.activeVault) {
       return;
     }
     let viewedArticles =
-      this.project?.workspaces[this.project?.activeWorkspaceIndex]
+      this.activeVault?.workspaces[this.activeVault?.activeWorkspaceIndex]
         .viewedArticles;
     if (index < viewedArticles.length - 1) {
       let tmp = viewedArticles[index + 1];
@@ -344,7 +341,7 @@ export class AppComponent implements OnInit {
   newProject(title: string) {
     this.getProjectFromDB(title).then((p) => {
       if (p === undefined) {
-        this.loadProject(new Project(title !== '' ? title : 'New Database'));
+        this.loadProject(new Vault(title !== '' ? title : 'New Database'));
       } else {
         this.messageService.add({
           severity: 'error',
@@ -354,11 +351,11 @@ export class AppComponent implements OnInit {
     });
   }
 
-  downloadProject(project: Project | undefined) {
+  downloadProject(project: Vault | undefined) {
     if (project) {
       const serializableProject = project?.toSerializableProject();
       this.localdriveService.saveToLocalDrive(
-        project.title + '.zip',
+        project.name + '.zip',
         serializableProject.serialize()
       );
     } else {
@@ -377,7 +374,7 @@ export class AppComponent implements OnInit {
       this.localdriveService
         .loadFromLocalDrive(input.files[0])
         .then((res) => this.loadProject(res.toProject()));*/
-    }
+    } Vault
   }
 
   async getProjectFromDB(title: string): Promise<Project | undefined> {
@@ -398,8 +395,8 @@ export class AppComponent implements OnInit {
           .then(
             () => {
               this.allProjectsPromise = this.indexedDbService.getAllProjects();
-              if (this.project?.title === title) {
-                this.project = undefined;
+              if (this.activeVault?.name === title) {
+                this.activeVault = undefined;
               }
             }
           );
@@ -408,17 +405,17 @@ export class AppComponent implements OnInit {
   }
 
   saveToDB(title?: string) {
-    if (this.project) {
-      const serializableProject = this.project?.toSerializableProject();
+    if (this.activeVault) {
+      const serializableProject = this.activeVault?.toSerializableProject();
       this.indexedDbService
         .saveProject(
-          title ?? this.project.title,
+          title ?? this.activeVault.name,
           serializableProject.serialize()
         )
         .then(() => {
           this.messageService.add({
             severity: 'success',
-            summary: `"${this.project?.title}" Saved`,
+            summary: `"${this.activeVault?.name}" Saved`,
           });
           this.allProjectsPromise = this.indexedDbService.getAllProjects();
         });
@@ -431,29 +428,29 @@ export class AppComponent implements OnInit {
   }
 
   addWorkspace() {
-    if (this.project) {
-      this.project.workspaces?.push(new Workspace());
+    if (this.activeVault) {
+      this.activeVault.workspaces?.push(new Workspace());
     }
   }
 
   removeWorkspace(index: number) {
-    if (this.project) {
-      this.project.workspaces?.splice(index, 1);
-      if (index < this.project.activeWorkspaceIndex) {
-        this.project.activeWorkspaceIndex = this.project.activeWorkspaceIndex - 1;
+    if (this.activeVault) {
+      this.activeVault.workspaces?.splice(index, 1);
+      if (index < this.activeVault.activeWorkspaceIndex) {
+        this.activeVault.activeWorkspaceIndex = this.activeVault.activeWorkspaceIndex - 1;
       }
     }
   }
 
   deleteArticle(name: string) {
-    if (this.project) {
-      if (this.project.articles.delete(name)) {
-        for (const workspace of this.project.workspaces) {
+    if (this.activeVault) {
+      if (this.activeVault.files.delete(name)) {
+        for (const workspace of this.activeVault.workspaces) {
           workspace.viewedArticles = workspace.viewedArticles.filter(
             (activeArticleName) => activeArticleName !== name
           );
         }
-        this.articleHierarchyMap.get(name)?.children.forEach((child) => {
+        this.fileHierarchyMap.get(name)?.children.forEach((child) => {
           const grps = new Set(child.node.groups)
           grps.delete(name)
           child.node.groups = [...grps]
@@ -512,13 +509,13 @@ export class AppComponent implements OnInit {
       this.initializeArticleHierarchyMap(refresh);
     } catch { }
 
-    if (this.project === undefined) return;
+    if (this.activeVault === undefined) return;
     // Remove all empty workspaces that aren't the last workspace
     let removedWorkspace = true;
-    while (removedWorkspace && this.project) {
+    while (removedWorkspace && this.activeVault) {
       removedWorkspace = false;
-      const index = this.project?.workspaces.findIndex((wrkspc) => wrkspc.viewedArticles.length === 0)
-      if (index !== -1 && index !== this.project?.workspaces.length - 1) {
+      const index = this.activeVault?.workspaces.findIndex((wrkspc) => wrkspc.viewedArticles.length === 0)
+      if (index !== -1 && index !== this.activeVault?.workspaces.length - 1) {
         this.removeWorkspace(index)
         removedWorkspace = true;
       } else {
@@ -526,7 +523,7 @@ export class AppComponent implements OnInit {
       }
     }
     // Add new empty workspace if empty workspace is no longer empty
-    if ((this.project?.workspaces[this.project?.workspaces.length - 1].viewedArticles.length ?? 0) > 0) {
+    if ((this.activeVault?.workspaces[this.activeVault?.workspaces.length - 1].viewedArticles.length ?? 0) > 0) {
       this.addWorkspace();
     }
   }
@@ -571,13 +568,13 @@ export class AppComponent implements OnInit {
   saveMessageAsArticle(msg: Msg) {
     const articleName = msg.content.slice(0, 15)
 
-    if (this.project?.articles.has(articleName)) {
+    if (this.activeVault?.files.has(articleName)) {
       this.messageService.add({ severity: 'error', summary: 'An article by this name already exists' })
       return;
     }
 
     let article = new Article(articleName, [], msg.content);
-    this.project?.articles.set(articleName, article)
+    this.activeVault?.files.set(articleName, article)
     this.onTouchWorkspaces(true);
   }
 }
