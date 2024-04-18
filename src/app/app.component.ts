@@ -22,6 +22,7 @@ import { Conversation, Msg } from './models/conversation.model';
 import { ProjectEvent } from './models/projectEvent.model';
 import { scrollIncrementDecrement } from './util/functions'
 import { ConversationViewerComponent } from './components/conversation-viewer/conversation-viewer.component';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -32,6 +33,7 @@ export class AppComponent implements OnInit {
   /** HTML Template Elements */
   @ViewChild('projectUpload', { static: false }) projectUpload!: ElementRef;
   @ViewChild('conversationViewer', { static: false }) conversationViewer!: ConversationViewerComponent;
+  @ViewChild('actionBar') actionBar!: HTMLInputElement;
   scrollIncrementDecrement = scrollIncrementDecrement;
   activeArticlePages: Map<string, HTMLElement> = new Map();
 
@@ -46,17 +48,12 @@ export class AppComponent implements OnInit {
   dropdownPanelActiveTab: 'chat' | 'llm' | 'files' | 'git' | '' | 'menu' | 'alerts' = '';
   activeAssistant?: number;
   consoleInputFocused: boolean = false;
-  input_placeholders = {
-    chat: 'Enter chat message here',
-    llm: 'Enter LLM prompt here',
-    files: 'Search for files',
-    git: '',
-    alerts: '',
-    menu: '',
-    '': 'Type here to do stuff'
-  }
 
   conversations: Conversation[] = this.loadConversations();
+  activeConversationIndex: number = 0;
+  selectedLLMIndex: number = 0;
+  rightClickedConversationIndex: number = 0;
+  addMessageEmitter: EventEmitter<Msg> = new EventEmitter();
 
   /** Dialogs */
   showSaveProjectOverlay: boolean = false;
@@ -86,6 +83,19 @@ export class AppComponent implements OnInit {
         if (this.rightClickedWorkspace !== (this.project?.workspaces.length ?? 0) - 1) {
           this.removeWorkspace(this.rightClickedWorkspace)
         }
+      }
+    },
+  ];
+
+  conversationContextMenuItems = [
+    {
+      label: 'Clear', icon: 'iconoir iconoir-erase', command: () => {
+        this.deleteMessages(false, this.rightClickedConversationIndex)
+      }
+    },
+    {
+      label: 'Delete', icon: 'iconoir iconoir-bin-half', command: () => {
+        this.deleteMessages(true, this.rightClickedConversationIndex)
       }
     },
   ];
@@ -479,6 +489,13 @@ export class AppComponent implements OnInit {
     }
   }
 
+  onClickConversation(conversation_index: number) {
+    if (this.activeConversationIndex === conversation_index || this.dropdownPanelActiveTab !== 'llm') {
+      this.onToggleConsole('llm')
+    }
+    this.activeConversationIndex = conversation_index
+  }
+
   onListArticleActionClick(event: {
     action: ArticleActionEnum;
     node: Article;
@@ -531,9 +548,9 @@ export class AppComponent implements OnInit {
   commandLineKeyUp(e: KeyboardEvent, input: HTMLInputElement) {
     if (e.key === 'Enter') {
       if (input.value) {
-        this.conversations[this.conversationViewer.activeConversation].messages.push({ active: true, role: 'user', content: input.value });
+        this.conversations[this.activeConversationIndex].messages.push({ active: true, role: 'user', content: input.value });
       }
-      this.conversationViewer.promptConversation();
+      this.promptConversation();
       input.value = '';
     }
   }
@@ -565,7 +582,18 @@ export class AppComponent implements OnInit {
     }
   }
 
-  saveMessageAsArticle(msg: Msg) {
+  handleMessageEvent(event: [string, Msg | undefined]) {
+    switch (event[0]) {
+      case 'save': this.saveMessageAsArticle(event[1]); break;
+      case 'added/removed': this.onTouchConversations();
+    }
+  }
+
+  saveMessageAsArticle(msg: Msg | undefined) {
+    if (!msg) {
+      return;
+    }
+
     const articleName = msg.content.slice(0, 15)
 
     if (this.project?.articles.has(articleName)) {
@@ -577,4 +605,78 @@ export class AppComponent implements OnInit {
     this.project?.articles.set(articleName, article)
     this.onTouchWorkspaces(true);
   }
+
+  deleteMessages(deleteSystem: boolean = false, conversationIndex: number) {
+    if (deleteSystem) {
+      this.conversations[conversationIndex].messages = [];
+    } else {
+      this.conversations[conversationIndex].messages = this.conversations[conversationIndex].messages.filter((msg) => msg.role === 'system')
+    }
+
+    this.onTouchConversations();
+  }
+
+
+
+  onTouchConversations() {
+    // Remove all empty conversations that aren't the last conversation
+    let removedConversation = true;
+    while (removedConversation) {
+      removedConversation = false;
+      const index = this.conversations.findIndex((conv) => conv.messages.length === 0)
+      if (index !== -1 && index !== this.conversations.length - 1) {
+        this.conversations.splice(index, 1)
+        removedConversation = true;
+      } else {
+        removedConversation = false;
+      }
+    }
+    // Add new empty conversation if the last conversation is no longer empty
+    if (this.conversations[this.conversations.length - 1].messages.length > 0) {
+      this.conversations.push(new Conversation())
+    }
+
+    localStorage.setItem('conversations', JSON.stringify(this.conversations));
+  }
+
+  promptConversation() {
+    const message: Msg = { role: 'assistant', content: '', active: true }
+    this.llmApiService.sendLLMPrompt(this.conversations[this.activeConversationIndex], this.llmApiService.llmConfigs[this.selectedLLMIndex]).then((o) => {
+      o?.subscribe((a) => {
+        for (const v of a) {
+          if (v && v.choices !== undefined) // If OPENAI style response
+          {
+            const newContent = v.choices[0]?.delta?.content;
+            const finishReason = v.choices[0]?.finish_reason;
+            if (newContent !== undefined) {
+              message.content += newContent;
+            }
+            if (finishReason) {
+              localStorage.setItem('conversations', JSON.stringify(this.conversations));
+            }
+          } else if (v && v.response !== undefined)  // If OLLAMA style response
+          {
+            const newContent = v.response;
+            const done = v.done;
+            if (newContent !== undefined) {
+              message.content += newContent;
+            }
+            if (done) {
+              localStorage.setItem('conversations', JSON.stringify(this.conversations));
+            }
+          }
+        }
+      })
+    });
+    this.conversations[this.activeConversationIndex].messages.push(message)
+    this.addMessageEmitter.emit(message)
+    this.onTouchConversations();
+  }
+
+  repeatPrompt() {
+    const index = Number(this.dropdownPanelActiveTab.replace('llm', ''))
+    this.conversations[index].messages.pop()
+    this.promptConversation();
+  }
 }
+

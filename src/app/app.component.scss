@@ -1,23 +1,15 @@
-.system-prompt-input {
-  min-height: 100%;
-  width: 30vw;
-  resize: none;
-  border-radius: 6px;
-}
-
 // Sidebar
 .sidebar {
   display: flex;
   flex-direction: column;
-  transition: width 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99);
+  transition: transform 0.25s cubic-bezier(0.05, 0.74, 0.2, 0.99);
   width: 20vw;
   height: 100%;
   overflow-y: hidden;
   background-color: var(--surface-b);
 
   &.collapsed {
-    width: 0;
-    height: 0;
+    transform: translateX(-100%);
     visibility: collapse;
     border: 0px;
 
@@ -28,64 +20,6 @@
 
   &.left {
     border-right: 1px solid var(--surface-border);
-  }
-}
-
-
-
-.articleTitle {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  color: var(--text-color-secondary);
-  text-overflow: ellipsis;
-  padding: 12px;
-  height: 42px;
-  border-bottom: 1px solid var(--surface-border);
-}
-
-.articleDescription {
-  padding: 4px 4px 0px 4px;
-  font-size: small;
-  text-align: justify;
-
-  .primary {
-    color: var(--text-color);
-  }
-
-  .secondary {
-    color: var(--text-color-secondary);
-  }
-}
-
-.labeled-separator {
-  display: flex;
-  flex-direction: row;
-  margin: 4px 4px 0px 4px;
-  width: auto;
-
-  .label {
-    font-size: x-small;
-    color: var(--surface-border);
-    line-height: 1;
-    margin-left: 1px;
-    margin-right: 1px;
-  }
-
-  .line {
-    border-bottom: 1px solid var(--surface-border);
-    margin-bottom: 2px;
-
-    &.right {
-      width: 90%;
-
-    }
-
-    &.left {
-      width: 10%;
-      border-bottom-left-radius: 50%;
-    }
   }
 }
 
@@ -100,24 +34,95 @@
     background-color: var(--surface-a);
     width: 100%;
     height: 100%;
-    padding: 2px 0px 2px 0px;
-
-    .card {
-      background-color: var(--surface-b);
-      width: 100%;
-      margin-bottom: 4px;
-    }
   }
 
-  .empty {
+  .empty-workspace {
     border-bottom-right-radius: 15px;
   }
 
   .menubar {
     display: flex;
     flex-direction: row;
-    align-content: center;
-    background-color: var(--surface-a);
+    align-items: center;
+    justify-content: flex-end;
+    background-color: var(--surface-b);
+
+    .input {
+      flex-grow: 1;
+      border: 0;
+      height: 40px;
+      background-color: transparent;
+
+      &.command-line {
+        width: 100%;
+      }
+    }
+
+    .tab {
+      background-color: transparent;
+      color: var(--text-color-secondary);
+      display: flex;
+      flex-direction: row;
+      justify-content: end;
+      align-items: center;
+      border-radius: 17px;
+      padding: 3px;
+      margin: 2px;
+      border: 1px solid transparent;
+
+      .iconoir {
+        &:hover {
+          color: var(--text-color);
+          cursor: pointer;
+        }
+
+        &.highlighted {
+          color: var(--text-color);
+        }
+      }
+
+      .separator {
+        background-color: var(--surface-border);
+        height: 23px;
+        width: 1px;
+        margin: 0 3px 0 3px;
+      }
+
+      .collapsed_item {
+        position: absolute;
+        visibility: collapse;
+        opacity: 0;
+      }
+
+      &.active {
+        background-color: var(--surface-a);
+        border-color: var(--surface-border);
+
+        .collapsed_item {
+          position: relative;
+          visibility: visible;
+          opacity: 1;
+        }
+      }
+    }
+
+    .tabInput {
+      transition: width 0.2s, padding 0.1s;
+      width: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      border-bottom: 1px solid transparent;
+      border-top: 1px solid transparent;
+      visibility: collapse;
+
+      &.active {
+        visibility: visible;
+        width: 240px;
+        padding: 8px 12px 8px 0px;
+        border-bottom: 1px solid var(--primary-color);
+      }
+    }
   }
 
   .central-header {
@@ -126,25 +131,27 @@
     padding: 0;
 
     .dropdown-panel {
+      position: relative;
       display: flex;
       flex-direction: row;
       background-color: var(--surface-b);
-      opacity: 0;
       pointer-events: all;
       height: 0vh;
       border: 0px solid var(--surface-border);
-      transition: height 0.25s, opacity 0.1s cubic-bezier(.77, 0, 1, .23);
+      transition: height 0.25s;
       overflow: hidden;
 
       .tab-content {
         flex-grow: 1;
         display: flex;
         flex-direction: row;
+        justify-content: flex-end;
+        height: 50vh;
+        animation-name: fadeIn;
+        animation-duration: 0.25s;
       }
 
       &.active {
-        padding-top: 2px;
-        opacity: 1;
         height: 50vh;
       }
     }
@@ -215,89 +222,6 @@
 
       &:hover {
         color: var(--text-color);
-      }
-    }
-  }
-
-  .tabs {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: center;
-    transition: background-color 0.1s;
-    color: var(--text-color-secondary);
-    margin-bottom: 0px;
-    pointer-events: all;
-
-    .tabs-group {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      height: 40px;
-      background-color: var(--surface-b);
-
-      &.command-line {
-        transition: border-color 0.2s;
-        width: 100%;
-
-
-        &:hover {
-          border-color: var(--primary-color);
-        }
-
-        &.active {
-          border-color: var(--primary-color);
-        }
-
-        .input {
-          flex-grow: 1;
-          border: 0;
-          height: 100%;
-          font-family: 'Courier New', Courier, monospace;
-          letter-spacing: -1px;
-          background-color: transparent;
-        }
-      }
-
-      .tab {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        height: 30px;
-        width: 30px;
-        border-radius: 16px;
-        margin: 2px;
-        padding: 4px;
-
-        &:hover {
-          color: var(--text-color);
-          cursor: pointer;
-        }
-
-        &.active {
-          color: var(--text-color);
-          background-color: var(--surface-border);
-        }
-      }
-    }
-
-    .tabInput {
-      transition: width 0.2s, padding 0.1s;
-      width: 0;
-      padding: 0;
-      border: 0;
-      border-radius: 0;
-      border-bottom: 1px solid transparent;
-      border-top: 1px solid transparent;
-      visibility: collapse;
-
-      &.active {
-        visibility: visible;
-        width: 240px;
-        padding: 8px 12px 8px 0px;
-        border-bottom: 1px solid var(--primary-color);
       }
     }
   }
@@ -445,5 +369,15 @@
         padding-bottom: 120px;
       }
     }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }

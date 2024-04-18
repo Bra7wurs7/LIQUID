@@ -36,7 +36,6 @@ import { TableModule } from 'primeng/table';
 import { RatingModule } from 'primeng/rating';
 import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-policy.component';
 import { HierarchicalListComponent } from './components/hierarchical-list/hierarchical-list.component';
-import { LlmSettingsComponent } from './components/llm-settings/llm-settings.component';
 import { ContextMenusService } from './services/contextMenus/context-menus.service';
 import { ArticleHierarchyListStringFilterPipe } from './pipes/articleHierarchyListStringFilter/article-hierarchy-list-filter.pipe';
 import { MapToListPipe } from './pipes/mapToList/map-to-list.pipe';
@@ -44,7 +43,7 @@ import { ArticleHierarchyListRootFilterPipe } from './pipes/articleHierarchyList
 import { ArticleHierarchyMapGetPipe } from './pipes/articleHierarchyMapGet/article-hierarchy-map-get.pipe';
 import { CascadeSelectModule } from 'primeng/cascadeselect';
 import { ArticleNameAndCategoriesToStringPipe } from './pipes/articleNameAndCategoriesToString/article-name-and-categories-to-string.pipe';
-import { IdbSettingsComponent } from './components/idb-settings/idb-settings.component';
+import { MenuComponent } from './components/menu/menu.component';
 import { UrlDomainPipe } from './pipes/urlDomain/url-domain.pipe';
 import { ConversationViewerComponent } from './components/conversation-viewer/conversation-viewer.component';
 import { AlertsListComponent } from './components/alerts-list/alerts-list.component';
@@ -58,12 +57,11 @@ import { ArticleHierarchyNodesFilterPipe } from './pipes/articleHierarchyNodeFil
     ParseMarkupPipe,
     PrivacyPolicyComponent,
     HierarchicalListComponent,
-    LlmSettingsComponent,
     ArticleHierarchyListStringFilterPipe,
     MapToListPipe,
     ArticleHierarchyListRootFilterPipe,
     ArticleHierarchyMapGetPipe,
-    IdbSettingsComponent,
+    MenuComponent,
     ConversationViewerComponent,
     AlertsListComponent,
   ],

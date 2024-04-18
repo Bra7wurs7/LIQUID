@@ -112,7 +112,7 @@
 .entryText {
     display: flex;
     flex-direction: row;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: flex-end;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -135,7 +135,7 @@
     opacity: 0;
 
     &.active {
-        max-width: 19px;
+        max-width: 24px;
         opacity: 1;
     }
 

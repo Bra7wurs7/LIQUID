@@ -1,19 +1,37 @@
-import { Component } from '@angular/core';
-import { LlmApiService } from '../../services/llmApi/llm-api.service';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Project } from '../../models/project.model';
+import { ProjectEvent } from 'src/app/models/projectEvent.model';
 import { LLMConfig } from 'src/app/services/llmApi/llm-config.model';
+import { LlmApiService } from 'src/app/services/llmApi/llm-api.service';
 
 @Component({
-  selector: 'app-llm-settings',
-  templateUrl: './llm-settings.component.html',
-  styleUrls: ['./llm-settings.component.scss']
+  selector: 'app-idb-settings',
+  templateUrl: './menu.component.html',
+  styleUrl: './menu.component.scss'
 })
-export class LlmSettingsComponent {
+export class MenuComponent {
+  @Input() allProjects!: null | { title: string; lastModified: Date }[];
+  @Input() activeProject!: string;
+  @Output() projectEventEmitter: EventEmitter<ProjectEvent> = new EventEmitter();
+
   JSON = JSON;
   llms: any[];
   selectedLLM: any;
 
   editConfig?: string;
   editConfigIndex?: number;
+
+  newProjectMenuItems = [
+    { label: 'Import archive', icon: 'iconoir iconoir-archive', command: () => this.projectEventEmitter.emit(["upload", '']) }
+  ]
+
+  lastClickedProject?: string;
+  existingProjectMenuItems = [
+    { label: 'Export archive', icon: 'iconoir iconoir-download-square', command: () => this.projectEventEmitter.emit(["download", this.lastClickedProject ?? '']) },
+    { label: 'Delete', icon: 'iconoir iconoir-bin-half', command: () => this.projectEventEmitter.emit(["delete", this.lastClickedProject ?? '']) }
+  ]
+
+  foobs = [1,2,3];
 
   constructor(public llmApiService: LlmApiService) {
     this.llms = [
@@ -40,8 +58,8 @@ export class LlmSettingsComponent {
             code: ["https://api.openai.com/v1/chat/completions", 'gpt-4', 'openai'],
           },
           {
-            mname: 'GPT-4 Turbo Preview',
-            code: ["https://api.openai.com/v1/chat/completions", 'gpt-4-turbo-preview', 'openai'],
+            mname: 'GPT-4 Turbo',
+            code: ["https://api.openai.com/v1/chat/completions", 'gpt-4-turbo', 'openai'],
           },
         ]
       },
