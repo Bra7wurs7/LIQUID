@@ -54,6 +54,7 @@ export class AppComponent implements OnInit {
   selectedLLMIndex: number = 0;
   rightClickedConversationIndex: number = 0;
   addMessageEmitter: EventEmitter<Msg> = new EventEmitter();
+  autopromptingEnabled: boolean = false;
 
   /** Dialogs */
   showSaveProjectOverlay: boolean = false;
@@ -61,8 +62,6 @@ export class AppComponent implements OnInit {
   showPrivacyPolicyDialog: boolean = false;
   loadDialogVisible: boolean = false;
   settingsDialogVisible: boolean = false;
-
-  foo: number = 0;
 
   /** Autosaver */
   autosave = timer(300000, 300000).pipe(
@@ -129,6 +128,7 @@ export class AppComponent implements OnInit {
 
       this.autosave.subscribe(() => { });
     });
+    this.loadSelectedLLMIndex()
   }
 
   loadConversations(): Conversation[] {
@@ -550,7 +550,7 @@ export class AppComponent implements OnInit {
       if (input.value) {
         this.conversations[this.activeConversationIndex].messages.push({ active: true, role: 'user', content: input.value });
       }
-      this.promptConversation();
+      this.promptLlm();
       input.value = '';
     }
   }
@@ -639,30 +639,76 @@ export class AppComponent implements OnInit {
     localStorage.setItem('conversations', JSON.stringify(this.conversations));
   }
 
-  promptConversation() {
+  onClickSend(event: MouseEvent) {
+    switch(event.button) {
+      case 0:
+        this.promptLlm();
+        break;
+      case 1:
+        this.autopromptingEnabled = !this.autopromptingEnabled;
+        break;
+      case 2:
+        this.repeatPrompt();
+        break;
+    }
+  }
+
+  promptLlm() {
     const message: Msg = { role: 'assistant', content: '', active: true }
+
+    let conversation_history_file = this.project?.articles.get("convo_history");
+    if (conversation_history_file === undefined) {
+      conversation_history_file = new Article("convo_history", [], "")
+      this.project?.articles.set("convo_history", conversation_history_file)
+    }
+
     this.llmApiService.sendLLMPrompt(this.conversations[this.activeConversationIndex], this.llmApiService.llmConfigs[this.selectedLLMIndex]).then((o) => {
       o?.subscribe((a) => {
         for (const v of a) {
-          if (v && v.choices !== undefined) // If OPENAI style response
-          {
+          if (v && v.choices !== undefined) {
+            // If OPENAI chat style response
             const newContent = v.choices[0]?.delta?.content;
             const finishReason = v.choices[0]?.finish_reason;
             if (newContent !== undefined) {
               message.content += newContent;
+              conversation_history_file!.content += `${newContent}`;
             }
             if (finishReason) {
               localStorage.setItem('conversations', JSON.stringify(this.conversations));
+              if(this.autopromptingEnabled) {
+                this.deactivateOldMessages(2);
+                this.promptLlm();
+              }
             }
-          } else if (v && v.response !== undefined)  // If OLLAMA style response
-          {
+          } else if (v && v.response !== undefined) {
+            // If OLLAMA generate style response
             const newContent = v.response;
             const done = v.done;
             if (newContent !== undefined) {
               message.content += newContent;
+              conversation_history_file!.content += `${newContent}`;
             }
             if (done) {
               localStorage.setItem('conversations', JSON.stringify(this.conversations));
+              if(this.autopromptingEnabled) {
+                this.deactivateOldMessages(2);
+                this.promptLlm();
+              }
+            }
+          } else if (v && v.message !== undefined) {
+            // If OLLAMA chat style response 
+            const newContent = v.message.content;
+            const done = v.done;
+            if (newContent !== undefined) {
+              message.content += newContent;
+              conversation_history_file!.content += `${newContent}`;
+            }
+            if (done) {
+              localStorage.setItem('conversations', JSON.stringify(this.conversations));
+              if(this.autopromptingEnabled) {
+                this.deactivateOldMessages(2);
+                this.promptLlm();
+              }
             }
           }
         }
@@ -674,9 +720,39 @@ export class AppComponent implements OnInit {
   }
 
   repeatPrompt() {
-    const index = Number(this.dropdownPanelActiveTab.replace('llm', ''))
-    this.conversations[index].messages.pop()
-    this.promptConversation();
+    this.conversations[this.activeConversationIndex].messages.pop()
+    this.promptLlm();
+  }
+
+  deactivateOldMessages(allowed_age: number){
+    this.conversations[this.activeConversationIndex].messages.forEach((msg, index, array) => {
+      if(!(msg.role==="system")) {
+        if(index >= array.length-allowed_age) {
+          msg.active = true;
+        } else {
+          msg.active = false;
+        }
+      }
+    })
+  }
+
+  loadSelectedLLMIndex() {
+    const index = Number(localStorage.getItem('llm_index')) ?? 0;
+    if (this.llmApiService.llmConfigs[index]) {
+      this.selectedLLMIndex = index;
+    }
+  }
+
+  saveSelectedLLMIndex() {
+    localStorage.setItem('llm_index', `${this.selectedLLMIndex}`)
+  }
+
+  toggleAutoprompting() {
+    this.autopromptingEnabled === !this.autopromptingEnabled;
+    this.messageService.add({
+      severity: 'success',
+      summary: `"${this.project?.title}" Saved`,
+    });
   }
 }
 

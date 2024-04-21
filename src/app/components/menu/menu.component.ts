@@ -77,7 +77,11 @@ export class MenuComponent {
           },
           {
             mname: 'Mistral Medium',
-            code: ["https://api.mistral.ai/v1/chat/completions", 'mistral-medium', 'mistral'],
+            code: ["https://api.mistral.ai/v1/chat/completions", 'mistral-medium-latest', 'mistral'],
+          },
+          {
+            mname: 'Mistral Large',
+            code: ["https://api.mistral.ai/v1/chat/completions", 'mistral-large-latest', 'mistral'],
           },
         ]
       }

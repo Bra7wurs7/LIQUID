@@ -63,15 +63,19 @@
           </ng-template>
         </div>
         <div class="iconoir iconoir-send collapsed_item" [pTooltip]="promptConversationTooltip" tooltipPosition="bottom"
-          (click)="promptConversation()"
-          (wheel)="selectedLLMIndex = scrollIncrementDecrement(false, $event, selectedLLMIndex, 1, llmApiService.llmConfigs.length-1)"
-          (contextmenu)="$event.preventDefault(); repeatPrompt()">
+          (mousedown)="onClickSend($event)"
+          (contextmenu)=" $event.preventDefault()"
+          (wheel)="selectedLLMIndex = scrollIncrementDecrement(false, $event, selectedLLMIndex, 1, llmApiService.llmConfigs.length-1); saveSelectedLLMIndex()"
+          [ngClass]="{'iconoir-send-solid': autopromptingEnabled}">
           <ng-template #promptConversationTooltip>
             <div class="tooltip-background">
-              Let LLM continue conversation <div class="iconoir iconoir-mouse-button-left"></div>
+              Prompt <div class="iconoir iconoir-mouse-button-left"></div>
             </div>
             <div class="tooltip-background">
-              Make LLM replace last message <div class="iconoir iconoir-mouse-button-right"></div>
+              Reprompt <div class="iconoir iconoir-mouse-button-right"></div>
+            </div>
+            <div class="tooltip-background" [ngClass]="{'highlighted': autopromptingEnabled}">
+              Autoprompting <div class="iconoir iconoir-pc-mouse"></div>
             </div>
             <div class="settings-tooltip-header flex justify-content-between align-items-center">Choose LLM
               <div class="iconoir iconoir-mouse-scroll-wheel" style="margin-left: 5px;"></div>

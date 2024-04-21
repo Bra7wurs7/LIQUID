@@ -66,9 +66,8 @@
       justify-content: end;
       align-items: center;
       border-radius: 17px;
-      padding: 3px;
+      padding: 4px;
       margin: 2px;
-      border: 1px solid transparent;
 
       .iconoir {
         &:hover {
@@ -96,7 +95,6 @@
 
       &.active {
         background-color: var(--surface-a);
-        border-color: var(--surface-border);
 
         .collapsed_item {
           position: relative;

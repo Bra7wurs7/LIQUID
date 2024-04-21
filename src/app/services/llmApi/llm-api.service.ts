@@ -37,13 +37,15 @@ export class LlmApiService {
   }
 
   public async sendLLMPrompt(prompt: Conversation, llmConfig: LLMConfig): Promise<Observable<Record<string, any>[]> | undefined> {
+    const last_message = prompt.messages.pop();
     switch (llmConfig.apiStyle) {
       case 'ollama':
+        if(last_message) {
+          prompt.messages.push(last_message);
+        }
         return this.sendOllamaStylePrompt(prompt, llmConfig);
       case 'openai':
-        return this.sendOpenAiStylePrompt(prompt, llmConfig);
       case 'mistral':
-        const last_message = prompt.messages.pop();
         if(last_message) {
           last_message.role = 'user';
           this.messageService.add({
