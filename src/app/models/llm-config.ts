@@ -9,6 +9,7 @@ export class LLMConfig {
     params: Record<string, string>;
     headers: Record<string, string>;
     body: Record<string, any>;
+    apiStyle: "openai" | "ollama" | "mistral" = 'openai';
 
     public constructor(
         name: string,

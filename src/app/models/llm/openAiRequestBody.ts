@@ -1,6 +1,6 @@
-import { LLMMessage } from "./message.model";
+import { LLMMessage } from "./message";
 
-export class LlmRequestBody {
+export class OpenAIRequestBody {
     model: string = "";
     messages: LLMMessage[] = [];
     temperature: number = 0;

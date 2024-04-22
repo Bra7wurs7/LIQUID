@@ -7,17 +7,18 @@ import {
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Vault } from './models/vault.model';
 import { IndexedDbService } from './services/indexedDb/indexed-db.service';
-import { Workspace } from './models/workspace.model';
+import { Workspace } from './models/workspace';
 import { lastValueFrom, of, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { FileHierarchNode } from './models/articleHierarchyNode.model';
+import { FileHierarchNode } from './models/articleHierarchyNode';
 import { ArticleActionEnum } from './enums/articleActionEnum';
 import { LlmApiService } from './services/llmApi/llm-api.service';
-import { Conversation, Msg } from './models/conversation.model';
-import { ProjectEvent } from './models/projectEvent.model';
+import { Conversation, Msg } from './models/conversation';
+import { MenuEvent } from './models/projectEvent';
 import { scrollIncrementDecrement } from './util/functions'
 import { ConversationViewerComponent } from './components/conversation-viewer/conversation-viewer.component';
 import { FileName } from './models/fileName.model';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +29,7 @@ export class AppComponent implements OnInit {
   /** HTML Template Elements */
   @ViewChild('projectUpload', { static: false }) projectUpload!: ElementRef;
   @ViewChild('conversationViewer', { static: false }) conversationViewer!: ConversationViewerComponent;
+  @ViewChild('actionBar') actionBar!: HTMLInputElement;
   scrollIncrementDecrement = scrollIncrementDecrement;
   activeArticlePages: Map<string, HTMLElement> = new Map();
 
@@ -42,21 +44,18 @@ export class AppComponent implements OnInit {
   dropdownPanelActiveTab: 'chat' | 'llm' | 'files' | 'git' | '' | 'menu' | 'alerts' = '';
   activeAssistant?: number;
   consoleInputFocused: boolean = false;
-  input_placeholders = {
-    chat: 'Enter chat message here',
-    llm: 'Enter LLM prompt here',
-    files: 'Search for files',
-    git: '',
-    alerts: '',
-    menu: '',
-    '': 'Type here to do stuff'
-  }
+  hideOlderThan: number = 2;
 
   /** Workspaces */
   workspaces: Workspace[] = [];
   activeWorkspaceIndex: number = 0;
 
   conversations: Conversation[] = this.loadConversations();
+  activeConversationIndex: number = 0;
+  selectedLLMIndex: number = 0;
+  rightClickedConversationIndex: number = 0;
+  addMessageEmitter: EventEmitter<Msg> = new EventEmitter();
+  autopromptingEnabled: boolean = false;
 
   /** Dialogs */
   showSaveProjectOverlay: boolean = false;
@@ -64,8 +63,6 @@ export class AppComponent implements OnInit {
   showPrivacyPolicyDialog: boolean = false;
   loadDialogVisible: boolean = false;
   settingsDialogVisible: boolean = false;
-
-  foo: number = 0;
 
   /** Autosaver */
   autosave = timer(300000, 300000).pipe(
@@ -86,6 +83,19 @@ export class AppComponent implements OnInit {
         if (this.rightClickedWorkspace !== (this.workspaces.length ?? 0) - 1) {
           this.removeWorkspace(this.rightClickedWorkspace)
         }
+      }
+    },
+  ];
+
+  conversationContextMenuItems = [
+    {
+      label: 'Clear', icon: 'iconoir iconoir-erase', command: () => {
+        this.deleteMessages(false, this.rightClickedConversationIndex)
+      }
+    },
+    {
+      label: 'Delete', icon: 'iconoir iconoir-bin-half', command: () => {
+        this.deleteMessages(true, this.rightClickedConversationIndex)
       }
     },
   ];
@@ -118,6 +128,7 @@ export class AppComponent implements OnInit {
 
       this.autosave.subscribe(() => { });
     });
+    this.loadSelectedLLMIndex()
   }
 
   loadConversations(): Conversation[] {
@@ -380,7 +391,8 @@ export class AppComponent implements OnInit {
   async getProjectFromDB(title: string): Promise<Project | undefined> {
     const project = await this.indexedDbService.loadProject(title);
     if (project) {
-      return SerializableProject.deserialize(project.projectJSON).toProject()
+      const dserializedProject = SerializableProject.deserialize(project.projectJSON).toProject()
+      return dserializedProject;
     } else {
       return undefined;
     }
@@ -479,6 +491,13 @@ export class AppComponent implements OnInit {
     }
   }
 
+  onClickConversation(conversation_index: number) {
+    if (this.activeConversationIndex === conversation_index || this.dropdownPanelActiveTab !== 'llm') {
+      this.onToggleConsole('llm')
+    }
+    this.activeConversationIndex = conversation_index
+  }
+
   onListArticleActionClick(event: {
     action: ArticleActionEnum;
     node: Article;
@@ -531,41 +550,72 @@ export class AppComponent implements OnInit {
   commandLineKeyUp(e: KeyboardEvent, input: HTMLInputElement) {
     if (e.key === 'Enter') {
       if (input.value) {
-        this.conversations[this.conversationViewer.activeConversation].messages.push({ active: true, role: 'user', content: input.value });
+        this.conversations[this.activeConversationIndex].messages.push({ active: true, role: 'user', content: input.value });
       }
-      this.conversationViewer.promptConversation();
+      this.promptLlm();
       input.value = '';
     }
   }
 
-  handleProjectEvent(event: ProjectEvent) {
+  async handleMenuEvent(event: MenuEvent) {
+    const allProjects = await this.allProjectsPromise;
     switch (event[0]) {
-      case "load":
-        this.getProjectFromDB(event[1]).then((project) => {
-          this.loadProject(project)
-        })
+      case "/folder":
+        if (allProjects.findIndex((prj) => prj.title === event[1]) !== -1) {
+          if (this.project?.title === event[1]) {
+            this.saveToDB(this.project?.title)
+          } else {
+            this.getProjectFromDB(event[1]).then((project) => {
+              if (project) {
+                this.loadProject(project);
+              }
+            });
+          }
+        } else {
+          this.saveToDB(event[1])
+        }
         break;
-      case "delete":
+      case "/delete":
         this.deleteFromDB(event[1])
         break;
-      case "saveas":
-        this.saveToDB(event[1])
-        break;
-      case "new":
-        this.newProject(event[1])
-        break;
-      case "download":
+      case "/download":
         this.getProjectFromDB(event[1]).then((project) => {
           this.downloadProject(project)
         })
         break;
-      case "upload":
+      case "/upload":
         this.projectUpload.nativeElement.click();
+        break;
+      case "/file":
+        const existing_article = this.project?.articles.get(event[1])
+        if (existing_article) {
+          this.toggleArticleActive(existing_article.name)
+        }
+        this.addArticle(event[1]);
+        break;
+      case "/api":
+        this.addApi(event[1]);
         break;
     }
   }
 
-  saveMessageAsArticle(msg: Msg) {
+  addApi(url: string) {
+    const a = new URL(url)
+    console.log(a)
+  }
+
+  handleMessageEvent(event: [string, Msg | undefined]) {
+    switch (event[0]) {
+      case 'save': this.saveMessageAsArticle(event[1]); break;
+      case 'added/removed': this.onTouchConversations();
+    }
+  }
+
+  saveMessageAsArticle(msg: Msg | undefined) {
+    if (!msg) {
+      return;
+    }
+
     const articleName = msg.content.slice(0, 15)
 
     if (this.activeVault?.files.has(articleName)) {
@@ -577,4 +627,162 @@ export class AppComponent implements OnInit {
     this.activeVault?.files.set(articleName, article)
     this.onTouchWorkspaces(true);
   }
+
+  deleteMessages(deleteSystem: boolean = false, conversationIndex: number) {
+    if (deleteSystem) {
+      this.conversations[conversationIndex].messages = [];
+    } else {
+      this.conversations[conversationIndex].messages = this.conversations[conversationIndex].messages.filter((msg) => msg.role === 'system')
+    }
+
+    this.onTouchConversations();
+  }
+
+
+
+  onTouchConversations() {
+    // Remove all empty conversations that aren't the last conversation
+    let removedConversation = true;
+    while (removedConversation) {
+      removedConversation = false;
+      const index = this.conversations.findIndex((conv) => conv.messages.length === 0)
+      if (index !== -1 && index !== this.conversations.length - 1) {
+        this.conversations.splice(index, 1)
+        removedConversation = true;
+      } else {
+        removedConversation = false;
+      }
+    }
+    // Add new empty conversation if the last conversation is no longer empty
+    if (this.conversations[this.conversations.length - 1].messages.length > 0) {
+      this.conversations.push(new Conversation())
+    }
+
+    localStorage.setItem('conversations', JSON.stringify(this.conversations));
+  }
+
+  onClickSend(event: MouseEvent) {
+    switch (event.button) {
+      case 0:
+        this.promptLlm();
+        break;
+      case 1:
+        this.toggleAutoprompting();
+        break;
+      case 2:
+        this.repeatPrompt();
+        break;
+    }
+  }
+
+  promptLlm() {
+    const message: Msg = { role: 'assistant', content: '', active: true }
+
+    let conversation_history_file = this.project?.articles.get("convo_history");
+    if (conversation_history_file === undefined) {
+      conversation_history_file = new Article("convo_history", [], "")
+      this.project?.articles.set("convo_history", conversation_history_file)
+    }
+
+    this.llmApiService.sendLLMPrompt(this.conversations[this.activeConversationIndex], this.llmApiService.llmConfigs[this.selectedLLMIndex]).then((o) => {
+      o?.subscribe((a) => {
+        for (const v of a) {
+          if (v && v.choices !== undefined) {
+            // If OPENAI chat style response
+            const newContent = v.choices[0]?.delta?.content;
+            const finishReason = v.choices[0]?.finish_reason;
+            if (newContent !== undefined) {
+              message.content += newContent;
+              conversation_history_file!.content += `${newContent}`;
+            }
+            if (finishReason) {
+              localStorage.setItem('conversations', JSON.stringify(this.conversations));
+              if (this.autopromptingEnabled) {
+                this.deactivateOldMessages(this.hideOlderThan);
+                this.promptLlm();
+              }
+            }
+          } else if (v && v.response !== undefined) {
+            // If OLLAMA generate style response
+            const newContent = v.response;
+            const done = v.done;
+            if (newContent !== undefined) {
+              message.content += newContent;
+              conversation_history_file!.content += `${newContent}`;
+            }
+            if (done) {
+              localStorage.setItem('conversations', JSON.stringify(this.conversations));
+              if (this.autopromptingEnabled) {
+                this.deactivateOldMessages(this.hideOlderThan);
+                this.promptLlm();
+              }
+            }
+          } else if (v && v.message !== undefined) {
+            // If OLLAMA chat style response 
+            const newContent = v.message.content;
+            const done = v.done;
+            if (newContent !== undefined) {
+              message.content += newContent;
+              conversation_history_file!.content += `${newContent}`;
+            }
+            if (done) {
+              localStorage.setItem('conversations', JSON.stringify(this.conversations));
+              if (this.autopromptingEnabled) {
+                this.deactivateOldMessages(this.hideOlderThan);
+                this.promptLlm();
+              }
+            }
+          }
+        }
+      })
+    });
+    this.conversations[this.activeConversationIndex].messages.push(message)
+    this.addMessageEmitter.emit(message)
+    this.onTouchConversations();
+  }
+
+  repeatPrompt() {
+    this.conversations[this.activeConversationIndex].messages.pop()
+    this.promptLlm();
+  }
+
+  deactivateOldMessages(allowed_age: number) {
+    this.conversations[this.activeConversationIndex].messages.forEach((msg, index, array) => {
+      if (!(msg.role === "system")) {
+        if (index >= array.length - allowed_age) {
+          msg.active = true;
+        } else {
+          msg.active = false;
+        }
+      }
+    })
+  }
+
+  loadSelectedLLMIndex() {
+    const index = Number(localStorage.getItem('llm_index')) ?? 0;
+    if (this.llmApiService.llmConfigs[index]) {
+      this.selectedLLMIndex = index;
+    }
+  }
+
+  saveSelectedLLMIndex() {
+    localStorage.setItem('llm_index', `${this.selectedLLMIndex}`)
+  }
+
+  toggleAutoprompting() {
+    this.autopromptingEnabled = !this.autopromptingEnabled;
+    if (this.autopromptingEnabled) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: `Once prompted, autoprompting continues sending prompts until turned off.`,
+      });
+    } else {
+      this.messageService.add({
+        severity: 'success',
+        summary: `Autoprompting off.`,
+      });
+    }
+
+  }
 }
+

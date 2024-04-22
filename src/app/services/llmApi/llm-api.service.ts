@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { LLMConfig } from './llm-config.model';
+import { LLMConfig } from '../../models/llm-config';
 import { Observable, map } from 'rxjs';
-import { Conversation } from '../../models/conversation.model';
-import { LlmRequestBody } from '../../models/llm/llmRequestBody.model';
+import { Conversation } from '../../models/conversation';
+import { OpenAIRequestBody } from '../../models/llm/openAiRequestBody';
 import { MessageService } from 'primeng/api';
+import { OllamaRequestBody } from 'src/app/models/llm/ollamaRequestBody';
 
 @Injectable({
   providedIn: 'root'
@@ -35,8 +36,30 @@ export class LlmApiService {
     localStorage.setItem("llmConfigs", JSON.stringify(this.llmConfigs));
   }
 
-  public async sendLLMPrompt(prompt: Conversation, llmConfig: LLMConfig): Promise<Observable<Record<string, any>[]> | undefined> {
-    const body: LlmRequestBody = { ...new LlmRequestBody(), ...llmConfig.body, temperature: prompt.temperature, max_tokens: prompt.max_tokens }
+  public async sendLLMPrompt(prompt: Conversation, llmConfig: LLMConfig): Promise<Observable<Record<string, any>[]> | void> {
+    const last_message = prompt.messages.pop();
+    switch (llmConfig.apiStyle) {
+      case 'ollama':
+        if(last_message) {
+          prompt.messages.push(last_message);
+        }
+        return this.sendOllamaStylePrompt(prompt, llmConfig);
+      case 'openai':
+      case 'mistral':
+        if(last_message) {
+          last_message.role = 'user';
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Last message changed to outgoing because of mistral api',
+          });
+          prompt.messages.push(last_message);
+        }
+        return this.sendOpenAiStylePrompt(prompt, llmConfig);
+    }
+  }
+
+  public async sendOpenAiStylePrompt(prompt: Conversation, llmConfig: LLMConfig): Promise<Observable<Record<string, any>[]> | undefined> {
+    const body: OpenAIRequestBody = { ...new OpenAIRequestBody(), ...llmConfig.body, temperature: prompt.temperature, max_tokens: prompt.max_tokens }
     for (const msg of prompt.messages) {
       if (msg.active) body.messages.push({ role: msg.role, content: msg.content });
     }
@@ -46,7 +69,45 @@ export class LlmApiService {
       body: JSON.stringify(body)
     });
 
-    if(!response.ok) {
+    if (!response.ok) {
+      this.messageService.add({ severity: 'error', summary: `Something went wrong trying to prompt the LLM. Code: ` + response.status })
+    }
+
+    const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader();
+
+    if (reader) {
+      return this.readableStreamToObservable(reader).pipe(map((a) => this.tolerantJsonParse(a)));
+    } else {
+      return;
+    }
+  }
+
+  public async sendOllamaStylePrompt(prompt: Conversation, llmConfig: LLMConfig) {
+    let system_text = "";
+    let prompt_text = "";
+    for (const msg of prompt.messages) {
+      if (msg.active) {
+        if (msg.role === "system") {
+          system_text = system_text + msg.content + "\n";
+        } else {
+          prompt_text = prompt_text + msg.content + "\n";
+        }
+      }
+    }
+    const body: OllamaRequestBody = {
+      ...new OllamaRequestBody(), ...llmConfig.body, system: system_text, prompt: prompt_text, options: {
+        top_p: prompt.top_p,
+        temperature: prompt.temperature,
+        num_predict: prompt.max_tokens,
+      }
+    }
+    const response = await fetch(llmConfig.url + this.httpParamsToStringSuffix(llmConfig.params), {
+      method: 'POST',
+      headers: { ...llmConfig.headers, "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+
+    if (!response.ok) {
       this.messageService.add({ severity: 'error', summary: `Something went wrong trying to prompt the LLM. Code: ` + response.status })
     }
 

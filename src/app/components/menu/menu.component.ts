@@ -1,19 +1,37 @@
-import { Component } from '@angular/core';
-import { LlmApiService } from '../../services/llmApi/llm-api.service';
-import { LLMConfig } from 'src/app/services/llmApi/llm-config.model';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Project } from '../../models/project';
+import { MenuEvent } from 'src/app/models/projectEvent';
+import { LlmApiService } from 'src/app/services/llmApi/llm-api.service';
+import { LLMConfig } from 'src/app/models/llm-config';
 
 @Component({
-  selector: 'app-llm-settings',
-  templateUrl: './llm-settings.component.html',
-  styleUrls: ['./llm-settings.component.scss']
+  selector: 'app-menu',
+  templateUrl: './menu.component.html',
+  styleUrl: './menu.component.scss'
 })
-export class LlmSettingsComponent {
+export class MenuComponent {
+  @Input() allProjectsPromise!: Promise<{ title: string; lastModified: Date }[]>;
+  @Input() activeProject!: string;
+  @Output() menuEventEmitter: EventEmitter<MenuEvent> = new EventEmitter();
+
   JSON = JSON;
   llms: any[];
   selectedLLM: any;
 
   editConfig?: string;
   editConfigIndex?: number;
+
+  newProjectMenuItems = [
+    { label: 'Import archive', icon: 'iconoir iconoir-archive', command: () => this.menuEventEmitter.emit(["/upload", '']) }
+  ]
+
+  lastRightClickedProject?: string;
+  existingProjectMenuItems = [
+    { label: 'Export archive', icon: 'iconoir iconoir-download-square', command: () => this.menuEventEmitter.emit(["/download", this.lastRightClickedProject ?? '']) },
+    { label: 'Delete', icon: 'iconoir iconoir-bin-half', command: () => this.menuEventEmitter.emit(["/delete", this.lastRightClickedProject ?? '']) }
+  ]
+
+  foobs = [1, 2, 3];
 
   constructor(public llmApiService: LlmApiService) {
     this.llms = [
@@ -40,8 +58,8 @@ export class LlmSettingsComponent {
             code: ["https://api.openai.com/v1/chat/completions", 'gpt-4', 'openai'],
           },
           {
-            mname: 'GPT-4 Turbo Preview',
-            code: ["https://api.openai.com/v1/chat/completions", 'gpt-4-turbo-preview', 'openai'],
+            mname: 'GPT-4 Turbo',
+            code: ["https://api.openai.com/v1/chat/completions", 'gpt-4-turbo', 'openai'],
           },
         ]
       },
@@ -59,7 +77,11 @@ export class LlmSettingsComponent {
           },
           {
             mname: 'Mistral Medium',
-            code: ["https://api.mistral.ai/v1/chat/completions", 'mistral-medium', 'mistral'],
+            code: ["https://api.mistral.ai/v1/chat/completions", 'mistral-medium-latest', 'mistral'],
+          },
+          {
+            mname: 'Mistral Large',
+            code: ["https://api.mistral.ai/v1/chat/completions", 'mistral-large-latest', 'mistral'],
           },
         ]
       }
@@ -74,5 +96,9 @@ export class LlmSettingsComponent {
         this.llmApiService.saveLLMConfigs();
       } catch { }
     }
+  }
+
+  onEnterVault(vault_title: string) {
+    this.menuEventEmitter.emit(['/folder', vault_title])
   }
 }

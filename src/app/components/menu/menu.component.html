@@ -1,0 +1,80 @@
+<p-dialog header="Edit LLM Configuration" [visible]="editConfig !== undefined && editConfigIndex !== undefined"
+  [style]="{width: '40vw'}" (onHide)="editConfig = undefined">
+  <ng-template pTemplate="closeicon"></ng-template>
+  <div class="flex flex-column">
+    <textarea pInputTextarea style="width: 100%; height: 40vh;" [(ngModel)]="editConfig"></textarea>
+    <div class="flex flex-row justify-content-between" style="margin-top: 2px;">
+      <button pButton pRipple label="Delete" class="p-button-danger" style="margin-right: 2px"
+        (click)="llmApiService.removeLLMConfig(editConfigIndex); closeButton.click()"></button>
+      <div>
+        <button pButton pRipple label="Save" class="p-button-primary" style="margin-right: 2px"
+          (click)="saveLLMConfigJSON(editConfig ?? '', editConfigIndex ?? -1); closeButton.click()"></button>
+        <button #closeButton pButton pRipple label="Cancel" class="p-button-secondary"
+          (click)="editConfig = undefined; editConfigIndex = undefined"></button>
+      </div>
+    </div>
+  </div>
+</p-dialog>
+
+<div class="flex flex-column menu-list">
+  <div class="menu-item-container">
+    <div class="menu-item transparent-bottom-border">
+      <input placeholder="Find commands" class="menu-item-input fade-in-on-hover-child">
+      <div class="iconoir iconoir-settings menu-item-icon hover-highlighting right-6px"></div>
+    </div>
+  </div>
+  <div>
+    <div class="menu-item-container fade-on-hover-parent">
+      <div class="menu-item transparent-top-border">
+        <div class="menu-item-text fade-out-on-hover-child">
+          <b>/api</b><i> url</i>
+        </div>
+        <input #apiUrlInput placeholder="Enter an api url" class="menu-item-input width-158px fade-in-on-hover-child">
+        <div class="iconoir iconoir-server menu-item-icon right-6px hover-highlighting" (click)="menuEventEmitter.emit(['/api',apiUrlInput.value])"></div>
+      </div>
+    </div>
+    <div class="menu-item-container margin-top-10px fade-on-hover-parent">
+      <div class="menu-item transparent-top-border">
+        <div class="menu-item-text fade-out-on-hover-child">
+          <b>/folder</b><i> name</i>
+        </div>
+        <input #vaultNameInput placeholder="Enter a name" class="menu-item-input width-158px fade-in-on-hover-child">
+        <div class="iconoir iconoir-folder-plus menu-item-icon hover-highlighting right-6px"
+          (click)="onEnterVault(vaultNameInput.value)"></div>
+      </div>
+    </div>
+    <div class="menu-item-container fade-on-hover-parent" *ngFor="let project of allProjectsPromise | async">
+      <div class="menu-item transparent-top-border hover-highlighting"
+        (click)="onEnterVault(project.title)"
+        (contextmenu)="projectContextMenu.toggle($event); $event.preventDefault()" [ngClass]="{'highlighted':project.title === activeProject}">
+        <div class="menu-item-text">
+          <span class="tiny-faint-text">/folder </span>{{project.title}}
+        </div>
+        <div class="iconoir iconoir-folder menu-item-icon right-6px" [ngClass]="{
+          'iconoir-folder': project.title !== activeProject,
+          'iconoir-floppy-disk': project.title === activeProject,
+        }"></div>
+        <p-contextMenu #projectContextMenu [model]="existingProjectMenuItems" [triggerEvent]="'click'"
+          appendTo="body"></p-contextMenu>
+      </div>
+    </div>
+    <div class="menu-item-container fade-on-hover-parent">
+      <div class="menu-item transparent-top-border">
+        <div class="menu-item-text fade-out-on-hover-child">
+          <b>/file</b><i> name</i>
+        </div>
+        <input #filenameInput placeholder="Enter a filename" class="menu-item-input width-158px fade-in-on-hover-child">
+        <div class="iconoir iconoir-page-plus menu-item-icon hover-highlighting right-6px" (click)="menuEventEmitter.emit(['/file', filenameInput.value])"></div>
+      </div>
+    </div>
+    <div class="menu-item-container fade-on-hover-parent">
+      <div class="menu-item transparent-top-border">
+        <div class="menu-item-text fade-out-on-hover-child">
+          <b>/help</b>
+        </div>
+        <input placeholder="Ask any question" class="menu-item-input width-158px fade-in-on-hover-child">
+        <div class="iconoir iconoir-help-circle menu-item-icon hover-highlighting right-6px"></div>
+      </div>
+    </div>
+  </div>
+</div>

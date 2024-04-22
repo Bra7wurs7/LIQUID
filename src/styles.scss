@@ -7,7 +7,6 @@ html {
 body {
   height: 100%;
   margin: 0;
-
 }
 
 :root {
@@ -21,27 +20,14 @@ app-root {
   height: 100%;
 }
 
-p-inputSwitch {
-  height: 28px;
-}
-
-//Hiding the default toggler for panels, so it doesn't block the far right side of the panel header
+//@PrimeNG file panel default toggler is disabled
 .panel-hide-default-toggler {
   .p-panel-toggler {
     display: none;
   }
 }
 
-.pi {
-  line-height: unset !important;
-}
-
-.p-panel-expanded {
-  .p-panel-header {
-    border-bottom: 0;
-  }
-}
-
+//@PrimeNG file panel is displayed differently
 .p-panel-header {
   border-radius: 0px;
   padding-left: 0px;
@@ -50,6 +36,14 @@ p-inputSwitch {
   border-right: 0;
 }
 
+//@PrimeNG file panel header shows no border when panel is expanded
+.p-panel-expanded {
+  .p-panel-header {
+    border-bottom: 0;
+  }
+}
+
+//@PrimeNG file panel content reduced padding and simplified style
 .p-panel-content {
   border-radius: 0px;
   padding: 5px;
@@ -64,8 +58,6 @@ p-inputSwitch {
 }
 
 .activePanel {
-  font-weight: bold;
-
   .p-panel-header {
     background-color: var(--surface-b);
   }
@@ -95,13 +87,15 @@ p-inputSwitch {
   }
 }
 
+//@PrimeNg
 .p-tooltip .p-tooltip-text {
-  padding: 4px 6px 4px 6px;
-  border-radius: 15px;
-  box-shadow: none;
+  padding: 2px;
+  border-radius: 10px;
+  //box-shadow: none;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
+//@PrimeNg
 .p-inputtext:enabled:focus {
   outline: 0 none;
   outline-offset: 0;
@@ -114,89 +108,6 @@ p-inputSwitch {
 
 .pseudo {
   padding: 1.5px;
-}
-
-.bigpseudo {
-  padding: 2px;
-}
-
-.vmarg {
-  margin-top: 2px;
-  margin-bottom: 2px;
-}
-
-.box {
-  padding: 8px;
-  width: max-content;
-  border-radius: 20px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  background-color: var(--surface-a);
-  width: 400px;
-  overflow: hidden;
-
-  &:not(:last-child) {
-    margin-right: 2px;
-  }
-
-  .p-cascadeselect-panel {
-    padding: 0px;
-    border-radius: 0;
-  }
-
-  .p-cascadeselect-panel .p-cascadeselect-item-content {
-    padding: 8px 8px 8px 8px;
-  }
-
-  .p-cascadeselect {
-    margin-right: 2px;
-  }
-}
-
-.iconButton {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-
-  padding: 4px;
-  transition: border 0.2s, background-color 0.05s;
-  height: auto;
-  border: 1px solid var(--surface-border);
-  color: var(--text-color-secondary);
-  border-radius: 3px;
-
-  &.active {
-    border-bottom: 1px solid var(--primary-color);
-  }
-
-  &:active {
-    transition: background-color 0s;
-    background-color: var(--surface-border);
-  }
-
-  &:hover {
-    cursor: pointer;
-    color: var(--text-color);
-    border-color: var(--text-color-secondary);
-  }
-}
-
-.textBox {
-  transition: border 0.2s;
-  border: 1px solid var(--surface-border);
-  padding: 8px;
-  min-width: max-content;
-  width: 100%;
-  margin-right: 2px;
-  white-space: nowrap;
-  border-radius: 3px;
-  font-family: 'Courier New', Courier, monospace;
-  letter-spacing: -2px;
-
-  &.active {
-    border-bottom: 1px solid var(--primary-color);
-  }
 }
 
 .tutorial-text {
@@ -221,9 +132,17 @@ p-inputSwitch {
 }
 
 .tooltip-background {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   background-color: var(--surface-a);
   border-radius: 10px;
   padding: 3px 7px 3px 7px;
+
+  &:not(:first-of-type) {
+    margin-top: 2px;
+  }
 
   &.clickable {
     &:hover {
@@ -231,20 +150,31 @@ p-inputSwitch {
       cursor: pointer;
     }
   }
+
+  &.highlighted {
+    background-color: var(--text-color-secondary);
+    color: var(--surface-a);
+  }
 }
 
 .settings-tooltip-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   background-color: var(--surface-a);
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  padding: 3px 7px 3px 7px;
-  margin: 0 1px 0 1px;
+  padding: 2px 7px 3px 7px;
+
+  &:not(:first-of-type) {
+    margin-top: 2px;
+  }
 }
 
 .settings-tooltip-selector {
   background-color: var(--surface-a);
   padding: 3px 7px 3px 7px;
-  margin: 1px 1px 0 1px;
   color: var(--text-color-secondary);
   user-select: none;
 
@@ -255,6 +185,22 @@ p-inputSwitch {
   &.active {
     background-color: var(--surface-b);
     color: var(--text-color);
+  }
+
+  &:last-of-type {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+}
+
+.settings-tooltip-input {
+  border-color: var(--surface-b);
+  border-radius: 0;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+
+  &:hover {
+    border-color: var(--primary-color);
   }
 }
 
@@ -271,10 +217,180 @@ p-inputSwitch {
 }
 
 .iconoir {
-  font-size: larger;
+  font-size: 23px;
 }
 
-.maximize {
-  width: 100%;
+.faint {
+  color: var(--surface-border);
+}
+
+.fade-on-hover-parent {
+
+  &:hover {
+    .fade-out-on-hover-child {
+      opacity: 0;
+    }
+
+    .fade-in-on-hover-child {
+      opacity: 1;
+    }
+  }
+
+
+  .fade-out-on-hover-child {
+    z-index: 1;
+    transition: opacity 0.5s;
+  }
+
+  .fade-in-on-hover-child {
+    z-index: 2;
+    transition: opacity 0.1s;
+    opacity: 0;
+  }
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 200px;
   height: 100%;
+
+  .menu-item-container {
+    position: relative;
+    width: 200px;
+    height: 33px;
+    color: var(--text-color-secondary);
+
+    &.margin-top-2 {
+      margin-top: 2px;
+    }
+
+    &.margin-top-10px {
+      margin-top: 10px;
+    }
+
+    .hover-highlighting {
+      &:hover {
+        cursor: pointer;
+        color: var(--text-color);
+      }
+    }
+
+    .menu-item {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      transition: width 0.1s;
+      background-color: var(--surface-b);
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 200px;
+      height: 33px;
+      border: 1px solid var(--surface-border);
+      border-right: 0;
+
+      &.highlighted {
+        background-color: var(--surface-a);
+      }
+
+      &.grow-on-hover {
+        &:hover {
+          width: 300px;
+          z-index: 2;
+
+          .menu-item-text {
+            width: 258px;
+          }
+        }
+      }
+
+      &.transparent-top-border {
+        border-top-color: transparent;
+      }
+      &.transparent-bottom-border {
+        border-bottom-color: transparent;
+      }
+
+      &.active {
+        border-color: var(--primary-color);
+
+        .menu-item-text {
+          color: var(--text-color);
+        }
+
+        .author-icon {
+          color: var(--text-color);
+        }
+      }
+
+      &.inactive {
+        &:not(.active) {
+          border-color: var(--gray-800);
+        }
+
+        &:hover {
+          color: var(--text-color-secondary);
+        }
+
+        &:focus {
+          color: var(--text-color-secondary);
+        }
+
+        .author-icon {
+          color: var(--gray-800);
+        }
+
+        .menu-item-text {
+          color: var(--gray-800);
+        }
+      }
+
+      .menu-item-icon {
+        position: absolute;
+
+        &.right-6px {
+          right: 6px;
+        }
+
+        &.right-29px {
+          right: 29px;
+        }
+      }
+
+      .menu-item-input {
+        height: 25px;
+        margin-left: 4px;
+        background-color: transparent;
+        border: 0;
+        font-family: 'Courier New', Courier, monospace;
+        letter-spacing: -1px;
+
+        &.width-138px {
+          width: 138px;
+        }
+        &.width-158px {
+          width: 158px;
+        }
+      }
+
+      .menu-item-text {
+        transition: width 0.1s;
+        position: absolute;
+        left: 4px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        user-select: none;
+        width: 158px;
+        .tiny-faint-text {
+          color: var(--surface-border);
+          font-size: x-small;
+          font-style: italic;
+        }
+      }
+    }
+  }
 }

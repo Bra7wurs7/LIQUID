@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { Article } from 'src/app/models/article.model';
+import { Article } from 'src/app/models/article';
 
 @Component({
   selector: 'app-note-panel',

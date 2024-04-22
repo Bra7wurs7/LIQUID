@@ -1,8 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Workspace } from '../../models/workspace.model';
-import { FileHierarchNode } from '../../models/articleHierarchyNode.model';
-import { Article } from '../../models/article.model';
-import { HighlightEventsEnum } from '../../enums/highlightEvents.enum';
+import { Workspace } from '../../models/workspace';
+import { FileHierarchNode } from '../../models/articleHierarchyNode';
 import { Vault } from '../../models/vault.model';
 import { ArticleActionEnum } from '../../enums/articleActionEnum';
 

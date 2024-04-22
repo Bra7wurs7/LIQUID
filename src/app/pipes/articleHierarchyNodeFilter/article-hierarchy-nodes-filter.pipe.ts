@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { FileHierarchNode } from 'src/app/models/articleHierarchyNode.model';
+import { FileHierarchNode } from 'src/app/models/articleHierarchyNode';
+
 
 @Pipe({
   name: 'articleHierarchyNodesFilter',
