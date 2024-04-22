@@ -89,9 +89,9 @@ app-root {
 
 //@PrimeNg
 .p-tooltip .p-tooltip-text {
-  padding: 4px 6px 4px 6px;
-  border-radius: 15px;
-  box-shadow: none;
+  padding: 2px;
+  border-radius: 10px;
+  //box-shadow: none;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
@@ -239,7 +239,7 @@ app-root {
 
   .fade-out-on-hover-child {
     z-index: 1;
-    transition: opacity 0.1s;
+    transition: opacity 0.5s;
   }
 
   .fade-in-on-hover-child {
@@ -260,10 +260,21 @@ app-root {
     position: relative;
     width: 200px;
     height: 33px;
-    margin-top: 2px;
+    color: var(--text-color-secondary);
 
-    &.margin-top-0 {
-      margin-top: 0;
+    &.margin-top-2 {
+      margin-top: 2px;
+    }
+
+    &.margin-top-10px {
+      margin-top: 10px;
+    }
+
+    .hover-highlighting {
+      &:hover {
+        cursor: pointer;
+        color: var(--text-color);
+      }
     }
 
     .menu-item {
@@ -280,6 +291,10 @@ app-root {
       height: 33px;
       border: 1px solid var(--surface-border);
       border-right: 0;
+
+      &.highlighted {
+        background-color: var(--surface-a);
+      }
 
       &.grow-on-hover {
         &:hover {
@@ -334,15 +349,7 @@ app-root {
       }
 
       .menu-item-icon {
-        color: var(--text-color-secondary);
         position: absolute;
-
-        &.hover-highlighting {
-          &:hover {
-            cursor: pointer;
-            color: var(--text-color);
-          }
-        }
 
         &.right-6px {
           right: 6px;
@@ -377,8 +384,12 @@ app-root {
         white-space: nowrap;
         overflow: hidden;
         user-select: none;
-        color: var(--text-color-secondary);
         width: 158px;
+        .tiny-faint-text {
+          color: var(--surface-border);
+          font-size: x-small;
+          font-style: italic;
+        }
       }
     }
   }

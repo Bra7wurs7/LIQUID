@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as FileSaver from 'file-saver';
 import { MessageService } from 'primeng/api';
-import { SerializableProject } from 'src/app/models/project.model';
+import { SerializableProject } from 'src/app/models/project';
 
 @Injectable({
   providedIn: 'root'

@@ -13,14 +13,14 @@
     </div>
     <div class="menu-list"
         (wheel)="activeMessage = scrollIncrementDecrement(false, $event, activeMessage, 1, conversation.messages.length-1)">
-        <div class="menu-item-container margin-top-0">
+        <div class="menu-item-container">
             <div class="menu-item transparent-bottom-border">
                 <input class="menu-item-input fade-in-on-hover-child width-158px">
                 <div class="iconoir iconoir-settings menu-item-icon hover-highlighting right-6px"></div>
             </div>
         </div>
         <div>
-            <div class="menu-item-container" [pTooltip]="addMessageTooltip"
+            <div class="menu-item-container margin-top-2" [pTooltip]="addMessageTooltip"
                 (click)="addEmptyMessage(conversation.messages, true)"
                 (contextmenu)="addEmptyMessage(conversation.messages, false); $event.preventDefault()">
                 <div class="menu-item transparent-top-border">

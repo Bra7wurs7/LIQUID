@@ -5,21 +5,21 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Article } from './models/article.model';
+import { Article } from './models/article';
 import {
   Project,
   SerializableProject,
-} from './models/project.model';
+} from './models/project';
 import { LocalDriveService } from './services/localDrive/local-drive.service';
 import { IndexedDbService } from './services/indexedDb/indexed-db.service';
-import { Workspace } from './models/workspace.model';
+import { Workspace } from './models/workspace';
 import { lastValueFrom, of, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { ArticleHierarchyNode } from './models/articleHierarchyNode.model';
+import { ArticleHierarchyNode } from './models/articleHierarchyNode';
 import { ArticleActionEnum } from './enums/articleActionEnum';
 import { LlmApiService } from './services/llmApi/llm-api.service';
-import { Conversation, Msg } from './models/conversation.model';
-import { ProjectEvent } from './models/projectEvent.model';
+import { Conversation, Msg } from './models/conversation';
+import { MenuEvent } from './models/projectEvent';
 import { scrollIncrementDecrement } from './util/functions'
 import { ConversationViewerComponent } from './components/conversation-viewer/conversation-viewer.component';
 import { EventEmitter } from '@angular/core';
@@ -48,6 +48,7 @@ export class AppComponent implements OnInit {
   dropdownPanelActiveTab: 'chat' | 'llm' | 'files' | 'git' | '' | 'menu' | 'alerts' = '';
   activeAssistant?: number;
   consoleInputFocused: boolean = false;
+  hideOlderThan: number = 2;
 
   conversations: Conversation[] = this.loadConversations();
   activeConversationIndex: number = 0;
@@ -390,7 +391,8 @@ export class AppComponent implements OnInit {
   async getProjectFromDB(title: string): Promise<Project | undefined> {
     const project = await this.indexedDbService.loadProject(title);
     if (project) {
-      return SerializableProject.deserialize(project.projectJSON).toProject()
+      const dserializedProject = SerializableProject.deserialize(project.projectJSON).toProject()
+      return dserializedProject;
     } else {
       return undefined;
     }
@@ -555,31 +557,51 @@ export class AppComponent implements OnInit {
     }
   }
 
-  handleProjectEvent(event: ProjectEvent) {
+  async handleMenuEvent(event: MenuEvent) {
+    const allProjects = await this.allProjectsPromise;
     switch (event[0]) {
-      case "load":
-        this.getProjectFromDB(event[1]).then((project) => {
-          this.loadProject(project)
-        })
+      case "/folder":
+        if (allProjects.findIndex((prj) => prj.title === event[1]) !== -1) {
+          if (this.project?.title === event[1]) {
+            this.saveToDB(this.project?.title)
+          } else {
+            this.getProjectFromDB(event[1]).then((project) => {
+              if (project) {
+                this.loadProject(project);
+              }
+            });
+          }
+        } else {
+          this.saveToDB(event[1])
+        }
         break;
-      case "delete":
+      case "/delete":
         this.deleteFromDB(event[1])
         break;
-      case "saveas":
-        this.saveToDB(event[1])
-        break;
-      case "new":
-        this.newProject(event[1])
-        break;
-      case "download":
+      case "/download":
         this.getProjectFromDB(event[1]).then((project) => {
           this.downloadProject(project)
         })
         break;
-      case "upload":
+      case "/upload":
         this.projectUpload.nativeElement.click();
         break;
+      case "/file":
+        const existing_article = this.project?.articles.get(event[1])
+        if (existing_article) {
+          this.toggleArticleActive(existing_article.name)
+        }
+        this.addArticle(event[1]);
+        break;
+      case "/api":
+        this.addApi(event[1]);
+        break;
     }
+  }
+
+  addApi(url: string) {
+    const a = new URL(url)
+    console.log(a)
   }
 
   handleMessageEvent(event: [string, Msg | undefined]) {
@@ -640,12 +662,12 @@ export class AppComponent implements OnInit {
   }
 
   onClickSend(event: MouseEvent) {
-    switch(event.button) {
+    switch (event.button) {
       case 0:
         this.promptLlm();
         break;
       case 1:
-        this.autopromptingEnabled = !this.autopromptingEnabled;
+        this.toggleAutoprompting();
         break;
       case 2:
         this.repeatPrompt();
@@ -675,8 +697,8 @@ export class AppComponent implements OnInit {
             }
             if (finishReason) {
               localStorage.setItem('conversations', JSON.stringify(this.conversations));
-              if(this.autopromptingEnabled) {
-                this.deactivateOldMessages(2);
+              if (this.autopromptingEnabled) {
+                this.deactivateOldMessages(this.hideOlderThan);
                 this.promptLlm();
               }
             }
@@ -690,8 +712,8 @@ export class AppComponent implements OnInit {
             }
             if (done) {
               localStorage.setItem('conversations', JSON.stringify(this.conversations));
-              if(this.autopromptingEnabled) {
-                this.deactivateOldMessages(2);
+              if (this.autopromptingEnabled) {
+                this.deactivateOldMessages(this.hideOlderThan);
                 this.promptLlm();
               }
             }
@@ -705,8 +727,8 @@ export class AppComponent implements OnInit {
             }
             if (done) {
               localStorage.setItem('conversations', JSON.stringify(this.conversations));
-              if(this.autopromptingEnabled) {
-                this.deactivateOldMessages(2);
+              if (this.autopromptingEnabled) {
+                this.deactivateOldMessages(this.hideOlderThan);
                 this.promptLlm();
               }
             }
@@ -724,10 +746,10 @@ export class AppComponent implements OnInit {
     this.promptLlm();
   }
 
-  deactivateOldMessages(allowed_age: number){
+  deactivateOldMessages(allowed_age: number) {
     this.conversations[this.activeConversationIndex].messages.forEach((msg, index, array) => {
-      if(!(msg.role==="system")) {
-        if(index >= array.length-allowed_age) {
+      if (!(msg.role === "system")) {
+        if (index >= array.length - allowed_age) {
           msg.active = true;
         } else {
           msg.active = false;
@@ -748,11 +770,19 @@ export class AppComponent implements OnInit {
   }
 
   toggleAutoprompting() {
-    this.autopromptingEnabled === !this.autopromptingEnabled;
-    this.messageService.add({
-      severity: 'success',
-      summary: `"${this.project?.title}" Saved`,
-    });
+    this.autopromptingEnabled = !this.autopromptingEnabled;
+    if (this.autopromptingEnabled) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: `Once prompted, autoprompting continues sending prompts until turned off.`,
+      });
+    } else {
+      this.messageService.add({
+        severity: 'success',
+        summary: `Autoprompting off.`,
+      });
+    }
+
   }
 }
 

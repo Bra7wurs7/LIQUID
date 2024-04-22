@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Article } from 'src/app/models/article.model';
-import { ArticleHierarchyNode } from 'src/app/models/articleHierarchyNode.model';
+import { Article } from 'src/app/models/article';
+import { ArticleHierarchyNode } from 'src/app/models/articleHierarchyNode';
 
 @Pipe({
   name: 'articleHierarchyMapGet'

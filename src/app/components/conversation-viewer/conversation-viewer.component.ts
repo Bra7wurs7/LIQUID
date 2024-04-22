@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Conversation, Msg } from '../../models/conversation.model';
+import { Conversation, Msg } from '../../models/conversation';
 import { scrollIncrementDecrement } from '../../util/functions'
 import { LlmApiService } from '../../services/llmApi/llm-api.service';
 

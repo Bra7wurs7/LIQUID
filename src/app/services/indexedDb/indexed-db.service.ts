@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { openDB, deleteDB, wrap, unwrap, IDBPDatabase } from 'idb';
-import { SerializableProject } from 'src/app/models/project.model';
+import { SerializableProject } from 'src/app/models/project';
 import { DBProject } from './DBProject';
 
 @Injectable({

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { LLMConfig } from './llm-config.model';
+import { LLMConfig } from '../../models/llm-config';
 import { Observable, map } from 'rxjs';
-import { Conversation } from '../../models/conversation.model';
+import { Conversation } from '../../models/conversation';
 import { OpenAIRequestBody } from '../../models/llm/openAiRequestBody';
 import { MessageService } from 'primeng/api';
 import { OllamaRequestBody } from 'src/app/models/llm/ollamaRequestBody';
@@ -36,7 +36,7 @@ export class LlmApiService {
     localStorage.setItem("llmConfigs", JSON.stringify(this.llmConfigs));
   }
 
-  public async sendLLMPrompt(prompt: Conversation, llmConfig: LLMConfig): Promise<Observable<Record<string, any>[]> | undefined> {
+  public async sendLLMPrompt(prompt: Conversation, llmConfig: LLMConfig): Promise<Observable<Record<string, any>[]> | void> {
     const last_message = prompt.messages.pop();
     switch (llmConfig.apiStyle) {
       case 'ollama':

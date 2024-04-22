@@ -1,5 +1,5 @@
 import { serializable } from "../helper/serialize.helper";
-import { Article } from "./article.model";
+import { Article } from "./article";
 
 @serializable
 export class Workspace {

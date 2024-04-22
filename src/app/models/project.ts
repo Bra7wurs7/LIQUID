@@ -1,5 +1,5 @@
-import { Article } from "./article.model";
-import { Workspace } from "./workspace.model";
+import { Article } from "./article";
+import { Workspace } from "./workspace";
 import { reviver, serializable } from "../helper/serialize.helper";
 
 export class Project {

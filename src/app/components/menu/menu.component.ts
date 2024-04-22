@@ -1,18 +1,18 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Project } from '../../models/project.model';
-import { ProjectEvent } from 'src/app/models/projectEvent.model';
-import { LLMConfig } from 'src/app/services/llmApi/llm-config.model';
+import { Project } from '../../models/project';
+import { MenuEvent } from 'src/app/models/projectEvent';
 import { LlmApiService } from 'src/app/services/llmApi/llm-api.service';
+import { LLMConfig } from 'src/app/models/llm-config';
 
 @Component({
-  selector: 'app-idb-settings',
+  selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss'
 })
 export class MenuComponent {
-  @Input() allProjects!: null | { title: string; lastModified: Date }[];
+  @Input() allProjectsPromise!: Promise<{ title: string; lastModified: Date }[]>;
   @Input() activeProject!: string;
-  @Output() projectEventEmitter: EventEmitter<ProjectEvent> = new EventEmitter();
+  @Output() menuEventEmitter: EventEmitter<MenuEvent> = new EventEmitter();
 
   JSON = JSON;
   llms: any[];
@@ -22,16 +22,16 @@ export class MenuComponent {
   editConfigIndex?: number;
 
   newProjectMenuItems = [
-    { label: 'Import archive', icon: 'iconoir iconoir-archive', command: () => this.projectEventEmitter.emit(["upload", '']) }
+    { label: 'Import archive', icon: 'iconoir iconoir-archive', command: () => this.menuEventEmitter.emit(["/upload", '']) }
   ]
 
-  lastClickedProject?: string;
+  lastRightClickedProject?: string;
   existingProjectMenuItems = [
-    { label: 'Export archive', icon: 'iconoir iconoir-download-square', command: () => this.projectEventEmitter.emit(["download", this.lastClickedProject ?? '']) },
-    { label: 'Delete', icon: 'iconoir iconoir-bin-half', command: () => this.projectEventEmitter.emit(["delete", this.lastClickedProject ?? '']) }
+    { label: 'Export archive', icon: 'iconoir iconoir-download-square', command: () => this.menuEventEmitter.emit(["/download", this.lastRightClickedProject ?? '']) },
+    { label: 'Delete', icon: 'iconoir iconoir-bin-half', command: () => this.menuEventEmitter.emit(["/delete", this.lastRightClickedProject ?? '']) }
   ]
 
-  foobs = [1,2,3];
+  foobs = [1, 2, 3];
 
   constructor(public llmApiService: LlmApiService) {
     this.llms = [
@@ -96,5 +96,9 @@ export class MenuComponent {
         this.llmApiService.saveLLMConfigs();
       } catch { }
     }
+  }
+
+  onEnterVault(vault_title: string) {
+    this.menuEventEmitter.emit(['/folder', vault_title])
   }
 }

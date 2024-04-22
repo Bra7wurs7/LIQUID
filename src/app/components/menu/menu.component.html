@@ -16,107 +16,10 @@
   </div>
 </p-dialog>
 
-<!-- LLM Settings -->
-<div class="flex flex-column h-full">
-  <div class="flex flex-row justify-content-between align-items-stretch">
-    <p-cascadeSelect pTooltip="Select an LLM Api Provider" tooltipPosition="left" [(ngModel)]="selectedLLM"
-      [options]="llms" optionLabel="mname" optionGroupLabel="name" [optionGroupChildren]="['models']"
-      placeholder="Select LLM Provider"></p-cascadeSelect>
-    <!-- @TODO Suggest Api Keys based on existing configurations -->
-    <input #ApiKey type="password" class="settingsTextInput" placeholder="Api Key" pInputText
-      pTooltip="Enter the authorization key for the API endpoint" tooltipPosition="bottom" />
-    <div class="iconButton flex flex-column justify-content-center" pTooltip="Add Api Endpoint" tooltipPosition="bottom"
-      (click)="llmApiService.addLLMConfig(selectedLLM.code, ApiKey.value)">
-      <i class="iconoir iconoir-plus"></i>
-    </div>
-  </div>
-  <div class="pseudoBorder vmarg"></div>
-  <div class="flex flex-row justify-content-between align-items-stretch" style="margin-bottom: 2px;"
-    *ngFor="let llmConfig of llmApiService.llmConfigs, index as i">
-    <input type="text" class="settingsTextInput" placeholder="Config Name" tooltipPosition="bottom"
-      [(ngModel)]="llmConfig.name" (change)="llmApiService.saveLLMConfigs()" pInputText />
-    <div class="flex flex-row textBox justify-content-between" [pTooltip]="llmConfig.url || 'Api endpoint URL'"
-      tooltipPosition="bottom">
-      <div>{{ llmConfig.url | urlDomain }}</div>
-    </div>
-    <div class="iconButton flex flex-column justify-content-center" pTooltip="Configure Api Endpoint"
-      tooltipPosition="bottom" (click)="editConfig = JSON.stringify(llmConfig, null ,2); editConfigIndex = i">
-      <i class="iconoir iconoir-settings"></i>
-    </div>
-  </div>
-  <div class="flex flex-column h-full justify-content-center align-items-center">
-    <div class="tutorial-text" *ngIf="llmApiService.llmConfigs.length === 0">
-      <p>To use generative AI in LIQUID, you need API access to a Large Language Model like GPT-3.5</p>
-      <p>Click <a href="https://console.mistral.ai" target="_blank" rel="noopener noreferrer">here</a> to get API access
-        from MistralAI, or <a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">here</a> for
-        OpenAI</p>
-      <p>Select your LLM provider, enter your API key and click + to allow LIQUID to use that LLM</p>
-    </div>
-  </div>
-</div>
-
-<div class="flex flex-column h-full">
-  <div class="flex flex-row">
-    <input #projectName type="text" class="projectTitleInput" placeholder="New Project Name" pInputText
-      tooltipPosition="bottom" pTooltip="Enter a name for the new project" />
-    <div class="iconButton" style="margin-right: 2px" (click)="projectEventEmitter.emit(['new', projectName.value])"
-      tooltipPosition="bottom"
-      [pTooltip]="projectName.value ? 'Create Project \n\'' + projectName.value + '\'' : 'Create New\nProject'">
-      <i class="iconoir iconoir-plus"></i>
-    </div>
-    <div class="iconButton" [pTooltip]="'More Options'" (click)="newProjectMenu.show($event)">
-      <i class="iconoir iconoir-more-vert"></i>
-      <p-contextMenu #newProjectMenu appendTo="body" [model]="newProjectMenuItems"></p-contextMenu>
-    </div>
-  </div>
-  <div class="pseudoBorder vmarg"></div>
-  <div class="flex flex-row" style="margin-bottom: 2px;" *ngFor="let p of allProjects ?? []">
-    <input #projectName type="text" class="settingsTextInput" placeholder="Project Name" pInputText
-      pTooltip="You may change the name of the project" tooltipPosition="bottom" [(ngModel)]="p.title" [ngClass]="{
-        'active': p.title === activeProject,
-      }" />
-    <div [ngClass]="{
-      'active': p.title === activeProject,
-    }" class="flex flex-row textBox justify-content-between"
-      [pTooltip]="'Project was last saved\n' + ((p.lastModified | date:'dd.MMM.yy, hh:mm a') ?? 'some point in time')"
-      tooltipPosition="bottom">
-      <div>{{ p.lastModified | date:'dd.MMM.yy, hh:mm a'}}</div>
-    </div>
-    <!--<div [ngClass]="{
-      'active': p.title === activeProject,
-    }" class="flex flex-row textBox justify-content-between" pTooltip="Amound of articles in this project">
-      <div>Article Count</div>
-    </div>-->
-    <div *ngIf="p.title !== activeProject" (click)="projectEventEmitter.emit(['load', p.title])" [ngClass]="{
-      'active': p.title === activeProject,
-    }" class="iconButton" style="margin-right: 2px;" [pTooltip]="'Load ' + p.title" tooltipPosition="left">
-      <div class="iconoir iconoir-open-in-browser"></div>
-    </div>
-    <div *ngIf="p.title === activeProject" (click)="projectEventEmitter.emit(['saveas', p.title])" [ngClass]="{
-      'active': p.title === activeProject,
-    }" class="iconButton" style="margin-right: 2px;" [pTooltip]="'Save changes to ' + p.title" tooltipPosition="left">
-      <div class="iconoir iconoir-floppy-disk-arrow-in"></div>
-    </div>
-    <div (click)="lastClickedProject = p.title; existingProjectMenu.show($event)" [ngClass]="{
-      'active': p.title === activeProject,
-    }" class="iconButton" [pTooltip]="'More Options'" tooltipPosition="left">
-      <i class="iconoir iconoir-more-vert"></i>
-      <p-contextMenu #existingProjectMenu appendTo="body" [model]="existingProjectMenuItems"></p-contextMenu>
-    </div>
-  </div>
-
-  <div class="flex flex-column h-full justify-content-center align-items-center">
-    <div class="tutorial-text" *ngIf="((allProjects ?? []).length ?? 0) === 0">
-      <p>Your projects will be listed here</p>
-      <p>Enter a project name and click + to add a the project</p>
-      <p>You can also import an existing project by clicking ︙</p>
-    </div>
-  </div>
-</div>
 <div class="flex flex-column menu-list">
   <div class="menu-item-container">
     <div class="menu-item transparent-bottom-border">
-      <input class="menu-item-input fade-in-on-hover-child">
+      <input placeholder="Find commands" class="menu-item-input fade-in-on-hover-child">
       <div class="iconoir iconoir-settings menu-item-icon hover-highlighting right-6px"></div>
     </div>
   </div>
@@ -124,32 +27,52 @@
     <div class="menu-item-container fade-on-hover-parent">
       <div class="menu-item transparent-top-border">
         <div class="menu-item-text fade-out-on-hover-child">
-          <b>/api</b><i> url</i></div>
-        <input placeholder="Enter api url" class="menu-item-input width-158px fade-in-on-hover-child">
-        <div class="iconoir iconoir-server menu-item-icon right-6px hover-highlighting"></div>
+          <b>/api</b><i> url</i>
+        </div>
+        <input #apiUrlInput placeholder="Enter an api url" class="menu-item-input width-158px fade-in-on-hover-child">
+        <div class="iconoir iconoir-server menu-item-icon right-6px hover-highlighting" (click)="menuEventEmitter.emit(['/api',apiUrlInput.value])"></div>
+      </div>
+    </div>
+    <div class="menu-item-container margin-top-10px fade-on-hover-parent">
+      <div class="menu-item transparent-top-border">
+        <div class="menu-item-text fade-out-on-hover-child">
+          <b>/folder</b><i> name</i>
+        </div>
+        <input #vaultNameInput placeholder="Enter a name" class="menu-item-input width-158px fade-in-on-hover-child">
+        <div class="iconoir iconoir-folder-plus menu-item-icon hover-highlighting right-6px"
+          (click)="onEnterVault(vaultNameInput.value)"></div>
+      </div>
+    </div>
+    <div class="menu-item-container fade-on-hover-parent" *ngFor="let project of allProjectsPromise | async">
+      <div class="menu-item transparent-top-border hover-highlighting"
+        (click)="onEnterVault(project.title)"
+        (contextmenu)="projectContextMenu.toggle($event); $event.preventDefault()" [ngClass]="{'highlighted':project.title === activeProject}">
+        <div class="menu-item-text">
+          <span class="tiny-faint-text">/folder </span>{{project.title}}
+        </div>
+        <div class="iconoir iconoir-folder menu-item-icon right-6px" [ngClass]="{
+          'iconoir-folder': project.title !== activeProject,
+          'iconoir-floppy-disk': project.title === activeProject,
+        }"></div>
+        <p-contextMenu #projectContextMenu [model]="existingProjectMenuItems" [triggerEvent]="'click'"
+          appendTo="body"></p-contextMenu>
       </div>
     </div>
     <div class="menu-item-container fade-on-hover-parent">
       <div class="menu-item transparent-top-border">
         <div class="menu-item-text fade-out-on-hover-child">
-        <b>/vault</b><i> name</i></div>
-        <input placeholder="Enter vault name" class="menu-item-input width-158px fade-in-on-hover-child">
-        <div class="iconoir iconoir-folder-plus menu-item-icon hover-highlighting right-6px"></div>
+          <b>/file</b><i> name</i>
+        </div>
+        <input #filenameInput placeholder="Enter a filename" class="menu-item-input width-158px fade-in-on-hover-child">
+        <div class="iconoir iconoir-page-plus menu-item-icon hover-highlighting right-6px" (click)="menuEventEmitter.emit(['/file', filenameInput.value])"></div>
       </div>
     </div>
     <div class="menu-item-container fade-on-hover-parent">
       <div class="menu-item transparent-top-border">
         <div class="menu-item-text fade-out-on-hover-child">
-        <b>/file</b><i> name</i></div>
-        <input placeholder="Enter file name" class="menu-item-input width-158px fade-in-on-hover-child">
-        <div class="iconoir iconoir-page-plus menu-item-icon hover-highlighting right-6px"></div>
-      </div>
-    </div>
-    <div class="menu-item-container fade-on-hover-parent">
-      <div class="menu-item transparent-top-border">
-        <div class="menu-item-text fade-out-on-hover-child">
-          <b>/help</b><i> topic</i></div>
-        <input placeholder="Ask question" class="menu-item-input width-158px fade-in-on-hover-child">
+          <b>/help</b>
+        </div>
+        <input placeholder="Ask any question" class="menu-item-input width-158px fade-in-on-hover-child">
         <div class="iconoir iconoir-help-circle menu-item-icon hover-highlighting right-6px"></div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Article } from '../../models/article.model';
+import { Article } from '../../models/article';
 
 @Pipe({
   name: 'articleNameAndCategoriesToString',

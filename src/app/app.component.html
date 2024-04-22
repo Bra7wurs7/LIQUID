@@ -19,9 +19,9 @@
 
       <app-alerts-list class="tab-content" *ngIf="dropdownPanelActiveTab === 'alerts'"></app-alerts-list>
 
-      <app-idb-settings *ngIf="dropdownPanelActiveTab === 'menu'" [activeProject]="project?.title ?? ''"
-        [allProjects]="allProjectsPromise | async" (projectEventEmitter)="handleProjectEvent($event)"
-        class="tab-content"></app-idb-settings>
+      <app-menu *ngIf="dropdownPanelActiveTab === 'menu'" [activeProject]="project?.title ?? ''"
+        [allProjectsPromise]="allProjectsPromise" (menuEventEmitter)="handleMenuEvent($event)"
+        class="tab-content"></app-menu>
     </div>
 
     <!-- Menubar -->
@@ -59,12 +59,16 @@
               <input #top_p type="number" class="settings-tooltip-input" [min]="0" [max]="1" [step]="0.1" pInputText
                 [(ngModel)]="conversations[0].top_p" tooltipPosition="left"
                 [pTooltip]="'A lower  \'Top P\' removes less probable tokens from the selection when generating text.\n\nA \'Top P\' of 1 makes the LLM consider 100% of options when selecting the next token'" />
+              <div class="settings-tooltip-header flex justify-content-between align-items-center">Conversation memory
+              </div>
+              <input #top_p type="number" class="settings-tooltip-input" [min]="1" [max]="50" [step]="1" pInputText
+                [(ngModel)]="hideOlderThan" tooltipPosition="left"
+                [pTooltip]="'The LLM will remember the last ' + hideOlderThan + ' messages. Context messages will not deactivate.'" />
             </div>
           </ng-template>
         </div>
         <div class="iconoir iconoir-send collapsed_item" [pTooltip]="promptConversationTooltip" tooltipPosition="bottom"
-          (mousedown)="onClickSend($event)"
-          (contextmenu)=" $event.preventDefault()"
+          (mousedown)="onClickSend($event)" (contextmenu)=" $event.preventDefault()"
           (wheel)="selectedLLMIndex = scrollIncrementDecrement(false, $event, selectedLLMIndex, 1, llmApiService.llmConfigs.length-1); saveSelectedLLMIndex()"
           [ngClass]="{'iconoir-send-solid': autopromptingEnabled}">
           <ng-template #promptConversationTooltip>

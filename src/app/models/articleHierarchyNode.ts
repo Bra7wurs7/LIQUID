@@ -1,4 +1,4 @@
-import { Article } from "./article.model";
+import { Article } from "./article";
 
 export class ArticleHierarchyNode {
     node: Article;

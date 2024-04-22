@@ -1,4 +1,4 @@
-import { LLMMessage } from "./message.model";
+import { LLMMessage } from "./message";
 
 export class OllamaRequestBody {
     model: string = "";
