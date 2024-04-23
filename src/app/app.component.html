@@ -39,27 +39,24 @@
           (click)="$event.stopImmediatePropagation()">
           <ng-template #llmSettingsTooltip>
             <div class="flex flex-column">
-              <div class="settings-tooltip-header flex justify-content-between align-items-center">Max
-                Tokens
-                <div>
-                  <div class="iconoir iconoir-mouse-scroll-wheel"></div>
-                </div>
+              <div class="settings-tooltip-header">Choose LLM
+                <div class="iconoir iconoir-mouse-scroll-wheel"></div>
               </div>
               <input #max_tokens type="number" class="settings-tooltip-input" [min]="0" [max]="4096" [step]="128"
                 pInputText [(ngModel)]="conversations[activeConversationIndex].max_tokens" tooltipPosition="left"
                 [pTooltip]="'The maximum number of text the LLM may generate.\n(4 tokens ≈ 3 words)'" />
-              <div class="settings-tooltip-header flex justify-content-between align-items-center">
+              <div class="settings-tooltip-header">
                 Temperature
               </div>
               <input #tempr type="number" class="settings-tooltip-input" [min]="0" [max]="2" [step]="0.1" pInputText
                 [(ngModel)]="conversations[activeConversationIndex].temperature" tooltipPosition="left"
                 [pTooltip]="'A higher temperature setting makes less probable text generation more likely.\n\nA temperature of 0 makes the LLM always select the most probable option.'" />
-              <div class="settings-tooltip-header flex justify-content-between align-items-center">Top P
+              <div class="settings-tooltip-header">Top P
               </div>
               <input #top_p type="number" class="settings-tooltip-input" [min]="0" [max]="1" [step]="0.1" pInputText
                 [(ngModel)]="conversations[0].top_p" tooltipPosition="left"
                 [pTooltip]="'A lower  \'Top P\' removes less probable tokens from the selection when generating text.\n\nA \'Top P\' of 1 makes the LLM consider 100% of options when selecting the next token'" />
-              <div class="settings-tooltip-header flex justify-content-between align-items-center">Conversation memory
+              <div class="settings-tooltip-header">Conversation memory
               </div>
               <input #top_p type="number" class="settings-tooltip-input" [min]="1" [max]="50" [step]="1" pInputText
                 [(ngModel)]="hideOlderThan" tooltipPosition="left"
@@ -93,7 +90,7 @@
         <div class="separator collapsed_item"></div>
         <div class="iconoir" *ngFor="let conversation of conversations; index as index" [ngClass]="{
           'highlighted': index === this.activeConversationIndex && dropdownPanelActiveTab === 'llm',
-          'iconoir-message-text': conversation.messages.length > 0,
+          'iconoir-message-text-solid': conversation.messages.length > 0,
           'iconoir-message': conversation.messages.length === 0,
           }" tooltipPosition="bottom" [pTooltip]="conversationTooltip" (click)="onClickConversation(index)"
           (contextmenu)="rightClickedConversationIndex = index; conversationContextMenu.toggle($event)">

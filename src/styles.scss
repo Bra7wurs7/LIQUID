@@ -249,6 +249,11 @@ app-root {
   }
 }
 
+.horizontal-borders-1 {
+  border-top: 1px solid var(--surface-border);
+  border-bottom: 1px solid var(--surface-border);
+}
+
 .menu-list {
   display: flex;
   flex-direction: column;
@@ -266,8 +271,8 @@ app-root {
       margin-top: 2px;
     }
 
-    &.margin-top-10px {
-      margin-top: 10px;
+    &.margin-top-6px {
+      margin-top: 6px;
     }
 
     .hover-highlighting {
@@ -307,11 +312,21 @@ app-root {
         }
       }
 
-      &.transparent-top-border {
-        border-top-color: transparent;
+      &.border-top-0 {
+        border-top: 0;
       }
-      &.transparent-bottom-border {
-        border-bottom-color: transparent;
+
+      &.border-bottom-0 {
+        border-bottom: 0;
+      }
+
+      &.horizontal-borders-0 {
+        border-top: 0;
+        border-bottom: 0;
+      }
+
+      &.vertical-borders-transparent {
+        border-left-color: transparent;
       }
 
       &.active {

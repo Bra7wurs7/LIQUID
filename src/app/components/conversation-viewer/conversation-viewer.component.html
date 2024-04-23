@@ -14,19 +14,19 @@
     <div class="menu-list"
         (wheel)="activeMessage = scrollIncrementDecrement(false, $event, activeMessage, 1, conversation.messages.length-1)">
         <div class="menu-item-container">
-            <div class="menu-item transparent-bottom-border">
+            <div class="menu-item horizontal-borders-0">
                 <input class="menu-item-input fade-in-on-hover-child width-158px">
                 <div class="iconoir iconoir-settings menu-item-icon hover-highlighting right-6px"></div>
             </div>
         </div>
         <div>
-            <div class="menu-item-container margin-top-2" [pTooltip]="addMessageTooltip"
+            <div class="menu-item-container margin-top-2" [pTooltip]="addMessageTooltip" tooltipPosition="top"
                 (click)="addEmptyMessage(conversation.messages, true)"
                 (contextmenu)="addEmptyMessage(conversation.messages, false); $event.preventDefault()">
-                <div class="menu-item transparent-top-border">
+                <div class="menu-item border-top-0 hover-highlighting">
                     <div class="menu-item-text right-6px">
                         Add Message</div>
-                    <div class="iconoir iconoir-chat-plus-in menu-item-icon right-6px"></div>
+                    <div class="iconoir iconoir-plus menu-item-icon right-6px"></div>
                 </div>
                 <ng-template #addMessageTooltip>
                     <div class="flex justify-content-between align-items-center tooltip-background"
@@ -42,8 +42,9 @@
             </div>
             <div class="menu-item-container" (click)="activeMessage = idx;"
                 *ngFor="let msg of conversation.messages ?? []; index as idx">
-                <div class="menu-item grow-on-hover" [ngClass]="{
+                <div class="menu-item horizontal-borders-0 grow-on-hover" [ngClass]="{
                     'active':activeMessage === idx, 
+                    'highlighted':activeMessage === idx, 
                     'system': msg.role === 'system',
                     'user': msg.role === 'user',
                     'assistant': msg.role === 'assistant',
@@ -52,14 +53,27 @@
                     <div class="menu-item-text" [ngClass]="{'faint': msg.content.length === 0}">
                         {{msg.content.length > 0 ? msg.content : 'Empty Message'}}</div>
                     <div class="menu-item-icon author-icon iconoir right-6px"
-                        [pTooltip]="msg.role === 'user' ? 'Outgoing message' : (msg.role === 'assistant' ? 'Incoming message' : 'Context message')"
+                        [pTooltip]="authorIconTooltip"
                         tooltipPosition="left"
-                        (click)="msg.role === 'assistant' ? msg.role = 'system' : (msg.role === 'user' ? msg.role = 'assistant' : msg.role = 'user'); $event.stopPropagation()"
+                        (click)="msg.role === 'user' ? msg.role = 'assistant' : msg.role = 'user'; $event.stopPropagation()"
+                        (contextmenu)="msg.role = 'system'; $event.preventDefault(); $event.stopPropagation()"
                         [ngClass]="{
-                                'iconoir-bubble-outcome': msg.role === 'user',
-                                'iconoir-bubble-income': msg.role === 'assistant',
-                                'iconoir-chat-lines-solid': msg.role === 'system',
-                            }"></div>
+                                'iconoir-mail-out': msg.role === 'user',
+                                'iconoir-mail-in': msg.role === 'assistant',
+                                'iconoir-headset-help': msg.role === 'system',
+                            }">
+                        <ng-template #authorIconTooltip>
+                            <div class="flex justify-content-between align-items-center tooltip-background"
+                                style="margin-bottom: 2px;">
+                                <span *ngIf="msg.role !== 'user'">Make incoming</span><span *ngIf="msg.role === 'user'">Make outgoing</span><div class="iconoir iconoir-mouse-button-left">
+                                </div>
+                            </div>
+                            <div class="flex justify-content-between align-items-center tooltip-background"
+                                style="margin-bottom: 2px;">
+                                Make system<div class="iconoir iconoir-mouse-button-right"></div>
+                            </div>
+                        </ng-template>
+                    </div>
                 </div>
                 <p-contextMenu #messageContextMenu [model]="messageContextMenuItems" [triggerEvent]="'click'"
                     appendTo="body"></p-contextMenu>

@@ -6,6 +6,7 @@
     flex-grow: 1;
     border-left: 0;
     border-top: 0;
+    border-bottom: 0;
     margin-right: 2px;
 
     &:hover {
@@ -40,7 +41,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 1px solid var(--surface-border);
+    border-right: 1px solid var(--surface-border);
     flex-grow: 1;
     user-select: none;
     text-align: center;
@@ -48,8 +49,6 @@
     padding: 50px;
     border-radius: 0;
     flex-grow: 1;
-    border-left: 0;
-    border-top: 0;
     margin-right: 2px;
 }
 
