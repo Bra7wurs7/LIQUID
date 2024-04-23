@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LLMConfig } from '../../models/llm-config';
+import { ApiConfig } from '../../models/apiConfig';
 import { Observable, map } from 'rxjs';
 import { Conversation } from '../../models/conversation';
 import { OpenAIRequestBody } from '../../models/llm/openAiRequestBody';
@@ -10,7 +10,7 @@ import { OllamaRequestBody } from 'src/app/models/llm/ollamaRequestBody';
   providedIn: 'root'
 })
 export class LlmApiService {
-  llmConfigs: LLMConfig[] = [];
+  llmConfigs: ApiConfig[] = [];
 
   constructor(private messageService: MessageService) {
     const loadedConfig = localStorage.getItem("llmConfigs")
@@ -20,7 +20,7 @@ export class LlmApiService {
   }
 
   public addLLMConfig(llm: [string, string, string], key: string) {
-    const newLLMConfig = new LLMConfig(llm[1], llm[0], {}, { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' }, { model: llm[1] })
+    const newLLMConfig = new ApiConfig(llm[1], llm[0], {}, { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' }, { model: llm[1] })
     this.llmConfigs.push(newLLMConfig);
     this.saveLLMConfigs();
   }
@@ -36,7 +36,7 @@ export class LlmApiService {
     localStorage.setItem("llmConfigs", JSON.stringify(this.llmConfigs));
   }
 
-  public async sendLLMPrompt(prompt: Conversation, llmConfig: LLMConfig): Promise<Observable<Record<string, any>[]> | void> {
+  public async sendLLMPrompt(prompt: Conversation, llmConfig: ApiConfig): Promise<Observable<Record<string, any>[]> | void> {
     const last_message = prompt.messages.pop();
     switch (llmConfig.apiStyle) {
       case 'ollama':
@@ -58,7 +58,7 @@ export class LlmApiService {
     }
   }
 
-  public async sendOpenAiStylePrompt(prompt: Conversation, llmConfig: LLMConfig): Promise<Observable<Record<string, any>[]> | undefined> {
+  public async sendOpenAiStylePrompt(prompt: Conversation, llmConfig: ApiConfig): Promise<Observable<Record<string, any>[]> | undefined> {
     const body: OpenAIRequestBody = { ...new OpenAIRequestBody(), ...llmConfig.body, temperature: prompt.temperature, max_tokens: prompt.max_tokens }
     for (const msg of prompt.messages) {
       if (msg.active) body.messages.push({ role: msg.role, content: msg.content });
@@ -82,7 +82,7 @@ export class LlmApiService {
     }
   }
 
-  public async sendOllamaStylePrompt(prompt: Conversation, llmConfig: LLMConfig) {
+  public async sendOllamaStylePrompt(prompt: Conversation, llmConfig: ApiConfig) {
     let system_text = "";
     let prompt_text = "";
     for (const msg of prompt.messages) {
