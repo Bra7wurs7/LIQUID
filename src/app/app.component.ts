@@ -684,6 +684,8 @@ export class AppComponent implements OnInit {
       this.project?.articles.set("convo_history", conversation_history_file)
     }
 
+    this.deactivateOldMessages(this.hideOlderThan);
+
     this.llmApiService.sendLLMPrompt(this.conversations[this.activeConversationIndex], this.llmApiService.llmConfigs[this.selectedLLMIndex]).then((o) => {
       o?.subscribe((a) => {
         for (const v of a) {
@@ -698,7 +700,6 @@ export class AppComponent implements OnInit {
             if (finishReason) {
               localStorage.setItem('conversations', JSON.stringify(this.conversations));
               if (this.autopromptingEnabled) {
-                this.deactivateOldMessages(this.hideOlderThan);
                 this.promptLlm();
               }
             }
@@ -713,7 +714,6 @@ export class AppComponent implements OnInit {
             if (done) {
               localStorage.setItem('conversations', JSON.stringify(this.conversations));
               if (this.autopromptingEnabled) {
-                this.deactivateOldMessages(this.hideOlderThan);
                 this.promptLlm();
               }
             }
@@ -728,7 +728,6 @@ export class AppComponent implements OnInit {
             if (done) {
               localStorage.setItem('conversations', JSON.stringify(this.conversations));
               if (this.autopromptingEnabled) {
-                this.deactivateOldMessages(this.hideOlderThan);
                 this.promptLlm();
               }
             }
@@ -746,16 +745,16 @@ export class AppComponent implements OnInit {
     this.promptLlm();
   }
 
-  deactivateOldMessages(allowed_age: number) {
-    this.conversations[this.activeConversationIndex].messages.forEach((msg, index, array) => {
-      if (!(msg.role === "system")) {
-        if (index >= array.length - allowed_age) {
-          msg.active = true;
-        } else {
+  deactivateOldMessages(allowed_age: number) { 
+    let index = 0;
+    for (const msg of this.conversations[this.activeConversationIndex].messages) {
+      if (index < this.conversations[this.activeConversationIndex].messages.length - allowed_age) {
+        if (!(msg.role === "system")) {
           msg.active = false;
         }
       }
-    })
+      index=+1;
+    }
   }
 
   loadSelectedLLMIndex() {

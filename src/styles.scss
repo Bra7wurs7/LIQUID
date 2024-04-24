@@ -279,6 +279,7 @@ app-root {
       &:hover {
         cursor: pointer;
         color: var(--text-color);
+        border-color: var(--text-color-secondary);
       }
     }
 
@@ -303,11 +304,11 @@ app-root {
 
       &.grow-on-hover {
         &:hover {
-          width: 300px;
+          width: 250px;
           z-index: 2;
 
           .menu-item-text {
-            width: 258px;
+            width: 208px;
           }
         }
       }
@@ -325,7 +326,7 @@ app-root {
         border-bottom: 0;
       }
 
-      &.vertical-borders-transparent {
+      &.left-border-transparent {
         border-left-color: transparent;
       }
 
