@@ -144,16 +144,16 @@ app-root {
     margin-top: 2px;
   }
 
+  &.highlighted {
+    background-color: var(--text-color-secondary);
+    color: var(--surface-a);
+  }
+
   &.clickable {
     &:hover {
       background-color: var(--surface-b);
       cursor: pointer;
     }
-  }
-
-  &.highlighted {
-    background-color: var(--text-color-secondary);
-    color: var(--surface-a);
   }
 }
 
@@ -182,9 +182,9 @@ app-root {
     cursor: pointer;
   }
 
-  &.active {
-    background-color: var(--surface-b);
-    color: var(--text-color);
+  &.highlighted {
+    background-color: var(--text-color-secondary);
+    color: var(--surface-a);
   }
 
   &:last-of-type {

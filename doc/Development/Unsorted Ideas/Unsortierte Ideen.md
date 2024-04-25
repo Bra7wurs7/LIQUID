@@ -1,29 +1,31 @@
-# 09.10.24
+##### 09.10.24
 - Tippen im Prompter gibt automatisch vorschau der promptergänzung (Zeigt gesamte End-Prompt an, sowie Artikel mit deren hilfe die Prompts gebaut wurden und deren "Wichtigkeit" bzw. "Aufmerksamheit")
 - Artikelname!llmname
 
-# Before 09.10.24
+# Unsortiert
 
 ##### LLM Technologie Allgemein
 - Wenn LLM ein Wort schreibt, wirkt sich dieses wort auf sein nächstes Autoprompt aus. Ein Wort zu schreiben, zu beeinflussen bedeutet gewissermaßen immer ein Wort zu lesen, wahrzunehmen. Actuator vs Sensor.
 - Ein LLM kann auch temporär schreiben, also ein schreiben das sich nicht auf unsere Umwelt auswirkt
 
 ## Grundsätze
-##### Jede Schaltfläche, jedes Feature ist auch vom KI-Agenten nutzbar.
+##### Jede Schaltfläche, jedes Feature ist auch vom KI-Agenten nutzbar. Das wird dadurch implementiert, dass jedes feature eine 
 ##### Möglichst alles open source, aber auch die proprietären Services leicht nutzbar machen, die gerade die beste Performance liefern.
 
 ##### So wenige clicks wie irgend nötig für jede Aktion, ohne Auswirkungen zu automatisieren
 
 ##### Erweiterung von Markdown. Formatierung vom Text beeinflusst
 # Versionen
-##### V0.5.0: 
+##### V1.0.0:
+- Alle dateien werden links gelistet und können über ein Zahnrad in der Seitenleiste, oder mit der Inputleiste gefiltert werden
+- Alles wird links gelistet, weil alles was irgendwie existiert eine datei ist.
+- Eine Datei kann geöffnet werden, dann wind sie in der mitte, unter wer werkzeugleiste eingelistet und hervorgehoben 
+
+##### V0.3.0: 
 - Seamless GIT-Clone Integration
 	- Laden eines Git-Repo via http
-# New Database Workflow
-
-- Take notes, record and manage Information, organize and categorize
-- Access all relevant information immediately, like from a second brain
-- Let large language models (AI)
+##### V0.2.0:
+- 100% TUI Integration für bestehende GUI Elemente
 
 
 # Datenmodell Nicht-Unique Artikelnamen

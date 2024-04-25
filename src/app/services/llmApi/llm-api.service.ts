@@ -10,30 +10,17 @@ import { OllamaRequestBody } from 'src/app/models/llm/ollamaRequestBody';
   providedIn: 'root'
 })
 export class LlmApiService {
-  llmConfigs: ApiConfig[] = [];
+  apiConfigs: ApiConfig[] = [];
 
   constructor(private messageService: MessageService) {
-    const loadedConfig = localStorage.getItem("llmConfigs")
+    const loadedConfig = localStorage.getItem("apiConfigs")
     if (loadedConfig) {
-      this.llmConfigs = JSON.parse(loadedConfig);
-    }
-  }
-
-  public addLLMConfig(llm: [string, string, string], key: string) {
-    const newLLMConfig = new ApiConfig(llm[1], llm[0], {}, { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' }, { model: llm[1] })
-    this.llmConfigs.push(newLLMConfig);
-    this.saveLLMConfigs();
-  }
-
-  public removeLLMConfig(index?: number) {
-    if (index !== undefined) {
-      this.llmConfigs.splice(index, 1);
-      this.saveLLMConfigs();
+      this.apiConfigs = JSON.parse(loadedConfig);
     }
   }
 
   public saveLLMConfigs() {
-    localStorage.setItem("llmConfigs", JSON.stringify(this.llmConfigs));
+    localStorage.setItem("apiConfigs", JSON.stringify(this.apiConfigs));
   }
 
   public async sendLLMPrompt(prompt: Conversation, llmConfig: ApiConfig): Promise<Observable<Record<string, any>[]> | void> {

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Project } from '../../models/project';
 import { MenuEvent } from 'src/app/models/projectEvent';
 import { LlmApiService } from 'src/app/services/llmApi/llm-api.service';
-import { ApiConfig } from 'src/app/models/llm-config';
+import { ApiConfig } from 'src/app/models/apiConfig';
 
 @Component({
   selector: 'app-menu',
@@ -92,7 +92,7 @@ export class MenuComponent {
     if (this.editConfigIndex !== undefined) {
       try {
         const conf: ApiConfig = JSON.parse(config);
-        this.llmApiService.llmConfigs[index] = conf;
+        this.llmApiService.apiConfigs[index] = conf;
         this.llmApiService.saveLLMConfigs();
       } catch { }
     }

@@ -1,1 +1,0 @@
-Über GIT? Notizen selbst haben Versionsverwaltung

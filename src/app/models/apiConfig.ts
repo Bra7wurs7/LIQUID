@@ -5,7 +5,7 @@ export class ApiConfig {
     default_params: Record<string, string>;
     default_headers: Record<string, string>;
     default_body: Record<string, any>;
-    apiStyle: "openai" | "ollama" | "mistral" = 'openai';
+    flags: ApiFlag[] = [];
 
     public constructor(
         url: URL,
@@ -35,4 +35,10 @@ export class ApiConfig {
         }
         return new URL(url);
     }
+}
+
+export enum ApiFlag {
+    ollama,
+    mistral,
+    openai,
 }

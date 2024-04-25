@@ -686,7 +686,7 @@ export class AppComponent implements OnInit {
 
     this.deactivateOldMessages(this.hideOlderThan);
 
-    this.llmApiService.sendLLMPrompt(this.conversations[this.activeConversationIndex], this.llmApiService.llmConfigs[this.selectedLLMIndex]).then((o) => {
+    this.llmApiService.sendLLMPrompt(this.conversations[this.activeConversationIndex], this.llmApiService.apiConfigs[this.selectedLLMIndex]).then((o) => {
       o?.subscribe((a) => {
         for (const v of a) {
           if (v && v.choices !== undefined) {
@@ -759,7 +759,7 @@ export class AppComponent implements OnInit {
 
   loadSelectedLLMIndex() {
     const index = Number(localStorage.getItem('llm_index')) ?? 0;
-    if (this.llmApiService.llmConfigs[index]) {
+    if (this.llmApiService.apiConfigs[index]) {
       this.selectedLLMIndex = index;
     }
   }
