@@ -1,1 +1,0 @@
-When you click one of the AI assistant Icons, your chat with the assistant will open and the chat input field is selected.

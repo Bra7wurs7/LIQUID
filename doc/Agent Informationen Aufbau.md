@@ -3,7 +3,7 @@
 [[Kaskadirende Referenzen]], 
 ```
 <SYSTEM>
-Wissen, das komplett aus der Datenbank kommt, und von dem USER Prompt-Abschnitt durch explizite und implizite Referenzen du Artikeln bestimmt wird. Das können Informationen, Geschichten, Instruktionen sein, et cetera. Wenn Kaskadierende Referenzierung aktviert ist, werden hier auch (indirekte) Referenzen aufgelöst. Es bildet sich eine wichtigkeit bestimmter Artikel ab, die bestimmt, wie groß der anteil der Artikel im system Prompt it.
+Wissen und Texte, die komplett aus der Datenbank kommt, und von dem USER Prompt-Abschnitt durch explizite und implizite Referenzen du Artikeln bestimmt wird. Das können Informationen, Geschichten, Instruktionen sein, et cetera. Wenn Kaskadierende Referenzierung aktviert ist, werden hier auch (indirekte) Referenzen aufgelöst. Es bildet sich eine wichtigkeit bestimmter Artikel ab, die bestimmt, wie groß der anteil der Artikel im system Prompt it.
 </SYSTEM>
 
 

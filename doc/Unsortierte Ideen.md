@@ -2,8 +2,6 @@
 - Tippen im Prompter gibt automatisch vorschau der promptergänzung (Zeigt gesamte End-Prompt an, sowie Artikel mit deren hilfe die Prompts gebaut wurden und deren "Wichtigkeit" bzw. "Aufmerksamheit")
 - Artikelname!llmname
 
-# Before 09.10.24
-
 ##### LLM Technologie Allgemein
 - Wenn LLM ein Wort schreibt, wirkt sich dieses wort auf sein nächstes Autoprompt aus. Ein Wort zu schreiben, zu beeinflussen bedeutet gewissermaßen immer ein Wort zu lesen, wahrzunehmen. Actuator vs Sensor.
 - Ein LLM kann auch temporär schreiben, also ein schreiben das sich nicht auf unsere Umwelt auswirkt
