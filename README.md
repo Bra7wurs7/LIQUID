@@ -13,4 +13,4 @@ Getting Started (Installation):
 - Change into the newly created directory: ```cd LIQUID```
 - Download NodeJS dependencies: ```npm i```
 - Start Angular live development server: ```npm run start```
-- Open app in your browser: ```localhost:4200```
+- Open app in your browser: ```firefox localhost:4200```
