@@ -1,6 +1,8 @@
 # README
 **LIQUID** - **L**LM-Powered, **I**n**qu**isitive and **I**ntelligent **D**atabase (wt) Is a markdown editor and LLM conversation client written in Angular (TS+HTML+SCSS).
 
+![Screenshot](/screenshot.png?raw=true)
+
 LIQUID Goals: 
 - Become an in-browser file manager and plaintext file editor with noob friendly, seamless git integration.
 - Seamlessly integrate AI content generation into the workflow. Allow usage of any accessible LLM API, especially locally run ones.
