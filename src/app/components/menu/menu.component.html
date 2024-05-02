@@ -16,6 +16,22 @@
   </div>
 </p-dialog>
 
+<!-- LLM Settings -->
+<div class="flex flex-column h-full">
+  <div class="flex flex-row justify-content-between align-items-stretch">
+    <p-cascadeSelect pTooltip="Select an LLM Api Provider" tooltipPosition="left" [(ngModel)]="selectedLLM"
+      [options]="llms" optionLabel="mname" optionGroupLabel="name" [optionGroupChildren]="['models']"
+      placeholder="Select LLM Provider"></p-cascadeSelect>
+    <!-- @TODO Suggest Api Keys based on existing configurations -->
+    <input #ApiKey type="password" class="settingsTextInput" placeholder="Api Key" pInputText
+      pTooltip="Enter the authorization key for the API endpoint" tooltipPosition="bottom" />
+    <div class="iconButton flex flex-column justify-content-center" pTooltip="Add Api Endpoint" tooltipPosition="bottom"
+      (click)="llmApiService.addLLMConfig(selectedLLM.code, ApiKey.value)">
+      <i class="iconoir iconoir-plus"></i>
+    </div>
+  </div>
+</div>
+
 <div class="flex flex-column menu-list">
   <div class="menu-item-container">
     <div class="menu-item horizontal-borders-0 left-border-transparent">
@@ -26,16 +42,45 @@
     <div class="menu-item-container margin-top-6px fade-on-hover-parent">
       <div class="menu-item hover-highlighting">
         <div class="menu-item-text fade-out-on-hover-child">
-          <b>/api</b><i> url</i>
+          <b>/api</b><i> url [key]</i>
         </div>
-        <input #apiUrlInput placeholder="Enter an api url" class="menu-item-input width-158px fade-in-on-hover-child">
-        <div class="iconoir iconoir-server menu-item-icon right-6px hover-highlighting" (click)="menuEventEmitter.emit(['/api',apiUrlInput.value])"></div>
+        <input #apiUrlInput placeholder="Enter URL" class="menu-item-input width-79px fade-in-on-hover-child"
+          (wheel)="selectedApiRecommendationIndex = scrollIncrementDecrement(false, $event, selectedApiRecommendationIndex, 1, apiRecommendations.length-1, -1); apiUrlInput.value = apiRecommendations[selectedApiRecommendationIndex] || ''"
+          [pTooltip]="apiUrlTooltip" tooltipPosition="bottom">
+        <ng-template #apiUrlTooltip>
+          <div class="settings-tooltip-header flex justify-content-between align-items-center">Known LLM APIs
+            <div class="iconoir iconoir-mouse-scroll-wheel" style="margin-left: 5px;"></div>
+          </div>
+          <div class="settings-tooltip-selector active">
+            {{apiUrlInput.value || 'Custom URL'}}
+          </div>
+          <div class="settings-tooltip-selector" [ngClass]="{'active': selectedApiRecommendationIndex === i}"
+            *ngFor="let url of apiRecommendations; let i = index">
+            {{url | urlDomain}}
+          </div>
+        </ng-template>
+        <input #apiKeyInput placeholder="Enter Key" class="menu-item-input width-79px fade-in-on-hover-child">
+        <div class="iconoir iconoir-server menu-item-icon right-6px hover-highlighting"
+          (click)="llmApiService.addLLMConfig([apiUrlInput.value, apiUrlInput.value, apiUrlInput.value], apiKeyInput.value)"></div>
+      </div>
+    </div>
+    <div class="menu-item-container fade-on-hover-parent"
+      *ngFor="let llmConfig of llmApiService.llmConfigs, index as i">
+      <div class="menu-item horizontal-borders-0 grow-on-hover hover-highlighting"
+        (click)="editConfig = JSON.stringify(llmConfig, null ,2); editConfigIndex = i"
+        [ngClass]="{'highlighted':editConfigIndex === i}">
+        <div class="menu-item-text">
+          <div class="tiny-faint-text">/folder </div>{{llmConfig.url | urlDomain}}
+        </div>
+        <div class="iconoir iconoir-settings menu-item-icon right-6px"></div>
+        <p-contextMenu #projectContextMenu [model]="existingProjectMenuItems" [triggerEvent]="'click'"
+          appendTo="body"></p-contextMenu>
       </div>
     </div>
     <div class="menu-item-container margin-top-6px fade-on-hover-parent">
       <div class="menu-item hover-highlighting">
         <div class="menu-item-text fade-out-on-hover-child">
-          <b>/folder</b><i> name</i>
+          <b>/vault</b><i> name</i>
         </div>
         <input #vaultNameInput placeholder="Enter a name" class="menu-item-input width-158px fade-in-on-hover-child">
         <div class="iconoir iconoir-folder-plus menu-item-icon hover-highlighting right-6px"
@@ -43,13 +88,13 @@
       </div>
     </div>
     <div class="menu-item-container fade-on-hover-parent" *ngFor="let project of allProjectsPromise | async">
-      <div class="menu-item horizontal-borders-0 grow-on-hover hover-highlighting"
-        (click)="onEnterVault(project.title)"
-        (contextmenu)="projectContextMenu.toggle($event); $event.preventDefault()" [ngClass]="{'highlighted':project.title === activeProject}">
+      <div class="menu-item horizontal-borders-0 grow-on-hover hover-highlighting" (click)="onEnterVault(project.title)"
+        (contextmenu)="lastRightClickedProject = project.title; projectContextMenu.toggle($event); $event.preventDefault()"
+        [ngClass]="{'highlighted':project.title === activeProject}">
         <div class="menu-item-text">
           <div class="tiny-faint-text">/folder </div>{{project.title}}
         </div>
-        <div class="iconoir iconoir-folder menu-item-icon right-6px" [ngClass]="{
+        <div class="iconoir menu-item-icon right-6px" [ngClass]="{
           'iconoir-folder': project.title !== activeProject,
           'iconoir-floppy-disk': project.title === activeProject,
         }"></div>
@@ -63,7 +108,8 @@
           <b>/file</b><i> name</i>
         </div>
         <input #filenameInput placeholder="Enter a filename" class="menu-item-input width-158px fade-in-on-hover-child">
-        <div class="iconoir iconoir-page-plus menu-item-icon hover-highlighting right-6px" (click)="menuEventEmitter.emit(['/file', filenameInput.value])"></div>
+        <div class="iconoir iconoir-page-plus menu-item-icon hover-highlighting right-6px"
+          (click)="menuEventEmitter.emit(['/file', filenameInput.value])"></div>
       </div>
     </div>
     <div class="menu-item-container margin-top-6px fade-on-hover-parent">

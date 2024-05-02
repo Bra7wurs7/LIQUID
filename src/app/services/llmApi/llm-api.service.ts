@@ -25,24 +25,15 @@ export class LlmApiService {
 
   public async sendLLMPrompt(prompt: Conversation, llmConfig: ApiConfig): Promise<Observable<Record<string, any>[]> | void> {
     const last_message = prompt.messages.pop();
-    switch (llmConfig.apiStyle) {
-      case 'ollama':
-        if(last_message) {
-          prompt.messages.push(last_message);
-        }
-        return this.sendOllamaStylePrompt(prompt, llmConfig);
-      case 'openai':
-      case 'mistral':
-        if(last_message) {
-          last_message.role = 'user';
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Last message changed to outgoing because of mistral api',
-          });
-          prompt.messages.push(last_message);
-        }
-        return this.sendOpenAiStylePrompt(prompt, llmConfig);
+    if (last_message) {
+      last_message.role = 'user';
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Last message changed to outgoing',
+      });
+      prompt.messages.push(last_message);
     }
+    return this.sendOpenAiStylePrompt(prompt, llmConfig);
   }
 
   public async sendOpenAiStylePrompt(prompt: Conversation, llmConfig: ApiConfig): Promise<Observable<Record<string, any>[]> | undefined> {

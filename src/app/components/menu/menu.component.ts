@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Project } from '../../models/project';
 import { MenuEvent } from 'src/app/models/projectEvent';
 import { LlmApiService } from 'src/app/services/llmApi/llm-api.service';
+import { scrollIncrementDecrement } from 'src/app/util/functions';
 import { ApiConfig } from 'src/app/models/apiConfig';
 
 @Component({
@@ -14,9 +15,14 @@ export class MenuComponent {
   @Input() activeProject!: string;
   @Output() menuEventEmitter: EventEmitter<MenuEvent> = new EventEmitter();
 
+  scrollIncrementDecrement = scrollIncrementDecrement;
+
   JSON = JSON;
   llms: any[];
   selectedLLM: any;
+
+  apiRecommendations = ["https://api.openai.com/v1/chat/completions", "https://api.mistral.ai/v1/chat/completions", "http://localhost:11434/api/chat"];
+  selectedApiRecommendationIndex: number = -1;
 
   editConfig?: string;
   editConfigIndex?: number;

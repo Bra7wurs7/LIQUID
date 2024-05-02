@@ -68,7 +68,7 @@ export class AppComponent implements OnInit {
   autosave = timer(300000, 300000).pipe(
     switchMap(() => {
       if (this.project) {
-        this.saveToDB(this.project.title);
+        this.saveToDB();
         return of({});
       } else {
         return of({});
@@ -161,7 +161,7 @@ export class AppComponent implements OnInit {
       return;
     }
     this.project = project;
-    this.saveToDB(project.title)
+    this.saveToDB()
     this.initializeArticleHierarchyMap(true);
   }
 
@@ -356,6 +356,7 @@ export class AppComponent implements OnInit {
     this.getProjectFromDB(title).then((p) => {
       if (p === undefined) {
         this.loadProject(new Project(title !== '' ? title : 'New Database'));
+        this.allProjectsPromise = this.indexedDbService.getAllProjects();
       } else {
         this.messageService.add({
           severity: 'error',
@@ -416,12 +417,12 @@ export class AppComponent implements OnInit {
     });
   }
 
-  saveToDB(title?: string) {
+  saveToDB() {
     if (this.project) {
       const serializableProject = this.project?.toSerializableProject();
       this.indexedDbService
         .saveProject(
-          title ?? this.project.title,
+          this.project.title,
           serializableProject.serialize()
         )
         .then(() => {
@@ -429,7 +430,6 @@ export class AppComponent implements OnInit {
             severity: 'success',
             summary: `"${this.project?.title}" Saved`,
           });
-          this.allProjectsPromise = this.indexedDbService.getAllProjects();
         });
     } else {
       this.messageService.add({
@@ -547,13 +547,14 @@ export class AppComponent implements OnInit {
     }
   }
 
-  commandLineKeyUp(e: KeyboardEvent, input: HTMLInputElement) {
+  commandLineKeyUp(e: KeyboardEvent) {
     if (e.key === 'Enter') {
-      if (input.value) {
-        this.conversations[this.activeConversationIndex].messages.push({ active: true, role: 'user', content: input.value });
+      if (this.input) {
+        this.conversations[this.activeConversationIndex].messages.push({ active: true, role: 'user', content: this.input });
+        this.input = '';
       }
       this.promptLlm();
-      input.value = '';
+      this.input = '';
     }
   }
 
@@ -563,7 +564,7 @@ export class AppComponent implements OnInit {
       case "/folder":
         if (allProjects.findIndex((prj) => prj.title === event[1]) !== -1) {
           if (this.project?.title === event[1]) {
-            this.saveToDB(this.project?.title)
+            this.saveToDB()
           } else {
             this.getProjectFromDB(event[1]).then((project) => {
               if (project) {
@@ -572,7 +573,7 @@ export class AppComponent implements OnInit {
             });
           }
         } else {
-          this.saveToDB(event[1])
+          this.newProject(event[1])
         }
         break;
       case "/delete":
@@ -594,14 +595,8 @@ export class AppComponent implements OnInit {
         this.addArticle(event[1]);
         break;
       case "/api":
-        this.addApi(event[1]);
         break;
     }
-  }
-
-  addApi(url: string) {
-    const a = new URL(url)
-    console.log(a)
   }
 
   handleMessageEvent(event: [string, Msg | undefined]) {
@@ -684,7 +679,7 @@ export class AppComponent implements OnInit {
       this.project?.articles.set("convo_history", conversation_history_file)
     }
 
-    this.deactivateOldMessages(this.hideOlderThan);
+    this.deactivateOldMessages(this.hideOlderThan, this.conversations[this.activeConversationIndex].messages);
 
     this.llmApiService.sendLLMPrompt(this.conversations[this.activeConversationIndex], this.llmApiService.apiConfigs[this.selectedLLMIndex]).then((o) => {
       o?.subscribe((a) => {
@@ -745,16 +740,16 @@ export class AppComponent implements OnInit {
     this.promptLlm();
   }
 
-  deactivateOldMessages(allowed_age: number) { 
-    let index = 0;
-    for (const msg of this.conversations[this.activeConversationIndex].messages) {
-      if (index < this.conversations[this.activeConversationIndex].messages.length - allowed_age) {
-        if (!(msg.role === "system")) {
-          msg.active = false;
+  deactivateOldMessages(allowed_age: number, messages: Msg[]) {
+    if (allowed_age > -1)
+    messages.forEach((msg, index) => {
+      if (msg.role !== "system") {
+        msg.active = false;
+        if (index > (messages.length - 1) - allowed_age) {
+          msg.active = true;
         }
       }
-      index=+1;
-    }
+    });
   }
 
   loadSelectedLLMIndex() {

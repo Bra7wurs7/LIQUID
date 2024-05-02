@@ -1,13 +1,22 @@
 # README
-Last Update 22.04.23 (DD-MM-YY)
+**LIQUID** - **L**LM-Powered, **I**n**qu**isitive and **I**ntelligent **D**atabase (wt) Is a markdown editor and LLM conversation client written in Angular (TS+HTML+SCSS).
 
-Liquid aims to be 
-- A universal user interface for any sort of public web api.
-- A "web operating system", "semiautonomous" if you will, truly assisting the user via an LLM powered agent that can make the same inputs and take the same actions as the user.
-  - To realize this, every GUI function also needs a TUI counterpart that a Language Model can somehow interface with. (ML- & LLM-Assisted parsing of LLM or USER written plaintext/code)
-- The GUI and TUI automatically generate from the API Documentation and public information.
-  - Until that is possible, uis are easily user-configurable
- 
+![Screenshot](/screenshot.png?raw=true)
 
-Known bugs:
-- Can not delete vault/folder/project
+LIQUID Goals: 
+- Become an in-browser file manager and plaintext file editor with noob friendly, seamless git integration.
+- Seamlessly integrate AI content generation into the workflow. Allow usage of any accessible LLM API, especially locally run ones.
+- Implement a universal REST-API client that automatically implements TUI and GUI inside LIQUID for services provided by the APIs.
+
+Use LIQUID right now:
+- Visit [hsp.dev](https://hsp.dev) to use a possibly very outdated version of LIQUID
+
+Getting Started (Development):
+- Make sure you've installed Git, NodeJs and NPM
+- Clone the Repository: ```git clone git@github.com:Bra7wurs7/LIQUID.git```
+- Change into the newly created directory: ```cd LIQUID```
+- Download NodeJS dependencies: ```npm i```
+- Start Angular live development server: ```npm run start```
+- Open app in your browser: ```firefox localhost:4200```
+
+*Last Update 29.04.23 (DD-MM-YY)*

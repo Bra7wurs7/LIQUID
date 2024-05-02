@@ -1,1 +1,0 @@
-- Whenever the current line in the editor follows a certain structure, like markdown syntax, The editor suggests

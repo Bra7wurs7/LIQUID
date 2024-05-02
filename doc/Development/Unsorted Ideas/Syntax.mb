@@ -1,5 +1,0 @@
-Methodenaufrufe
-artikelname(): Rufe die Kurzbeschreibung von dem Artikel hinter "artikelname" auf und schicke sie als prompt an das LLM
-artikelname.überschrift1() Rufe den text der Sektion zur Überschrift "überschrift1" auf und sende ihn als prompt an das LLM
-
-Wenn ein Text im Artikel solche attributsabrufungen enthält {attribute_name}, werden entweder artikelattribute abgerufen, oder beim aufrufen der zugehörgen überschrift als methode abgefragt.
