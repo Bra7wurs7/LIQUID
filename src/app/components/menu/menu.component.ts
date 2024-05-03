@@ -13,6 +13,7 @@ import { ApiConfig } from 'src/app/models/apiConfig';
 export class MenuComponent {
   @Input() allProjectsPromise!: Promise<{ title: string; lastModified: Date }[]>;
   @Input() activeProject!: string;
+  @Input() allApis!: ApiConfig[]
   @Output() menuEventEmitter: EventEmitter<MenuEvent> = new EventEmitter();
 
   scrollIncrementDecrement = scrollIncrementDecrement;
@@ -98,8 +99,8 @@ export class MenuComponent {
     if (this.editConfigIndex !== undefined) {
       try {
         const conf: ApiConfig = JSON.parse(config);
-        this.llmApiService.apiConfigs[index] = conf;
-        this.llmApiService.saveLLMConfigs();
+        //this.llmApiService.apiConfigs[index] = conf;
+        //this.llmApiService.saveLLMConfigs();
       } catch { }
     }
   }

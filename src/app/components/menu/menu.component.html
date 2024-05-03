@@ -4,8 +4,7 @@
   <div class="flex flex-column">
     <textarea pInputTextarea style="width: 100%; height: 40vh;" [(ngModel)]="editConfig"></textarea>
     <div class="flex flex-row justify-content-between" style="margin-top: 2px;">
-      <button pButton pRipple label="Delete" class="p-button-danger" style="margin-right: 2px"
-        (click)="llmApiService.removeApiConfig(editConfigIndex); closeButton.click()"></button>
+      <button pButton pRipple label="Delete" class="p-button-danger" style="margin-right: 2px"></button>
       <div>
         <button pButton pRipple label="Save" class="p-button-primary" style="margin-right: 2px"
           (click)="saveLLMConfigJSON(editConfig ?? '', editConfigIndex ?? -1); closeButton.click()"></button>
@@ -25,8 +24,7 @@
     <!-- @TODO Suggest Api Keys based on existing configurations -->
     <input #ApiKey type="password" class="settingsTextInput" placeholder="Api Key" pInputText
       pTooltip="Enter the authorization key for the API endpoint" tooltipPosition="bottom" />
-    <div class="iconButton flex flex-column justify-content-center" pTooltip="Add Api Endpoint" tooltipPosition="bottom"
-      (click)="llmApiService.addLLMConfig(selectedLLM.code, ApiKey.value)">
+    <div class="iconButton flex flex-column justify-content-center" pTooltip="Add Api Endpoint" tooltipPosition="bottom">
       <i class="iconoir iconoir-plus"></i>
     </div>
   </div>
@@ -51,26 +49,25 @@
           <div class="settings-tooltip-header flex justify-content-between align-items-center">Known LLM APIs
             <div class="iconoir iconoir-mouse-scroll-wheel" style="margin-left: 5px;"></div>
           </div>
-          <div class="settings-tooltip-selector active">
-            {{apiUrlInput.value || 'Custom URL'}}
+          <div class="settings-tooltip-selector" [ngClass]="{'active': selectedApiRecommendationIndex === -1}">
+            {{'Custom URL'}}
           </div>
           <div class="settings-tooltip-selector" [ngClass]="{'active': selectedApiRecommendationIndex === i}"
             *ngFor="let url of apiRecommendations; let i = index">
             {{url | urlDomain}}
           </div>
         </ng-template>
-        <input #apiKeyInput placeholder="Enter Key" class="menu-item-input width-79px fade-in-on-hover-child">
-        <div class="iconoir iconoir-server menu-item-icon right-6px hover-highlighting"
-          (click)="llmApiService.addLLMConfig([apiUrlInput.value, apiUrlInput.value, apiUrlInput.value], apiKeyInput.value)"></div>
+        <input #apiKeyInput placeholder="Enter Key" type="password" class="menu-item-input width-79px fade-in-on-hover-child">
+        <div class="iconoir iconoir-server menu-item-icon right-6px hover-highlighting"></div>
       </div>
     </div>
     <div class="menu-item-container fade-on-hover-parent"
-      *ngFor="let llmConfig of llmApiService.llmConfigs, index as i">
+      *ngFor="let apiConfig of allApis, index as i">
       <div class="menu-item horizontal-borders-0 grow-on-hover hover-highlighting"
-        (click)="editConfig = JSON.stringify(llmConfig, null ,2); editConfigIndex = i"
+        (click)="editConfig = JSON.stringify(apiConfig, null ,2); editConfigIndex = i"
         [ngClass]="{'highlighted':editConfigIndex === i}">
         <div class="menu-item-text">
-          <div class="tiny-faint-text">/folder </div>{{llmConfig.url | urlDomain}}
+          <div class="tiny-faint-text">/folder </div>{{apiConfig.url.host}}
         </div>
         <div class="iconoir iconoir-settings menu-item-icon right-6px"></div>
         <p-contextMenu #projectContextMenu [model]="existingProjectMenuItems" [triggerEvent]="'click'"

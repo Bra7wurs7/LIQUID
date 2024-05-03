@@ -1,26 +1,18 @@
 import { Injectable } from '@angular/core';
 import { ApiConfig } from '../../models/apiConfig';
-import { Observable, map } from 'rxjs';
+import { Observable, lastValueFrom, map } from 'rxjs';
 import { Conversation } from '../../models/conversation';
 import { OpenAIRequestBody } from '../../models/llm/openAiRequestBody';
 import { MessageService } from 'primeng/api';
-import { OllamaRequestBody } from 'src/app/models/llm/ollamaRequestBody';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LlmApiService {
-  apiConfigs: ApiConfig[] = [];
 
-  constructor(private messageService: MessageService) {
-    const loadedConfig = localStorage.getItem("apiConfigs")
-    if (loadedConfig) {
-      this.apiConfigs = JSON.parse(loadedConfig);
-    }
-  }
-
-  public saveLLMConfigs() {
-    localStorage.setItem("apiConfigs", JSON.stringify(this.apiConfigs));
+  constructor(private messageService: MessageService, private http: HttpClient) {
+    
   }
 
   public async sendLLMPrompt(prompt: Conversation, llmConfig: ApiConfig): Promise<Observable<Record<string, any>[]> | void> {
@@ -36,52 +28,18 @@ export class LlmApiService {
     return this.sendOpenAiStylePrompt(prompt, llmConfig);
   }
 
+  public async getModels(api: ApiConfig): Promise<string[]> {
+    return lastValueFrom(this.http.get<string[]>(api.url.hostname + '/models'));
+  }
+
   public async sendOpenAiStylePrompt(prompt: Conversation, llmConfig: ApiConfig): Promise<Observable<Record<string, any>[]> | undefined> {
-    const body: OpenAIRequestBody = { ...new OpenAIRequestBody(), ...llmConfig.body, temperature: prompt.temperature, max_tokens: prompt.max_tokens }
+    const body: OpenAIRequestBody = { ...new OpenAIRequestBody(), ...llmConfig.default_body, temperature: prompt.temperature, max_tokens: prompt.max_tokens }
     for (const msg of prompt.messages) {
       if (msg.active) body.messages.push({ role: msg.role, content: msg.content });
     }
-    const response = await fetch(llmConfig.url + this.httpParamsToStringSuffix(llmConfig.params), {
+    const response = await fetch(llmConfig.url + this.httpParamsToStringSuffix(llmConfig.default_params), {
       method: 'POST',
-      headers: { ...llmConfig.headers, "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    });
-
-    if (!response.ok) {
-      this.messageService.add({ severity: 'error', summary: `Something went wrong trying to prompt the LLM. Code: ` + response.status })
-    }
-
-    const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader();
-
-    if (reader) {
-      return this.readableStreamToObservable(reader).pipe(map((a) => this.tolerantJsonParse(a)));
-    } else {
-      return;
-    }
-  }
-
-  public async sendOllamaStylePrompt(prompt: Conversation, llmConfig: ApiConfig) {
-    let system_text = "";
-    let prompt_text = "";
-    for (const msg of prompt.messages) {
-      if (msg.active) {
-        if (msg.role === "system") {
-          system_text = system_text + msg.content + "\n";
-        } else {
-          prompt_text = prompt_text + msg.content + "\n";
-        }
-      }
-    }
-    const body: OllamaRequestBody = {
-      ...new OllamaRequestBody(), ...llmConfig.body, system: system_text, prompt: prompt_text, options: {
-        top_p: prompt.top_p,
-        temperature: prompt.temperature,
-        num_predict: prompt.max_tokens,
-      }
-    }
-    const response = await fetch(llmConfig.url + this.httpParamsToStringSuffix(llmConfig.params), {
-      method: 'POST',
-      headers: { ...llmConfig.headers, "Content-Type": "application/json" },
+      headers: { ...llmConfig.default_headers, "Content-Type": "application/json" },
       body: JSON.stringify(body)
     });
 

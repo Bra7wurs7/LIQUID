@@ -26,13 +26,13 @@
 
     <!-- Menubar -->
     <div class="menubar">
-      <input *ngIf="llmApiService.llmConfigs.length > 0 || this.project" #consoleinput type="text"
+      <input #consoleinput type="text"
         [placeholder]="'Type here to interact with LIQUID'" class="input command-line" pInputText
         (focus)="consoleInputFocused = true" tooltipPosition="bottom" (blur)="consoleInputFocused = false"
         (keyup)="commandLineKeyUp($event)" [(ngModel)]="input" />
       <!-- Conversation Buttons -->
-      <div *ngIf="llmApiService.llmConfigs.length > 0" class="tab"
-        [ngClass]="{ active: dropdownPanelActiveTab === 'llm' }">
+      <div *ngFor="let api of apiConfigs; index as index" class="tab"
+        [ngClass]="{ active: dropdownPanelActiveTab === 'llm' &&  index === selectedApiIndex}">
         <div class="iconoir iconoir-settings collapsed_item" [pTooltip]="llmSettingsTooltip" tooltipPosition="bottom"
           [autoHide]="false"
           (wheel)="conversations[activeConversationIndex].max_tokens= scrollIncrementDecrement(true, $event, conversations[activeConversationIndex].max_tokens, 128, 4096)"
@@ -66,7 +66,7 @@
         </div>
         <div class="iconoir iconoir-send collapsed_item" [pTooltip]="promptConversationTooltip" tooltipPosition="bottom"
           (mousedown)="onClickSend($event)" (contextmenu)=" $event.preventDefault()"
-          (wheel)="selectedLLMIndex = scrollIncrementDecrement(false, $event, selectedLLMIndex, 1, llmApiService.llmConfigs.length-1); saveSelectedLLMIndex()"
+          (wheel)="selectedLLMIndex = scrollIncrementDecrement(false, $event, selectedLLMIndex, 1, apiConfigs.length-1); saveSelectedLLMIndex()"
           [ngClass]="{'iconoir-send-solid': autopromptingEnabled}">
           <ng-template #promptConversationTooltip>
             <div class="tooltip-background">
@@ -82,7 +82,7 @@
               <div class="iconoir iconoir-mouse-scroll-wheel" style="margin-left: 5px;"></div>
             </div>
             <div class="settings-tooltip-selector" [ngClass]="{'active': selectedLLMIndex === i}"
-              *ngFor="let option of llmApiService.apiConfigs; let i = index">
+              *ngFor="let option of apiConfigs; let i = index">
               {{option.url.hostname}}
             </div>
           </ng-template>

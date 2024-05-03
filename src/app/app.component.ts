@@ -23,6 +23,7 @@ import { MenuEvent } from './models/projectEvent';
 import { scrollIncrementDecrement } from './util/functions'
 import { ConversationViewerComponent } from './components/conversation-viewer/conversation-viewer.component';
 import { EventEmitter } from '@angular/core';
+import { ApiConfig } from './models/apiConfig';
 
 @Component({
   selector: 'app-root',
@@ -76,6 +77,10 @@ export class AppComponent implements OnInit {
     })
   );
 
+  /** API Configurations */
+  apiConfigs: ApiConfig[] = [];
+  selectedApiIndex: number = 0;
+
   rightClickedWorkspace: number = -1;
   workspaceContextMenuItems = [
     {
@@ -99,7 +104,6 @@ export class AppComponent implements OnInit {
       }
     },
   ];
-
 
   constructor(
     private messageService: MessageService,
@@ -130,6 +134,14 @@ export class AppComponent implements OnInit {
       this.autosave.subscribe(() => { });
     });
     this.loadSelectedLLMIndex()
+    const loadedConfig = localStorage.getItem("apiConfigs")
+    if (loadedConfig) {
+      this.apiConfigs = JSON.parse(loadedConfig);
+    }
+  }
+
+  public saveLLMConfigs() {
+    localStorage.setItem("apiConfigs", JSON.stringify(this.apiConfigs));
   }
 
   loadConversations(): Conversation[] {
@@ -681,7 +693,7 @@ export class AppComponent implements OnInit {
 
     this.deactivateOldMessages(this.hideOlderThan, this.conversations[this.activeConversationIndex].messages);
 
-    this.llmApiService.sendLLMPrompt(this.conversations[this.activeConversationIndex], this.llmApiService.apiConfigs[this.selectedLLMIndex]).then((o) => {
+    this.llmApiService.sendLLMPrompt(this.conversations[this.activeConversationIndex], this.apiConfigs[this.selectedLLMIndex]).then((o) => {
       o?.subscribe((a) => {
         for (const v of a) {
           if (v && v.choices !== undefined) {
@@ -754,7 +766,7 @@ export class AppComponent implements OnInit {
 
   loadSelectedLLMIndex() {
     const index = Number(localStorage.getItem('llm_index')) ?? 0;
-    if (this.llmApiService.apiConfigs[index]) {
+    if (this.apiConfigs[index]) {
       this.selectedLLMIndex = index;
     }
   }
