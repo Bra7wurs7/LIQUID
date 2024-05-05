@@ -140,7 +140,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  public saveLLMConfigs() {
+  public saveApiConfigs() {
     localStorage.setItem("apiConfigs", JSON.stringify(this.apiConfigs));
   }
 
@@ -172,8 +172,10 @@ export class AppComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: `Loading Failed` });
       return;
     }
+    if (this.project) {
+      this.saveToDB();
+    }
     this.project = project;
-    this.saveToDB()
     this.initializeArticleHierarchyMap(true);
   }
 
@@ -440,7 +442,7 @@ export class AppComponent implements OnInit {
         .then(() => {
           this.messageService.add({
             severity: 'success',
-            summary: `"${this.project?.title}" Saved`,
+            summary: `"${serializableProject.title}" Saved`,
           });
         });
     } else {
@@ -610,7 +612,12 @@ export class AppComponent implements OnInit {
         const urlAndKey = event[1].split(' ');
         const newApi = ApiConfig.ForChatCompletion(urlAndKey[0], urlAndKey[1]);
         this.apiConfigs.push(newApi);
+        this.saveApiConfigs();
         break;
+      case "/delete_api":
+        const apiIndex = Number(event[1]);
+        this.apiConfigs.splice(apiIndex, 1);
+        this.saveApiConfigs();
     }
   }
 

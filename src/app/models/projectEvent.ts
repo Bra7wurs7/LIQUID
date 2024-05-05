@@ -1,1 +1,1 @@
-export type MenuEvent = ["/api" | "/folder" | "/file" | "/help" | "/download" | "/upload" | "/delete", string];
+export type MenuEvent = ["/api" | "/folder" | "/file" | "/help" | "/download" | "/upload" | "/delete" | "/delete_api", string];

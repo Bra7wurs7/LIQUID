@@ -43,8 +43,10 @@ export class MenuComponent {
     if (this.editConfigIndex !== undefined) {
       try {
         const conf: ApiConfig = JSON.parse(config);
-        //this.llmApiService.apiConfigs[index] = conf;
-        //this.llmApiService.saveLLMConfigs();
+        this.allApis[this.editConfigIndex].url = conf.url;
+        this.allApis[this.editConfigIndex].body = conf.body;
+        this.allApis[this.editConfigIndex].headers = conf.headers;
+        this.allApis[this.editConfigIndex].params = conf.params;
       } catch { }
     }
   }

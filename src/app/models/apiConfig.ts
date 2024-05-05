@@ -17,18 +17,10 @@ export class ApiConfig {
     }
 
     public static ForChatCompletion(url: string, key: string) {
-        const parsedUrl = this.TolerantUrlParse(url)
+        const parsedUrl = new URL(url);
         const authorization = `Bearer ${key}`
         parsedUrl.pathname = "/chat/completions"
 
         return new ApiConfig(parsedUrl, {}, {'Authorization' : authorization})
-    }
-
-    public static TolerantUrlParse(url: string): URL {
-        if (URL.canParse(url)) {
-            const urlCopy = "https://" + url
-            return new URL(urlCopy)
-        }
-        return new URL(url);
     }
 }
