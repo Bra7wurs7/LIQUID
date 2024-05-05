@@ -18,13 +18,13 @@
 
 <div class="flex flex-column menu-list">
   <div class="menu-item-container">
-    <div class="menu-item horizontal-borders-0 left-border-transparent">
+    <div class="menu-item border-bottom-0 border-left-transparent">
       <div class="iconoir iconoir-settings menu-item-icon hover-highlighting right-6px"></div>
     </div>
   </div>
   <div>
     <div class="menu-item-container margin-top-6px fade-on-hover-parent">
-      <div class="menu-item hover-highlighting">
+      <div class="menu-item border-top-0 border-right-transparent hover-highlighting">
         <div class="menu-item-text fade-out-on-hover-child">
           <b>/api</b><i> url [key]</i>
         </div>
@@ -50,11 +50,11 @@
       </div>
     </div>
     <div class="menu-item-container fade-on-hover-parent" *ngFor="let apiConfig of allApis, index as i, last as isLast">
-      <div class="menu-item border-top-0 grow-on-hover hover-highlighting"
+      <div class="menu-item border-top-0 border-bottom-0 border-right-transparent grow-on-hover hover-highlighting"
         (click)="editConfig = JSON.stringify(apiConfig, null ,2); editConfigIndex = i"
-        [ngClass]="{'highlighted':editConfigIndex === i, 'border-bottom-0': !isLast}">
+        [ngClass]="{'highlighted':editConfigIndex === i}">
         <div class="menu-item-text">
-          <div class="tiny-faint-text">/api </div>{{apiConfig.url.host}}
+          <div class="tiny-faint-text">/api </div>{{apiConfig.url | urlDomain}}
         </div>
         <div class="iconoir iconoir-settings menu-item-icon right-6px"></div>
         <p-contextMenu #projectContextMenu [model]="existingProjectMenuItems" [triggerEvent]="'click'"
@@ -62,7 +62,7 @@
       </div>
     </div>
     <div class="menu-item-container margin-top-6px fade-on-hover-parent">
-      <div class="menu-item hover-highlighting">
+      <div class="menu-item border-top-0 border-right-transparent hover-highlighting">
         <div class="menu-item-text fade-out-on-hover-child">
           <b>/archive</b><i> name</i>
         </div>
@@ -74,9 +74,9 @@
     </div>
     <div class="menu-item-container fade-on-hover-parent"
       *ngFor="let project of allProjectsPromise | async, last as isLast">
-      <div class="menu-item border-top-0 grow-on-hover hover-highlighting" (click)="onEnterVault(project.title)"
+      <div class="menu-item border-top-0 border-bottom-0 border-right-transparent grow-on-hover hover-highlighting" (click)="onEnterVault(project.title)"
         (contextmenu)="lastRightClickedProject = project.title; projectContextMenu.toggle($event); $event.preventDefault()"
-        [ngClass]="{'highlighted':project.title === activeProject, 'border-bottom-0': !isLast}">
+        [ngClass]="{'highlighted':project.title === activeProject}">
         <div class="menu-item-text">
           <div class="tiny-faint-text">/folder </div>{{project.title}}
         </div>
@@ -89,7 +89,7 @@
       </div>
     </div>
     <div class="menu-item-container margin-top-6px fade-on-hover-parent">
-      <div class="menu-item hover-highlighting">
+      <div class="menu-item border-top-0 border-right-transparent hover-highlighting">
         <div class="menu-item-text fade-out-on-hover-child">
           <b>/file</b><i> name</i>
         </div>
@@ -100,7 +100,7 @@
       </div>
     </div>
     <div class="menu-item-container margin-top-6px fade-on-hover-parent">
-      <div class="menu-item hover-highlighting">
+      <div class="menu-item border-top-0 border-right-transparent hover-highlighting">
         <div class="menu-item-text fade-out-on-hover-child">
           <b>/help</b>
         </div>

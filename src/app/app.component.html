@@ -1,11 +1,12 @@
 <!-- LEFT SIDEBAR -->
 <div class="left sidebar" [ngClass]="{'collapsed': !project}">
-  <!-- @TODO Add sorting mechanics -->
-  <app-hierarchical-list *ngIf="this.project" [project]="project" [hierarchyDirection]="'down'"
+  <app-hierarchical-list class="width-200px" *ngIf="this.project" [project]="project" [hierarchyDirection]="'down'"
     [currentWorkspace]="this.project.workspaces[this.project.activeWorkspaceIndex]" [isListRoot]="true"
     [showSearch]="true" [hierarchyNodeList]="articleHierarchyMap | mapToList" [searchValue]="input"
     (articleClickedEmitter)="toggleArticleActive($event.name)" (articleActionClicked)="onListArticleActionClick($event)"
     (addArticleEvent)="addArticle($event)"></app-hierarchical-list>
+  <!-- @TODO Rework to use the menu system -->
+  
 </div>
 
 <!-- CENTRAL AREA -->
@@ -83,7 +84,7 @@
             </div>
             <div class="settings-tooltip-selector" [ngClass]="{'active': selectedLLMIndex === i}"
               *ngFor="let option of apiConfigs; let i = index">
-              {{option.url.hostname}}
+              {{option.url | urlDomain}}
             </div>
           </ng-template>
         </div>
@@ -193,9 +194,6 @@
     </div>
   </div>
 </div>
-
-<!-- RIGHT SIDEBAR -->
-<div class="right sidebar" [ngClass]="{'collapsed': true}"></div>
 
 <!-- Notification Outlet -->
 <p-toast position="bottom-center"></p-toast>

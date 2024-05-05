@@ -79,6 +79,7 @@ export class AppComponent implements OnInit {
 
   /** API Configurations */
   apiConfigs: ApiConfig[] = [];
+  apiConfigModelsMap: Record<string, string[]> = {}
   selectedApiIndex: number = 0;
 
   rightClickedWorkspace: number = -1;
@@ -137,11 +138,27 @@ export class AppComponent implements OnInit {
     const loadedConfig = localStorage.getItem("apiConfigs")
     if (loadedConfig) {
       this.apiConfigs = JSON.parse(loadedConfig);
+      this.loadApiModels()
     }
   }
 
-  public saveApiConfigs() {
+  saveApiConfigs() {
     localStorage.setItem("apiConfigs", JSON.stringify(this.apiConfigs));
+    this.loadApiModels()
+  }
+
+  loadApiModels() {
+    for (const config of this.apiConfigs) {
+      // if localhost use of ollama is assumed
+      if(config.url.includes('localhost')) {
+        fetch(config.url + "/api/tags", {method: 'GET', headers: config.headers}).then((response) => console.log(response));
+      } 
+      // Otherwise assume openai api style
+      else {
+        fetch(config.url + "/v1/models", {method: 'GET', headers: config.headers}).then((response) => console.log(response));
+      } 
+
+    }
   }
 
   loadConversations(): Conversation[] {
@@ -610,7 +627,14 @@ export class AppComponent implements OnInit {
         break;
       case "/api":
         const urlAndKey = event[1].split(' ');
-        const newApi = ApiConfig.ForChatCompletion(urlAndKey[0], urlAndKey[1]);
+        const parsedUrl = new URL(urlAndKey[0]);
+        parsedUrl.pathname = "/chat/completions"
+        const newApi: ApiConfig = {
+          url: parsedUrl.protocol + '//' + parsedUrl.host, 
+          params: {}, 
+          headers: urlAndKey[1] !== undefined ? {'Authorization' : `Bearer ${urlAndKey[1]}`} : {}, 
+          body: {},
+        }
         this.apiConfigs.push(newApi);
         this.saveApiConfigs();
         break;
@@ -764,14 +788,14 @@ export class AppComponent implements OnInit {
 
   deactivateOldMessages(allowed_age: number, messages: Msg[]) {
     if (allowed_age > -1)
-    messages.forEach((msg, index) => {
-      if (msg.role !== "system") {
-        msg.active = false;
-        if (index > (messages.length - 1) - allowed_age) {
-          msg.active = true;
+      messages.forEach((msg, index) => {
+        if (msg.role !== "system") {
+          msg.active = false;
+          if (index > (messages.length - 1) - allowed_age) {
+            msg.active = true;
+          }
         }
-      }
-    });
+      });
   }
 
   loadSelectedLLMIndex() {

@@ -16,8 +16,28 @@ body {
 
 app-root {
   display: flex;
-  flex-direction: row;
   height: 100%;
+}
+
+.sidebar {
+  transition: max-width 0.2s;
+  height: 100%;
+  overflow-y: hidden;
+  background-color: var(--surface-b);
+  max-width: 250px;
+
+  .width-200px {
+    width: 200px;
+  }
+
+  &.collapsed {
+    max-width: 0;
+    border: 0 transparent;
+  }
+
+  &.left {
+    border-right: 1px solid var(--surface-border);
+  }
 }
 
 //@PrimeNG file panel default toggler is disabled
@@ -259,7 +279,7 @@ app-root {
   flex-direction: column;
   justify-content: space-between;
   width: 200px;
-  height: 100%;
+  margin: 4px 4px 4px 0;
 
   .menu-item-container {
     position: relative;
@@ -296,7 +316,6 @@ app-root {
       width: 200px;
       height: 33px;
       border: 1px solid var(--surface-border);
-      border-right: 0;
 
       &.highlighted {
         background-color: var(--surface-a);
@@ -326,8 +345,12 @@ app-root {
         border-bottom: 0;
       }
 
-      &.left-border-transparent {
+      &.border-left-transparent {
         border-left-color: transparent;
+      }
+
+      &.border-right-transparent {
+        border-right-color: transparent;
       }
 
       &.active {

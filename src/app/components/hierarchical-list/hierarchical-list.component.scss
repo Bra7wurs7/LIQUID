@@ -109,7 +109,7 @@
     border-bottom-color: var(--surface-border);
 }
 
-.entryText {
+.article-text {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -129,7 +129,7 @@
     }
 }
 
-.activeEntryFolderIcon {
+.active-article-icon {
     transition: max-width 0.1s, opacity 0.1s;
     max-width: 0;
     opacity: 0;

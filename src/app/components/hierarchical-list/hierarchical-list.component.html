@@ -1,14 +1,14 @@
-<div class="hierarchicalListContainer flex flex-column showBorderL" [ngClass]="{
+<div class="hierarchicalListContainer showBorderL" [ngClass]="{
         'active': isActive,
         'showBorderR': isListRoot,
         'isRoot': isListRoot
     }">
     <!-- Add Article Button -->
-    <div class="flex-column left flex justify-content-start align-items-center" *ngIf="searchValue">
-        <div class="article borderTop w-full relative flex flex-row align-content-center justify-content-between hideChildUntilHoverParent borderBottom"
+    <div class="left" *ngIf="searchValue">
+        <div class="article borderTop hideChildUntilHoverParent borderBottom"
             (click)="addArticleEvent.emit(searchValue); searchValue = ''" [pTooltip]="'Add article ' + searchValue">
-            <div class="iconoir iconoir-page-plus-in activeEntryFolderIcon active"></div>
-            <div class="entryText pointerOnHover flex-grow-1">
+            <div class="iconoir iconoir-page-plus-in active-article-icon active"></div>
+            <div class="article-text pointerOnHover flex-grow-1">
                 {{'New: ' + searchValue}}
             </div>
         </div>
@@ -21,7 +21,7 @@
         : (hierarchyNodeList | articleHierarchyListStringFilter:searchValue); first as isFirst; last as isLast; index as i">
         <div class="pseudoBorder top" *ngIf="isFirst && !searchValue"
             [ngClass]="{'active': currentWorkspace.viewedArticles.includes(articleHierarchyNode.node.name)}"></div>
-        <div class="articleContainer flex-column left flex justify-content-start align-items-center" [ngClass]="{
+        <div class="articleContainer" [ngClass]="{
                 'active': currentWorkspace.viewedArticles.includes(articleHierarchyNode.node.name),
             }">
             <!-- Article Name & Buttons -->
@@ -32,12 +32,12 @@
                     'active': currentWorkspace.viewedArticles.includes(articleHierarchyNode.node.name),
                     'highlighted': false
             }">
-                <i class="iconoir activeEntryFolderIcon" [ngClass]="{
+                <i class="iconoir active-article-icon" [ngClass]="{
                         'iconoir-hashtag': articleHierarchyNode.children.length > 0, 
                         'iconoir-page': articleHierarchyNode.children.length === 0, 
                         'active': currentWorkspace.viewedArticles.includes(articleHierarchyNode.node.name)
                         }"></i>
-                <div class="entryText">
+                <div class="article-text">
                     {{articleHierarchyNode.node.name}}
                     <span class="articleParent" *ngFor="let parent of (listParent ? (articleHierarchyNode.parents | articleHierarchyNodesFilter:(listParent.node.name)) : articleHierarchyNode.parents)">#{{parent.node.name}}</span>
                 </div>

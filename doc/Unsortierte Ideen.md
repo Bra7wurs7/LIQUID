@@ -19,6 +19,10 @@
 - Alles wird links gelistet, weil alles was irgendwie existiert eine datei ist.
 - Eine Datei kann geöffnet werden, dann wind sie in der mitte, unter wer werkzeugleiste eingelistet und hervorgehoben 
 
+##### V0.5.0
+- Ab version 0.5 soll Liquid in der Lage sein, sich selbst in Rust zu übersetzen, mit der nutzung von nur Lokalen LLMs.
+	- Das heißt auch, dass fast nur noch funktionale programmierkonzepte verwendet werden.
+
 ##### V0.3.0: 
 - Seamless GIT-Clone Integration
 	- Laden eines Git-Repo via http

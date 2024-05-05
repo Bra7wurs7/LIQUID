@@ -29,7 +29,7 @@ export class LlmApiService {
   }
 
   public async getModels(api: ApiConfig): Promise<string[]> {
-    return lastValueFrom(this.http.get<string[]>(api.url.hostname + '/models'));
+    return lastValueFrom(this.http.get<string[]>(new URL(api.url).hostname + '/models'));
   }
 
   public async sendOpenAiStylePrompt(prompt: Conversation, llmConfig: ApiConfig): Promise<Observable<Record<string, any>[]> | undefined> {
@@ -37,7 +37,7 @@ export class LlmApiService {
     for (const msg of prompt.messages) {
       if (msg.active) body.messages.push({ role: msg.role, content: msg.content });
     }
-    const response = await fetch(llmConfig.url + this.httpParamsToStringSuffix(llmConfig.params), {
+    const response = await fetch(llmConfig.url + '/v1/chat/completions' + this.httpParamsToStringSuffix(llmConfig.params), {
       method: 'POST',
       headers: { ...llmConfig.headers, "Content-Type": "application/json" },
       body: JSON.stringify(body)
