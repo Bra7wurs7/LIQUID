@@ -15,21 +15,6 @@
   </div>
 </p-dialog>
 
-<!-- LLM Settings -->
-<div class="flex flex-column h-full">
-  <div class="flex flex-row justify-content-between align-items-stretch">
-    <p-cascadeSelect pTooltip="Select an LLM Api Provider" tooltipPosition="left" [(ngModel)]="selectedLLM"
-      [options]="llms" optionLabel="mname" optionGroupLabel="name" [optionGroupChildren]="['models']"
-      placeholder="Select LLM Provider"></p-cascadeSelect>
-    <!-- @TODO Suggest Api Keys based on existing configurations -->
-    <input #ApiKey type="password" class="settingsTextInput" placeholder="Api Key" pInputText
-      pTooltip="Enter the authorization key for the API endpoint" tooltipPosition="bottom" />
-    <div class="iconButton flex flex-column justify-content-center" pTooltip="Add Api Endpoint" tooltipPosition="bottom">
-      <i class="iconoir iconoir-plus"></i>
-    </div>
-  </div>
-</div>
-
 <div class="flex flex-column menu-list">
   <div class="menu-item-container">
     <div class="menu-item horizontal-borders-0 left-border-transparent">
@@ -44,7 +29,7 @@
         </div>
         <input #apiUrlInput placeholder="Enter URL" class="menu-item-input width-79px fade-in-on-hover-child"
           (wheel)="selectedApiRecommendationIndex = scrollIncrementDecrement(false, $event, selectedApiRecommendationIndex, 1, apiRecommendations.length-1, -1); apiUrlInput.value = apiRecommendations[selectedApiRecommendationIndex] || ''"
-          [pTooltip]="apiUrlTooltip" tooltipPosition="bottom">
+          [pTooltip]="apiUrlTooltip" tooltipPosition="left">
         <ng-template #apiUrlTooltip>
           <div class="settings-tooltip-header flex justify-content-between align-items-center">Known LLM APIs
             <div class="iconoir iconoir-mouse-scroll-wheel" style="margin-left: 5px;"></div>
@@ -58,16 +43,16 @@
           </div>
         </ng-template>
         <input #apiKeyInput placeholder="Enter Key" type="password" class="menu-item-input width-79px fade-in-on-hover-child">
-        <div class="iconoir iconoir-server menu-item-icon right-6px hover-highlighting"></div>
+        <div class="iconoir iconoir-server menu-item-icon right-6px hover-highlighting" (click)="menuEventEmitter.emit(['/api', apiUrlInput.value + ' ' + apiKeyInput.value])"></div>
       </div>
     </div>
     <div class="menu-item-container fade-on-hover-parent"
-      *ngFor="let apiConfig of allApis, index as i">
-      <div class="menu-item horizontal-borders-0 grow-on-hover hover-highlighting"
+      *ngFor="let apiConfig of allApis, index as i, last as isLast">
+      <div class="menu-item border-top-0 grow-on-hover hover-highlighting"
         (click)="editConfig = JSON.stringify(apiConfig, null ,2); editConfigIndex = i"
-        [ngClass]="{'highlighted':editConfigIndex === i}">
+        [ngClass]="{'highlighted':editConfigIndex === i, 'border-bottom-0': !isLast}">
         <div class="menu-item-text">
-          <div class="tiny-faint-text">/folder </div>{{apiConfig.url.host}}
+          <div class="tiny-faint-text">/api </div>{{apiConfig.url.host}}
         </div>
         <div class="iconoir iconoir-settings menu-item-icon right-6px"></div>
         <p-contextMenu #projectContextMenu [model]="existingProjectMenuItems" [triggerEvent]="'click'"
@@ -77,17 +62,17 @@
     <div class="menu-item-container margin-top-6px fade-on-hover-parent">
       <div class="menu-item hover-highlighting">
         <div class="menu-item-text fade-out-on-hover-child">
-          <b>/vault</b><i> name</i>
+          <b>/archive</b><i> name</i>
         </div>
-        <input #vaultNameInput placeholder="Enter a name" class="menu-item-input width-158px fade-in-on-hover-child">
+        <input #vaultNameInput placeholder="Enter new archive name" class="menu-item-input width-158px fade-in-on-hover-child">
         <div class="iconoir iconoir-folder-plus menu-item-icon hover-highlighting right-6px"
           (click)="onEnterVault(vaultNameInput.value)"></div>
       </div>
     </div>
-    <div class="menu-item-container fade-on-hover-parent" *ngFor="let project of allProjectsPromise | async">
-      <div class="menu-item horizontal-borders-0 grow-on-hover hover-highlighting" (click)="onEnterVault(project.title)"
+    <div class="menu-item-container fade-on-hover-parent" *ngFor="let project of allProjectsPromise | async, last as isLast">
+      <div class="menu-item border-top-0 grow-on-hover hover-highlighting" (click)="onEnterVault(project.title)"
         (contextmenu)="lastRightClickedProject = project.title; projectContextMenu.toggle($event); $event.preventDefault()"
-        [ngClass]="{'highlighted':project.title === activeProject}">
+        [ngClass]="{'highlighted':project.title === activeProject, 'border-bottom-0': !isLast}">
         <div class="menu-item-text">
           <div class="tiny-faint-text">/folder </div>{{project.title}}
         </div>
@@ -104,7 +89,7 @@
         <div class="menu-item-text fade-out-on-hover-child">
           <b>/file</b><i> name</i>
         </div>
-        <input #filenameInput placeholder="Enter a filename" class="menu-item-input width-158px fade-in-on-hover-child">
+        <input #filenameInput placeholder="Enter new file name" class="menu-item-input width-158px fade-in-on-hover-child">
         <div class="iconoir iconoir-page-plus menu-item-icon hover-highlighting right-6px"
           (click)="menuEventEmitter.emit(['/file', filenameInput.value])"></div>
       </div>

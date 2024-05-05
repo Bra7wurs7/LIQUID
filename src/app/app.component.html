@@ -20,7 +20,7 @@
       <app-alerts-list class="tab-content" *ngIf="dropdownPanelActiveTab === 'alerts'"></app-alerts-list>
 
       <app-menu *ngIf="dropdownPanelActiveTab === 'menu'" [activeProject]="project?.title ?? ''"
-        [allProjectsPromise]="allProjectsPromise" (menuEventEmitter)="handleMenuEvent($event)"
+        [allProjectsPromise]="allProjectsPromise" [allApis]="apiConfigs" (menuEventEmitter)="handleMenuEvent($event)"
         class="tab-content"></app-menu>
     </div>
 

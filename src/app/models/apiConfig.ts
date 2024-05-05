@@ -1,11 +1,8 @@
-import { HttpParams } from "@angular/common/http";
-
 export class ApiConfig {
     url: URL;
-    default_params: Record<string, string>;
-    default_headers: Record<string, string>;
-    default_body: Record<string, any>;
-    models: string[] = [];
+    params: Record<string, string>;
+    headers: Record<string, string>;
+    body: Record<string, any>;
 
     public constructor(
         url: URL,
@@ -14,18 +11,17 @@ export class ApiConfig {
         body?: Record<string, any>
     ) {
         this.url = url;
-        this.default_params = params ?? {};
-        this.default_headers = headers ?? {};
-        this.default_body = body ?? {};
+        this.params = params ?? {};
+        this.headers = headers ?? {};
+        this.body = body ?? {};
     }
 
-    public static ForChatCompletion(url: string) {
+    public static ForChatCompletion(url: string, key: string) {
         const parsedUrl = this.TolerantUrlParse(url)
-        const params = {}
-
+        const authorization = `Bearer ${key}`
         parsedUrl.pathname = "/chat/completions"
 
-        return new ApiConfig(parsedUrl)
+        return new ApiConfig(parsedUrl, {}, {'Authorization' : authorization})
     }
 
     public static TolerantUrlParse(url: string): URL {

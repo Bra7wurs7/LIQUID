@@ -19,7 +19,6 @@ export class MenuComponent {
   scrollIncrementDecrement = scrollIncrementDecrement;
 
   JSON = JSON;
-  llms: any[];
   selectedLLM: any;
 
   apiRecommendations = ["https://api.openai.com/v1/chat/completions", "https://api.mistral.ai/v1/chat/completions", "http://localhost:11434/api/chat"];
@@ -38,62 +37,7 @@ export class MenuComponent {
     { label: 'Delete', icon: 'iconoir iconoir-bin-half', command: () => this.menuEventEmitter.emit(["/delete", this.lastRightClickedProject ?? '']) }
   ]
 
-  foobs = [1, 2, 3];
-
-  constructor(public llmApiService: LlmApiService) {
-    this.llms = [
-      {
-        name: 'custom.domain',
-        code: ["https://api.some-domain.ai/v1/chat/completions", '', 'custom'],
-        models: [
-          {
-            mname: 'Custom Model',
-            code: ["https://api.some-domain.com/v1/chat/completions", 'custom-model', 'custom'],
-          },
-        ]
-      },
-      {
-        name: 'openai.com',
-        code: ["https://api.openai.com/v1/chat/completions", '', 'openai'],
-        models: [
-          {
-            mname: 'GPT-3.5 Turbo',
-            code: ["https://api.openai.com/v1/chat/completions", 'gpt-3.5-turbo', 'openai'],
-          },
-          {
-            mname: 'GPT-4',
-            code: ["https://api.openai.com/v1/chat/completions", 'gpt-4', 'openai'],
-          },
-          {
-            mname: 'GPT-4 Turbo',
-            code: ["https://api.openai.com/v1/chat/completions", 'gpt-4-turbo', 'openai'],
-          },
-        ]
-      },
-      {
-        name: 'mistral.ai',
-        code: ["https://api.mistral.ai/v1/chat/completions", '', 'mistral'],
-        models: [
-          {
-            mname: 'Mistral Tiny',
-            code: ["https://api.mistral.ai/v1/chat/completions", 'mistral-tiny', 'mistral'],
-          },
-          {
-            mname: 'Mistral Small',
-            code: ["https://api.mistral.ai/v1/chat/completions", 'mistral-small', 'mistral'],
-          },
-          {
-            mname: 'Mistral Medium',
-            code: ["https://api.mistral.ai/v1/chat/completions", 'mistral-medium-latest', 'mistral'],
-          },
-          {
-            mname: 'Mistral Large',
-            code: ["https://api.mistral.ai/v1/chat/completions", 'mistral-large-latest', 'mistral'],
-          },
-        ]
-      }
-    ];
-  }
+  constructor(public llmApiService: LlmApiService) {}
 
   saveLLMConfigJSON(config: string, index: number) {
     if (this.editConfigIndex !== undefined) {

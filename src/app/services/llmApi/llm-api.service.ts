@@ -33,13 +33,13 @@ export class LlmApiService {
   }
 
   public async sendOpenAiStylePrompt(prompt: Conversation, llmConfig: ApiConfig): Promise<Observable<Record<string, any>[]> | undefined> {
-    const body: OpenAIRequestBody = { ...new OpenAIRequestBody(), ...llmConfig.default_body, temperature: prompt.temperature, max_tokens: prompt.max_tokens }
+    const body: OpenAIRequestBody = { ...new OpenAIRequestBody(), ...llmConfig.body, temperature: prompt.temperature, max_tokens: prompt.max_tokens }
     for (const msg of prompt.messages) {
       if (msg.active) body.messages.push({ role: msg.role, content: msg.content });
     }
-    const response = await fetch(llmConfig.url + this.httpParamsToStringSuffix(llmConfig.default_params), {
+    const response = await fetch(llmConfig.url + this.httpParamsToStringSuffix(llmConfig.params), {
       method: 'POST',
-      headers: { ...llmConfig.default_headers, "Content-Type": "application/json" },
+      headers: { ...llmConfig.headers, "Content-Type": "application/json" },
       body: JSON.stringify(body)
     });
 

@@ -607,6 +607,9 @@ export class AppComponent implements OnInit {
         this.addArticle(event[1]);
         break;
       case "/api":
+        const urlAndKey = event[1].split(' ');
+        const newApi = ApiConfig.ForChatCompletion(urlAndKey[0], urlAndKey[1]);
+        this.apiConfigs.push(newApi);
         break;
     }
   }
