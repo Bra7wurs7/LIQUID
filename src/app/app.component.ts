@@ -824,5 +824,9 @@ export class AppComponent implements OnInit {
     }
 
   }
+
+  num(s: string): number {
+    return Number(s);
+  }
 }
 

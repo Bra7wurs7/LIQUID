@@ -6,7 +6,7 @@
     (articleClickedEmitter)="toggleArticleActive($event.name)" (articleActionClicked)="onListArticleActionClick($event)"
     (addArticleEvent)="addArticle($event)"></app-hierarchical-list>
   <!-- @TODO Rework to use the menu system -->
-  
+
 </div>
 
 <!-- CENTRAL AREA -->
@@ -27,41 +27,56 @@
 
     <!-- Menubar -->
     <div class="menubar">
-      <input #consoleinput type="text"
-        [placeholder]="'Type here to interact with LIQUID'" class="input command-line" pInputText
-        (focus)="consoleInputFocused = true" tooltipPosition="bottom" (blur)="consoleInputFocused = false"
+      <input #consoleinput type="text" [placeholder]="'Type here to interact with LIQUID'" class="input command-line"
+        pInputText (focus)="consoleInputFocused = true" tooltipPosition="bottom" (blur)="consoleInputFocused = false"
         (keyup)="commandLineKeyUp($event)" [(ngModel)]="input" />
       <!-- Conversation Buttons -->
       <div *ngFor="let api of apiConfigs; index as index" class="tab"
         [ngClass]="{ active: dropdownPanelActiveTab === 'llm' &&  index === selectedApiIndex}">
         <div class="iconoir iconoir-settings collapsed_item" [pTooltip]="llmSettingsTooltip" tooltipPosition="bottom"
-          [autoHide]="false"
-          (wheel)="conversations[activeConversationIndex].max_tokens= scrollIncrementDecrement(true, $event, conversations[activeConversationIndex].max_tokens, 128, 4096)"
-          (click)="$event.stopImmediatePropagation()">
+          [autoHide]="false" (click)="$event.stopImmediatePropagation()">
           <ng-template #llmSettingsTooltip>
             <div class="flex flex-column">
-              <div class="settings-tooltip-header">Max # of tokens to generate
-                <div class="iconoir iconoir-mouse-scroll-wheel"></div>
+
+              <div class="settings-tooltip-header fade-on-hover-parent"
+                (wheel)="max_tokens.value = ''+scrollIncrementDecrement(true, $event, max_tokens.value, 32, 4096)">Max
+                # of new tokens
+                <div class="iconoir iconoir-mouse-scroll-wheel fade-in-on-hover-child"></div>
               </div>
-              <input #max_tokens type="number" class="settings-tooltip-input" [min]="0" [max]="4096" [step]="128"
+              <input #max_tokens type="number" class="settings-tooltip-input" [min]="0" [max]="4096" [step]="32"
                 pInputText [(ngModel)]="conversations[activeConversationIndex].max_tokens" tooltipPosition="left"
-                [pTooltip]="'The maximum number of text the LLM may generate.\n(4 tokens ≈ 3 words)'" />
-              <div class="settings-tooltip-header">
+                [pTooltip]="'The maximum number of text the LLM may generate.\n(4 tokens ≈ 3 words)'"
+                (wheel)="max_tokens.value = ''+scrollIncrementDecrement(true, $event, max_tokens.value, 32, 4096)" />
+
+              <div class="settings-tooltip-header fade-on-hover-parent"
+                (wheel)="tempr.value = ''+scrollIncrementDecrement(true, $event, max_tokens.value, 0.05, 2); conversations[activeConversationIndex].temperature = num(tempr.value)">
                 Randomness
+                <div class="iconoir iconoir-mouse-scroll-wheel fade-in-on-hover-child"></div>
               </div>
               <input #tempr type="number" class="settings-tooltip-input" [min]="0" [max]="2" [step]="0.1" pInputText
                 [(ngModel)]="conversations[activeConversationIndex].temperature" tooltipPosition="left"
-                [pTooltip]="'A higher \'temperature\' (called \'Randomness\' here) setting makes less probable text generation more likely.\n\nA temperature of 0 makes the LLM always select the most probable option.'" />
-              <div class="settings-tooltip-header">Predictability
+                [pTooltip]="'A higher \'temperature\' (called \'Randomness\' here) setting makes less probable text generation more likely.\n\nA temperature of 0 makes the LLM always select the most probable option.'"
+                (wheel)="tempr.value = ''+scrollIncrementDecrement(true, $event, tempr.value, 0.05, 2); conversations[activeConversationIndex].temperature = num(tempr.value)" />
+
+              <div class="settings-tooltip-header fade-on-hover-parent"
+                (wheel)="top_p.value = ''+scrollIncrementDecrement(true, $event, top_p.value, 0.1, 4096); conversations[activeConversationIndex].top_p = num(top_p.value)">
+                Predictability
+                <div class="iconoir iconoir-mouse-scroll-wheel fade-in-on-hover-child"></div>
               </div>
               <input #top_p type="number" class="settings-tooltip-input" [min]="0" [max]="1" [step]="0.1" pInputText
-                [(ngModel)]="conversations[0].top_p" tooltipPosition="left"
-                [pTooltip]="'A lower  \'Top P\' (called \'Predictability\' here) removes less probable tokens from the selection when generating text.\n\nA \'Top P\' of 1 makes the LLM consider 100% of options when selecting the next token'" />
-              <div class="settings-tooltip-header">Memory
+                [(ngModel)]="conversations[activeConversationIndex].top_p" tooltipPosition="left"
+                [pTooltip]="'A lower  \'Top P\' (called \'Predictability\' here) removes less probable tokens from the selection when generating text.\n\nA \'Top P\' of 1 makes the LLM consider 100% of options when selecting the next token'"
+                (wheel)="top_p.value = ''+scrollIncrementDecrement(true, $event, top_p.value, 0.1, 4096); conversations[activeConversationIndex].top_p = num(top_p.value)" />
+
+              <div class="settings-tooltip-header fade-on-hover-parent"
+                (wheel)="memory.value = ''+scrollIncrementDecrement(true, $event, memory.value, 1, 4096, -1); hideOlderThan = num(memory.value)">
+                Memory
+                <div class="iconoir iconoir-mouse-scroll-wheel fade-in-on-hover-child"></div>
               </div>
-              <input #top_p type="number" class="settings-tooltip-input" [min]="-1" [max]="99" [step]="1" pInputText
+              <input #memory type="number" class="settings-tooltip-input" [min]="-1" [max]="99" [step]="1" pInputText
                 [(ngModel)]="hideOlderThan" tooltipPosition="left"
-                [pTooltip]="'The LLM will remember the last ' + hideOlderThan + ' messages. Context messages will not deactivate.'" />
+                [pTooltip]="'The LLM will remember the last ' + hideOlderThan + ' messages. Context messages will not deactivate. Set to -1 to remember everything.'"
+                (wheel)="memory.value = ''+scrollIncrementDecrement(true, $event, memory.value, 1, 99, -1); hideOlderThan = num(memory.value)" />
             </div>
           </ng-template>
         </div>
@@ -70,6 +85,14 @@
           (wheel)="selectedLLMIndex = scrollIncrementDecrement(false, $event, selectedLLMIndex, 1, apiConfigs.length-1); saveSelectedLLMIndex()"
           [ngClass]="{'iconoir-send-solid': autopromptingEnabled}">
           <ng-template #promptConversationTooltip>
+            <div class="settings-tooltip-header flex justify-content-between align-items-center">Choose LLM
+              <div class="iconoir iconoir-mouse-scroll-wheel" style="margin-left: 5px;"></div>
+            </div>
+            <div class="settings-tooltip-selector"
+              [ngClass]="{'active': selectedLLMIndex === i, 'border-bottom-radius-10px': isLast}"
+              *ngFor="let option of apiConfigs; last as isLast; index as i">
+              {{option.url | urlDomain}}
+            </div>
             <div class="tooltip-background">
               Prompt <div class="iconoir iconoir-mouse-button-left"></div>
             </div>
@@ -78,13 +101,6 @@
             </div>
             <div class="tooltip-background" [ngClass]="{'highlighted': autopromptingEnabled}">
               Autoprompting <div class="iconoir iconoir-pc-mouse"></div>
-            </div>
-            <div class="settings-tooltip-header flex justify-content-between align-items-center">Choose LLM
-              <div class="iconoir iconoir-mouse-scroll-wheel" style="margin-left: 5px;"></div>
-            </div>
-            <div class="settings-tooltip-selector" [ngClass]="{'active': selectedLLMIndex === i}"
-              *ngFor="let option of apiConfigs; let i = index">
-              {{option.url | urlDomain}}
             </div>
           </ng-template>
         </div>

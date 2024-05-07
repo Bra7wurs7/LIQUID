@@ -1,12 +1,16 @@
-export function scrollIncrementDecrement(invert: boolean, e: WheelEvent, n: number, step: number = 1, max: number = 100, min: number = 0): number {
+export function scrollIncrementDecrement(invert: boolean, e: WheelEvent, n: number | string, step: number = 1, max: number = 100, min: number = 0): number {
+    let m = Number(n)
     if (invert ? e.deltaY > 0 : e.deltaY < 0) {
-        if (n - step >= min) {
-            return n - step;
+        if (m - step >= min) {
+            return m - step;
+        } else {
+            return min;
         }
     } else {
-        if (n + step <= max) {
-            return n + step;
+        if (m + step <= max) {
+            return m + step;
+        } else {
+            return max;
         }
     }
-    return n;
 }

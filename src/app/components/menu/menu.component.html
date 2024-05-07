@@ -18,15 +18,15 @@
 
 <div class="flex flex-column menu-list">
   <div class="menu-item-container">
-    <div class="menu-item border-bottom-0 border-left-transparent">
+    <div class="menu-item border-bottom-0 border-right-transparent border-left-transparent">
       <div class="iconoir iconoir-settings menu-item-icon hover-highlighting right-6px"></div>
     </div>
   </div>
   <div>
     <div class="menu-item-container margin-top-6px fade-on-hover-parent">
-      <div class="menu-item border-top-0 border-right-transparent hover-highlighting">
+      <div class="menu-item border-top-0 border-left-transparent hover-highlighting">
         <div class="menu-item-text fade-out-on-hover-child">
-          <b>/api</b><i> url [key]</i>
+          <b class="text-color-primary">/api</b><i> url [key]</i>
         </div>
         <input #apiUrlInput placeholder="Enter URL" class="menu-item-input width-79px fade-in-on-hover-child"
           (wheel)="selectedApiRecommendationIndex = scrollIncrementDecrement(false, $event, selectedApiRecommendationIndex, 1, apiRecommendations.length-1, -1); apiUrlInput.value = apiRecommendations[selectedApiRecommendationIndex] || ''"
@@ -50,7 +50,7 @@
       </div>
     </div>
     <div class="menu-item-container fade-on-hover-parent" *ngFor="let apiConfig of allApis, index as i, last as isLast">
-      <div class="menu-item border-top-0 border-bottom-0 border-right-transparent grow-on-hover hover-highlighting"
+      <div class="menu-item border-top-0 border-bottom-0 border-left-transparent grow-on-hover hover-highlighting"
         (click)="editConfig = JSON.stringify(apiConfig, null ,2); editConfigIndex = i"
         [ngClass]="{'highlighted':editConfigIndex === i}">
         <div class="menu-item-text">
@@ -62,9 +62,9 @@
       </div>
     </div>
     <div class="menu-item-container margin-top-6px fade-on-hover-parent">
-      <div class="menu-item border-top-0 border-right-transparent hover-highlighting">
+      <div class="menu-item border-top-0 border-left-transparent hover-highlighting">
         <div class="menu-item-text fade-out-on-hover-child">
-          <b>/archive</b><i> name</i>
+          <b class="text-color-primary">/archive</b><i> name</i>
         </div>
         <input #vaultNameInput placeholder="Enter new archive name"
           class="menu-item-input width-158px fade-in-on-hover-child">
@@ -74,7 +74,7 @@
     </div>
     <div class="menu-item-container fade-on-hover-parent"
       *ngFor="let project of allProjectsPromise | async, last as isLast">
-      <div class="menu-item border-top-0 border-bottom-0 border-right-transparent grow-on-hover hover-highlighting" (click)="onEnterVault(project.title)"
+      <div class="menu-item border-top-0 border-bottom-0 border-left-transparent grow-on-hover hover-highlighting" (click)="onEnterVault(project.title)"
         (contextmenu)="lastRightClickedProject = project.title; projectContextMenu.toggle($event); $event.preventDefault()"
         [ngClass]="{'highlighted':project.title === activeProject}">
         <div class="menu-item-text">
@@ -89,9 +89,9 @@
       </div>
     </div>
     <div class="menu-item-container margin-top-6px fade-on-hover-parent">
-      <div class="menu-item border-top-0 border-right-transparent hover-highlighting">
+      <div class="menu-item border-top-0 border-left-transparent hover-highlighting">
         <div class="menu-item-text fade-out-on-hover-child">
-          <b>/file</b><i> name</i>
+          <b class="text-color-primary">/file</b><i> name</i>
         </div>
         <input #filenameInput placeholder="Enter new file name"
           class="menu-item-input width-158px fade-in-on-hover-child">
@@ -100,9 +100,9 @@
       </div>
     </div>
     <div class="menu-item-container margin-top-6px fade-on-hover-parent">
-      <div class="menu-item border-top-0 border-right-transparent hover-highlighting">
+      <div class="menu-item border-top-0 border-left-transparent hover-highlighting">
         <div class="menu-item-text fade-out-on-hover-child">
-          <b>/help</b>
+          <b class="text-color-primary">/help</b>
         </div>
         <input placeholder="Ask any question" class="menu-item-input width-158px fade-in-on-hover-child">
         <div class="iconoir iconoir-help-circle menu-item-icon hover-highlighting right-6px"></div>
