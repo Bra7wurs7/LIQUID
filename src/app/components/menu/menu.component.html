@@ -16,7 +16,7 @@
   </div>
 </p-dialog>
 
-<div class="flex flex-column menu-list">
+<div class="menu-list">
   <div class="menu-item-container">
     <div class="menu-item border-bottom-0 border-right-transparent border-left-transparent">
       <div class="iconoir iconoir-settings menu-item-icon hover-highlighting right-6px"></div>
@@ -78,7 +78,7 @@
         (contextmenu)="lastRightClickedProject = project.title; projectContextMenu.toggle($event); $event.preventDefault()"
         [ngClass]="{'highlighted':project.title === activeProject}">
         <div class="menu-item-text">
-          <div class="tiny-faint-text">/folder </div>{{project.title}}
+          <div class="tiny-faint-text">/archive </div>{{project.title}}
         </div>
         <div class="iconoir menu-item-icon right-6px" [ngClass]="{
           'iconoir-folder': project.title !== activeProject,
