@@ -105,29 +105,7 @@
           </ng-template>
         </div>
         <div class="separator collapsed_item"></div>
-        <div class="iconoir" *ngFor="let conversation of conversations; index as index" [ngClass]="{
-          'highlighted': index === this.activeConversationIndex && dropdownPanelActiveTab === 'llm',
-          'iconoir-message-text-solid': conversation.messages.length > 0,
-          'iconoir-message': conversation.messages.length === 0,
-          }" tooltipPosition="bottom" [pTooltip]="conversationTooltip" (click)="onClickConversation(index)"
-          (contextmenu)="rightClickedConversationIndex = index; conversationContextMenu.toggle($event)">
-          <ng-template #conversationTooltip>
-            <div class="flex flex-column tooltipList">
-              <div *ngFor="let message of conversation.messages; let isLast = last">
-                <div class="tooltipListItem" [ngClass]="{'faint': message.content.length === 0}">
-                  {{ message.content.length === 0 ? 'Empty Message' : (message.content | slice:0:50)}}
-                </div>
-                <div class="pseudo" *ngIf="!isLast"></div>
-              </div>
-
-              <div *ngIf="conversation.messages.length === 0">
-                New Conversation
-              </div>
-            </div>
-          </ng-template>
-          <p-contextMenu #conversationContextMenu [model]="conversationContextMenuItems" [triggerEvent]="'click'"
-            appendTo="body"></p-contextMenu>
-        </div>
+        <div class="iconoir iconoir-globe" (click)="onClickConversation(index)"></div>
       </div>
       <!-- Workspaces -->
       <div *ngIf="project" class="toolbarWorkspaces">

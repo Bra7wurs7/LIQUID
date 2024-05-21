@@ -279,7 +279,7 @@ app-root {
   flex-direction: column;
   justify-content: space-between;
   width: 200px;
-  margin: 4px 4px 0 0;
+  margin-right: 2px;
 
   .menu-item-container {
     position: relative;
@@ -390,6 +390,10 @@ app-root {
       .menu-item-icon {
         position: absolute;
 
+        &.left-6px {
+          left: 6px;
+        }
+        
         &.right-6px {
           right: 6px;
         }
