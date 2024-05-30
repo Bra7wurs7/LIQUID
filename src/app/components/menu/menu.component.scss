@@ -3,7 +3,7 @@
     width: 150px;
 
     &.active:not(:focus):not(:hover) {
-        border-bottom: 1px solid var(--primary-color);
+        border-bottom: 1px solid var(--orange);
     }
 }
 
@@ -26,29 +26,29 @@
     padding: 4px;
     transition: border 0.2s, background-color 0.05s;
     height: auto;
-    border: 1px solid var(--surface-border);
-    color: var(--text-color-secondary);
+    border: 1px solid var(--bg1);
+    color: var(--fg2);
     border-radius: 3px;
 
     &.active {
-        border-bottom: 1px solid var(--primary-color);
+        border-bottom: 1px solid var(--orange);
     }
 
     &:active {
         transition: background-color 0s;
-        background-color: var(--surface-border);
+        background-color: var(--bg1);
     }
 
     &:hover {
         cursor: pointer;
-        color: var(--text-color);
-        border-color: var(--text-color-secondary);
+        color: var(--fg);
+        border-color: var(--fg2);
     }
 }
 
 .textBox {
     transition: border 0.2s;
-    border: 1px solid var(--surface-border);
+    border: 1px solid var(--bg1);
     padding: 8px;
     min-width: max-content;
     width: 100%;
@@ -59,6 +59,6 @@
     letter-spacing: -2px;
 
     &.active {
-        border-bottom: 1px solid var(--primary-color);
+        border-bottom: 1px solid var(--orange);
     }
 }

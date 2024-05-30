@@ -1,33 +1,36 @@
 .dialog-prompt-textarea {
+    background-color: transparent;
     resize: none !important;
     padding: 10px;
     height: 100%;
-    border-radius: 0;
     flex-grow: 1;
     border-left: 0;
     border-top: 0;
     border-bottom: 0;
     margin-right: 2px;
-
-    &:hover {
-        background-color: var(--surface-a);
-    }
+    border-right: 1px solid var(--bg1);
+    outline: none;
+    color: var(--fg);
 
     &:focus {
-        background-color: var(--surface-a);
+        background-color: var(--bg0);
         resize: vertical;
+        border-color: var(--orange);
+    }
+
+    &:hover {
+        border-color: var(--orange);
     }
 
     &.inactive {
-        color: var(--gray-800);
-        border-color: var(--gray-800);
+        color: var(--bg1);
 
         &:hover {
-            color: var(--text-color-secondary);
+            color: var(--fg2);
         }
 
         &:focus {
-            color: var(--text-color-secondary);
+            color: var(--fg2);
         }
     }
 
@@ -41,7 +44,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-right: 1px solid var(--surface-border);
+    border-right: 1px solid var(--bg1);
     flex-grow: 1;
     user-select: none;
     text-align: center;
@@ -53,6 +56,6 @@
 }
 
 .author-icon {
-    background-color: var(--surface-border);
+    background-color: var(--bg1);
     border-radius: 24px;
 }

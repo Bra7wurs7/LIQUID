@@ -1,5 +1,5 @@
 .alert {
-    border: 1px solid var(--surface-border);
+    border: 1px solid var(--bg1);
     border-radius: 10px;
     width: 300px;
     .summary {
@@ -8,14 +8,14 @@
     }
     .actions{
         padding: 10px;
-        border-left: 1px solid var(--surface-border);
+        border-left: 1px solid var(--bg1);
         .pi {
             transition: color 0.1s;
-            color: var(--text-color-secondary);
+            color: var(--fg2);
             font-size: larger;
             &:hover {
                 cursor: pointer;
-                color: var(--text-color);
+                color: var(--fg);
             }
         }
     }

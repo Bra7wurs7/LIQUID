@@ -1,6 +1,6 @@
 html {
   height: 100%;
-  background-color: var(--surface-a);
+  background-color: var(--bg0);
   overflow: hidden;
 }
 
@@ -10,6 +10,14 @@ body {
 }
 
 :root {
+  --bg1: #3c3836;
+  --bg0_h: #1d2021;
+  --bg0: #282828;
+  --fg: #ebdbb2;
+  --fg2: #d5c4a1;
+  --purple: #b16286;
+  --orange: #fe8019;
+  --blue: #458588;
   font-family: Helvetica, sans-serif;
   --font-family: Helvetica, sans-serif;
 }
@@ -24,7 +32,7 @@ app-root {
   transition: max-width 0.2s;
   height: 100%;
   overflow-y: hidden;
-  background-color: var(--surface-b);
+  background-color: var(--bg0_h);
 
   .width-200px {
     width: 200px;
@@ -36,7 +44,7 @@ app-root {
   }
 
   &.left {
-    border-right: 1px solid var(--surface-border);
+    border-right: 1px solid var(--bg1);
   }
 }
 
@@ -79,11 +87,11 @@ app-root {
 
 .activePanel {
   .p-panel-header {
-    background-color: var(--surface-b);
+    background-color: var(--bg0_h);
   }
 
   .p-panel-content {
-    background-color: var(--surface-b);
+    background-color: var(--bg0_h);
   }
 }
 
@@ -94,7 +102,7 @@ app-root {
 }
 
 .internalLink {
-  color: var(--blue-700);
+  color: var(--blue);
 
   &:hover {
     cursor: pointer;
@@ -123,7 +131,7 @@ app-root {
 }
 
 .pseudoBorder {
-  border-bottom: 1px solid var(--surface-border);
+  border-bottom: 1px solid var(--bg1);
 }
 
 .pseudo {
@@ -144,7 +152,7 @@ app-root {
   .tooltipListItem {
     padding: 4px 8px 4px 8px;
     border-radius: 10px;
-    background-color: var(--surface-a);
+    background-color: var(--bg0);
     min-height: 27px;
     min-width: 100px;
     font-size: small;
@@ -156,7 +164,7 @@ app-root {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--surface-a);
+  background-color: var(--bg0);
   border-radius: 10px;
   padding: 3px 7px 3px 7px;
 
@@ -165,13 +173,13 @@ app-root {
   }
 
   &.highlighted {
-    background-color: var(--text-color-secondary);
-    color: var(--surface-a);
+    background-color: var(--fg2);
+    color: var(--bg0);
   }
 
   &.clickable {
     &:hover {
-      background-color: var(--surface-b);
+      background-color: var(--bg0_h);
       cursor: pointer;
     }
   }
@@ -182,7 +190,7 @@ app-root {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--surface-a);
+  background-color: var(--bg0);
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   padding: 2px 7px 3px 7px;
@@ -193,9 +201,9 @@ app-root {
 }
 
 .settings-tooltip-selector {
-  background-color: var(--surface-a);
+  background-color: var(--bg0);
   padding: 3px 7px 3px 7px;
-  color: var(--text-color-secondary);
+  color: var(--fg2);
   user-select: none;
 
   &:hover {
@@ -203,8 +211,8 @@ app-root {
   }
 
   &.active {
-    background-color: var(--text-color-secondary);
-    color: var(--surface-a);
+    background-color: var(--fg2);
+    color: var(--bg0);
   }
 
   &.border-bottom-radius-10px {
@@ -214,13 +222,13 @@ app-root {
 }
 
 .settings-tooltip-input {
-  border-color: var(--surface-b);
+  border-color: var(--bg0_h);
   border-radius: 0;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 
   &:hover {
-    border-color: var(--primary-color);
+    border-color: var(--orange);
   }
 }
 
@@ -241,7 +249,7 @@ app-root {
 }
 
 .faint {
-  color: var(--surface-border);
+  color: var(--bg1);
 }
 
 .fade-on-hover-parent {
@@ -270,8 +278,8 @@ app-root {
 }
 
 .horizontal-borders-1 {
-  border-top: 1px solid var(--surface-border);
-  border-bottom: 1px solid var(--surface-border);
+  border-top: 1px solid var(--bg1);
+  border-bottom: 1px solid var(--bg1);
 }
 
 .menu-list {
@@ -285,7 +293,7 @@ app-root {
     position: relative;
     width: 200px;
     height: 33px;
-    color: var(--text-color-secondary);
+    color: var(--fg2);
 
     &.margin-top-2 {
       margin-top: 2px;
@@ -298,8 +306,8 @@ app-root {
     .hover-highlighting {
       &:hover {
         cursor: pointer;
-        color: var(--text-color);
-        border-color: var(--text-color-secondary);
+        color: var(--fg);
+        border-color: var(--fg2);
       }
     }
 
@@ -309,16 +317,16 @@ app-root {
       justify-content: start;
       align-items: center;
       transition: width 0.1s;
-      background-color: var(--surface-b);
+      background-color: var(--bg0_h);
       position: absolute;
       top: 0;
       right: 0;
       width: 200px;
       height: 33px;
-      border: 1px solid var(--surface-border);
+      border: 1px solid var(--bg1);
 
       &.highlighted {
-        background-color: var(--surface-a);
+        background-color: var(--bg0);
       }
 
       &.grow-on-hover {
@@ -354,36 +362,28 @@ app-root {
       }
 
       &.active {
-        border-color: var(--primary-color);
+        border-color: var(--orange);
 
         .menu-item-text {
-          color: var(--text-color);
-        }
-
-        .author-icon {
-          color: var(--text-color);
+          color: var(--fg);
         }
       }
 
       &.inactive {
         &:not(.active) {
-          border-color: var(--gray-800);
+          border-color: var(--bg1);
         }
 
         &:hover {
-          color: var(--text-color-secondary);
+          color: var(--fg2);
         }
 
         &:focus {
-          color: var(--text-color-secondary);
-        }
-
-        .author-icon {
-          color: var(--gray-800);
+          color: var(--fg2);
         }
 
         .menu-item-text {
-          color: var(--gray-800);
+          color: var(--bg1);
         }
       }
 
@@ -437,13 +437,13 @@ app-root {
         user-select: none;
         width: 158px;
         .tiny-faint-text {
-          color: var(--surface-border);
+          color: var(--bg1);
           font-size: x-small;
           font-style: italic;
         }
 
         .text-color-primary {
-          color: var(--text-color)
+          color: var(--fg)
         }
       }
     }

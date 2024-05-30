@@ -19,8 +19,11 @@ export class ConversationViewerComponent implements OnInit {
   }
 
   @Input() conversation!: Conversation;
+  @Input() conversations: Conversation[] = [];
   @Input() addMessageEmitter!: EventEmitter<Msg>;
   @Output() messageEventEmitter: EventEmitter<[string, Msg | undefined]> = new EventEmitter();
+
+  activeConversationIndex: number = 0;
 
   messageContextMenuItems = [
     {

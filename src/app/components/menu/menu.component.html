@@ -18,7 +18,7 @@
 
 <div class="menu-list">
   <div class="menu-item-container">
-    <div class="menu-item border-bottom-0 border-right-transparent border-left-transparent">
+    <div class="menu-item border-bottom-0 border-top-0 border-right-transparent border-left-transparent">
       <div class="iconoir iconoir-settings menu-item-icon hover-highlighting right-6px"></div>
     </div>
   </div>
@@ -45,7 +45,7 @@
         </ng-template>
         <input #apiKeyInput placeholder="Enter Key" type="password"
           class="menu-item-input width-79px fade-in-on-hover-child">
-        <div class="iconoir iconoir-server menu-item-icon right-6px hover-highlighting"
+        <div class="iconoir iconoir-globe menu-item-icon right-6px hover-highlighting"
           (click)="menuEventEmitter.emit(['/api', apiUrlInput.value + ' ' + apiKeyInput.value])"></div>
       </div>
     </div>
@@ -56,7 +56,7 @@
         <div class="menu-item-text">
           <div class="tiny-faint-text">/api </div>{{apiConfig.url | urlDomain}}
         </div>
-        <div class="iconoir iconoir-settings menu-item-icon right-6px"></div>
+        <div class="iconoir iconoir-server-connection menu-item-icon right-6px"></div>
         <p-contextMenu #projectContextMenu [model]="existingProjectMenuItems" [triggerEvent]="'click'"
           appendTo="body"></p-contextMenu>
       </div>

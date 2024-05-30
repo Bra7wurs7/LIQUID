@@ -1,5 +1,5 @@
 <textarea *ngIf="conversation.messages.length > 0 && conversation.messages[activeMessage] !== undefined" #msgarea
-    pInputTextarea class="dialog-prompt-textarea" placeholder="Edit message text here" [ngClass]="{
+    class="dialog-prompt-textarea" placeholder="Edit message text here" [ngClass]="{
           'inactive': !conversation.messages[activeMessage].active,
         }" [(ngModel)]="conversation.messages[activeMessage].content"></textarea>
 <div *ngIf="conversation.messages.length === 0 || conversation.messages[activeMessage] === undefined"
@@ -14,7 +14,12 @@
     (wheel)="activeMessage = scrollIncrementDecrement(false, $event, activeMessage, 1, conversation.messages.length-1)">
     <div class="menu-item-container">
         <div class="menu-item horizontal-borders-0 border-right-transparent border-left-transparent">
-            <div class="iconoir iconoir-message menu-item-icon hover-highlighting left-6px"></div>
+            <div *ngFor="let conversation of conversations; index as i" (click)="activeConversationIndex = i"
+                class="iconoir hover-highlighting"
+                [ngClass]="{
+                    'iconoir-multi-bubble-solid': activeConversationIndex === i,
+                    'iconoir-multi-bubble': activeConversationIndex !== i
+                    }"></div>
             <div class="iconoir iconoir-settings menu-item-icon hover-highlighting right-6px"></div>
         </div>
     </div>
