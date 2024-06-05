@@ -36,13 +36,11 @@ export class AppComponent implements OnInit {
   @ViewChild('conversationViewer', { static: false }) conversationViewer!: ConversationViewerComponent;
   @ViewChild('actionBar') actionBar!: HTMLInputElement;
   scrollIncrementDecrement = scrollIncrementDecrement;
-  activeArticlePages: Map<string, HTMLElement> = new Map();
 
   /** Project */
   allProjectsPromise: Promise<{ title: string; lastModified: Date }[]>;
   articleHierarchyMap: Map<string, ArticleHierarchyNode> = new Map();
   project?: Project;
-  activeArticle?: string;
 
   /** Assistants & Consoles */
   input: string = '';
@@ -150,13 +148,13 @@ export class AppComponent implements OnInit {
   loadApiModels() {
     for (const config of this.apiConfigs) {
       // if localhost use of ollama is assumed
-      if(config.url.includes('localhost')) {
-        fetch(config.url + "/api/tags", {method: 'GET', headers: config.headers}).then((response) => console.log(response));
-      } 
+      if (config.url.includes('localhost')) {
+        fetch(config.url + "/api/tags", { method: 'GET', headers: config.headers }).then((response) => console.log(response));
+      }
       // Otherwise assume openai api style
       else {
-        fetch(config.url + "/v1/models", {method: 'GET', headers: config.headers}).then((response) => console.log(response));
-      } 
+        fetch(config.url + "/v1/models", { method: 'GET', headers: config.headers }).then((response) => console.log(response));
+      }
 
     }
   }
@@ -168,16 +166,6 @@ export class AppComponent implements OnInit {
       return convs;
     }
     return [new Conversation()]
-  }
-
-  setActiveArticle(index: number) {
-    const activeWorkspace = this.project!.workspaces[
-      this.project!.activeWorkspaceIndex
-    ];
-    activeWorkspace.activeArticleIndex = index;
-    this.activeArticle = this.project!.workspaces[this.project!.activeWorkspaceIndex].viewedArticles[this.project!.workspaces[
-      this.project!.activeWorkspaceIndex
-    ].activeArticleIndex];
   }
 
   toggleNewProjectOverlay() {
@@ -277,7 +265,7 @@ export class AppComponent implements OnInit {
     let article = this.project?.articles.get(articleName) ?? new Article(articleName)
     this.project?.articles.set(articleName, article)
 
-    // Then checking for existance of all groups    
+    // Then checking for existance of all groups
     const newCategories = categoryNames.filter((name) => !this.project?.articles.has(name));
 
     if (newCategories.length > 0) {
@@ -490,7 +478,7 @@ export class AppComponent implements OnInit {
       if (this.project.articles.delete(name)) {
         for (const workspace of this.project.workspaces) {
           workspace.viewedArticles = workspace.viewedArticles.filter(
-            (activeArticleName) => activeArticleName !== name
+            (articleName) => articleName !== name
           );
         }
         this.articleHierarchyMap.get(name)?.children.forEach((child) => {
@@ -630,9 +618,9 @@ export class AppComponent implements OnInit {
         const parsedUrl = new URL(urlAndKey[0]);
         parsedUrl.pathname = "/chat/completions"
         const newApi: ApiConfig = {
-          url: parsedUrl.protocol + '//' + parsedUrl.host, 
-          params: {}, 
-          headers: urlAndKey[1] !== undefined ? {'Authorization' : `Bearer ${urlAndKey[1]}`} : {}, 
+          url: parsedUrl.protocol + '//' + parsedUrl.host,
+          params: {},
+          headers: urlAndKey[1] !== undefined ? { 'Authorization': `Bearer ${urlAndKey[1]}` } : {},
           body: {},
         }
         this.apiConfigs.push(newApi);
@@ -759,7 +747,7 @@ export class AppComponent implements OnInit {
               }
             }
           } else if (v && v.message !== undefined) {
-            // If OLLAMA chat style response 
+            // If OLLAMA chat style response
             const newContent = v.message.content;
             const done = v.done;
             if (newContent !== undefined) {

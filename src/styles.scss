@@ -57,6 +57,7 @@ app-root {
 
 //@PrimeNG file panel is displayed differently
 .p-panel-header {
+  background-color: var(--bg0_h);
   border-radius: 0px;
   padding-left: 0px;
   padding-right: 0px;
@@ -73,6 +74,7 @@ app-root {
 
 //@PrimeNG file panel content reduced padding and simplified style
 .p-panel-content {
+  background-color: var(--bg0_h);
   border-radius: 0px;
   padding: 5px;
   margin-bottom: 2px;
@@ -82,16 +84,6 @@ app-root {
 
   :last-child {
     margin-bottom: 0;
-  }
-}
-
-.activePanel {
-  .p-panel-header {
-    background-color: var(--bg0_h);
-  }
-
-  .p-panel-content {
-    background-color: var(--bg0_h);
   }
 }
 
@@ -393,7 +385,7 @@ app-root {
         &.left-6px {
           left: 6px;
         }
-        
+
         &.right-6px {
           right: 6px;
         }
@@ -403,7 +395,7 @@ app-root {
         }
       }
 
-      .menu-item-select{
+      .menu-item-select {
         width: 50px;
         height: 25px;
       }
@@ -419,9 +411,11 @@ app-root {
         &.width-79px {
           width: 79px;
         }
+
         &.width-138px {
           width: 138px;
         }
+
         &.width-158px {
           width: 158px;
         }
@@ -436,6 +430,7 @@ app-root {
         overflow: hidden;
         user-select: none;
         width: 158px;
+
         .tiny-faint-text {
           color: var(--bg1);
           font-size: x-small;

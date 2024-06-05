@@ -15,7 +15,6 @@ export class NotePanelComponent implements OnInit {
   @Output() moveDownEvent: EventEmitter<void> = new EventEmitter();
   @Output() closePanelEvent: EventEmitter<void> = new EventEmitter();
   @Output() renameEvent: EventEmitter<string> = new EventEmitter();
-  @Input() isActivePanel?: boolean = false;
   @Input() articleName?: string;
   @Input() editMode: boolean = false;
   @Input() articles?: Map<string, Article>;

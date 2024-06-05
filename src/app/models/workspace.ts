@@ -5,9 +5,7 @@ import { Article } from "./article";
 export class Workspace {
   readonly className: string = 'Workspace';
   viewedArticles: string[];
-  activeArticleIndex: number;
-  constructor(viewedArticles: string[] = [], activeArticleIndex: number = -1) {
+  constructor(viewedArticles: string[] = []) {
     this.viewedArticles = viewedArticles;
-    this.activeArticleIndex = activeArticleIndex;
   }
 }
