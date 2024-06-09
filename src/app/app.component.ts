@@ -77,7 +77,7 @@ export class AppComponent implements OnInit {
 
   /** API Configurations */
   apiConfigs: ApiConfig[] = [];
-  apiConfigModelsMap: Record<string, string[]> = {}
+  apiConfigModelsMap: Record<string, string[]> = {};
   selectedApiIndex: number = 0;
 
   rightClickedWorkspace: number = -1;
@@ -87,19 +87,6 @@ export class AppComponent implements OnInit {
         if (this.rightClickedWorkspace !== (this.project?.workspaces.length ?? 0) - 1) {
           this.removeWorkspace(this.rightClickedWorkspace)
         }
-      }
-    },
-  ];
-
-  conversationContextMenuItems = [
-    {
-      label: 'Clear', icon: 'iconoir iconoir-erase', command: () => {
-        this.deleteMessages(false, this.rightClickedConversationIndex)
-      }
-    },
-    {
-      label: 'Delete', icon: 'iconoir iconoir-bin-half', command: () => {
-        this.deleteMessages(true, this.rightClickedConversationIndex)
       }
     },
   ];
@@ -142,7 +129,7 @@ export class AppComponent implements OnInit {
 
   saveApiConfigs() {
     localStorage.setItem("apiConfigs", JSON.stringify(this.apiConfigs));
-    this.loadApiModels()
+    this.loadApiModels();
   }
 
   loadApiModels() {
@@ -155,7 +142,6 @@ export class AppComponent implements OnInit {
       else {
         fetch(config.url + "/v1/models", { method: 'GET', headers: config.headers }).then((response) => console.log(response));
       }
-
     }
   }
 
@@ -510,13 +496,6 @@ export class AppComponent implements OnInit {
     }
   }
 
-  onClickConversation(conversation_index: number) {
-    if (this.activeConversationIndex === conversation_index || this.dropdownPanelActiveTab !== 'llm') {
-      this.onToggleConsole('llm')
-    }
-    this.activeConversationIndex = conversation_index
-  }
-
   onListArticleActionClick(event: {
     action: ArticleActionEnum;
     node: Article;
@@ -636,7 +615,6 @@ export class AppComponent implements OnInit {
   handleMessageEvent(event: [string, Msg | undefined]) {
     switch (event[0]) {
       case 'save': this.saveMessageAsArticle(event[1]); break;
-      case 'added/removed': this.onTouchConversations();
     }
   }
 
@@ -655,39 +633,6 @@ export class AppComponent implements OnInit {
     let article = new Article(articleName, [], msg.content);
     this.project?.articles.set(articleName, article)
     this.onTouchWorkspaces(true);
-  }
-
-  deleteMessages(deleteSystem: boolean = false, conversationIndex: number) {
-    if (deleteSystem) {
-      this.conversations[conversationIndex].messages = [];
-    } else {
-      this.conversations[conversationIndex].messages = this.conversations[conversationIndex].messages.filter((msg) => msg.role === 'system')
-    }
-
-    this.onTouchConversations();
-  }
-
-
-
-  onTouchConversations() {
-    // Remove all empty conversations that aren't the last conversation
-    let removedConversation = true;
-    while (removedConversation) {
-      removedConversation = false;
-      const index = this.conversations.findIndex((conv) => conv.messages.length === 0)
-      if (index !== -1 && index !== this.conversations.length - 1) {
-        this.conversations.splice(index, 1)
-        removedConversation = true;
-      } else {
-        removedConversation = false;
-      }
-    }
-    // Add new empty conversation if the last conversation is no longer empty
-    if (this.conversations[this.conversations.length - 1].messages.length > 0) {
-      this.conversations.push(new Conversation())
-    }
-
-    localStorage.setItem('conversations', JSON.stringify(this.conversations));
   }
 
   onClickSend(event: MouseEvent) {
@@ -766,7 +711,6 @@ export class AppComponent implements OnInit {
     });
     this.conversations[this.activeConversationIndex].messages.push(message)
     this.addMessageEmitter.emit(message)
-    this.onTouchConversations();
   }
 
   repeatPrompt() {

@@ -22,7 +22,7 @@
       <app-alerts-list class="tab-content" *ngIf="dropdownPanelActiveTab === 'alerts'"></app-alerts-list>
 
       <app-menu *ngIf="dropdownPanelActiveTab === 'menu'" [activeProject]="project?.title ?? ''"
-        [allProjectsPromise]="allProjectsPromise" [allApis]="apiConfigs" (menuEventEmitter)="handleMenuEvent($event)"
+        [allProjectsPromise]="allProjectsPromise" [allApis]="apiConfigs" (menuEventEmitter)="handleMenuEvent($event)" (saveApisEmitter)="saveApiConfigs()"
         class="tab-content"></app-menu>
     </div>
 
@@ -32,8 +32,8 @@
         pInputText (focus)="consoleInputFocused = true" tooltipPosition="bottom" (blur)="consoleInputFocused = false"
         (keyup)="commandLineKeyUp($event)" [(ngModel)]="input" />
       <!-- Conversation Buttons -->
-      <div *ngFor="let api of apiConfigs; index as index" class="tab"
-        [ngClass]="{ active: dropdownPanelActiveTab === 'llm' &&  index === selectedApiIndex}">
+      <div class="tab"
+        [ngClass]="{ active: dropdownPanelActiveTab === 'llm'}">
         <div class="iconoir iconoir-settings collapsed_item" [pTooltip]="llmSettingsTooltip" tooltipPosition="bottom"
           [autoHide]="false" (click)="$event.stopImmediatePropagation()">
           <ng-template #llmSettingsTooltip>
@@ -107,7 +107,7 @@
         </div>
         <div class="separator collapsed_item"></div>
         <div class="iconoir iconoir-globe" [pTooltip]="llmInterfaceTooltip" tooltipPosition="bottom"
-          (click)="onClickConversation(index)">
+          (click)="this.onToggleConsole('llm')">
           <ng-template #llmInterfaceTooltip>
             <div class="tooltip-background">
               <span *ngIf="dropdownPanelActiveTab !== 'llm'">LLM GUI</span>
@@ -134,8 +134,8 @@
         " [ngClass]="{
           active: this.project.activeWorkspaceIndex === index,
           isLast: isLast
-        }" [autoHide]="false" tooltipPosition="bottom" [pTooltip]="tooltipContent"
-          class="hideChildUntilHoverParent toolbarWorkspace" (click)="this.project.activeWorkspaceIndex = index"
+        }" tooltipPosition="left" [pTooltip]="tooltipContent" class="hideChildUntilHoverParent toolbarWorkspace"
+          (click)="this.project.activeWorkspaceIndex = index"
           (contextmenu)="rightClickedWorkspace = index; workspaceContextMenu.toggle($event)">
           <p-contextMenu #workspaceContextMenu [model]="workspaceContextMenuItems" [triggerEvent]="'click'"
             appendTo="body"></p-contextMenu>

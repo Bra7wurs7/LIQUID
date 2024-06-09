@@ -15,6 +15,7 @@ export class MenuComponent {
   @Input() activeProject!: string;
   @Input() allApis!: ApiConfig[]
   @Output() menuEventEmitter: EventEmitter<MenuEvent> = new EventEmitter();
+  @Output() saveApisEmitter: EventEmitter<void> = new EventEmitter();
 
   scrollIncrementDecrement = scrollIncrementDecrement;
 
@@ -48,6 +49,7 @@ export class MenuComponent {
         this.allApis[this.editConfigIndex].headers = conf.headers;
         this.allApis[this.editConfigIndex].params = conf.params;
       } catch { }
+      this.saveApisEmitter.emit();
     }
   }
 

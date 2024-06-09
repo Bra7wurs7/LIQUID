@@ -15,6 +15,7 @@ export class ConversationViewerComponent implements OnInit {
   ngOnInit(): void {
     this.addMessageEmitter.subscribe((message) => {
       this.activeMessage = this.conversation.messages.length - 1;
+      this.onTouchConversations();
     })
   }
 
@@ -46,16 +47,30 @@ export class ConversationViewerComponent implements OnInit {
         this.conversation.messages.splice(this.rightClickedMessage, 1)
         this.activeMessage = this.rightClickedMessage > this.activeMessage ? this.activeMessage : this.activeMessage - 1
         this.messageEventEmitter.emit(['added/removed', undefined])
-        //this.onTouchConversations()
+        this.onTouchConversations()
       }
     },
   ];
   rightClickedMessage: number = -1;
-  rightClickedConversation: number = -1;
+  rightClickedConversationIndex: number = -1;
 
   scrollIncrementDecrement = scrollIncrementDecrement;
 
   activeMessage: number = 0;
+
+
+  conversationContextMenuItems = [
+    {
+      label: 'Clear', icon: 'iconoir iconoir-erase', command: () => {
+        this.deleteMessages(false, this.rightClickedConversationIndex)
+      }
+    },
+    {
+      label: 'Delete', icon: 'iconoir iconoir-bin-half', command: () => {
+        this.deleteMessages(true, this.rightClickedConversationIndex)
+      }
+    },
+  ];
 
   addEmptyMessage(messages: Msg[], addToStart: boolean) {
     const newMessage: Msg = {
@@ -70,6 +85,37 @@ export class ConversationViewerComponent implements OnInit {
       messages.push(newMessage)
       this.activeMessage = this.conversation.messages.length - 1
     }
-    this.messageEventEmitter.emit(['added/removed', newMessage])
+    this.onTouchConversations();
+  }
+
+  deleteMessages(deleteSystem: boolean = false, conversationIndex: number) {
+    if (deleteSystem) {
+      this.conversations[conversationIndex].messages = [];
+    } else {
+      this.conversations[conversationIndex].messages = this.conversations[conversationIndex].messages.filter((msg) => msg.role === 'system')
+    }
+
+    this.onTouchConversations();
+  }
+
+  onTouchConversations() {
+    // Remove all empty conversations that aren't the last conversation
+    let removedConversation = true;
+    while (removedConversation) {
+      removedConversation = false;
+      const index = this.conversations.findIndex((conv) => conv.messages.length === 0)
+      if (index !== -1 && index !== this.conversations.length - 1) {
+        this.conversations.splice(index, 1)
+        removedConversation = true;
+      } else {
+        removedConversation = false;
+      }
+    }
+    // Add new empty conversation if the last conversation is no longer empty
+    if (this.conversations[this.conversations.length - 1].messages.length > 0) {
+      this.conversations.push(new Conversation())
+    }
+
+    localStorage.setItem('conversations', JSON.stringify(this.conversations));
   }
 }
