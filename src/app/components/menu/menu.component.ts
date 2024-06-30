@@ -29,12 +29,12 @@ export class MenuComponent {
   editConfigIndex?: number;
 
   newProjectMenuItems = [
-    { label: 'Import archive', icon: 'iconoir iconoir-archive', command: () => this.menuEventEmitter.emit(["/upload", '']) }
+    { label: 'Import archive as directory', icon: 'iconoir iconoir-archive', command: () => this.menuEventEmitter.emit(["/upload", '']) }
   ]
 
   lastRightClickedProject?: string;
   existingProjectMenuItems = [
-    { label: 'Export archive', icon: 'iconoir iconoir-download-square', command: () => this.menuEventEmitter.emit(["/download", this.lastRightClickedProject ?? '']) },
+    { label: 'Export directory as archive', icon: 'iconoir iconoir-download-square', command: () => this.menuEventEmitter.emit(["/download", this.lastRightClickedProject ?? '']) },
     { label: 'Delete', icon: 'iconoir iconoir-bin-half', command: () => this.menuEventEmitter.emit(["/delete", this.lastRightClickedProject ?? '']) }
   ]
 

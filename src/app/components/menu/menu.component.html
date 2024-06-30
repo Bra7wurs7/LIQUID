@@ -64,9 +64,9 @@
     <div class="menu-item-container margin-top-6px fade-on-hover-parent">
       <div class="menu-item border-top-0 border-left-transparent hover-highlighting">
         <div class="menu-item-text fade-out-on-hover-child">
-          <b class="text-color-primary">/archive</b><i> name</i>
+          <b class="text-color-primary">/directory</b><i> name</i>
         </div>
-        <input #vaultNameInput placeholder="Enter new archive name"
+        <input #vaultNameInput placeholder="Enter new directory name"
           class="menu-item-input width-158px fade-in-on-hover-child">
         <div class="iconoir iconoir-folder-plus menu-item-icon hover-highlighting right-6px"
           (click)="onEnterVault(vaultNameInput.value)"></div>
@@ -78,7 +78,7 @@
         (contextmenu)="lastRightClickedProject = project.title; projectContextMenu.toggle($event); $event.preventDefault()"
         [ngClass]="{'highlighted':project.title === activeProject}">
         <div class="menu-item-text">
-          <div class="tiny-faint-text">/archive </div>{{project.title}}
+          <div class="tiny-faint-text">/directory </div>{{project.title}}
         </div>
         <div class="iconoir menu-item-icon right-6px" [ngClass]="{
           'iconoir-folder': project.title !== activeProject,

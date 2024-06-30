@@ -1,0 +1,4 @@
+- Ordner sind Vaults.
+- Ich kann Vaults in den Arbeitsplatz einhängen.
+- /foo/bar.md ist eine Markdown Datei namens "bar" im Vault "foo".
+- Mehrere Dateien mit dem gleichen Namen und unterschiedlichen Dateiendungen bekommen den gleichen Eintrag.
