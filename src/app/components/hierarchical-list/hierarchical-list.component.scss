@@ -2,11 +2,11 @@
     border-radius: 0px;
     text-overflow: ellipsis;
     border: 0;
-    border-bottom: 1px solid var(--bg1);
+    border-bottom: 1px solid var(--surface-border);
     height: 43px;
 
     &:hover {
-        border-color: var(--orange)
+        border-color: var(--primary-color)
     }
 }
 
@@ -17,8 +17,8 @@
     opacity: 0;
     max-height: 0;
     border-bottom-width: 0px;
-    border-right-color: var(--bg1);
-    border-left-color: var(--bg1);
+    border-right-color: var(--surface-border);
+    border-left-color: var(--surface-border);
 
     overflow-y: hidden;
     overflow-x: hidden;
@@ -65,9 +65,9 @@
     height: 34px;
     display: flex;
     align-items: center;
-    border-right-color: var(--bg1);
-    border-left-color: var(--bg1);
-    color: var(--fg2);
+    border-right-color: var(--surface-border);
+    border-left-color: var(--surface-border);
+    color: var(--text-color-secondary);
     line-height: 1;
 
     &.showBorderL {
@@ -85,12 +85,12 @@
     }
 
     &.active {
-        background-image: linear-gradient(to right, var(--bg0_h), var(--bg0));
-        color: var(--fg);
+        background-image: linear-gradient(to right, var(--surface-b), var(--surface-a));
+        color: var(--text-color);
     }
 
     &.highlighted {
-        border-left-color: var(--orange);
+        border-left-color: var(--primary-color);
         border-left-width: 1px;
         border-left-style: solid;
     }
@@ -100,13 +100,13 @@
 .borderTop {
     border-top-width: 1px;
     border-top-style: solid;
-    border-top-color: var(--bg1);
+    border-top-color: var(--surface-border);
 }
 
 .borderBottom {
     border-bottom-width: 1px;
     border-bottom-style: solid;
-    border-bottom-color: var(--bg1);
+    border-bottom-color: var(--surface-border);
 }
 
 .article-text {
@@ -123,7 +123,7 @@
         font-size: xx-small;
         margin-left: 2px;
         height: 10px;
-        color: var(--bg1);
+        color: var(--surface-border);
         text-overflow: ellipsis;
         overflow: hidden;
     }
@@ -147,10 +147,10 @@
     padding-bottom: 3px;
     margin-left: 2px;
     margin-right: 2px;
-    color: var(--fg2);
+    color: var(--text-color-secondary);
 
     &:hover {
-        color: var(--fg);
+        color: var(--text-color);
     }
 
 }

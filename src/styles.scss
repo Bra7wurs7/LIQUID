@@ -1,6 +1,6 @@
 html {
   height: 100%;
-  background-color: var(--bg0);
+  background-color: var(--surface-a);
   overflow: hidden;
 }
 
@@ -10,14 +10,6 @@ body {
 }
 
 :root {
-  --bg1: #3c3836;
-  --bg0_h: #1d2021;
-  --bg0: #282828;
-  --fg: #ebdbb2;
-  --fg2: #d5c4a1;
-  --purple: #b16286;
-  --orange: #fe8019;
-  --blue: #458588;
   font-family: Helvetica, sans-serif;
   --font-family: Helvetica, sans-serif;
 }
@@ -32,7 +24,7 @@ app-root {
   transition: max-width 0.2s;
   height: 100%;
   overflow-y: hidden;
-  background-color: var(--bg0_h);
+  background-color: var(--surface-b);
 
   .width-200px {
     width: 200px;
@@ -44,7 +36,7 @@ app-root {
   }
 
   &.left {
-    border-right: 1px solid var(--bg1);
+    border-right: 1px solid var(--surface-border);
   }
 }
 
@@ -57,7 +49,7 @@ app-root {
 
 //@PrimeNG file panel is displayed differently
 .p-panel-header {
-  background-color: var(--bg0_h);
+  background-color: var(--surface-b);
   border-radius: 0px;
   padding-left: 0px;
   padding-right: 0px;
@@ -74,7 +66,7 @@ app-root {
 
 //@PrimeNG file panel content reduced padding and simplified style
 .p-panel-content {
-  background-color: var(--bg0_h);
+  background-color: var(--surface-b);
   border-radius: 0px;
   padding: 5px;
   margin-bottom: 2px;
@@ -94,7 +86,7 @@ app-root {
 }
 
 .internalLink {
-  color: var(--blue);
+  color: var(--blue-700);
 
   &:hover {
     cursor: pointer;
@@ -123,7 +115,7 @@ app-root {
 }
 
 .pseudoBorder {
-  border-bottom: 1px solid var(--bg1);
+  border-bottom: 1px solid var(--surface-border);
 }
 
 .pseudo {
@@ -144,7 +136,7 @@ app-root {
   .tooltipListItem {
     padding: 4px 8px 4px 8px;
     border-radius: 10px;
-    background-color: var(--bg0);
+    background-color: var(--surface-a);
     min-height: 27px;
     min-width: 100px;
     font-size: small;
@@ -156,7 +148,7 @@ app-root {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--bg0);
+  background-color: var(--surface-a);
   border-radius: 10px;
   padding: 3px 7px 3px 7px;
 
@@ -165,13 +157,13 @@ app-root {
   }
 
   &.highlighted {
-    background-color: var(--fg2);
-    color: var(--bg0);
+    background-color: var(--text-color-secondary);
+    color: var(--surface-a);
   }
 
   &.clickable {
     &:hover {
-      background-color: var(--bg0_h);
+      background-color: var(--surface-b);
       cursor: pointer;
     }
   }
@@ -182,7 +174,7 @@ app-root {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--bg0);
+  background-color: var(--surface-a);
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   padding: 2px 7px 3px 7px;
@@ -193,9 +185,9 @@ app-root {
 }
 
 .settings-tooltip-selector {
-  background-color: var(--bg0);
+  background-color: var(--surface-a);
   padding: 3px 7px 3px 7px;
-  color: var(--fg2);
+  color: var(--text-color-secondary);
   user-select: none;
 
   &:hover {
@@ -203,8 +195,8 @@ app-root {
   }
 
   &.active {
-    background-color: var(--fg2);
-    color: var(--bg0);
+    background-color: var(--text-color-secondary);
+    color: var(--surface-a);
   }
 
   &.border-bottom-radius-10px {
@@ -214,13 +206,13 @@ app-root {
 }
 
 .settings-tooltip-input {
-  border-color: var(--bg0_h);
+  border-color: var(--surface-b);
   border-radius: 0;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 
   &:hover {
-    border-color: var(--orange);
+    border-color: var(--primary-color);
   }
 }
 
@@ -241,7 +233,7 @@ app-root {
 }
 
 .faint {
-  color: var(--bg1);
+  color: var(--surface-border);
 }
 
 .fade-on-hover-parent {
@@ -270,8 +262,8 @@ app-root {
 }
 
 .horizontal-borders-1 {
-  border-top: 1px solid var(--bg1);
-  border-bottom: 1px solid var(--bg1);
+  border-top: 1px solid var(--surface-border);
+  border-bottom: 1px solid var(--surface-border);
 }
 
 .menu-list {
@@ -285,7 +277,7 @@ app-root {
     position: relative;
     width: 200px;
     height: 33px;
-    color: var(--fg2);
+    color: var(--text-color-secondary);
 
     &.margin-top-2 {
       margin-top: 2px;
@@ -298,8 +290,8 @@ app-root {
     .hover-highlighting {
       &:hover {
         cursor: pointer;
-        color: var(--fg);
-        border-color: var(--fg2);
+        color: var(--text-color);
+        border-color: var(--text-color-secondary);
       }
     }
 
@@ -309,16 +301,16 @@ app-root {
       justify-content: start;
       align-items: center;
       transition: width 0.1s;
-      background-color: var(--bg0_h);
+      background-color: var(--surface-b);
       position: absolute;
       top: 0;
       right: 0;
       width: 200px;
       height: 33px;
-      border: 1px solid var(--bg1);
+      border: 1px solid var(--surface-border);
 
       &.highlighted {
-        background-color: var(--bg0);
+        background-color: var(--surface-a);
       }
 
       &.grow-on-hover {
@@ -354,28 +346,28 @@ app-root {
       }
 
       &.active {
-        border-color: var(--orange);
+        border-color: var(--primary-color);
 
         .menu-item-text {
-          color: var(--fg);
+          color: var(--text-color);
         }
       }
 
       &.inactive {
         &:not(.active) {
-          border-color: var(--bg1);
+          border-color: var(--surface-border);
         }
 
         &:hover {
-          color: var(--fg2);
+          color: var(--text-color-secondary);
         }
 
         &:focus {
-          color: var(--fg2);
+          color: var(--text-color-secondary);
         }
 
         .menu-item-text {
-          color: var(--bg1);
+          color: var(--surface-border);
         }
       }
 
@@ -432,13 +424,13 @@ app-root {
         width: 158px;
 
         .tiny-faint-text {
-          color: var(--bg1);
+          color: var(--surface-border);
           font-size: x-small;
           font-style: italic;
         }
 
         .text-color-primary {
-          color: var(--fg)
+          color: var(--text-color)
         }
       }
     }

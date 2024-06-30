@@ -3,10 +3,10 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: var(--bg1);
+  background-color: var(--surface-border);
 
   .content {
-    background-color: var(--bg0);
+    background-color: var(--surface-a);
     width: 100%;
     height: 100%;
   }
@@ -20,7 +20,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
-    background-color: var(--bg0_h);
+    background-color: var(--surface-b);
     padding: 0 4px 0 4px;
 
     .input {
@@ -36,7 +36,7 @@
 
     .tab {
       background-color: transparent;
-      color: var(--fg2);
+      color: var(--text-color-secondary);
       display: flex;
       flex-direction: row;
       justify-content: end;
@@ -47,17 +47,17 @@
 
       .iconoir {
         &:hover {
-          color: var(--fg);
+          color: var(--text-color);
           cursor: pointer;
         }
 
         &.highlighted {
-          color: var(--fg);
+          color: var(--text-color);
         }
       }
 
       .separator {
-        background-color: var(--bg1);
+        background-color: var(--surface-border);
         height: 23px;
         width: 1px;
         margin: 0 3px 0 3px;
@@ -70,7 +70,7 @@
       }
 
       &.active {
-        background-color: var(--bg0);
+        background-color: var(--surface-a);
 
         .collapsed_item {
           position: relative;
@@ -94,24 +94,24 @@
         visibility: visible;
         width: 240px;
         padding: 8px 12px 8px 0px;
-        border-bottom: 1px solid var(--orange);
+        border-bottom: 1px solid var(--primary-color);
       }
     }
   }
 
   .central-header {
-    //border-bottom: 1px solid var(--bg1);
-    background-color: var(--bg0_h);
+    //border-bottom: 1px solid var(--surface-border);
+    background-color: var(--surface-b);
     padding: 0;
 
     .dropdown-panel {
       position: relative;
       display: flex;
       flex-direction: row;
-      background-color: var(--bg0_h);
+      background-color: var(--surface-b);
       pointer-events: all;
       height: 0vh;
-      border: 0px solid var(--bg1);
+      border: 0px solid var(--surface-border);
       transition: height 0.25s;
       overflow: hidden;
 
@@ -134,16 +134,16 @@
       display: flex;
       flex-direction: row;
       height: 40px;
-      color: var(--bg1);
+      color: var(--surface-border);
 
       .toolbarWorkspace {
-        background-color: var(--bg0_h);
+        background-color: var(--surface-b);
         min-width: 30px;
         padding-top: 1px;
-        border-right: 1px solid var(--bg1);
+        border-right: 1px solid var(--surface-border);
 
         &:first-of-type {
-          border-left: 1px solid var(--bg1);
+          border-left: 1px solid var(--surface-border);
         }
 
         .workspace-articles {
@@ -152,7 +152,7 @@
           overflow-y: hidden;
 
           .workspace-article {
-            background-color: var(--bg1);
+            background-color: var(--surface-border);
             margin-bottom: 1px;
             margin-left: 1px;
             margin-right: 1px;
@@ -161,11 +161,11 @@
         }
 
         &.active {
-          background-color: var(--bg0);
+          background-color: var(--surface-a);
 
           .workspace-articles {
             .workspace-article {
-              background-color: var(--fg2);
+              background-color: var(--text-color-secondary);
             }
           }
         }
@@ -179,10 +179,10 @@
 
     .folderAction {
       transition: color 0.1s;
-      color: var(--fg2);
+      color: var(--text-color-secondary);
 
       &:hover {
-        color: var(--fg);
+        color: var(--text-color);
       }
     }
   }

@@ -8,29 +8,29 @@
     border-top: 0;
     border-bottom: 0;
     margin-right: 2px;
-    border-right: 1px solid var(--bg1);
+    border-right: 1px solid var(--surface-a);
     outline: none;
-    color: var(--fg);
+    color: var(--text-color);
 
     &:focus {
-        background-color: var(--bg0);
+        background-color: var(--surface-a);
         resize: vertical;
-        border-color: var(--orange);
+        border-color: var(--primary-color);
     }
 
     &:hover {
-        border-color: var(--orange);
+        border-color: var(--primary-color);
     }
 
     &.inactive {
-        color: var(--bg1);
+        color: var(--surface-a);
 
         &:hover {
-            color: var(--fg2);
+            color: var(--text-color-secondary);
         }
 
         &:focus {
-            color: var(--fg2);
+            color: var(--text-color-secondary);
         }
     }
 
@@ -44,7 +44,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-right: 1px solid var(--bg1);
+    border-right: 1px solid var(--surface-a);
     flex-grow: 1;
     user-select: none;
     text-align: center;
@@ -56,6 +56,6 @@
 }
 
 .author-icon {
-    background-color: var(--bg1);
+    background-color: var(--surface-a);
     border-radius: 24px;
 }
