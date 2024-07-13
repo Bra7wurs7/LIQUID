@@ -2,7 +2,7 @@
   [style]="{width: '40vw'}" (onHide)="editConfig = undefined">
   <ng-template pTemplate="closeicon"></ng-template>
   <div class="flex flex-column">
-    <textarea pInputTextarea style="width: 100%; height: 40vh;" [(ngModel)]="editConfig"></textarea>
+    <textarea style="width: 100%; height: 40vh; resize: none;" [(ngModel)]="editConfig"></textarea>
     <div class="flex flex-row justify-content-between" style="margin-top: 2px;">
       <button pButton pRipple label="Delete" class="p-button-danger" style="margin-right: 2px"
         (click)="menuEventEmitter.emit(['/delete_api', ''+editConfigIndex]); closeButton.click()"></button>
@@ -24,7 +24,7 @@
   </div>
   <div>
     <div class="menu-item-container margin-top-6px fade-on-hover-parent">
-      <div class="menu-item border-top-0 border-left-transparent hover-highlighting">
+      <div class="menu-item border-right-transparent hover-highlighting">
         <div class="menu-item-text fade-out-on-hover-child">
           <b class="text-color-primary">/api</b><i> url [key]</i>
         </div>
@@ -50,9 +50,12 @@
       </div>
     </div>
     <div class="menu-item-container fade-on-hover-parent" *ngFor="let apiConfig of allApis, index as i, last as isLast">
-      <div class="menu-item border-top-0 border-bottom-0 border-left-transparent grow-on-hover hover-highlighting"
+      <div class="menu-item border-top-0 border-right-transparent grow-on-hover hover-highlighting"
         (click)="editConfig = JSON.stringify(apiConfig, null ,2); editConfigIndex = i"
-        [ngClass]="{'highlighted':editConfigIndex === i}">
+        [ngClass]="{
+          'highlighted':editConfigIndex === i,
+          'border-bottom-0':!isLast
+          }">
         <div class="menu-item-text">
           <div class="tiny-faint-text">/api </div>{{apiConfig.url | urlDomain}}
         </div>
@@ -62,7 +65,7 @@
       </div>
     </div>
     <div class="menu-item-container margin-top-6px fade-on-hover-parent">
-      <div class="menu-item border-top-0 border-left-transparent hover-highlighting">
+      <div class="menu-item border-right-transparent hover-highlighting">
         <div class="menu-item-text fade-out-on-hover-child">
           <b class="text-color-primary">/directory</b><i> name</i>
         </div>
@@ -74,9 +77,12 @@
     </div>
     <div class="menu-item-container fade-on-hover-parent"
       *ngFor="let project of allProjectsPromise | async, last as isLast">
-      <div class="menu-item border-top-0 border-bottom-0 border-left-transparent grow-on-hover hover-highlighting" (click)="onEnterVault(project.title)"
+      <div class="menu-item border-top-0 border-right-transparent grow-on-hover hover-highlighting" (click)="onEnterVault(project.title)"
         (contextmenu)="lastRightClickedProject = project.title; projectContextMenu.toggle($event); $event.preventDefault()"
-        [ngClass]="{'highlighted':project.title === activeProject}">
+        [ngClass]="{
+          'highlighted':project.title === activeProject,
+          'border-bottom-0':!isLast
+          }">
         <div class="menu-item-text">
           <div class="tiny-faint-text">/directory </div>{{project.title}}
         </div>
@@ -89,7 +95,7 @@
       </div>
     </div>
     <div class="menu-item-container margin-top-6px fade-on-hover-parent">
-      <div class="menu-item border-top-0 border-left-transparent hover-highlighting">
+      <div class="menu-item border-right-transparent hover-highlighting">
         <div class="menu-item-text fade-out-on-hover-child">
           <b class="text-color-primary">/file</b><i> name</i>
         </div>
@@ -100,7 +106,7 @@
       </div>
     </div>
     <div class="menu-item-container margin-top-6px fade-on-hover-parent">
-      <div class="menu-item border-top-0 border-left-transparent hover-highlighting">
+      <div class="menu-item border-right-transparent hover-highlighting">
         <div class="menu-item-text fade-out-on-hover-child">
           <b class="text-color-primary">/help</b>
         </div>

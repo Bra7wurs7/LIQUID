@@ -1,5 +1,5 @@
 ##### 09.10.24
-- Tippen im Prompter gibt automatisch vorschau der promptergänzung (Zeigt gesamte End-Prompt an, sowie Artikel mit deren hilfe die Prompts gebaut wurden und deren "Wichtigkeit" bzw. "Aufmerksamheit")
+- Tippen im Prompter gibt automatisch vorschau der Promptergänzung (Zeigt gesamte End-Prompt an, sowie Artikel mit deren Hilfe die Prompts gebaut wurden und deren "Wichtigkeit" bzw. "Aufmerksamheit")
 - Artikelname!llmname
 
 ##### LLM Technologie Allgemein

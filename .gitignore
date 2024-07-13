@@ -10,6 +10,8 @@
 # dependencies
 /node_modules
 
+/doc/.obsidian
+
 # profiling files
 chrome-profiler-events*.json
 

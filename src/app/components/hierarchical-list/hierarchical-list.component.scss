@@ -85,7 +85,7 @@
     }
 
     &.active {
-        background-image: linear-gradient(to right, var(--surface-b), var(--surface-a));
+        background-image: linear-gradient(to right, var(--surface-a), var(--surface-b));
         color: var(--text-color);
     }
 
